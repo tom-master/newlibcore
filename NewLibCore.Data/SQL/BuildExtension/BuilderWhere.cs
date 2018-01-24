@@ -8,7 +8,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
 {
     internal class BuilderWhere<TModel> : ITranslate where TModel : class, new()
     {
-        internal DatabaseSyntaxBuilder _syntaxBuilder = new MysqlSyntaxBuilder(true);
+        internal DatabaseSyntaxBuilder _syntaxBuilder = new MysqlSyntaxBuilder();
 
         internal StringBuilder _builder = new StringBuilder();
 
