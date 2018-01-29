@@ -36,7 +36,7 @@ namespace NewLibCore.Data.SQL.Builder
 
         internal Expression Expression { get; private set; }
 
-        internal ExpressionModel(Expression expression) : this(expression, JoinType.INNER)
+        internal ExpressionModel(Expression expression) : this(expression, JoinType.Inner)
         {
 
         }
