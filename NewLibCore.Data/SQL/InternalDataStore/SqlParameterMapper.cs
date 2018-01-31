@@ -11,6 +11,7 @@ namespace NewLibCore.Data.SQL.InternalDataStore
     {
         public SqlParameterMapper(String key, Object value)
         {
+            var a = 1 = 1;
             Key = key;
             Value = ParseValueType(value);
         }
