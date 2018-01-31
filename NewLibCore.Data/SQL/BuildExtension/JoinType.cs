@@ -2,8 +2,10 @@
 {
     public enum JoinType
     {
-        INNER = 1,
-        LEFT = 2,
-        RIGHT = 3
+        Inner = 1,
+
+        Left = 2,
+
+        Right = 3
     }
 }
