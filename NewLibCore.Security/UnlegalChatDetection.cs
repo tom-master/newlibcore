@@ -10,7 +10,7 @@ namespace NewLibCore.Security
             {
                 return "";
             }
-            else
+            else 
             {
                 //删除脚本
                 value = Regex.Replace(value, @"<script[^>]*?>.*?</script>", "", RegexOptions.IgnoreCase);
