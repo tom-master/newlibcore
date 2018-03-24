@@ -58,7 +58,10 @@ namespace NewLibCore.Data.SQL.InternalDataStore
             if (_useTransaction)
             {
                 _logger.Write("INFO", "commit transaction");
-                _dataTransaction.Commit();
+                if (_dataTransaction != null)
+                {
+                    _dataTransaction.Commit();
+                }
                 return;
             }
             throw new Exception("没有启动事务，无法执行事务提交");
@@ -69,7 +72,10 @@ namespace NewLibCore.Data.SQL.InternalDataStore
             if (_useTransaction)
             {
                 _logger.Write("INFO", "rollback transaction ");
-                _dataTransaction?.Rollback();
+                if (_dataTransaction != null)
+                {
+                    _dataTransaction.Rollback();
+                }
                 return;
             }
             throw new Exception("没有启动事务，无法执行事务回滚");
