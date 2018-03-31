@@ -278,7 +278,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
         }
 
         private void GetJoin(BinaryExpression binaryExp, RelationType relationType)
-        {
+        { 
             var leftMemberExp = (MemberExpression)binaryExp.Left;
             var leftAliasName = _expressionParameterNameToTableAliasNameMappers[((ParameterExpression)leftMemberExp.Expression).Name];
 
