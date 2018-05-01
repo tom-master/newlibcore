@@ -242,8 +242,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
                         Object result = result = getter.DynamicInvoke();
                         WhereParameters.Add(new SqlParameterMapper($@"@{_parameterNameStack.Pop()}", result));
                         break;
-                    }
-
+                    } 
                     break;
                 }
                 case ExpressionType.Not:
