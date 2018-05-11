@@ -89,63 +89,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
                 }
                 case ExpressionType.Call:
                 {
-                    var methodCallExp = (MethodCallExpression)expression;
-                    var methodName = methodCallExp.Method.Name;
-
-                    var methodCallArguments = methodCallExp.Arguments;
-                    Type argumentType = null;
-                    Expression argument = null;
-                    Expression obj = null;
-                    if (methodCallArguments.Count > 1)
-                    {
-                        argumentType = methodCallArguments[0].Type;
-                        argument = methodCallArguments[1];
-                        obj = methodCallArguments[0];
-                    }
-                    else
-                    {
-                        argumentType = methodCallExp.Object.Type;
-                        argument = methodCallArguments[0];
-                        obj = methodCallExp.Object;
-                    }
-
-                    var relationType = default(RelationType);
-                    if (methodName == "StartsWith")
-                    {
-                        relationType = RelationType.START_LIKE;
-                    }
-                    else if (methodName == "EndsWith")
-                    {
-                        relationType = RelationType.END_LIKE;
-                    }
-                    else if (methodName == "Contains")
-                    {
-                        if (argumentType == typeof(String))
-                        {
-                            relationType = RelationType.LIKE;
-                        }
-                        else if (argumentType == typeof(Int32[]) || (argumentType.Name == "List`1" || argumentType.Name == "IList`1"))
-                        {
-                            relationType = RelationType.IN;
-                        }
-                    }
-                    else
-                    {
-                        throw new Exception("暂不支持的方法");
-                    }
-
-                    _operationalCharacterStack.Push(relationType);
-
-                    if (argumentType == typeof(String))
-                    {
-                        InternalBuildWhere(obj);
-                        InternalBuildWhere(argument);
-                    }
-                    else if (argumentType == typeof(Int32[]) || (argumentType.Name == "List`1" || argumentType.Name == "IList`1"))
-                    {
-                        InternalBuildWhere(argument);
-                        InternalBuildWhere(obj);
-                    }
+                    MethodCall(expression);
                     break;
                 }
                 case ExpressionType.Constant:
@@ -258,6 +202,67 @@ namespace NewLibCore.Data.SQL.BuildExtension
 
                 default:
                     break;
+            }
+        }
+
+        private void MethodCall(Expression expression)
+        {
+            var methodCallExp = (MethodCallExpression)expression;
+            var methodName = methodCallExp.Method.Name;
+
+            var methodCallArguments = methodCallExp.Arguments;
+            Type argumentType = null;
+            Expression argument = null;
+            Expression obj = null;
+            if (methodCallArguments.Count > 1)
+            {
+                argumentType = methodCallArguments[0].Type;
+                argument = methodCallArguments[1];
+                obj = methodCallArguments[0];
+            }
+            else
+            {
+                argumentType = methodCallExp.Object.Type;
+                argument = methodCallArguments[0];
+                obj = methodCallExp.Object;
+            }
+
+            var relationType = default(RelationType);
+            if (methodName == "StartsWith")
+            {
+                relationType = RelationType.START_LIKE;
+            }
+            else if (methodName == "EndsWith")
+            {
+                relationType = RelationType.END_LIKE;
+            }
+            else if (methodName == "Contains")
+            {
+                if (argumentType == typeof(String))
+                {
+                    relationType = RelationType.LIKE;
+                }
+                else if (argumentType == typeof(Int32[]) || (argumentType.Name == "List`1" || argumentType.Name == "IList`1"))
+                {
+                    relationType = RelationType.IN;
+                }
+            }
+            else
+            {
+                throw new Exception("暂不支持的方法");
+            }
+
+            _operationalCharacterStack.Push(relationType);
+
+            if (argumentType == typeof(String))
+            {
+                InternalBuildWhere(obj);
+                InternalBuildWhere(argument);
+            }
+            else if (argumentType == typeof(Int32[]) || (argumentType.Name == "List`1" || argumentType.Name == "IList`1"))
+            {
+                InternalBuildWhere(argument);
+                InternalBuildWhere(obj);
             }
         }
 
