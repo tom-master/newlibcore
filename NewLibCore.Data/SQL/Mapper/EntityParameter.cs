@@ -31,7 +31,7 @@ namespace NewLibCore.Data.SQL.Mapper
             var parameter = MapperFactory.Mapper.GetParameterInstance();
             parameter.ParameterName = entityParameter.Key;
             parameter.Value = entityParameter.Value;
-            return parameter;
+            return parameter; 
         }
 
         private Object ParseValueType(Object obj)
