@@ -36,7 +36,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
         private Object ParseValueType(Object obj)
         {
-            Parameter.Validate(obj);
+            Parameter.Validate(obj); 
 
             if (obj.GetType() == typeof(String))
             {
