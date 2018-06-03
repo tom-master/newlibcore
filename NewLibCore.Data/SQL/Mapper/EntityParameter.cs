@@ -38,7 +38,7 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             Parameter.Validate(obj); 
 
-            if (obj.GetType() == typeof(String))
+            if (obj.GetType() == typeof(String)) 
             {
                 return UnlegalChatDetection.FilterBadChat(obj.ToString());
             }
