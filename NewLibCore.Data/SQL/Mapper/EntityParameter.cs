@@ -40,7 +40,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
             if (obj.GetType() == typeof(String)) 
             {
-                return UnlegalChatDetection.FilterBadChat(obj.ToString());
+                return UnlegalChatDetection.FilterBadChat(obj.ToString()); 
             }
 
             if (obj.GetType() == typeof(Boolean))
