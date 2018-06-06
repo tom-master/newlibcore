@@ -57,7 +57,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
         internal override void Clear()
         {
             _syntaxBuilder.Clear();
-        }
+        } 
     }
 
 
