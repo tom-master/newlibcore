@@ -18,7 +18,7 @@ namespace NewLibCore.Data.Mapper.MapperExtension
 		public PropertyDefaultValueAttribute(Type type)
 		{
 
-			if (type == null)
+			if (type == null) 
 			{
 				throw new ArgumentException($@"{nameof(type)} is null");
 			} 
