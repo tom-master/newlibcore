@@ -76,13 +76,8 @@ namespace NewLibCore.Data.SQL.MapperExtension
         public Object Value { get; private set; }
 
 
-        public override Int32 Order
-        {
-            get
-            {
-                return 2;
-            }
-        }
+        public override Int32 Order => 2;
+         
 
         public override String FailReason(String fieldName)
         {
