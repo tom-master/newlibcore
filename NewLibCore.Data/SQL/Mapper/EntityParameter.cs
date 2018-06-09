@@ -41,13 +41,12 @@ namespace NewLibCore.Data.SQL.Mapper
             if (obj.GetType() == typeof(String)) 
             {
                 return UnlegalChatDetection.FilterBadChat(obj.ToString()); 
-            }
+            } 
 
             if (obj.GetType() == typeof(Boolean))
             {
                 return (Boolean)obj ? 1 : 0;
             }
-
 
             if (obj.IsComplexType())
             {
