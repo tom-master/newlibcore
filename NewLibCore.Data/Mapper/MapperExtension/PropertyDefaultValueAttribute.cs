@@ -21,7 +21,7 @@ namespace NewLibCore.Data.Mapper.MapperExtension
 			if (type == null)
 			{
 				throw new ArgumentException($@"{nameof(type)} is null");
-			}
+			} 
 
 			if (type.BaseType == typeof(ValueType))
 			{
