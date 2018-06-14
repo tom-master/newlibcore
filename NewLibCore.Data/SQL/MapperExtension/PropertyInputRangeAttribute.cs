@@ -10,10 +10,8 @@ namespace NewLibCore.Data.SQL.MapperExtension
         private Int32 _max;
 
 
-        public override Int32 Order
-        {
-            get { return 1; }
-        }
+        public override Int32 Order => 1;
+      
 
         public PropertyInputRangeAttribute(Int32 min, Int32 max)
         {
