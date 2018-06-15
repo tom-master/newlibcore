@@ -4,10 +4,8 @@ namespace NewLibCore.Data.SQL.MapperExtension
 {
     public class PropertyRequiredAttribute : PropertyValidate
     {
-        public override Int32 Order
-        {
-            get { return 3; }
-        }
+        public override Int32 Order => 3;
+       
 
         public override String FailReason(String fieldName)
         {
