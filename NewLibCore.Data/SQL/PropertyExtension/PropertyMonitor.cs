@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
+﻿using System.Collections.Generic;
 
 namespace NewLibCore.Data.SQL.PropertyExtension
 {
@@ -14,7 +12,12 @@ namespace NewLibCore.Data.SQL.PropertyExtension
 
         protected void OnPropertyChanged(params PropertyArgs[] propertyArgs)
         {
-            if (propertyArgs.Length == 0)
+            if (propertyArgs == null)
+            {
+                return;
+            } 
+
+            if (var.Length == 0)
             {
                 return;
             }
