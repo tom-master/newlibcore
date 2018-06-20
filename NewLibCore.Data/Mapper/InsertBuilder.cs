@@ -113,6 +113,5 @@ namespace NewLibCore.Data.Mapper
 		}
 
 		#endregion
-
 	}
 }
