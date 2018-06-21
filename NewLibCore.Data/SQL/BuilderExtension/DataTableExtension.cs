@@ -36,8 +36,8 @@ namespace NewLibCore.Data.SQL.DataExtension
             foreach (DataRow dr in dt.Rows)
             {
                 var t = new T();
-                PropertyInfo[] propertys = t.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public);
-                foreach (PropertyInfo propertyInfo in propertys)
+                var propertys = t.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public);
+                foreach (var propertyInfo in propertys)
                 {
                     var tempName = propertyInfo.Name;
                     if (dt.Columns.Contains(tempName))
@@ -88,15 +88,15 @@ namespace NewLibCore.Data.SQL.DataExtension
             var instance = Expression.Parameter(typeof(object), "instance");
             var value = Expression.Parameter(typeof(object), "value");
 
-            UnaryExpression instanceCast = (!this.Property.DeclaringType.IsValueType) ? Expression.TypeAs(instance, this.Property.DeclaringType) : Expression.Convert(instance, this.Property.DeclaringType);
-            UnaryExpression valueCast = (!this.Property.PropertyType.IsValueType) ? Expression.TypeAs(value, this.Property.PropertyType) : Expression.Convert(value, this.Property.PropertyType);
+            var instanceCast = (!this.Property.DeclaringType.IsValueType) ? Expression.TypeAs(instance, this.Property.DeclaringType) : Expression.Convert(instance, this.Property.DeclaringType);
+            var valueCast = (!this.Property.PropertyType.IsValueType) ? Expression.TypeAs(value, this.Property.PropertyType) : Expression.Convert(value, this.Property.PropertyType);
             this.SetDelegate = Expression.Lambda<Action<object, object>>(Expression.Call(instanceCast, this.Property.SetMethod, valueCast), new ParameterExpression[] { instance, value }).Compile();
         }
 
         private void InitializeGet()
         {
             var instance = Expression.Parameter(typeof(object), "instance");
-            UnaryExpression instanceCast = (!this.Property.DeclaringType.IsValueType) ? Expression.TypeAs(instance, this.Property.DeclaringType) : Expression.Convert(instance, this.Property.DeclaringType);
+            var instanceCast = (!this.Property.DeclaringType.IsValueType) ? Expression.TypeAs(instance, this.Property.DeclaringType) : Expression.Convert(instance, this.Property.DeclaringType);
             this.GetDelegate = Expression.Lambda<Func<object, object>>(Expression.TypeAs(Expression.Call(instanceCast, this.Property.GetGetMethod()), typeof(object)), instance).Compile();
         }
 
