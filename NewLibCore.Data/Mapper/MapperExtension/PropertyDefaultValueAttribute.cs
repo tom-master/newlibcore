@@ -10,7 +10,6 @@ namespace NewLibCore.Data.Mapper.MapperExtension
 
 		public PropertyDefaultValueAttribute(Type type, Object value)
 		{
-
 			_type = type ?? throw new ArgumentException($@"{nameof(type)} is null");
 			_value = value ?? throw new ArgumentException($@"{nameof(value)} is null");
 		}
