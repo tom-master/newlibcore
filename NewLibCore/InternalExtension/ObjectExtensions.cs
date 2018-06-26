@@ -50,7 +50,7 @@ namespace NewLibCore.InternalExtension
 		public static T CastTo<T>(this Object value, T defaultValue)
 		{
 			Object result;
-			var type = typeof(T);
+			var type = typeof(T); 
 			try
 			{
 				result = type.IsEnum ? Enum.Parse(type, value.ToString()) : Convert.ChangeType(value, type);
