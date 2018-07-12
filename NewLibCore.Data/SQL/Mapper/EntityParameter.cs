@@ -59,7 +59,7 @@ namespace NewLibCore.Data.SQL.Mapper
                     }
                     return String.Join(",", (IList<Int32>)obj);
                 }
-            }
+            } 
 
             return obj;
         }
