@@ -28,7 +28,7 @@ namespace NewLibCore.Data.Mapper.MapperExtension
 				_value = 0;
 			}
 			else
-			{
+			{ 
 				if (type == typeof(String))
 				{
 					_value = "";
