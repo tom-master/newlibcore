@@ -2,7 +2,7 @@
 
 namespace NewLibCore.Data.Mapper.MapperExtension
 {
-	public class PropertyDefaultValueAttribute: ValidateBase
+	public class PropertyDefaultValueAttribute : ValidateBase
 	{
 		private Type _type;
 
@@ -10,18 +10,35 @@ namespace NewLibCore.Data.Mapper.MapperExtension
 
 		public PropertyDefaultValueAttribute(Type type, Object value)
 		{
+
+			_type = type ?? throw new ArgumentException($@"{nameof(type)} is null");
+			_value = value ?? throw new ArgumentException($@"{nameof(value)} is null");
+		}
+
+		public PropertyDefaultValueAttribute(Type type)
+		{
+
 			if (type == null)
 			{
 				throw new ArgumentException($@"{nameof(type)} is null");
 			}
 
-			if (value == null)
+			if (type.BaseType == typeof(ValueType))
 			{
-				throw new ArgumentException($@"{nameof(value)} is null");
+				_value = 0;
 			}
-
+			else
+			{
+				if (type == typeof(String))
+				{
+					_value = "";
+				}
+				else
+				{
+					_value = null;
+				}
+			}
 			_type = type;
-			_value = value;
 		}
 
 		public Type Type
