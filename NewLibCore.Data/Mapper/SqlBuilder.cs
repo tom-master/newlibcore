@@ -7,7 +7,7 @@ using NewLibCore.Data.Mapper.MapperExtension;
 
 namespace NewLibCore.Data.Mapper
 {
-	internal abstract class SqlBuilder<TModel> where TModel : class
+	internal abstract class SqlBuilder<TModel> where TModel : class,new()
 	{
 		private StringBuilder _sqlBuilder = new StringBuilder();
 		private Type _modelType;
@@ -25,7 +25,7 @@ namespace NewLibCore.Data.Mapper
 			_modelInstance = model;
 		}
 
-		protected internal abstract BuildEntry Build();
+		protected internal abstract BuildEntry<TModel> Build();
 
 		protected Type ModelType
 		{

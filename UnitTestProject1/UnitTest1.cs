@@ -74,40 +74,40 @@ namespace UnitTestProject1
 			//	});
 			//});
 
-			//using (var dataStore = new DataStore("Server=39.106.106.137;Database=NewCrmContext;Uid=root;Pwd=xiaofan@.1;port=6033;SslMode=none;Pooling=True;Min Pool Size=5;Max Pool Size=10;Treat Tiny As Boolean=false"))
-			//{
-			//	try
-			//	{
-			//		dataStore.OpenTransaction();
-			//		#region 设置用户下线
-			//		{
-			//			var account = new Account();
-			//			account.Offline();
-			//			var rowCount = dataStore.ExecuteModify(account, acc => acc.Id == 4 && !acc.IsDeleted && acc.IsDisable);
-			//			if (rowCount == 0)
-			//			{
+			using (var dataStore = new DataStore("Server=39.106.106.137;Database=NewCrmContext;Uid=root;Pwd=xiaofan@.1;port=6033;SslMode=none;Pooling=True;Min Pool Size=5;Max Pool Size=10;Treat Tiny As Boolean=false"))
+			{
+				try
+				{
+					dataStore.OpenTransaction();
+					#region 设置用户下线
+					{
+						var account = new Account();
+						account.Offline();
+						var a1 = "str";
+						var rowCount = dataStore.ExecuteModify(account, acc => acc.Id == 4 || acc.Name.Contains(a1) && !acc.IsDeleted && !acc.IsDisable);
+						if (rowCount == 0)
+						{
 
-			//			}
-			//		}
-			//		#endregion
+						}
+					}
+					#endregion
 
-			//		dataStore.Commit();
-			//	}
-			//	catch (Exception e)
-			//	{
-			//		dataStore.Rollback();
-			//		throw;
-			//	}
-			//}
+					dataStore.Commit();
+				}
+				catch (Exception e)
+				{
+					dataStore.Rollback();
+					throw;
+				}
+			}
 
-			PropertyDefaultValueAttribute a = new PropertyDefaultValueAttribute(typeof(String));
 		}
 
-		public enum T
+		public string V()
 		{
-			A = 1,
-			B = 2
+			return "123";
 		}
+
 
 		//public class classA
 		//{

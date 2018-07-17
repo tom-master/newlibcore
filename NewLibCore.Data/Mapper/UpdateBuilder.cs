@@ -15,7 +15,7 @@ namespace NewLibCore.Data.Mapper
 			_where = where;
 		}
 
-		protected internal override BuildEntry Build()
+		protected internal override BuildEntry<TModel> Build()
 		{
 			if (!ModelInstance.Args.Any())
 			{
@@ -23,19 +23,18 @@ namespace NewLibCore.Data.Mapper
 			}
 
 			var columns = ModelInstance.Args;
-			var builder = new BuilderExtension<TModel>();
-			builder.Append($@"UPDATE {ModelType.Name} SET {String.Join(",", columns.Select(s => $@"{s.GetArgumentName()}=@{s.GetArgumentName()}"))}");
+			var buildEntry = new BuildEntry<TModel>();
+			buildEntry.Append($@"UPDATE {ModelType.Name} SET {String.Join(",", columns.Select(s => $@"{s.GetArgumentName()}=@{s.GetArgumentName()}"))}");
 			if (_where != null)
 			{
-				builder.BuildWhere(_where);
+				buildEntry.BuildWhere(_where);
 			}
-
-			var entry = builder.GetBuildEntry();
+			 
 			foreach (var item in columns.Select(s => new ParameterMapper($@"@{s.GetArgumentName()}", s.PropertyValue)))
 			{
-				entry.Parameters.Add(item);
+				buildEntry.Parameters.Add(item);
 			}
-			return entry;
+			return buildEntry;
 		}
 	}
 }

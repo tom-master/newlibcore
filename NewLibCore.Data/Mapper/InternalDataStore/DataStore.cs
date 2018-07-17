@@ -11,10 +11,10 @@ using NewLibCore.Data.Mapper.PropertyExtension;
 
 namespace NewLibCore.Data.Mapper.InternalDataStore
 {
-	public class DataStore: IDisposable
+	public class DataStore : IDisposable
 	{
-		private MySqlConnection _connection;
-		private MySqlTransaction _dataTransaction;
+		private DbConnection _connection;
+		private DbTransaction _dataTransaction;
 		private Boolean disposed = false;
 
 		public DataStore(String connection)
@@ -31,7 +31,7 @@ namespace NewLibCore.Data.Mapper.InternalDataStore
 
 		private Boolean UseTransaction { get; set; }
 
-		private MySqlTransaction GetNonceTransaction()
+		private DbTransaction GetNonceTransaction()
 		{
 			if (UseTransaction)
 			{
@@ -75,20 +75,20 @@ namespace NewLibCore.Data.Mapper.InternalDataStore
 		{
 			SqlBuilder<TModel> builder = new InsertBuilder<TModel>(model, true);
 			var entry = builder.Build();
-			return SqlExecute(entry.Sql, entry.Parameters);
+			return SqlExecute(entry.ToString(), entry.Parameters);
 		}
 
 		public Int32 ExecuteModify<TModel>(TModel model, Expression<Func<TModel, Boolean>> where = default(Expression<Func<TModel, Boolean>>)) where TModel : PropertyMonitor, new()
 		{
 			SqlBuilder<TModel> builder = new UpdateBuilder<TModel>(model, where);
 			var entry = builder.Build();
-			return SqlExecute(entry.Sql, entry.Parameters);
+			return SqlExecute(entry.ToString(), entry.Parameters);
 		}
 
 		private Int32 SqlExecute(String sqlStr, IEnumerable<ParameterMapper> parameters = default(IEnumerable<ParameterMapper>), CommandType commandType = CommandType.Text)
 		{
 			Open();
-			using (MySqlCommand cmd = _connection.CreateCommand())
+			using (DbCommand cmd = _connection.CreateCommand())
 			{
 				if (UseTransaction)
 				{
@@ -111,7 +111,7 @@ namespace NewLibCore.Data.Mapper.InternalDataStore
 			Open();
 			try
 			{
-				using (MySqlCommand cmd = _connection.CreateCommand())
+				using (DbCommand cmd = _connection.CreateCommand())
 				{
 					if (UseTransaction)
 					{
@@ -139,7 +139,7 @@ namespace NewLibCore.Data.Mapper.InternalDataStore
 		public List<TModel> Find<TModel>(String sqlStr, IEnumerable<ParameterMapper> parameters = default(IEnumerable<ParameterMapper>), CommandType commandType = CommandType.Text) where TModel : class, new()
 		{
 			Open();
-			using (MySqlCommand cmd = _connection.CreateCommand())
+			using (DbCommand cmd = _connection.CreateCommand())
 			{
 				if (UseTransaction)
 				{

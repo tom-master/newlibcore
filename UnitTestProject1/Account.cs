@@ -9,6 +9,8 @@ namespace UnitTestProject1
 		{
 		}
 
+		public String Name { get; set; }
+
 		public System.Int32 Id { get; internal set; }
 		public System.Boolean IsDeleted { get; internal set; }
 		public System.Boolean IsDisable { get; internal set; }

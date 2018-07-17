@@ -10,7 +10,7 @@ using NewLibCore.Data.Mapper.MapperExtension;
 
 namespace NewLibCore.Data.Mapper
 {
-	internal class InsertBuilder<TModel>: SqlBuilder<TModel> where TModel : class, new()
+	internal class InsertBuilder<TModel> : SqlBuilder<TModel> where TModel : class, new()
 	{
 		private Boolean _isVerifyModel;
 
@@ -19,9 +19,9 @@ namespace NewLibCore.Data.Mapper
 			_isVerifyModel = isVerifyModel;
 		}
 
-		protected internal override BuildEntry Build()
+		protected internal override BuildEntry<TModel> Build()
 		{
-			var builderExtension = new BuilderExtension<TModel>();
+			var buildEntry = new BuildEntry<TModel>();
 
 			if (_isVerifyModel)
 			{
@@ -29,14 +29,13 @@ namespace NewLibCore.Data.Mapper
 			}
 
 			var columns = GetColumns();
-			builderExtension.Append($@" INSERT {ModelType.Name} ({String.Join(",", columns.Select(c => c.Name))} ) VALUES ({String.Join(",", columns.Select(key => $@"@{key.Name}"))})");
-			var entry = builderExtension.GetBuildEntry();
+			buildEntry.Append($@" INSERT {ModelType.Name} ({String.Join(",", columns.Select(c => c.Name))} ) VALUES ({String.Join(",", columns.Select(key => $@"@{key.Name}"))})");
 
 			foreach (var item in columns.Select(c => new ParameterMapper($@"@{c.Name}", c.GetValue(ModelInstance))))
 			{
-				entry.Parameters.Add(item);
+				buildEntry.Parameters.Add(item);
 			}
-			return entry;
+			return buildEntry;
 		}
 
 		private IEnumerable<PropertyInfo> GetColumns()
