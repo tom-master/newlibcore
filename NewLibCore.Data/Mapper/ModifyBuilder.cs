@@ -6,11 +6,11 @@ using NewLibCore.Data.Mapper.PropertyExtension;
 
 namespace NewLibCore.Data.Mapper
 {
-	internal class UpdateBuilder<TModel>: SqlBuilder<TModel> where TModel : PropertyMonitor, new()
+	internal class ModifyBuilder<TModel>: SqlBuilder<TModel> where TModel : PropertyMonitor, new()
 	{
 		private Expression<Func<TModel, Boolean>> _where;
 
-		public UpdateBuilder(TModel model, Expression<Func<TModel, Boolean>> where = null) : base(model)
+		public ModifyBuilder(TModel model, Expression<Func<TModel, Boolean>> where = null) : base(model)
 		{
 			_where = where;
 		}

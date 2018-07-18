@@ -10,11 +10,11 @@ using NewLibCore.Data.Mapper.MapperExtension;
 
 namespace NewLibCore.Data.Mapper
 {
-	internal class InsertBuilder<TModel> : SqlBuilder<TModel> where TModel : class, new()
+	internal class AddBuilder<TModel> : SqlBuilder<TModel> where TModel : class, new()
 	{
 		private Boolean _isVerifyModel;
 
-		public InsertBuilder(TModel model, Boolean isVerifyModel = false) : base(model)
+		public AddBuilder(TModel model, Boolean isVerifyModel = false) : base(model)
 		{
 			_isVerifyModel = isVerifyModel;
 		}
@@ -61,6 +61,7 @@ namespace NewLibCore.Data.Mapper
 				foreach (var validateItem in validateBases)
 				{
 					VerifyPropertyValue(propertyItem, validateItem, propertyItem.GetValue(ModelInstance));
+
 					var defaultValueAttribute = validateItem as PropertyDefaultValueAttribute;
 					if (defaultValueAttribute != null)
 					{
@@ -89,7 +90,7 @@ namespace NewLibCore.Data.Mapper
 		{
 			var validateAttributes = propertyInfo.GetCustomAttributes<ValidateBase>(true);
 
-			if (VerifyTheAttributeIsDuplicate(validateAttributes))
+			if (validateAttributes.GroupBy(g => g.Order).Where(w => w.Count() > 1).Any())
 			{
 				throw new Exception($@"{propertyInfo.Name} 中使用了多个优先级相同的特性");
 			}
@@ -97,17 +98,13 @@ namespace NewLibCore.Data.Mapper
 			return validateAttributes.OrderByDescending(o => o.Order).ToList();
 		}
 
-		private Boolean VerifyTheAttributeIsDuplicate(IEnumerable<ValidateBase> validates)
-		{
-			return validates.GroupBy(g => g.Order).Where(w => w.Count() > 1).Any();
-		}
+	 
 
 		private void VerifyPropertyValue(PropertyInfo propertyInfo, ValidateBase validate, Object value)
 		{
 			if (!validate.IsValidate(value))
-			{
-				var reason = validate.FailReason($@"{propertyInfo.DeclaringType.FullName}.{propertyInfo.Name}");
-				throw new Exception(reason);
+			{ 
+				throw new Exception(validate.FailReason($@"{propertyInfo.DeclaringType.FullName}.{propertyInfo.Name}"));
 			}
 		}
 
