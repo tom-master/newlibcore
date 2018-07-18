@@ -10,24 +10,23 @@ namespace NewLibCore.Data.Mapper.MapperExtension
 
 		public PropertyDefaultValueAttribute(Type type, Object value)
 		{
-			_type = type ?? throw new ArgumentException($@"{nameof(type)} is null");
-			_value = value ?? throw new ArgumentException($@"{nameof(value)} is null");
+			_type = type ?? throw new ArgumentException($@"{nameof(type)} 不能为空");
+			_value = value ?? throw new ArgumentException($@"{nameof(value)} 不能为空");
 		}
 
 		public PropertyDefaultValueAttribute(Type type)
 		{
-
-			if (type == null) 
+			if (type == null)
 			{
-				throw new ArgumentException($@"{nameof(type)} is null");
-			} 
+				throw new ArgumentException($@"{nameof(type)} 不能为空");
+			}
 
 			if (type.BaseType == typeof(ValueType))
 			{
 				_value = 0;
 			}
 			else
-			{ 
+			{
 				if (type == typeof(String))
 				{
 					_value = "";
@@ -66,7 +65,7 @@ namespace NewLibCore.Data.Mapper.MapperExtension
 
 		public override String FailReason(String fieldName)
 		{
-			return $@"{fieldName}的默认值类型转换失败";
+			return $@"{fieldName} 的默认值类型转换失败";
 		}
 
 		public override bool IsValidate(object value)

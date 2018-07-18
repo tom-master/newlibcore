@@ -79,14 +79,14 @@ namespace NewLibCore.Data.Mapper.InternalDataStore
 			return SqlExecute(entry.ToString(), entry.Parameters);
 		}
 
-		public Int32 ExecuteModify<TModel>(TModel model, Expression<Func<TModel, Boolean>> where = default(Expression<Func<TModel, Boolean>>)) where TModel : PropertyMonitor, new()
+		public Int32 ExecuteModify<TModel>(TModel model, Expression<Func<TModel, Boolean>> where = null) where TModel : PropertyMonitor, new()
 		{
 			SqlBuilder<TModel> builder = new ModifyBuilder<TModel>(model, where);
 			var entry = builder.Build();
 			return SqlExecute(entry.ToString(), entry.Parameters);
 		}
 
-		private Int32 SqlExecute(String sqlStr, IEnumerable<ParameterMapper> parameters = default(IEnumerable<ParameterMapper>), CommandType commandType = CommandType.Text)
+		private Int32 SqlExecute(String sqlStr, IEnumerable<ParameterMapper> parameters =null, CommandType commandType = CommandType.Text)
 		{
 			Open();
 			using (DbCommand cmd = _connection.CreateCommand())
@@ -107,7 +107,7 @@ namespace NewLibCore.Data.Mapper.InternalDataStore
 			}
 		}
 
-		public TValue FindSingleValue<TValue>(String sqlStr, IEnumerable<ParameterMapper> parameters = default(IEnumerable<ParameterMapper>), CommandType commandType = CommandType.Text)
+		public TValue FindSingleValue<TValue>(String sqlStr, IEnumerable<ParameterMapper> parameters = null, CommandType commandType = CommandType.Text)
 		{
 			Open();
 			try
@@ -137,7 +137,7 @@ namespace NewLibCore.Data.Mapper.InternalDataStore
 			}
 		}
 
-		public List<TModel> Find<TModel>(String sqlStr, IEnumerable<ParameterMapper> parameters = default(IEnumerable<ParameterMapper>), CommandType commandType = CommandType.Text) where TModel : class, new()
+		public List<TModel> Find<TModel>(String sqlStr, IEnumerable<ParameterMapper> parameters = null, CommandType commandType = CommandType.Text) where TModel : class, new()
 		{
 			Open();
 			using (DbCommand cmd = _connection.CreateCommand())
@@ -161,7 +161,7 @@ namespace NewLibCore.Data.Mapper.InternalDataStore
 			}
 		}
 
-		public TModel FindOne<TModel>(String sqlStr, IEnumerable<ParameterMapper> parameters = default(IEnumerable<ParameterMapper>), CommandType commandType = CommandType.Text) where TModel : class, new()
+		public TModel FindOne<TModel>(String sqlStr, IEnumerable<ParameterMapper> parameters = null, CommandType commandType = CommandType.Text) where TModel : class, new()
 		{
 			return Find<TModel>(sqlStr, parameters, commandType).FirstOrDefault();
 		}
