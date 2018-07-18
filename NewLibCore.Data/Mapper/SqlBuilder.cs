@@ -31,6 +31,5 @@ namespace NewLibCore.Data.Mapper
 		}
 
 		protected internal abstract BuildEntry<TModel> Build();
-
 	}
 }
