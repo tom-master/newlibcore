@@ -14,6 +14,8 @@ namespace NewLibCore.Data.Mapper
 		private StringBuilder _builder = new StringBuilder();
 		private RelationType _temp;
 
+		internal IList<ParameterMapper> Parameters { get; } = new List<ParameterMapper>();
+
 		internal void BuildWhere(Expression expression)
 		{
 			if (!_builder.ToString().Trim().Contains("WHERE"))
@@ -124,7 +126,7 @@ namespace NewLibCore.Data.Mapper
 						if (memberExp.Expression.NodeType == ExpressionType.Parameter)
 						{
 							var memberName = memberExp.Member.Name;
-							var newParameterName = $@"{memberName}{GetTimeStamp()}";
+							var newParameterName = $@"{memberName}{Guid.NewGuid().ToString().Replace("-", "")}";
 							if (_operationalCharacterStack.Count == 0)
 							{
 								if (memberExp.Type == typeof(Boolean))
@@ -185,18 +187,6 @@ namespace NewLibCore.Data.Mapper
 		internal void Append(String value)
 		{
 			_builder.Append(value);
-		}
-
-		internal void ResetBuilder()
-		{
-			_builder.Clear();
-		}
-
-		internal IList<ParameterMapper> Parameters { get; } = new List<ParameterMapper>();
-
-		private string GetTimeStamp()
-		{
-			return Guid.NewGuid().ToString().Replace("-", "");
 		}
 
 		public override string ToString()
