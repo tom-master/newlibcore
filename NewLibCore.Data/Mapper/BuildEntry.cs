@@ -81,8 +81,6 @@ namespace NewLibCore.Data.Mapper
 						BuildWhere(binaryExp.Right);
 					}
 					break;
-				case ExpressionType.Invoke:
-					break;
 				case ExpressionType.Lambda:
 					{
 						var lamdbaExp = (LambdaExpression)expression;
@@ -171,8 +169,6 @@ namespace NewLibCore.Data.Mapper
 						BuildWhere(newExpression);
 						break;
 					}
-				case ExpressionType.Or:
-					break;
 				case ExpressionType.OrElse:
 					{
 						var binaryExp = (BinaryExpression)expression;
