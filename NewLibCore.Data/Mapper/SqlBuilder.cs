@@ -28,12 +28,9 @@ namespace NewLibCore.Data.Mapper
 				ModelType = model.GetType();
 			}
 
-
-
 		}
 
 		protected internal abstract BuildEntry<TModel> Build();
-
 
 	}
 }

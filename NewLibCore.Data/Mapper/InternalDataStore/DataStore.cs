@@ -71,7 +71,6 @@ namespace NewLibCore.Data.Mapper.InternalDataStore
 
 		#endregion
 
-
 		public Int32 ExecuteAdd<TModel>(TModel model) where TModel : class, new()
 		{
 			SqlBuilder<TModel> builder = new AddBuilder<TModel>(model, true);

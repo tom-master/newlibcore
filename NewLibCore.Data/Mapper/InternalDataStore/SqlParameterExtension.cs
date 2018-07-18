@@ -9,7 +9,6 @@ namespace NewLibCore.Data.Mapper.InternalDataStore
 {
 	public class ParameterMapper
 	{
-
 		public ParameterMapper(String key, Object value)
 		{
 			Key = key;
