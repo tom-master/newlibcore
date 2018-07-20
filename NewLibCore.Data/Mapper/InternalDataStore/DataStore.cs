@@ -16,6 +16,7 @@ namespace NewLibCore.Data.Mapper.InternalDataStore
 		private DbConnection _connection;
 		private DbTransaction _dataTransaction;
 		private Boolean disposed = false;
+		private Boolean _useTransaction;
 
 		public DataStore(String connection)
 		{
@@ -26,18 +27,16 @@ namespace NewLibCore.Data.Mapper.InternalDataStore
 
 		public void OpenTransaction()
 		{
-			UseTransaction = true;
+			_useTransaction = true;
 		}
-
-		private Boolean UseTransaction { get; set; }
 
 		private DbTransaction GetNonceTransaction()
 		{
-			if (UseTransaction)
+			if (_useTransaction)
 			{
 				if (_dataTransaction == null)
 				{
-					UseTransaction = true;
+					_useTransaction = true;
 					_dataTransaction = _connection.BeginTransaction();
 				}
 				return _dataTransaction;
@@ -47,7 +46,7 @@ namespace NewLibCore.Data.Mapper.InternalDataStore
 
 		public void Commit()
 		{
-			if (UseTransaction)
+			if (_useTransaction)
 			{
 				_dataTransaction.Commit();
 			}
@@ -59,7 +58,7 @@ namespace NewLibCore.Data.Mapper.InternalDataStore
 
 		public void Rollback()
 		{
-			if (UseTransaction)
+			if (_useTransaction)
 			{
 				_dataTransaction?.Rollback();
 			}
@@ -90,7 +89,7 @@ namespace NewLibCore.Data.Mapper.InternalDataStore
 			Open();
 			using (DbCommand cmd = _connection.CreateCommand())
 			{
-				if (UseTransaction)
+				if (_useTransaction)
 				{
 					cmd.Transaction = GetNonceTransaction();
 				}
@@ -113,7 +112,7 @@ namespace NewLibCore.Data.Mapper.InternalDataStore
 			{
 				using (DbCommand cmd = _connection.CreateCommand())
 				{
-					if (UseTransaction)
+					if (_useTransaction)
 					{
 						cmd.Transaction = GetNonceTransaction();
 					}
@@ -141,7 +140,7 @@ namespace NewLibCore.Data.Mapper.InternalDataStore
 			Open();
 			using (DbCommand cmd = _connection.CreateCommand())
 			{
-				if (UseTransaction)
+				if (_useTransaction)
 				{
 					cmd.Transaction = GetNonceTransaction();
 				}
