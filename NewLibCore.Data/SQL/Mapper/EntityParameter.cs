@@ -53,7 +53,7 @@ namespace NewLibCore.Data.SQL.Mapper
                 var objType = obj.GetType();
                 if (objType.IsArray || objType.GetGenericTypeDefinition() == typeof(List<>))
                 {
-                    if (objType.GetGenericArguments().Any() && objType.GetGenericArguments()[0] == typeof(String))
+                    if (objType.GetGenericArguments().Any() && objType.GetGenericArguments()[0] == typeof(String)) 
                     {
                         return String.Join(",", ((IList<String>)obj).Select(s => $@"'{s}'"));
                     }
