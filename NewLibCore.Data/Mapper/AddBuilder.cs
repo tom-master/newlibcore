@@ -40,6 +40,9 @@ namespace NewLibCore.Data.Mapper
 
 		private IEnumerable<PropertyInfo> GetColumns()
 		{
+
+			var prop = ModelType.GetProperty("RoleIds");
+			
 			foreach (var item in ModelType.GetProperties(BindingFlags.Instance | BindingFlags.Public).Where(w => w.PropertyType.Name != "IList`1" && w.CustomAttributes.Count() != 0))
 			{
 				yield return item;
@@ -98,12 +101,12 @@ namespace NewLibCore.Data.Mapper
 			return validateAttributes.OrderByDescending(o => o.Order).ToList();
 		}
 
-	 
+
 
 		private void VerifyPropertyValue(PropertyInfo propertyInfo, ValidateBase validate, Object value)
 		{
 			if (!validate.IsValidate(value))
-			{ 
+			{
 				throw new Exception(validate.FailReason($@"{propertyInfo.DeclaringType.FullName}.{propertyInfo.Name}"));
 			}
 		}

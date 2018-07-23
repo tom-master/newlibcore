@@ -11,7 +11,6 @@ namespace NewLibCore.Data.Mapper.DataExtension
 		/// <summary>
 		/// 获取列表
 		/// </summary>
-		/// <returns></returns>
 		public static IList<T> AsList<T>(this DataTable dataTable) where T : class, new()
 		{
 			if (dataTable == null || dataTable.Rows.Count == 0)
@@ -25,7 +24,6 @@ namespace NewLibCore.Data.Mapper.DataExtension
 		/// <summary>
 		/// 获取单值
 		/// </summary>
-		/// <returns></returns>
 		public static T AsSignal<T>(this DataTable dataTable) where T : class, new()
 		{
 			return AsList<T>(dataTable).FirstOrDefault();
