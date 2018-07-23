@@ -3,7 +3,7 @@
 namespace NewLibCore.Data.Mapper.MapperExtension
 {
 
-	public class PropertyRequiredAttribute: ValidateBase
+	public class PropertyRequiredAttribute : ValidateBase
 	{
 		public override Int32 Order
 		{
