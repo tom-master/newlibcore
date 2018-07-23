@@ -19,18 +19,13 @@ namespace NewLibCore.Data.Mapper
 			_isVerifyModel = isVerifyModel;
 		}
 
-		protected override IList<PropertyInfo> GetProperty()
-		{
-			return ModelType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
-		}
-
 		protected internal override BuildEntry<TModel> Build()
 		{
 			var buildEntry = new BuildEntry<TModel>();
 
 			if (_isVerifyModel)
 			{
-				ValidateModel();
+				ValidateModel(ModelType.GetProperties(BindingFlags.Instance | BindingFlags.Public));
 			}
 
 			var columns = GetColumns();

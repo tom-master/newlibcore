@@ -32,9 +32,9 @@ namespace NewLibCore.Data.Mapper
 
 		protected internal abstract BuildEntry<TModel> Build();
 
-		protected void ValidateModel()
+		protected void ValidateModel(IList<PropertyInfo> propertyInfos)
 		{
-			var propertys = GetProperty();
+			var propertys = propertyInfos;
 			foreach (var propertyItem in propertys)
 			{
 				if (propertyItem.CustomAttributes.Count() == 0)
@@ -50,17 +50,10 @@ namespace NewLibCore.Data.Mapper
 					var defaultValueAttribute = validateItem as PropertyDefaultValueAttribute;
 					if (defaultValueAttribute != null)
 					{
-						var value = defaultValueAttribute.Value;
-						if (defaultValueAttribute.Value != propertyItem.GetValue(ModelInstance))
+						Object value = null;
+						if (propertyItem.GetValue(ModelInstance) == null || String.IsNullOrEmpty(propertyItem.GetValue(ModelInstance) + ""))
 						{
-							if (defaultValueAttribute.Type == typeof(DateTime))
-							{
-								value = defaultValueAttribute.Value;
-							}
-							else
-							{
-								value = propertyItem.GetValue(ModelInstance) ?? value;
-							}
+							value = defaultValueAttribute.Value;
 						}
 
 						propertyItem.SetValue(ModelInstance, value);
@@ -68,8 +61,6 @@ namespace NewLibCore.Data.Mapper
 				}
 			}
 		}
-
-		protected abstract IList<PropertyInfo> GetProperty();
 
 		#region private
 
@@ -84,8 +75,6 @@ namespace NewLibCore.Data.Mapper
 
 			return validateAttributes.OrderByDescending(o => o.Order).ToList();
 		}
-
-
 
 		private void VerifyPropertyValue(PropertyInfo propertyInfo, ValidateBase validate, Object value)
 		{

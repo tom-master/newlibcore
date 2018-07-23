@@ -11,14 +11,14 @@ namespace UnitTestProject1
 		{
 		}
 
-		[InputRange(2, 6)]
+		[PropertyDefaultValue(typeof(String), "wasd123")]
 		public String Name { get; set; }
 
 		public System.Int32 Id { get; internal set; }
 		public System.Boolean IsDeleted { get; internal set; }
 		public System.Boolean IsDisable { get; internal set; }
 
-		[PropertyDefaultValue(typeof(Boolean))]
+
 		public Boolean IsOnline { get; internal set; }
 
 		public IList<Int32> RoleIds { get; internal set; }
@@ -31,7 +31,7 @@ namespace UnitTestProject1
 
 		internal void ModifyName()
 		{
-			Name = "wasd";
+			Name = "";
 			OnPropertyChanged(new PropertyArgs(nameof(Name), Name));
 		}
 	}

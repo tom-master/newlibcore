@@ -18,12 +18,7 @@ namespace NewLibCore.Data.Mapper
 			_where = where;
 			_isValidate = isValidate;
 		}
-
-		protected override IList<PropertyInfo> GetProperty()
-		{
-			return ModelInstance.Args.Select(s => s.PropertyInfo).ToList();
-		}
-
+ 
 		protected internal override BuildEntry<TModel> Build()
 		{
 			if (!ModelInstance.Args.Any())
@@ -34,7 +29,7 @@ namespace NewLibCore.Data.Mapper
 			var columns = ModelInstance.Args;
 			if (_isValidate)
 			{
-				ValidateModel();
+				ValidateModel(ModelInstance.Args.Select(s => s.PropertyInfo).ToList());
 			}
 
 			var buildEntry = new BuildEntry<TModel>();
