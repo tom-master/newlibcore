@@ -19,13 +19,18 @@ namespace NewLibCore.Data.Mapper
 			_isVerifyModel = isVerifyModel;
 		}
 
+		protected override IList<PropertyInfo> GetProperty()
+		{
+			return ModelType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
+		}
+
 		protected internal override BuildEntry<TModel> Build()
 		{
 			var buildEntry = new BuildEntry<TModel>();
 
 			if (_isVerifyModel)
 			{
-				VerifyModel();
+				ValidateModel();
 			}
 
 			var columns = GetColumns();
@@ -40,77 +45,11 @@ namespace NewLibCore.Data.Mapper
 
 		private IEnumerable<PropertyInfo> GetColumns()
 		{
-
-			var prop = ModelType.GetProperty("RoleIds");
-			
 			foreach (var item in ModelType.GetProperties(BindingFlags.Instance | BindingFlags.Public).Where(w => w.PropertyType.Name != "IList`1" && w.CustomAttributes.Count() != 0))
 			{
 				yield return item;
 			}
 		}
 
-
-		protected void VerifyModel()
-		{
-			var propertys = ModelType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
-			foreach (var propertyItem in propertys)
-			{
-				if (propertyItem.CustomAttributes.Count() == 0)
-				{
-					continue;
-				}
-
-				var validateBases = GetValidateAttributes(propertyItem);
-				foreach (var validateItem in validateBases)
-				{
-					VerifyPropertyValue(propertyItem, validateItem, propertyItem.GetValue(ModelInstance));
-
-					var defaultValueAttribute = validateItem as PropertyDefaultValueAttribute;
-					if (defaultValueAttribute != null)
-					{
-						var value = defaultValueAttribute.Value;
-						if (defaultValueAttribute.Value != propertyItem.GetValue(ModelInstance))
-						{
-							if (defaultValueAttribute.Type == typeof(DateTime))
-							{
-								value = defaultValueAttribute.Value;
-							}
-							else
-							{
-								value = propertyItem.GetValue(ModelInstance) ?? value;
-							}
-						}
-
-						propertyItem.SetValue(ModelInstance, value);
-					}
-				}
-			}
-		}
-
-		#region private
-
-		private IList<ValidateBase> GetValidateAttributes(PropertyInfo propertyInfo)
-		{
-			var validateAttributes = propertyInfo.GetCustomAttributes<ValidateBase>(true);
-
-			if (validateAttributes.GroupBy(g => g.Order).Where(w => w.Count() > 1).Any())
-			{
-				throw new Exception($@"{propertyInfo.Name} 中使用了多个优先级相同的特性");
-			}
-
-			return validateAttributes.OrderByDescending(o => o.Order).ToList();
-		}
-
-
-
-		private void VerifyPropertyValue(PropertyInfo propertyInfo, ValidateBase validate, Object value)
-		{
-			if (!validate.IsValidate(value))
-			{
-				throw new Exception(validate.FailReason($@"{propertyInfo.DeclaringType.FullName}.{propertyInfo.Name}"));
-			}
-		}
-
-		#endregion
 	}
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace NewLibCore.Data.Mapper.PropertyExtension
 {
@@ -9,6 +10,7 @@ namespace NewLibCore.Data.Mapper.PropertyExtension
 		{
 			Args = new List<PropertyArgs>();
 		}
+		public IList<PropertyArgs> Args { get; }
 
 		protected void OnPropertyChanged(params PropertyArgs[] propertyNames)
 		{
@@ -17,16 +19,12 @@ namespace NewLibCore.Data.Mapper.PropertyExtension
 				return;
 			}
 
-			var currentTypeFullName = GetType().FullName;
-
 			for (int i = 0; i < propertyNames.Length; i++)
 			{
-				var instanceName = $@"{currentTypeFullName}.{propertyNames[i].PropertyName}";
-				Args.Add(new PropertyArgs(propertyNames[i].PropertyName, propertyNames[i].PropertyValue));
+				propertyNames[i].SetPropertyInfo(GetType());
+				Args.Add(propertyNames[i]);
 			}
 		}
-
-		public IList<PropertyArgs> Args { get; private set; }
 	}
 }
 
@@ -34,18 +32,25 @@ public class PropertyArgs
 {
 	internal String PropertyName { get; }
 
-	public Object PropertyValue { get; }
+	internal PropertyInfo PropertyInfo { get; private set; }
+
+	internal Object PropertyValue { get; }
 
 	public PropertyArgs(String propertyName, Object propertyValue)
 	{
+		if (String.IsNullOrEmpty(propertyName) || propertyValue == null)
+		{
+			throw new Exception();
+		}
+
 		PropertyName = propertyName;
 		PropertyValue = propertyValue;
 	}
 
-	public String GetArgumentName()
+
+	internal void SetPropertyInfo(Type propertyType)
 	{
-		var lastIndex = PropertyName.LastIndexOf(".");
-		return PropertyName.Substring(lastIndex + 1);
+		PropertyInfo = propertyType.GetProperty(PropertyName);
 	}
 }
 

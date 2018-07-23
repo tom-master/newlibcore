@@ -31,5 +31,70 @@ namespace NewLibCore.Data.Mapper
 		}
 
 		protected internal abstract BuildEntry<TModel> Build();
+
+		protected void ValidateModel()
+		{
+			var propertys = GetProperty();
+			foreach (var propertyItem in propertys)
+			{
+				if (propertyItem.CustomAttributes.Count() == 0)
+				{
+					continue;
+				}
+
+				var validateBases = GetValidateAttributes(propertyItem);
+				foreach (var validateItem in validateBases)
+				{
+					VerifyPropertyValue(propertyItem, validateItem, propertyItem.GetValue(ModelInstance));
+
+					var defaultValueAttribute = validateItem as PropertyDefaultValueAttribute;
+					if (defaultValueAttribute != null)
+					{
+						var value = defaultValueAttribute.Value;
+						if (defaultValueAttribute.Value != propertyItem.GetValue(ModelInstance))
+						{
+							if (defaultValueAttribute.Type == typeof(DateTime))
+							{
+								value = defaultValueAttribute.Value;
+							}
+							else
+							{
+								value = propertyItem.GetValue(ModelInstance) ?? value;
+							}
+						}
+
+						propertyItem.SetValue(ModelInstance, value);
+					}
+				}
+			}
+		}
+
+		protected abstract IList<PropertyInfo> GetProperty();
+
+		#region private
+
+		private IList<ValidateBase> GetValidateAttributes(PropertyInfo propertyInfo)
+		{
+			var validateAttributes = propertyInfo.GetCustomAttributes<ValidateBase>(true);
+
+			if (validateAttributes.GroupBy(g => g.Order).Where(w => w.Count() > 1).Any())
+			{
+				throw new Exception($@"{propertyInfo.Name} 中使用了多个优先级相同的特性");
+			}
+
+			return validateAttributes.OrderByDescending(o => o.Order).ToList();
+		}
+
+
+
+		private void VerifyPropertyValue(PropertyInfo propertyInfo, ValidateBase validate, Object value)
+		{
+			if (!validate.IsValidate(value))
+			{
+				throw new Exception(validate.FailReason($@"{propertyInfo.DeclaringType.FullName}.{propertyInfo.Name}"));
+			}
+		}
+
+		#endregion
 	}
 }

@@ -1,18 +1,27 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using NewLibCore.Data.Mapper.InternalDataStore;
 using NewLibCore.Data.Mapper.PropertyExtension;
 
 namespace NewLibCore.Data.Mapper
 {
-	internal class ModifyBuilder<TModel>: SqlBuilder<TModel> where TModel : PropertyMonitor, new()
+	internal class ModifyBuilder<TModel> : SqlBuilder<TModel> where TModel : PropertyMonitor, new()
 	{
 		private Expression<Func<TModel, Boolean>> _where;
+		private Boolean _isValidate;
 
-		public ModifyBuilder(TModel model, Expression<Func<TModel, Boolean>> where = null) : base(model)
+		public ModifyBuilder(TModel model, Expression<Func<TModel, Boolean>> where = null, Boolean isValidate = false) : base(model)
 		{
 			_where = where;
+			_isValidate = isValidate;
+		}
+
+		protected override IList<PropertyInfo> GetProperty()
+		{
+			return ModelInstance.Args.Select(s => s.PropertyInfo).ToList();
 		}
 
 		protected internal override BuildEntry<TModel> Build()
@@ -23,14 +32,19 @@ namespace NewLibCore.Data.Mapper
 			}
 
 			var columns = ModelInstance.Args;
+			if (_isValidate)
+			{
+				ValidateModel();
+			}
+
 			var buildEntry = new BuildEntry<TModel>();
-			buildEntry.Append($@"UPDATE {ModelType.Name} SET {String.Join(",", columns.Select(s => $@"{s.GetArgumentName()}=@{s.GetArgumentName()}"))}");
+			buildEntry.Append($@"UPDATE {ModelType.Name} SET {String.Join(",", columns.Select(s => $@"{s.PropertyName}=@{s.PropertyName}"))}");
 			if (_where != null)
 			{
 				buildEntry.BuildWhere(_where);
 			}
-			 
-			foreach (var item in columns.Select(s => new ParameterMapper($@"@{s.GetArgumentName()}", s.PropertyValue)))
+
+			foreach (var item in columns.Select(s => new ParameterMapper($@"@{s.PropertyName}", s.PropertyValue)))
 			{
 				buildEntry.Parameters.Add(item);
 			}
