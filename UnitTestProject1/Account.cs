@@ -11,17 +11,25 @@ namespace UnitTestProject1
 		{
 		}
 
-		[DateTimeDefaultValue()]
-		public DateTime AddTime { get; internal set; }
+		public Int32 Id { get; internal set; }
 
-		[PropertyDefaultValue(typeof(String), "xiaofan")]
+		[PropertyRequired, InputRange(2, 6)]
 		public String Name { get; set; }
 
-		public System.Int32 Id { get; internal set; }
-		public System.Boolean IsDeleted { get; internal set; }
-		public System.Boolean IsDisable { get; internal set; }
+		[PropertyRequired, InputRange(6, 12)]
+		public String Password { get; set; }
 
+		[PropertyDefaultValue(typeof(Boolean), false)]
 		public Boolean IsOnline { get; internal set; }
+
+		[PropertyDefaultValue(typeof(Boolean), false)]
+		public Boolean IsDeleted { get; internal set; }
+
+		[PropertyDefaultValue(typeof(Boolean), false)]
+		public Boolean IsDisable { get; internal set; }
+
+		[DateTimeDefaultValue]
+		public DateTime AddTime { get; internal set; }
 
 		public IList<Int32> RoleIds { get; internal set; }
 
@@ -41,27 +49,6 @@ namespace UnitTestProject1
 		{
 			AddTime = DateTime.Now.AddDays(10);
 			OnPropertyChanged(new PropertyArgs(nameof(AddTime), AddTime));
-		}
-	}
-
-	internal class Account2 : PropertyMonitor
-	{
-		public Account2()
-		{
-		}
-
-		public String Name { get; set; }
-
-		public System.Int32 Id { get; internal set; }
-		public System.Boolean IsDeleted { get; internal set; }
-		public System.Boolean IsDisable { get; internal set; }
-
-		public Boolean IsOnline { get; internal set; }
-
-		internal void Offline()
-		{
-			IsOnline = true;
-			//base.OnPropertyChanged(new PropertyArgs(nameof(IsOnline), IsOnline));
 		}
 	}
 }
