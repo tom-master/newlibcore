@@ -21,7 +21,7 @@ namespace NewLibCore.Data.Mapper
 
 		protected internal override BuildEntry<TModel> Build()
 		{
-			var buildEntry = new BuildEntry<TModel>();
+			var buildEntry = new BuildEntry<TModel>(ModelInstance);
 
 			if (_isVerifyModel)
 			{
@@ -35,6 +35,7 @@ namespace NewLibCore.Data.Mapper
 			{
 				buildEntry.Parameters.Add(item);
 			}
+			buildEntry.Format()
 			return buildEntry;
 		}
 

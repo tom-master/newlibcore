@@ -11,13 +11,15 @@ namespace UnitTestProject1
 		{
 		}
 
-		[PropertyDefaultValue(typeof(String), "wasd123")]
+		[DateTimeDefaultValue()]
+		public DateTime AddTime { get; internal set; }
+
+		[PropertyDefaultValue(typeof(String), "xiaofan")]
 		public String Name { get; set; }
 
 		public System.Int32 Id { get; internal set; }
 		public System.Boolean IsDeleted { get; internal set; }
 		public System.Boolean IsDisable { get; internal set; }
-
 
 		public Boolean IsOnline { get; internal set; }
 
@@ -31,8 +33,14 @@ namespace UnitTestProject1
 
 		internal void ModifyName()
 		{
-			Name = "";
+			Name = "123456";
 			OnPropertyChanged(new PropertyArgs(nameof(Name), Name));
+		}
+
+		internal void ModifyTime()
+		{
+			AddTime = DateTime.Now.AddDays(10);
+			OnPropertyChanged(new PropertyArgs(nameof(AddTime), AddTime));
 		}
 	}
 

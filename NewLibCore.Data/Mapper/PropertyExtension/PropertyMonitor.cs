@@ -12,17 +12,17 @@ namespace NewLibCore.Data.Mapper.PropertyExtension
 		}
 		public IList<PropertyArgs> Args { get; }
 
-		protected void OnPropertyChanged(params PropertyArgs[] propertyNames)
+		protected void OnPropertyChanged(params PropertyArgs[] propertyArgs)
 		{
-			if (propertyNames.Length == 0)
+			if (propertyArgs.Length == 0)
 			{
 				return;
 			}
 
-			for (int i = 0; i < propertyNames.Length; i++)
+			for (int i = 0; i < propertyArgs.Length; i++)
 			{
-				propertyNames[i].SetPropertyInfo(GetType());
-				Args.Add(propertyNames[i]);
+				propertyArgs[i].SetPropertyInfo(GetType());
+				Args.Add(propertyArgs[i]);
 			}
 		}
 	}
@@ -34,7 +34,7 @@ public class PropertyArgs
 
 	internal PropertyInfo PropertyInfo { get; private set; }
 
-	internal Object PropertyValue { get; }
+	private Object _propertyValue { get; }
 
 	public PropertyArgs(String propertyName, Object propertyValue)
 	{
@@ -44,13 +44,17 @@ public class PropertyArgs
 		}
 
 		PropertyName = propertyName;
-		PropertyValue = propertyValue;
+		_propertyValue = propertyValue;
 	}
-
 
 	internal void SetPropertyInfo(Type propertyType)
 	{
 		PropertyInfo = propertyType.GetProperty(PropertyName);
+	}
+
+	internal Object GetPropertyValue(Object modelInstance)
+	{
+		return PropertyInfo.GetValue(modelInstance);
 	}
 }
 

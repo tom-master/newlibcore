@@ -18,7 +18,7 @@ namespace NewLibCore.Data.Mapper
 			_where = where;
 			_isValidate = isValidate;
 		}
- 
+
 		protected internal override BuildEntry<TModel> Build()
 		{
 			if (!ModelInstance.Args.Any())
@@ -32,14 +32,14 @@ namespace NewLibCore.Data.Mapper
 				ValidateModel(ModelInstance.Args.Select(s => s.PropertyInfo).ToList());
 			}
 
-			var buildEntry = new BuildEntry<TModel>();
+			var buildEntry = new BuildEntry<TModel>(ModelInstance);
 			buildEntry.Append($@"UPDATE {ModelType.Name} SET {String.Join(",", columns.Select(s => $@"{s.PropertyName}=@{s.PropertyName}"))}");
 			if (_where != null)
 			{
 				buildEntry.BuildWhere(_where);
 			}
 
-			foreach (var item in columns.Select(s => new ParameterMapper($@"@{s.PropertyName}", s.PropertyValue)))
+			foreach (var item in columns.Select(s => new ParameterMapper($@"@{s.PropertyName}", s.GetPropertyValue(ModelInstance))))
 			{
 				buildEntry.Parameters.Add(item);
 			}

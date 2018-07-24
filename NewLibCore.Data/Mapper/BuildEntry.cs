@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 using NewLibCore.Data.Mapper.InternalDataStore;
 
@@ -13,6 +15,12 @@ namespace NewLibCore.Data.Mapper
 		private Stack<String> _operationalCharacterStack = new Stack<String>();
 		private StringBuilder _builder = new StringBuilder();
 		private RelationType _temp;
+		private TModel _model;
+
+		internal BuildEntry(TModel model)
+		{
+			_model = model;
+		}
 
 		internal IList<ParameterMapper> Parameters { get; } = new List<ParameterMapper>();
 
@@ -187,6 +195,14 @@ namespace NewLibCore.Data.Mapper
 		internal void Append(String value)
 		{
 			_builder.Append(value);
+		}
+
+		internal void Format(IList<PropertyInfo> propertyInfos)
+		{
+			foreach (var item in propertyInfos.ToList().Select(c => new ParameterMapper($@"@{c.Name}", c.GetValue(_model))))
+			{
+				Parameters.Add(item);
+			}
 		}
 
 		public override string ToString()

@@ -47,15 +47,18 @@ namespace NewLibCore.Data.Mapper
 				{
 					VerifyPropertyValue(propertyItem, validateItem, propertyItem.GetValue(ModelInstance));
 
-					var defaultValueAttribute = validateItem as PropertyDefaultValueAttribute;
-					if (defaultValueAttribute != null)
+					if (validateItem is PropertyDefaultValueAttribute defaultValueAttribute)
 					{
 						Object value = null;
-						if (propertyItem.GetValue(ModelInstance) == null || String.IsNullOrEmpty(propertyItem.GetValue(ModelInstance) + ""))
+						var propertyInstanceValue = propertyItem.GetValue(ModelInstance);
+						if (String.IsNullOrEmpty(propertyInstanceValue + "") || (propertyInstanceValue.GetType() == typeof(DateTime) && (DateTime)propertyInstanceValue == default(DateTime)))
 						{
 							value = defaultValueAttribute.Value;
 						}
-
+						else
+						{
+							value = propertyInstanceValue;
+						}
 						propertyItem.SetValue(ModelInstance, value);
 					}
 				}
