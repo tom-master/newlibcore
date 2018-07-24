@@ -38,8 +38,8 @@ namespace NewLibCore.Data.Mapper
 			{
 				buildEntry.BuildWhere(_where);
 			}
+			buildEntry.AppendParameter(ModelInstance.Args.Select(s => s.PropertyInfo).ToList());
 
-			buildEntry.Format(ModelInstance.Args.Select(s => s.PropertyInfo).ToList());
 			return buildEntry;
 		}
 	}

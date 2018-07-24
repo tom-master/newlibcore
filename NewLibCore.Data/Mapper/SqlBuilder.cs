@@ -45,7 +45,10 @@ namespace NewLibCore.Data.Mapper
 				var validateBases = GetValidateAttributes(propertyItem);
 				foreach (var validateItem in validateBases)
 				{
-					VerifyPropertyValue(propertyItem, validateItem, propertyItem.GetValue(ModelInstance));
+					if (!validateItem.IsValidate(propertyItem.GetValue(ModelInstance)))
+					{
+						throw new Exception(validateItem.FailReason($@"{propertyItem.DeclaringType.FullName}.{propertyItem.Name}"));
+					}
 
 					if (validateItem is PropertyDefaultValueAttribute defaultValueAttribute)
 					{
@@ -78,15 +81,6 @@ namespace NewLibCore.Data.Mapper
 
 			return validateAttributes.OrderByDescending(o => o.Order).ToList();
 		}
-
-		private void VerifyPropertyValue(PropertyInfo propertyInfo, ValidateBase validate, Object value)
-		{
-			if (!validate.IsValidate(value))
-			{
-				throw new Exception(validate.FailReason($@"{propertyInfo.DeclaringType.FullName}.{propertyInfo.Name}"));
-			}
-		}
-
 		#endregion
 	}
 }

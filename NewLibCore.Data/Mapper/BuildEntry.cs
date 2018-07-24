@@ -14,6 +14,7 @@ namespace NewLibCore.Data.Mapper
 		private Stack<String> _parameterStack = new Stack<String>();
 		private Stack<String> _operationalCharacterStack = new Stack<String>();
 		private StringBuilder _builder = new StringBuilder();
+		private IList<ParameterMapper> _parameters = new List<ParameterMapper>();
 		private RelationType _temp;
 		private TModel _model;
 
@@ -22,7 +23,7 @@ namespace NewLibCore.Data.Mapper
 			_model = model;
 		}
 
-		internal IList<ParameterMapper> Parameters { get; } = new List<ParameterMapper>();
+		internal IList<ParameterMapper> Parameters { get { return _parameters; } }
 
 		internal void BuildWhere(Expression expression)
 		{
@@ -56,7 +57,7 @@ namespace NewLibCore.Data.Mapper
 				case ExpressionType.Constant:
 					{
 						var binaryExp = (ConstantExpression)expression;
-						Parameters.Add(new ParameterMapper($@"@{_parameterStack.Pop()}", binaryExp.Value));
+						_parameters.Add(new ParameterMapper($@"@{_parameterStack.Pop()}", binaryExp.Value));
 					}
 					break;
 				case ExpressionType.Equal:
@@ -163,7 +164,7 @@ namespace NewLibCore.Data.Mapper
 							{
 								result = getter();
 							}
-							Parameters.Add(new ParameterMapper($@"@{_parameterStack.Pop()}", result));
+							_parameters.Add(new ParameterMapper($@"@{_parameterStack.Pop()}", result));
 							break;
 						}
 						break;
@@ -197,11 +198,11 @@ namespace NewLibCore.Data.Mapper
 			_builder.Append(value);
 		}
 
-		internal void Format(IList<PropertyInfo> propertyInfos)
+		internal void AppendParameter(IList<PropertyInfo> propertyInfos)
 		{
 			foreach (var item in propertyInfos.ToList().Select(c => new ParameterMapper($@"@{c.Name}", c.GetValue(_model))))
 			{
-				Parameters.Add(item);
+				_parameters.Add(item);
 			}
 		}
 

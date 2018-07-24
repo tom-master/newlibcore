@@ -30,7 +30,7 @@ namespace NewLibCore.Data.Mapper
 
 			var columns = GetColumns();
 			buildEntry.Append($@" INSERT {ModelType.Name} ({String.Join(",", columns.Select(c => c.Name))} ) VALUES ({String.Join(",", columns.Select(key => $@"@{key.Name}"))})");
-			buildEntry.Format(columns.ToList());
+			buildEntry.AppendParameter(columns.ToList());
 			return buildEntry;
 		}
 
