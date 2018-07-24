@@ -49,28 +49,5 @@ namespace UnitTestProject1
 				}
 			}
 		}
-
-
-
-
-		//public class classA
-		//{
-		//	public string a { get; set; }
-
-		//	public Int32 b { get; set; }
-		//}
-
-
-		//public class ClassB: PropertyMonitor
-		//{
-		//	public String C { get; set; }
-
-		//	public String D { get; set; }
-
-		//	public void ModelC()
-		//	{
-		//		OnPropertyChanged(new PropertyArgs(nameof(C), "456"));
-		//	}
-		//}
 	}
 }
