@@ -39,10 +39,7 @@ namespace NewLibCore.Data.Mapper
 				buildEntry.BuildWhere(_where);
 			}
 
-			foreach (var item in columns.Select(s => new ParameterMapper($@"@{s.PropertyName}", s.GetPropertyValue(ModelInstance))))
-			{
-				buildEntry.Parameters.Add(item);
-			}
+			buildEntry.Format(ModelInstance.Args.Select(s => s.PropertyInfo).ToList());
 			return buildEntry;
 		}
 	}

@@ -30,22 +30,16 @@ namespace NewLibCore.Data.Mapper
 
 			var columns = GetColumns();
 			buildEntry.Append($@" INSERT {ModelType.Name} ({String.Join(",", columns.Select(c => c.Name))} ) VALUES ({String.Join(",", columns.Select(key => $@"@{key.Name}"))})");
-
-			foreach (var item in columns.Select(c => new ParameterMapper($@"@{c.Name}", c.GetValue(ModelInstance))))
-			{
-				buildEntry.Parameters.Add(item);
-			}
-			buildEntry.Format()
+			buildEntry.Format(columns.ToList());
 			return buildEntry;
 		}
 
 		private IEnumerable<PropertyInfo> GetColumns()
 		{
-			foreach (var item in ModelType.GetProperties(BindingFlags.Instance | BindingFlags.Public).Where(w => w.PropertyType.Name != "IList`1" && w.CustomAttributes.Count() != 0))
+			foreach (var item in ModelType.GetProperties(BindingFlags.Instance | BindingFlags.Public).Where(w => w.PropertyType.Name != "IList`1" && w.CustomAttributes.Any()))
 			{
 				yield return item;
 			}
 		}
-
 	}
 }
