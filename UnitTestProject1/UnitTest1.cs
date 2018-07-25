@@ -10,8 +10,7 @@ using NewLibCore.Data.Mapper.DataExtension;
 using NewLibCore.Data.Mapper.InternalDataStore;
 using NewLibCore.Data.Mapper.MapperExtension;
 using NewLibCore.Data.Mapper.PropertyExtension;
-using Newtonsoft.Json;
-using StackExchange.Redis;
+
 
 namespace UnitTestProject1
 {
