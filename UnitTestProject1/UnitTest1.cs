@@ -17,7 +17,7 @@ namespace UnitTestProject1
 	[TestClass]
 	public class UnitTest1
 	{
-		[TestMethod]
+		[TestMethod] 
 		public void TestMethod1()
 		{
 			using (var dataStore = new DataStore("Server=39.106.106.137;Database=NewCrmContext;Uid=root;Pwd=xiaofan@.1;port=6033;SslMode=none;Pooling=True;Min Pool Size=5;Max Pool Size=10;Treat Tiny As Boolean=false"))
