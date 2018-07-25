@@ -22,13 +22,18 @@ namespace NewLibCore.Data.Mapper
 		protected internal override BuildEntry<TModel> Build()
 		{
 			var buildEntry = new BuildEntry<TModel>(ModelInstance);
+			var columns = GetColumns();
+
+			if (!columns.Any())
+			{
+				throw new Exception("没有要插入的列");
+			}
 
 			if (_isVerifyModel)
 			{
-				ValidateModel(ModelType.GetProperties(BindingFlags.Instance | BindingFlags.Public));
+				ValidateModel(columns.ToList());
 			}
 
-			var columns = GetColumns();
 			buildEntry.Append($@" INSERT {ModelType.Name} ({String.Join(",", columns.Select(c => c.Name))} ) VALUES ({String.Join(",", columns.Select(key => $@"@{key.Name}"))})");
 			buildEntry.AppendParameter(columns.ToList());
 			return buildEntry;

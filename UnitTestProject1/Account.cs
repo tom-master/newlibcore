@@ -11,17 +11,19 @@ namespace UnitTestProject1
 		{
 		}
 
-		[DateTimeDefaultValue()]
-		public DateTime AddTime { get; internal set; }
-
-		[PropertyDefaultValue(typeof(String), "xiaofan")]
+		public Int32 Id { get; internal set; }
+		
 		public String Name { get; set; }
-
-		public System.Int32 Id { get; internal set; }
-		public System.Boolean IsDeleted { get; internal set; }
-		public System.Boolean IsDisable { get; internal set; }
-
+		
+		public String Password { get; set; }
+		
 		public Boolean IsOnline { get; internal set; }
+		
+		public Boolean IsDeleted { get; internal set; }
+		
+		public Boolean IsDisable { get; internal set; }
+		
+		public DateTime AddTime { get; internal set; }
 
 		public IList<Int32> RoleIds { get; internal set; }
 
@@ -33,7 +35,7 @@ namespace UnitTestProject1
 
 		internal void ModifyName()
 		{
-			Name = "123456";
+			Name = "admin";
 			OnPropertyChanged(new PropertyArgs(nameof(Name), Name));
 		}
 
@@ -41,27 +43,6 @@ namespace UnitTestProject1
 		{
 			AddTime = DateTime.Now.AddDays(10);
 			OnPropertyChanged(new PropertyArgs(nameof(AddTime), AddTime));
-		}
-	}
-
-	internal class Account2 : PropertyMonitor
-	{
-		public Account2()
-		{
-		}
-
-		public String Name { get; set; }
-
-		public System.Int32 Id { get; internal set; }
-		public System.Boolean IsDeleted { get; internal set; }
-		public System.Boolean IsDisable { get; internal set; }
-
-		public Boolean IsOnline { get; internal set; }
-
-		internal void Offline()
-		{
-			IsOnline = true;
-			//base.OnPropertyChanged(new PropertyArgs(nameof(IsOnline), IsOnline));
 		}
 	}
 }
