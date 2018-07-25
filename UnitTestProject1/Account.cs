@@ -12,23 +12,17 @@ namespace UnitTestProject1
 		}
 
 		public Int32 Id { get; internal set; }
-
-		[PropertyRequired, InputRange(2, 6)]
+		
 		public String Name { get; set; }
-
-		[PropertyRequired, InputRange(6, 12)]
+		
 		public String Password { get; set; }
-
-		[PropertyDefaultValue(typeof(Boolean), false)]
+		
 		public Boolean IsOnline { get; internal set; }
-
-		[PropertyDefaultValue(typeof(Boolean), false)]
+		
 		public Boolean IsDeleted { get; internal set; }
-
-		[PropertyDefaultValue(typeof(Boolean), false)]
+		
 		public Boolean IsDisable { get; internal set; }
-
-		[DateTimeDefaultValue]
+		
 		public DateTime AddTime { get; internal set; }
 
 		public IList<Int32> RoleIds { get; internal set; }

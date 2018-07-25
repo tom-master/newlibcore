@@ -29,12 +29,7 @@ namespace UnitTestProject1
 					#region 设置用户下线
 					{
 						var account = new Account();
-						account.ModifyName();
-						var rowCount = dataStore.ExecuteModify(account, acc => acc.Id == 4 && !acc.IsDeleted && !acc.IsDisable);
-						if (rowCount == 0)
-						{
-
-						}
+						dataStore.ExecuteAdd(account);
 					}
 					#endregion
 

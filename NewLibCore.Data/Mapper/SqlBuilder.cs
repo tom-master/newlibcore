@@ -68,8 +68,6 @@ namespace NewLibCore.Data.Mapper
 			}
 		}
 
-		#region private
-
 		private IList<ValidateBase> GetValidateAttributes(PropertyInfo propertyInfo)
 		{
 			var validateAttributes = propertyInfo.GetCustomAttributes<ValidateBase>(true);
@@ -81,6 +79,5 @@ namespace NewLibCore.Data.Mapper
 
 			return validateAttributes.OrderByDescending(o => o.Order).ToList();
 		}
-		#endregion
 	}
 }
