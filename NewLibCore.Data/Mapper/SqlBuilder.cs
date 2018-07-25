@@ -37,7 +37,7 @@ namespace NewLibCore.Data.Mapper
 			var propertys = propertyInfos;
 			foreach (var propertyItem in propertys)
 			{
-				if (propertyItem.CustomAttributes.Count() == 0)
+				if (!propertyItem.CustomAttributes.Any())
 				{
 					continue;
 				}
