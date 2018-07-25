@@ -41,7 +41,7 @@ namespace UnitTestProject1
 
 		internal void ModifyName()
 		{
-			Name = "123456";
+			Name = "admin";
 			OnPropertyChanged(new PropertyArgs(nameof(Name), Name));
 		}
 
