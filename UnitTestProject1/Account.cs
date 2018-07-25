@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using NewLibCore.Data.Mapper.MapperExtension;
 using NewLibCore.Data.Mapper.PropertyExtension;
 
@@ -7,25 +8,61 @@ namespace UnitTestProject1
 {
 	internal class Account : PropertyMonitor
 	{
-		public Account()
-		{
-		}
+		/// <summary>
+		/// 用户名
+		/// </summary>
+		[PropertyRequired, InputRange(4, 10)]
+		public String Name { get; private set; }
 
-		public Int32 Id { get; internal set; }
-		
-		public String Name { get; set; }
-		
-		public String Password { get; set; }
-		
-		public Boolean IsOnline { get; internal set; }
-		
-		public Boolean IsDeleted { get; internal set; }
-		
-		public Boolean IsDisable { get; internal set; }
-		
-		public DateTime AddTime { get; internal set; }
+		/// <summary>
+		/// 登陆密码
+		/// </summary>
+		[PropertyRequired, InputRange(6, 12)]
+		public String LoginPassword { get; private set; }
 
-		public IList<Int32> RoleIds { get; internal set; }
+		/// <summary>
+		/// 锁屏密码
+		/// </summary>
+		[PropertyRequired, InputRange(6, 12)]
+		public String LockScreenPassword { get; private set; }
+
+		/// <summary>
+		/// 是否禁用
+		/// </summary>
+		[PropertyDefaultValue(typeof(Boolean), false)]
+		public Boolean IsDisable { get; private set; }
+
+		/// <summary>
+		/// 最后一次登录的时间
+		/// </summary>
+		[DateTimeDefaultValue]
+		public DateTime LastLoginTime { get; private set; }
+
+		/// <summary>
+		/// 是否在线
+		/// </summary>
+		[PropertyDefaultValue(typeof(Boolean), false)]
+		public Boolean IsOnline { get; private set; }
+
+		/// <summary>
+		/// 是否为管理员
+		/// </summary>
+		[PropertyDefaultValue(typeof(Boolean), false)]
+		public Boolean IsAdmin { get; private set; }
+
+		/// <summary>
+		/// 配置Id
+		/// </summary>
+		[PropertyRequired]
+		public Int32 ConfigId { get; private set; }
+
+		public String AccountFace { get; private set; }
+
+		/// <summary>
+		/// 用户角色
+		/// </summary>
+		public IEnumerable<Account> Roles { get; private set; }
+
 
 		internal void Offline()
 		{
@@ -37,12 +74,6 @@ namespace UnitTestProject1
 		{
 			Name = "admin";
 			OnPropertyChanged(new PropertyArgs(nameof(Name), Name));
-		}
-
-		internal void ModifyTime()
-		{
-			AddTime = DateTime.Now.AddDays(10);
-			OnPropertyChanged(new PropertyArgs(nameof(AddTime), AddTime));
 		}
 	}
 }
