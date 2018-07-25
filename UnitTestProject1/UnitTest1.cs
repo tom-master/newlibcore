@@ -26,7 +26,7 @@ namespace UnitTestProject1
 				{
 					dataStore.OpenTransaction();
 					#region 设置用户下线
-					{
+					{ 
 						var account = new Account();
 						dataStore.ExecuteAdd(account);
 					}
