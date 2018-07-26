@@ -66,7 +66,7 @@ namespace NewLibCore.Data.Mapper.InternalDataStore
 
 		#endregion
 
-		public Int32 ExecuteAdd<TModel>(TModel model) where TModel : class, new()
+		public Int32 ExecuteAdd<TModel>(TModel model) where TModel : PropertyMonitor, new()
 		{
 			SqlBuilder<TModel> builder = new AddBuilder<TModel>(model, true);
 			var entry = builder.Build();

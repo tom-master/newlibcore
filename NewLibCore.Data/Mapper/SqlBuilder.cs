@@ -4,10 +4,11 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using NewLibCore.Data.Mapper.MapperExtension;
+using NewLibCore.Data.Mapper.PropertyExtension;
 
 namespace NewLibCore.Data.Mapper
 {
-	internal abstract class SqlBuilder<TModel> where TModel : class, new()
+	internal abstract class SqlBuilder<TModel> where TModel : PropertyMonitor, new()
 	{
 		private StringBuilder _sqlBuilder = new StringBuilder();
 
@@ -37,7 +38,7 @@ namespace NewLibCore.Data.Mapper
 			var propertys = propertyInfos;
 			foreach (var propertyItem in propertys)
 			{
-				if (propertyItem.CustomAttributes.Count() == 0)
+				if (!propertyItem.CustomAttributes.Any())
 				{
 					continue;
 				}
