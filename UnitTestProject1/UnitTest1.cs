@@ -11,17 +11,17 @@ using NewLibCore.Data.Mapper.DataExtension;
 using NewLibCore.Data.Mapper.InternalDataStore;
 using NewLibCore.Data.Mapper.MapperExtension;
 using NewLibCore.Data.Mapper.PropertyExtension;
-using Newtonsoft.Json;
-using StackExchange.Redis;
+
 
 namespace UnitTestProject1
 {
 	[TestClass]
 	public class UnitTest1
 	{
-		[TestMethod]
+		[TestMethod] 
 		public void TestMethod1()
 		{
+<<<<<<< HEAD
 			var account = new Account();
 			var result = account.GetType().GetProperties().Where(w => w.PropertyType.Name != "IList`1" && w.GetCustomAttributes<ValidateBase>().Any());
 			var a = 0;
@@ -36,6 +36,19 @@ namespace UnitTestProject1
 			//			dataStore.ExecuteAdd(account);
 			//		}
 			//		#endregion
+=======
+			using (var dataStore = new DataStore("Server=39.106.106.137;Database=NewCrmContext;Uid=root;Pwd=xiaofan@.1;port=6033;SslMode=none;Pooling=True;Min Pool Size=5;Max Pool Size=10;Treat Tiny As Boolean=false"))
+			{
+				try
+				{
+					dataStore.OpenTransaction();
+					#region 设置用户下线
+					{ 
+						var account = new Account();
+						dataStore.ExecuteAdd(account);
+					}
+					#endregion
+>>>>>>> fb5f71a6703dcb07ca452b71bdf15c40f4d934e8
 
 			//		dataStore.Commit();
 			//	}
@@ -46,28 +59,5 @@ namespace UnitTestProject1
 			//	}
 			//}
 		}
-
-
-
-
-		//public class classA
-		//{
-		//	public string a { get; set; }
-
-		//	public Int32 b { get; set; }
-		//}
-
-
-		//public class ClassB: PropertyMonitor
-		//{
-		//	public String C { get; set; }
-
-		//	public String D { get; set; }
-
-		//	public void ModelC()
-		//	{
-		//		OnPropertyChanged(new PropertyArgs(nameof(C), "456"));
-		//	}
-		//}
 	}
 }
