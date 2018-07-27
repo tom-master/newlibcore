@@ -19,7 +19,6 @@ namespace NewLibCore.Data.Mapper.InternalDataStore
 
 		public Object Value { get; private set; }
 
-
 		public static implicit operator DbParameter(ParameterMapper value)
 		{
 			return new MySqlParameter(value.Key, value.Value);

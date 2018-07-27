@@ -47,14 +47,9 @@ public class PropertyArgs
 		_propertyValue = propertyValue;
 	}
 
-	internal void SetPropertyInfo(Type propertyType)
+	internal void SetPropertyInfo(Type modelType)
 	{
-		PropertyInfo = propertyType.GetProperty(PropertyName);
-	}
-
-	internal Object GetPropertyValue(Object modelInstance)
-	{
-		return PropertyInfo.GetValue(modelInstance);
+		PropertyInfo = modelType.GetProperty(PropertyName);
 	}
 }
 
