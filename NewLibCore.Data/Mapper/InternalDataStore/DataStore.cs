@@ -11,7 +11,6 @@ using NewLibCore.Data.Mapper.PropertyExtension;
 
 namespace NewLibCore.Data.Mapper.InternalDataStore
 {
-<<<<<<< HEAD
     public class DataStore : IDisposable
     {
         private DbConnection _connection;

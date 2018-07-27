@@ -33,7 +33,7 @@ namespace NewLibCore.Data.Mapper
 			}
 
 			var buildEntry = new BuildEntry<TModel>(ModelInstance);
-			buildEntry.Append($@"UPDATE {ModelType.Name} SET {String.Join(",", columns.Select(s => $@"{s.PropertyName}=@{s.PropertyName}"))}");
+			buildEntry.AppendSqlPart($@"UPDATE {ModelType.Name} SET {String.Join(",", columns.Select(s => $@"{s.PropertyName}=@{s.PropertyName}"))}");
 
 			if (_where != null)
 			{

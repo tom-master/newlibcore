@@ -35,7 +35,7 @@ namespace NewLibCore.Data.Mapper
 				ValidateModel(columns.ToList());
 			}
 
-			buildEntry.Append($@" INSERT {ModelType.Name} ({String.Join(",", columns.Select(c => c.Name))} ) VALUES ({String.Join(",", columns.Select(key => $@"@{key.Name}"))})");
+			buildEntry.AppendSqlPart($@" INSERT {ModelType.Name} ({String.Join(",", columns.Select(c => c.Name))} ) VALUES ({String.Join(",", columns.Select(key => $@"@{key.Name}"))})");
 			buildEntry.AppendParameter(columns.ToList());
 			return buildEntry;
 		}

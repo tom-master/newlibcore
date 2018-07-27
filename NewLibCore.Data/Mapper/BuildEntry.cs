@@ -193,7 +193,7 @@ namespace NewLibCore.Data.Mapper
 			}
 		}
 
-		internal void Append(String value)
+		internal void AppendSqlPart(String value)
 		{
 			_builder.Append(value);
 		}
