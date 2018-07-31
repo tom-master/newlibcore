@@ -25,21 +25,24 @@ namespace NewLibCore.Data.Mapper
 
 		internal IList<ParameterMapper> Parameters { get { return _parameters; } }
 
+
 		internal void BuildWhere(Expression expression)
 		{
-			if (!_builder.ToString().Trim().Contains("WHERE"))
-			{
-				_builder.Append(" WHERE ");
-			}
+			_builder.Append(" WHERE ");
+			InternalBuildWhere(expression);
+		}
 
+
+		private void InternalBuildWhere(Expression expression)
+		{
 			switch (expression.NodeType)
 			{
 				case ExpressionType.AndAlso:
 					{
 						var binaryExp = (BinaryExpression)expression;
-						BuildWhere(binaryExp.Left);
+						InternalBuildWhere(binaryExp.Left);
 						_builder.Append(RelationType.AND.ToString());
-						BuildWhere(binaryExp.Right);
+						InternalBuildWhere(binaryExp.Right);
 						break;
 					}
 				case ExpressionType.Call:
@@ -49,8 +52,8 @@ namespace NewLibCore.Data.Mapper
 						{
 							_temp = RelationType.LIKE;
 							_operationalCharacterStack.Push(RelationType.LIKE.ToString());
-							BuildWhere(methodCallExp.Object);
-							BuildWhere(methodCallExp.Arguments[0]);
+							InternalBuildWhere(methodCallExp.Object);
+							InternalBuildWhere(methodCallExp.Arguments[0]);
 						}
 						break;
 					}
@@ -64,32 +67,32 @@ namespace NewLibCore.Data.Mapper
 					{
 						var binaryExp = (BinaryExpression)expression;
 						_operationalCharacterStack.Push(" = ");
-						BuildWhere(binaryExp.Left);
-						BuildWhere(binaryExp.Right);
+						InternalBuildWhere(binaryExp.Left);
+						InternalBuildWhere(binaryExp.Right);
 						break;
 					}
 				case ExpressionType.GreaterThan:
 					{
 						var binaryExp = (BinaryExpression)expression;
 						_operationalCharacterStack.Push(" > ");
-						BuildWhere(binaryExp.Left);
-						BuildWhere(binaryExp.Right);
+						InternalBuildWhere(binaryExp.Left);
+						InternalBuildWhere(binaryExp.Right);
 					}
 					break;
 				case ExpressionType.NotEqual:
 					{
 						var binaryExp = (BinaryExpression)expression;
 						_operationalCharacterStack.Push(" <> ");
-						BuildWhere(binaryExp.Left);
-						BuildWhere(binaryExp.Right);
+						InternalBuildWhere(binaryExp.Left);
+						InternalBuildWhere(binaryExp.Right);
 					}
 					break;
 				case ExpressionType.GreaterThanOrEqual:
 					{
 						var binaryExp = (BinaryExpression)expression;
 						_operationalCharacterStack.Push(" >= ");
-						BuildWhere(binaryExp.Left);
-						BuildWhere(binaryExp.Right);
+						InternalBuildWhere(binaryExp.Left);
+						InternalBuildWhere(binaryExp.Right);
 					}
 					break;
 				case ExpressionType.Lambda:
@@ -97,19 +100,19 @@ namespace NewLibCore.Data.Mapper
 						var lamdbaExp = (LambdaExpression)expression;
 						if (lamdbaExp.Body is BinaryExpression)
 						{
-							BuildWhere((BinaryExpression)lamdbaExp.Body);
+							InternalBuildWhere((BinaryExpression)lamdbaExp.Body);
 						}
 						else if (lamdbaExp.Body is MemberExpression)
 						{
-							BuildWhere((MemberExpression)lamdbaExp.Body);
+							InternalBuildWhere((MemberExpression)lamdbaExp.Body);
 						}
 						else if (lamdbaExp.Body is MethodCallExpression)
 						{
-							BuildWhere((MethodCallExpression)lamdbaExp.Body);
+							InternalBuildWhere((MethodCallExpression)lamdbaExp.Body);
 						}
 						else
 						{
-							BuildWhere((UnaryExpression)lamdbaExp.Body);
+							InternalBuildWhere((UnaryExpression)lamdbaExp.Body);
 						}
 						break;
 					}
@@ -117,16 +120,16 @@ namespace NewLibCore.Data.Mapper
 					{
 						var binaryExp = (BinaryExpression)expression;
 						_operationalCharacterStack.Push(" < ");
-						BuildWhere(binaryExp.Left);
-						BuildWhere(binaryExp.Right);
+						InternalBuildWhere(binaryExp.Left);
+						InternalBuildWhere(binaryExp.Right);
 					}
 					break;
 				case ExpressionType.LessThanOrEqual:
 					{
 						var binaryExp = (BinaryExpression)expression;
 						_operationalCharacterStack.Push(" <= ");
-						BuildWhere(binaryExp.Left);
-						BuildWhere(binaryExp.Right);
+						InternalBuildWhere(binaryExp.Left);
+						InternalBuildWhere(binaryExp.Right);
 					}
 					break;
 				case ExpressionType.MemberAccess:
@@ -135,7 +138,7 @@ namespace NewLibCore.Data.Mapper
 						if (memberExp.Expression.NodeType == ExpressionType.Parameter)
 						{
 							var memberName = memberExp.Member.Name;
-							var newParameterName = $@"{memberName}{Guid.NewGuid().ToString().Replace("-", "")}";
+							var newParameterName = $@"{Guid.NewGuid().ToString().Replace("-", "")}";
 							if (_operationalCharacterStack.Count == 0)
 							{
 								if (memberExp.Type == typeof(Boolean))
@@ -143,7 +146,7 @@ namespace NewLibCore.Data.Mapper
 									var left = Expression.Parameter(typeof(TModel), ((ParameterExpression)memberExp.Expression).Name);
 									var newMember = Expression.MakeMemberAccess(left, left.Type.GetMember(memberName)[0]);
 									var newExpression = Expression.Equal(newMember, Expression.Constant(true));
-									BuildWhere(newExpression);
+									InternalBuildWhere(newExpression);
 								}
 							}
 							else
@@ -154,16 +157,17 @@ namespace NewLibCore.Data.Mapper
 						}
 						else
 						{
-							var getter = Expression.Lambda<Func<Object>>(memberExp).Compile();
+							var getter = Expression.Lambda(memberExp).Compile();
 							Object result = "";
 							if (_temp == RelationType.LIKE)
 							{
-								result = $@"%{getter()}%";
+								result = $@"%{getter.DynamicInvoke()}%";
 							}
 							else
 							{
-								result = getter();
+								result = getter.DynamicInvoke();
 							}
+
 							_parameters.Add(new ParameterMapper($@"@{_parameterStack.Pop()}", result));
 							break;
 						}
@@ -177,15 +181,15 @@ namespace NewLibCore.Data.Mapper
 						var left = Expression.Parameter(typeof(TModel), ((ParameterExpression)memberExpression.Expression).Name);
 						var newMember = Expression.MakeMemberAccess(left, left.Type.GetMember(memberName)[0]);
 						var newExpression = Expression.NotEqual(newMember, Expression.Constant(true));
-						BuildWhere(newExpression);
+						InternalBuildWhere(newExpression);
 						break;
 					}
 				case ExpressionType.OrElse:
 					{
 						var binaryExp = (BinaryExpression)expression;
-						BuildWhere(binaryExp.Left);
+						InternalBuildWhere(binaryExp.Left);
 						_builder.Append(RelationType.OR.ToString());
-						BuildWhere(binaryExp.Right);
+						InternalBuildWhere(binaryExp.Right);
 						break;
 					}
 				default:

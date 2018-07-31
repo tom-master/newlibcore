@@ -21,61 +21,54 @@ namespace UnitTestProject1
 		[TestMethod]
 		public void TestMethod1()
 		{
-			NodeList nodes = new NodeList(0);
-			nodes.Append(1);
-			nodes.Append(2);
-			nodes.Append(3);
-			nodes.Append(4);
-			nodes.Append(5);
-			nodes.Append(6);
-			nodes.Append(7);
-			nodes.Append(8);
-			nodes.Append(9);
-			var result = nodes;
-
-			var r = nodes.GetMiddleValue();
+			using (var dataStore = new DataStore("", true))
+			{
+				var model = new Model();
+				model.ChangeAddTime();
+				model.ChangeAge();
+				model.ChangeIsDelete();
+				model.ChangeName();
+				dataStore.Modify(model, m => m.Name.Contains(model.Name) && !m.IsDelete);
+			}
 		}
 	}
 
-	public class NodeList
+
+	public class Model : PropertyMonitor
 	{
-		private NodeList _next;
-		private Int32 _data;
+		public Int32 Id { get; set; }
 
-		public NodeList(Int32 data)
+		public String Name { get; set; }
+
+		public Int32 Age { get; set; }
+
+		public Boolean IsDelete { get; set; }
+
+		public DateTime AddTime { get; set; }
+
+
+		public void ChangeName()
 		{
-			_next = null;
-			_data = data;
+			Name = "wasd";
+			OnPropertyChanged(new PropertyArgs(nameof(Name), Name));
 		}
 
-		public void Append(Int32 data)
+		public void ChangeAge()
 		{
-			var newNode = new NodeList(data);
-			var root = this;
-			if (root._next == null)
-			{
-				root._next = newNode;
-				return;
-			}
-			while (root._next != null)
-			{
-				root = root._next;
-			}
-			root._next = newNode;
+			Age = new Random(DateTime.Now.Millisecond).Next(0, 5);
+			OnPropertyChanged(new PropertyArgs(nameof(Age), Age));
 		}
 
-		public Int32 GetMiddleValue()
+		public void ChangeIsDelete()
 		{
-			var fast = this;
-			var slow = this;
+			IsDelete = true;
+			OnPropertyChanged(new PropertyArgs(nameof(IsDelete), IsDelete));
+		}
 
-			while (fast != null && fast._next != null)
-			{
-				fast = fast._next._next;
-				slow = slow._next;
-			}
-
-			return slow._data;
+		public void ChangeAddTime()
+		{
+			AddTime = DateTime.Now;
+			OnPropertyChanged(new PropertyArgs(nameof(AddTime), AddTime));
 		}
 	}
 }
