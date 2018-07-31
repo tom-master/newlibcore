@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using NewLibCore.Data.Mapper.PropertyExtension;
+using System;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
-using NewLibCore.Data.Mapper.InternalDataStore;
-using NewLibCore.Data.Mapper.PropertyExtension;
 
 namespace NewLibCore.Data.Mapper
 {
@@ -29,7 +26,7 @@ namespace NewLibCore.Data.Mapper
 			var columns = ModelInstance.Args;
 			if (_isValidate)
 			{
-				ValidateModel(ModelInstance.Args.Select(s => s.PropertyInfo).ToList());
+				ValidateModel(columns.Select(s => s.PropertyInfo).ToList());
 			}
 
 			var buildEntry = new BuildEntry<TModel>(ModelInstance);
