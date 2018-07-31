@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using NewLibCore.Data.Mapper.BuilderLog;
 using NewLibCore.Data.Mapper.InternalDataStore;
 using NewLibCore.Data.Mapper.MapperExtension;
 using NewLibCore.Data.Mapper.PropertyExtension;
