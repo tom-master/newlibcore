@@ -15,7 +15,7 @@ namespace NewLibCore.Data.Mapper.BuilderLog
 		{
 			_config = config ?? BuilderFactory.GetDefaultLoggerConfig();
 		}
-		
+
 		public Task WriteLogAsync(Object model)
 		{
 			return Task.Run(() =>
@@ -23,7 +23,13 @@ namespace NewLibCore.Data.Mapper.BuilderLog
 				try
 				{
 					_readerWriterLock.EnterWriteLock();
-					using (var stream = new FileStream(_config.LogFileRootDirectory, FileMode.Create, FileAccess.Write))
+
+					if (_config.IsAutoCreateLoggerFileByCapacity)
+					{
+
+					}
+					var loggerPath = $@"{_config.LogFileRootDirectory}\{_config.LoggerFileFolder}\{_config.LogFileName}";
+					using (var stream = new FileStream(loggerPath, FileMode.Create, FileAccess.Write))
 					{
 
 					}

@@ -10,7 +10,7 @@ namespace NewLibCore
 		/// 获取环境变量
 		/// </summary>
 		/// <returns></returns>
-		public String GetHostVar(String varName)
+		public static String GetHostVar(String varName)
 		{
 			var v1 = Environment.GetEnvironmentVariable(varName, EnvironmentVariableTarget.Machine);
 			if (!String.IsNullOrEmpty(v1))
