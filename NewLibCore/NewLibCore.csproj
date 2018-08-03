@@ -14,10 +14,4 @@
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.4.1" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="NewLibCore.Security">
-      <HintPath>..\NewLibCore.Security\bin\Debug\netcoreapp2.0\NewLibCore.Security.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
 </Project>
