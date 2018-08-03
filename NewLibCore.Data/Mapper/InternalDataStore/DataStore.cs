@@ -58,7 +58,7 @@ namespace NewLibCore.Data.Mapper.InternalDataStore
 		{
 			if (_useTransaction)
 			{
-				_dataTransaction.Rollback();
+				_dataTransaction?.Rollback();
 				return;
 			}
 			throw new Exception("没有启动事务，无法执行事务回滚");
@@ -78,7 +78,7 @@ namespace NewLibCore.Data.Mapper.InternalDataStore
 			var entry = builder.Build();
 			if (!_noExecuteMode)
 			{
-				return SqlExecute(entry.ToString(), entry.Parameters);
+				return SqlExecute($@"{entry.ToString()} SELECT @@IDENTITY ", entry.Parameters, CommandType.Text);
 			}
 			return 0;
 		}
@@ -89,7 +89,7 @@ namespace NewLibCore.Data.Mapper.InternalDataStore
 			var entry = builder.Build();
 			if (!_noExecuteMode)
 			{
-				return SqlExecute(entry.ToString(), entry.Parameters);
+				return SqlExecute($@"{entry.ToString()} SELECT @@ROWCOUNT", entry.Parameters, CommandType.Text, true);
 			}
 			return 0;
 		}
@@ -153,7 +153,7 @@ namespace NewLibCore.Data.Mapper.InternalDataStore
 			}
 		}
 
-		private Int32 SqlExecute(String sqlStr, IEnumerable<ParameterMapper> parameters = null, CommandType commandType = CommandType.Text)
+		private Int32 SqlExecute(String sqlStr, IEnumerable<ParameterMapper> parameters = null, CommandType commandType = CommandType.Text, Boolean isModify = false)
 		{
 			Open();
 			using (DbCommand cmd = _connection.CreateCommand())
@@ -168,7 +168,15 @@ namespace NewLibCore.Data.Mapper.InternalDataStore
 				{
 					cmd.Parameters.AddRange(parameters.Select(s => (DbParameter)s).ToArray());
 				}
-				Int32 count = cmd.ExecuteNonQuery();
+				Int32 count = 0;
+				if (!isModify)
+				{
+					count = (Int32)cmd.ExecuteScalar();
+				}
+				else
+				{
+					count = cmd.ExecuteNonQuery();
+				}
 				cmd.Parameters.Clear();
 				return count;
 			}
