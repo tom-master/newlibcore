@@ -89,7 +89,7 @@ namespace NewLibCore.Data.Mapper.InternalDataStore
 			var entry = builder.Build();
 			if (!_noExecuteMode)
 			{
-				return SqlExecute($@"{entry.ToString()} ; SELECT @@ROWCOUNT", entry.Parameters, CommandType.Text, true);
+				return SqlExecute($@"{entry.ToString()} ; SELECT @@ROW_COUNT()", entry.Parameters, CommandType.Text, true);
 			}
 			return 0;
 		}
