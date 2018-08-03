@@ -78,7 +78,7 @@ namespace NewLibCore.Data.Mapper.InternalDataStore
 			var entry = builder.Build();
 			if (!_noExecuteMode)
 			{
-				return SqlExecute($@"{entry.ToString()} ; SELECT @@IDENTITY ", entry.Parameters, CommandType.Text);
+				return SqlExecute($@"{entry.ToString()} ; SELECT CAST(@@IDENTITY AS SIGNED) AS c ", entry.Parameters, CommandType.Text);
 			}
 			return 0;
 		}
@@ -89,7 +89,7 @@ namespace NewLibCore.Data.Mapper.InternalDataStore
 			var entry = builder.Build();
 			if (!_noExecuteMode)
 			{
-				return SqlExecute($@"{entry.ToString()} ; SELECT @@ROW_COUNT()", entry.Parameters, CommandType.Text, true);
+				return SqlExecute($@"{entry.ToString()} ; SELECT CAST(ROW_COUNT() AS SIGNED) AS c", entry.Parameters, CommandType.Text, true);
 			}
 			return 0;
 		}
@@ -171,11 +171,11 @@ namespace NewLibCore.Data.Mapper.InternalDataStore
 				Int32 count = 0;
 				if (!isModify)
 				{
-					count = (Int32)cmd.ExecuteScalar();
+					count = Int32.Parse(cmd.ExecuteScalar().ToString());
 				}
 				else
 				{
-					count = cmd.ExecuteNonQuery();
+					count = Int32.Parse(cmd.ExecuteNonQuery().ToString());
 				}
 				cmd.Parameters.Clear();
 				return count;
