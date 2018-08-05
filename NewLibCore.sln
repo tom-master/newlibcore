@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewLibCore", "NewLibCore\NewLibCore.csproj", "{A17D52BA-5213-42A1-A8B4-8A9172FDDF30}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewLibCore", "NewLibCore\NewLibCore.csproj", "{A17D52BA-5213-42A1-A8B4-8A9172FDDF30}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewLibCore.Data", "NewLibCore.Data\NewLibCore.Data.csproj", "{580B27C4-5D8A-4DB9-955C-A8C31FF99570}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewLibCore.Data", "NewLibCore.Data\NewLibCore.Data.csproj", "{580B27C4-5D8A-4DB9-955C-A8C31FF99570}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewLibCore.Security", "NewLibCore.Security\NewLibCore.Security.csproj", "{9A51A057-B44E-43E2-8987-BFDCA7C826E8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewLibCore.Security", "NewLibCore.Security\NewLibCore.Security.csproj", "{9A51A057-B44E-43E2-8987-BFDCA7C826E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestProject1", "UnitTestProject1\UnitTestProject1.csproj", "{53DDB807-B3DB-435A-8833-6D4C603BE89D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTestProject1", "UnitTestProject1\UnitTestProject1.csproj", "{53DDB807-B3DB-435A-8833-6D4C603BE89D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,9 +19,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{A17D52BA-5213-42A1-A8B4-8A9172FDDF30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -72,5 +69,11 @@ Global
 		{53DDB807-B3DB-435A-8833-6D4C603BE89D}.Release|x64.Build.0 = Release|Any CPU
 		{53DDB807-B3DB-435A-8833-6D4C603BE89D}.Release|x86.ActiveCfg = Release|Any CPU
 		{53DDB807-B3DB-435A-8833-6D4C603BE89D}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D88221DD-9640-4484-9D97-2DA9689759F9}
 	EndGlobalSection
 EndGlobal
