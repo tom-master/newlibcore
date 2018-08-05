@@ -56,7 +56,7 @@ namespace NewLibCore.Data.Mapper.InternalDataStore
         {
             if (_useTransaction)
             {
-                _dataTransaction.Rollback();
+                _dataTransaction?.Rollback();
                 return;
             }
             throw new Exception("没有启动事务，无法执行事务回滚");

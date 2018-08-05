@@ -154,15 +154,15 @@ namespace NewLibCore.Data.Mapper
 						}
 						else
 						{
-							var getter = Expression.Lambda<Func<Object>>(memberExp).Compile();
+							var getter = Expression.Lambda(memberExp).Compile();
 							Object result = "";
 							if (_temp == RelationType.LIKE)
 							{
-								result = $@"%{getter()}%";
+								result = $@"%{getter.DynamicInvoke()}%";
 							}
 							else
 							{
-								result = getter();
+								result = getter.DynamicInvoke();
 							}
 							_parameters.Add(new ParameterMapper($@"@{_parameterStack.Pop()}", result));
 							break;
