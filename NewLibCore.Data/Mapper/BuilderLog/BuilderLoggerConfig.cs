@@ -41,7 +41,7 @@ namespace NewLibCore.Data.Mapper.BuilderLog
 		{
 			get
 			{
-				return Host.GetHostVar("LogFileRootDirectory");
+				return NewLibCore.Host.GetHostVar("LogFileRootDirectory");
 			}
 		}
 	}

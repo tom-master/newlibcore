@@ -19,12 +19,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NewLibCore.Security\NewLibCore.Security.csproj" />
+    <ProjectReference Include="..\NewLibCore\NewLibCore.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="NewLibCore">
-      <HintPath>..\NewLibCore\bin\Debug\netstandard2.0\NewLibCore.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
 </Project>

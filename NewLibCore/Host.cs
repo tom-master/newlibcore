@@ -4,7 +4,7 @@ using System.Text;
 
 namespace NewLibCore
 {
-	public class Host
+	public static class Host
 	{
 		/// <summary>
 		/// 获取环境变量
