@@ -118,6 +118,32 @@ namespace NewLibCore.Data.Mapper.InternalDataStore
 			}
 		}
 
+
+
+		public DataTable Find(String sqlStr, IEnumerable<ParameterMapper> parameters = null, CommandType commandType = CommandType.Text)
+		{
+			Open();
+			using (DbCommand cmd = _connection.CreateCommand())
+			{
+				if (_useTransaction)
+				{
+					cmd.Transaction = GetNonceTransaction();
+				}
+				cmd.CommandType = commandType;
+				cmd.CommandText = sqlStr;
+				if (parameters != null && parameters.Any())
+				{
+					cmd.Parameters.AddRange(parameters.Select(s => (DbParameter)s).ToArray());
+				}
+
+				var dr = cmd.ExecuteReader();
+				var tmpDt = new DataTable("tmpDt");
+				tmpDt.Load(dr, LoadOption.Upsert);
+				dr.Close();
+				return tmpDt;
+			}
+		}
+
 		public TModel FindOne<TModel>(String sqlStr, IEnumerable<ParameterMapper> parameters = null, CommandType commandType = CommandType.Text) where TModel : class, new()
 		{
 			return Find<TModel>(sqlStr, parameters, commandType).FirstOrDefault();
