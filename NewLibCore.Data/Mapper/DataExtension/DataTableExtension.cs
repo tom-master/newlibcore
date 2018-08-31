@@ -47,7 +47,6 @@ namespace NewLibCore.Data.Mapper.DataExtension
                         {
                             var fast = new FastProperty(propertyInfo);
                             fast.Set(t, ConvertExtension.ChangeType(value, propertyInfo.PropertyType));
-                            //propertyInfo.SetValue(t, ConvertExtension.ChangeType(value, propertyInfo.PropertyType), null);
                         }
                     }
                 }
@@ -88,8 +87,6 @@ namespace NewLibCore.Data.Mapper.DataExtension
         {
             var instance = Expression.Parameter(typeof(object), "instance");
             var value = Expression.Parameter(typeof(object), "value");
-
-            // value as T is slightly faster than (T)value, so if it's not a value type, use that
 
             UnaryExpression instanceCast = (!this.Property.DeclaringType.IsValueType) ? Expression.TypeAs(instance, this.Property.DeclaringType) : Expression.Convert(instance, this.Property.DeclaringType);
 

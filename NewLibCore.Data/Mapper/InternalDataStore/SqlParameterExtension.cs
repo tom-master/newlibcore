@@ -37,6 +37,10 @@ namespace NewLibCore.Data.Mapper.InternalDataStore
 					return 0;
 				}
 			}
+			if (obj.GetType().GetGenericTypeDefinition() == typeof(List<>))
+			{
+				return String.Join(",", (IList<Int32>)obj);
+			}
 			return obj;
 		}
 	}

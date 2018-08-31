@@ -50,10 +50,22 @@ namespace NewLibCore.Data.Mapper
 						var methodCallExp = (MethodCallExpression)expression;
 						if (methodCallExp.Method.Name == "Contains")
 						{
-							_temp = RelationType.LIKE;
-							_operationalCharacterStack.Push(RelationType.LIKE.ToString());
-							InternalBuildWhere(methodCallExp.Object);
-							InternalBuildWhere(methodCallExp.Arguments[0]);
+
+							if (methodCallExp.Object.Type == typeof(String))
+							{
+								_temp = RelationType.LIKE;
+								_operationalCharacterStack.Push(RelationType.LIKE.ToString());
+								InternalBuildWhere(methodCallExp.Object);
+								InternalBuildWhere(methodCallExp.Arguments[0]);
+							}
+							else if (methodCallExp.Object.Type.Name == "IList`1" || methodCallExp.Object.Type.Name == "List`1")
+							{
+								_temp = RelationType.IN;
+								_operationalCharacterStack.Push(RelationType.IN.ToString());
+								InternalBuildWhere(methodCallExp.Arguments[0]);
+								InternalBuildWhere(methodCallExp.Object);
+							}
+
 						}
 						break;
 					}
@@ -151,7 +163,7 @@ namespace NewLibCore.Data.Mapper
 							}
 							else
 							{
-								_builder.Append($@" {memberName} {_operationalCharacterStack.Pop()} @{newParameterName} ");
+								_builder.Append(memberName, _operationalCharacterStack.Pop(), newParameterName);
 								_parameterStack.Push(newParameterName);
 							}
 						}
@@ -222,6 +234,23 @@ namespace NewLibCore.Data.Mapper
 
 		OR = 2,
 
-		LIKE = 3
+		LIKE = 3,
+
+		IN = 4
+	}
+
+	public static class StringBuilderExtension
+	{
+		public static void Append(this StringBuilder builder, String left, String opt, String right)
+		{
+			if (opt.ToUpper() == "IN")
+			{
+				builder.Append($@" {left} {opt} (@{right}) ");
+			}
+			else
+			{
+				builder.Append($@" {left} {opt} @{right} ");
+			}
+		}
 	}
 }
