@@ -245,7 +245,7 @@ namespace NewLibCore.Data.Mapper
 		{
 			if (opt.ToUpper() == "IN")
 			{
-				builder.Append($@" {left} {opt} (@{right}) ");
+				builder.Append($@" {left} {opt} ( @{right} ) ");
 			}
 			else
 			{
