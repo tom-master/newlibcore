@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Linq;
@@ -12,13 +13,7 @@ namespace NewLibCore.Run
 	{
 		static void Main(string[] args)
 		{
-			using (var dataStore = new DataStore(""))
-			{
-				var notify = new Notify();
-				notify.Read();
-				var s = new Int32[] { 1, 2, 3 }.ToList();
-				dataStore.Modify(notify, (n) => s.Contains(n.Id));
-			}
+			ParameterMapper parameterMapper = new ParameterMapper("wasd", 0);
 		}
 	}
 

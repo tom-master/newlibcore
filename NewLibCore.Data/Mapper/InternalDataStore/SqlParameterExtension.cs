@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data.Common;
-using System.Data.SqlClient;
-using System.Text;
 using MySql.Data.MySqlClient;
 
 namespace NewLibCore.Data.Mapper.InternalDataStore
@@ -26,6 +25,14 @@ namespace NewLibCore.Data.Mapper.InternalDataStore
 
 		private Object ParseValueType(Object obj)
 		{
+			var isComplexType = TypeDescriptor.GetConverter(obj.GetType()).CanConvertFrom(typeof(String));
+			if (!isComplexType)
+			{
+				if (obj.GetType().GetGenericTypeDefinition() == typeof(List<>))
+				{
+					return String.Join(",", (IList<Int32>)obj);
+				}
+			}
 			if (obj.GetType() == typeof(Boolean))
 			{
 				if (((Boolean)obj))
@@ -37,10 +44,7 @@ namespace NewLibCore.Data.Mapper.InternalDataStore
 					return 0;
 				}
 			}
-			if (obj.GetType().GetGenericTypeDefinition() == typeof(List<>))
-			{
-				return String.Join(",", (IList<Int32>)obj);
-			}
+			
 			return obj;
 		}
 	}
