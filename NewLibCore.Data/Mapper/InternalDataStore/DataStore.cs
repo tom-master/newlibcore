@@ -201,8 +201,7 @@ namespace NewLibCore.Data.Mapper.InternalDataStore
                 }
                 else
                 {
-                    var a = cmd.ExecuteNonQuery().ToString();
-                    count = Int32.Parse(a);
+                    count = Int32.Parse(cmd.ExecuteNonQuery().ToString());
                 }
                 cmd.Parameters.Clear();
                 return count;
