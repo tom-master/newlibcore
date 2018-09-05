@@ -28,7 +28,8 @@ namespace NewLibCore.Data.Mapper.InternalDataStore
 			var isComplexType = TypeDescriptor.GetConverter(obj.GetType()).CanConvertFrom(typeof(String));
 			if (!isComplexType)
 			{
-				if (obj.GetType().GetGenericTypeDefinition() == typeof(List<>))
+				var objType = obj.GetType();
+				if (objType.IsArray || objType.GetGenericTypeDefinition() == typeof(List<>))
 				{
 					return String.Join(",", (IList<Int32>)obj);
 				}
@@ -39,12 +40,9 @@ namespace NewLibCore.Data.Mapper.InternalDataStore
 				{
 					return 1;
 				}
-				else
-				{
-					return 0;
-				}
+				return 0;
 			}
-			
+
 			return obj;
 		}
 	}

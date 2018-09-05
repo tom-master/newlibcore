@@ -50,20 +50,38 @@ namespace NewLibCore.Data.Mapper
 						var methodCallExp = (MethodCallExpression)expression;
 						if (methodCallExp.Method.Name == "Contains")
 						{
+							var methodCallArguments = methodCallExp.Arguments;
+							Type argumentType = null;
+							Expression argument = null;
+							Expression obj = null;
+							if (methodCallArguments.Count > 1)
+							{
+								argumentType = methodCallArguments[0].Type;
+								argument = methodCallArguments[1];
+								obj = methodCallArguments[0];
+							}
+							else
+							{
+								argumentType = methodCallExp.Object.Type;
+								argument = methodCallArguments[0];
+								obj = methodCallExp.Object;
+							}
 
-							if (methodCallExp.Object.Type == typeof(String))
+
+
+							if (argumentType == typeof(String))
 							{
 								_temp = RelationType.LIKE;
 								_operationalCharacterStack.Push(RelationType.LIKE.ToString());
-								InternalBuildWhere(methodCallExp.Object);
-								InternalBuildWhere(methodCallExp.Arguments[0]);
+								InternalBuildWhere(obj);
+								InternalBuildWhere(argument);
 							}
-							else if (methodCallExp.Object.Type.Name == "IList`1" || methodCallExp.Object.Type.Name == "List`1")
+							else if (argumentType == typeof(Int32[]) || (argumentType.Name == "List`1" || argumentType.Name == "IList`1"))
 							{
 								_temp = RelationType.IN;
-								_operationalCharacterStack.Push(RelationType.IN.ToString());
-								InternalBuildWhere(methodCallExp.Arguments[0]);
-								InternalBuildWhere(methodCallExp.Object);
+								_operationalCharacterStack.Push(RelationType.FIND_IN_SET.ToString());
+								InternalBuildWhere(argument);
+								InternalBuildWhere(obj);
 							}
 
 						}
@@ -147,10 +165,10 @@ namespace NewLibCore.Data.Mapper
 				case ExpressionType.MemberAccess:
 					{
 						var memberExp = (MemberExpression)expression;
+						var memberName = memberExp.Member.Name;
+						var newParameterName = $@"{Guid.NewGuid().ToString().Replace("-", "")}";
 						if (memberExp.Expression.NodeType == ExpressionType.Parameter)
 						{
-							var memberName = memberExp.Member.Name;
-							var newParameterName = $@"{Guid.NewGuid().ToString().Replace("-", "")}";
 							if (_operationalCharacterStack.Count == 0)
 							{
 								if (memberExp.Type == typeof(Boolean))
@@ -236,16 +254,18 @@ namespace NewLibCore.Data.Mapper
 
 		LIKE = 3,
 
-		IN = 4
+		IN = 4,
+
+		FIND_IN_SET = 5
 	}
 
 	public static class StringBuilderExtension
 	{
 		public static void Append(this StringBuilder builder, String left, String opt, String right)
 		{
-			if (opt.ToUpper() == "IN")
+			if (opt.ToUpper() == "FIND_IN_SET")
 			{
-				builder.Append($@" {left} {opt} ( @{right} ) ");
+				builder.Append($@" FIND_IN_SET({left}, @{right})>0 ");
 			}
 			else
 			{

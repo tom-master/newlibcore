@@ -13,7 +13,13 @@ namespace NewLibCore.Run
 	{
 		static void Main(string[] args)
 		{
-			ParameterMapper parameterMapper = new ParameterMapper("wasd", 0);
+			using (var dataStore = new DataStore("Server=39.106.106.137;Database=NewCrmContext;Uid=root;Pwd=xiaofan@.1;port=6033;SslMode=none;Pooling=True;Min Pool Size=5;Max Pool Size=10;Treat Tiny As Boolean=false"))
+			{
+				var ids = new Int32[] { 3, 8, 9, 10, 11 };
+				var notify = new Notify();
+				notify.Read();
+				dataStore.Modify(notify, n => ids.Contains(n.Id));
+			}
 		}
 	}
 
