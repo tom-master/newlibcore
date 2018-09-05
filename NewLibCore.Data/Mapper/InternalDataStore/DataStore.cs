@@ -14,9 +14,13 @@ namespace NewLibCore.Data.Mapper.InternalDataStore
     public class DataStore : IDisposable
     {
         private DbConnection _connection;
+
         private DbTransaction _dataTransaction;
+
         private Boolean disposed = false;
+
         private Boolean _useTransaction;
+
         private Boolean _noExecuteMode = false;
 
         public DataStore(String connection, Boolean noExecuteMode = false)
