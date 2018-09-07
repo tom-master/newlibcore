@@ -22,9 +22,6 @@ namespace NewLibCore.Data.Mapper
 			_model = model;
 		}
 
-		internal IList<ParameterMapper> Parameters { get { return _parameters; } }
-
-
 		internal void BuildWhere(Expression expression)
 		{
 			_builder.Append(" WHERE ");
@@ -237,6 +234,11 @@ namespace NewLibCore.Data.Mapper
 			{
 				_parameters.Add(item);
 			}
+		}
+
+		internal IList<ParameterMapper> GetParameters()
+		{
+			return _parameters;
 		}
 
 		public override string ToString()

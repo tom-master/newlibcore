@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using NewLibCore.Data.Mapper.BuilderLog;
-using NewLibCore.Data.Mapper.InternalDataStore;
 using NewLibCore.Data.Mapper.MapperExtension;
 using NewLibCore.Data.Mapper.PropertyExtension;
 
@@ -15,6 +9,8 @@ namespace NewLibCore.Data.Mapper
 	internal class AddBuilder<TModel> : SqlBuilder<TModel> where TModel : PropertyMonitor, new()
 	{
 		private Boolean _isVerifyModel;
+
+		private static readonly String _maxIdentity = " ; SELECT CAST(@@IDENTITY AS SIGNED) AS c ";
 
 		public AddBuilder(TModel model, Boolean isVerifyModel = false) : base(model)
 		{
@@ -36,7 +32,7 @@ namespace NewLibCore.Data.Mapper
 				ValidateModel(columns.ToList());
 			}
 
-			buildEntry.AppendSqlPart($@" INSERT {ModelType.Name} ({String.Join(",", columns.Select(c => c.Name))} ) VALUES ({String.Join(",", columns.Select(key => $@"@{key.Name}"))})");
+			buildEntry.AppendSqlPart($@" INSERT {ModelType.Name} ({String.Join(",", columns.Select(c => c.Name))} ) VALUES ({String.Join(",", columns.Select(key => $@"@{key.Name}"))}) {_maxIdentity} ");
 			buildEntry.AppendParameter(columns.ToList());
 			return buildEntry;
 		}

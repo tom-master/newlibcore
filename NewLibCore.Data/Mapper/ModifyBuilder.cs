@@ -9,6 +9,7 @@ namespace NewLibCore.Data.Mapper
 	{
 		private Expression<Func<TModel, Boolean>> _where;
 		private Boolean _isValidate;
+		private static readonly String _rowCount = " ; SELECT CAST(ROW_COUNT() AS SIGNED) AS c";
 
 		public ModifyBuilder(TModel model, Expression<Func<TModel, Boolean>> where = null, Boolean isValidate = false) : base(model)
 		{
@@ -36,6 +37,7 @@ namespace NewLibCore.Data.Mapper
 			{
 				buildEntry.BuildWhere(_where);
 			}
+			buildEntry.AppendSqlPart(_rowCount);
 
 			buildEntry.AppendParameter(ModelInstance.Args.Select(s => s.PropertyInfo).ToList());
 

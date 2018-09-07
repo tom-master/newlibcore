@@ -81,7 +81,7 @@ namespace NewLibCore.Data.Mapper.InternalDataStore
 			var entry = builder.Build();
 			if (!_noExecuteMode)
 			{
-				return SqlExecute($@"{entry.ToString()} ; SELECT CAST(@@IDENTITY AS SIGNED) AS c ", entry.Parameters, CommandType.Text);
+				return SqlExecute($@"{entry.ToString()}", entry.GetParameters(), CommandType.Text);
 			}
 			return 0;
 		}
@@ -92,7 +92,7 @@ namespace NewLibCore.Data.Mapper.InternalDataStore
 			var entry = builder.Build();
 			if (!_noExecuteMode)
 			{
-				return SqlExecute($@"{entry.ToString()} ; SELECT CAST(ROW_COUNT() AS SIGNED) AS c", entry.Parameters, CommandType.Text, true);
+				return SqlExecute($@"{entry.ToString()}", entry.GetParameters(), CommandType.Text, true);
 			}
 			return 0;
 		}
