@@ -74,7 +74,6 @@ namespace NewLibCore.Data.Mapper
 							}
 							else if (argumentType == typeof(Int32[]) || (argumentType.Name == "List`1" || argumentType.Name == "IList`1"))
 							{
-								_temp = RelationType.IN;
 								_operationalCharacterStack.Push(RelationType.FIND_IN_SET.ToString());
 								InternalBuildWhere(argument);
 								InternalBuildWhere(obj);
@@ -184,16 +183,7 @@ namespace NewLibCore.Data.Mapper
 						else
 						{
 							var getter = Expression.Lambda(memberExp).Compile();
-							Object result = "";
-							if (_temp == RelationType.LIKE)
-							{
-								result = $@"%{getter.DynamicInvoke()}%";
-							}
-							else
-							{
-								result = getter.DynamicInvoke();
-							}
-
+							Object result = result = getter.DynamicInvoke();
 							_parameters.Add(new ParameterMapper($@"@{_parameterStack.Pop()}", result));
 							break;
 						}
@@ -255,9 +245,7 @@ namespace NewLibCore.Data.Mapper
 
 		LIKE = 3,
 
-		IN = 4,
-
-		FIND_IN_SET = 5
+		FIND_IN_SET = 4
 	}
 
 	public static class StringBuilderExtension
@@ -267,6 +255,10 @@ namespace NewLibCore.Data.Mapper
 			if (opt.ToUpper() == "FIND_IN_SET")
 			{
 				builder.Append($@" FIND_IN_SET({left}, @{right})>0 ");
+			}
+			else if (opt.ToUpper() == "LIKE")
+			{
+				builder.Append($@" {left} {opt} CONCAT('%',@{right},'%') ");
 			}
 			else
 			{
