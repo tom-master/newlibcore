@@ -35,7 +35,10 @@ namespace NewLibCore.Data.Mapper
 
 			if (_where != null)
 			{
-				buildEntry.BuildWhere(_where);
+				var builderWhere = new BuilderWhere<TModel>();
+				builderWhere.Where(_where);
+				buildEntry.AppendSqlPart(builderWhere.ToString());
+				buildEntry.ParameterMappers.AddRange(builderWhere.WhereParameters);
 			}
 			buildEntry.AppendSqlPart(_rowCount);
 

@@ -81,7 +81,7 @@ namespace NewLibCore.Data.Mapper.InternalDataStore
 			var entry = builder.Build();
 			if (!_noExecuteMode)
 			{
-				return SqlExecute($@"{entry.ToString()}", entry.GetParameters(), CommandType.Text);
+				return SqlExecute($@"{entry.ToString()}", entry.ParameterMappers, CommandType.Text);
 			}
 			return 0;
 		}
@@ -92,9 +92,15 @@ namespace NewLibCore.Data.Mapper.InternalDataStore
 			var entry = builder.Build();
 			if (!_noExecuteMode)
 			{
-				return SqlExecute($@"{entry.ToString()}", entry.GetParameters(), CommandType.Text, true);
+				return SqlExecute($@"{entry.ToString()}", entry.ParameterMappers, CommandType.Text, true);
 			}
 			return 0;
+		}
+
+		public void Finds<TModel>(Expression<Func<TModel, Boolean>> where, Expression<Func<TModel, Object>> fields) where TModel : PropertyMonitor, new()
+		{
+			var a = new SelectBuilder<TModel>(null, where, fields);
+			a.Build();
 		}
 
 		public TModel FindOne<TModel>(String sqlStr, IEnumerable<ParameterMapper> parameters = null, CommandType commandType = CommandType.Text) where TModel : class, new()

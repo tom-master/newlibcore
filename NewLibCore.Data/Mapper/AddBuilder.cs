@@ -12,7 +12,7 @@ namespace NewLibCore.Data.Mapper
 
 		private static readonly String _maxIdentity = " ; SELECT CAST(@@IDENTITY AS SIGNED) AS c ";
 
-		public AddBuilder(TModel model, Boolean isVerifyModel = false) : base(model)
+		internal AddBuilder(TModel model, Boolean isVerifyModel = false) : base(model)
 		{
 			_isVerifyModel = isVerifyModel;
 		}
@@ -20,7 +20,7 @@ namespace NewLibCore.Data.Mapper
 		protected internal override BuildEntry<TModel> Build()
 		{
 			var buildEntry = new BuildEntry<TModel>(ModelInstance);
-			var columns = ModelType.GetProperties().Where(w => w.PropertyType.Name != "IList`1" && w.GetCustomAttributes<ValidateBase>().Any());
+			var columns = ModelType.GetProperties().Where(w => w.GetCustomAttributes<ValidateBase>().Any());
 
 			if (!columns.Any())
 			{

@@ -13,12 +13,14 @@ namespace NewLibCore.Run
 	{
 		static void Main(string[] args)
 		{
+
 			using (var dataStore = new DataStore("Server=39.106.106.137;Database=NewCrmContext;Uid=root;Pwd=xiaofan@.1;port=6033;SslMode=none;Pooling=True;Min Pool Size=5;Max Pool Size=10;Treat Tiny As Boolean=false"))
 			{
 				var ids = "应用审核通过通知";
 				var notify = new Notify();
-				notify.Read();
-				dataStore.Modify(notify, n => n.Title.Contains(ids));
+				//notify.Read();
+				//dataStore.Modify(notify, n => n.Title.Contains(ids));
+				dataStore.Finds<Notify>(a => a.Id == 1, a => new { a.Id, a.Title, a.Content });
 			}
 		}
 	}
