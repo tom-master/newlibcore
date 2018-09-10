@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Linq;
 using NewLibCore.Data.Mapper.InternalDataStore;
 using NewLibCore.Data.Mapper.MapperExtension;
 using NewLibCore.Data.Mapper.PropertyExtension;
@@ -20,7 +17,7 @@ namespace NewLibCore.Run
 				var notify = new Notify();
 				//notify.Read();
 				//dataStore.Modify(notify, n => n.Title.Contains(ids));
-				dataStore.Finds<Notify>(a => a.Id == 1, a => new { a.Id, a.Title, a.Content });
+				//var a1 = dataStore.Find<Notify>(a => a.Id == 3, a => new { a.Id, a.Title, a.Content });
 			}
 		}
 	}

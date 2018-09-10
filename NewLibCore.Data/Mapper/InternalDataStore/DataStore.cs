@@ -79,28 +79,28 @@ namespace NewLibCore.Data.Mapper.InternalDataStore
 		{
 			SqlBuilder<TModel> builder = new AddBuilder<TModel>(model, true);
 			var entry = builder.Build();
-			if (!_noExecuteMode)
-			{
-				return SqlExecute($@"{entry.ToString()}", entry.ParameterMappers, CommandType.Text);
-			}
-			return 0;
+			return SqlExecute($@"{entry.ToString()}", entry.ParameterMappers, CommandType.Text);
 		}
 
 		public Int32 Modify<TModel>(TModel model, Expression<Func<TModel, Boolean>> where = null) where TModel : PropertyMonitor, new()
 		{
 			SqlBuilder<TModel> builder = new ModifyBuilder<TModel>(model, where, true);
 			var entry = builder.Build();
-			if (!_noExecuteMode)
-			{
-				return SqlExecute($@"{entry.ToString()}", entry.ParameterMappers, CommandType.Text, true);
-			}
-			return 0;
+			return SqlExecute(entry.ToString(), entry.ParameterMappers, CommandType.Text, true);
 		}
 
-		public void Finds<TModel>(Expression<Func<TModel, Boolean>> where, Expression<Func<TModel, Object>> fields) where TModel : PropertyMonitor, new()
+		public List<TModel> Find<TModel>(Expression<Func<TModel, Boolean>> where, Expression<Func<TModel, Object>> fields) where TModel : PropertyMonitor, new()
 		{
-			var a = new SelectBuilder<TModel>(null, where, fields);
-			a.Build();
+			var builder = new SelectBuilder<TModel>(null, where, fields);
+			var entry = builder.Build();
+			return Find<TModel>(entry.FormatSql(), entry.ParameterMappers, CommandType.Text);
+		}
+
+		public TModel FindOne<TModel>(Expression<Func<TModel, Boolean>> where, Expression<Func<TModel, Object>> fields) where TModel : PropertyMonitor, new()
+		{
+			var builder = new SelectBuilder<TModel>(null, where, fields);
+			var entry = builder.Build();
+			return Find<TModel>(entry.FormatSql(), entry.ParameterMappers, CommandType.Text).FirstOrDefault();
 		}
 
 		public TModel FindOne<TModel>(String sqlStr, IEnumerable<ParameterMapper> parameters = null, CommandType commandType = CommandType.Text) where TModel : class, new()
@@ -129,30 +129,6 @@ namespace NewLibCore.Data.Mapper.InternalDataStore
 				tmpDt.Load(dr, LoadOption.Upsert);
 				dr.Close();
 				return tmpDt.AsList<TModel>().ToList();
-			}
-		}
-
-		public DataTable Find(String sqlStr, IEnumerable<ParameterMapper> parameters = null, CommandType commandType = CommandType.Text)
-		{
-			Open();
-			using (DbCommand cmd = _connection.CreateCommand())
-			{
-				if (_useTransaction)
-				{
-					cmd.Transaction = GetNonceTransaction();
-				}
-				cmd.CommandType = commandType;
-				cmd.CommandText = sqlStr;
-				if (parameters != null && parameters.Any())
-				{
-					cmd.Parameters.AddRange(parameters.Select(s => (DbParameter)s).ToArray());
-				}
-
-				var dr = cmd.ExecuteReader();
-				var tmpDt = new DataTable("tmpDt");
-				tmpDt.Load(dr, LoadOption.Upsert);
-				dr.Close();
-				return tmpDt;
 			}
 		}
 
