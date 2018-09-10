@@ -74,7 +74,7 @@ namespace NewLibCore.Data.Mapper
 							}
 							else if (argumentType == typeof(Int32[]) || (argumentType.Name == "List`1" || argumentType.Name == "IList`1"))
 							{
-								_operationalCharacterStack.Push(RelationType.FIND_IN_SET.ToString());
+								_operationalCharacterStack.Push(RelationType.IN.ToString());
 								InternalBuildWhere(argument);
 								InternalBuildWhere(obj);
 							}
@@ -245,18 +245,18 @@ namespace NewLibCore.Data.Mapper
 
 		LIKE = 3,
 
-		FIND_IN_SET = 4
+		IN = 4
 	}
 
 	public static class StringBuilderExtension
 	{
 		public static void Append(this StringBuilder builder, String left, String opt, String right)
 		{
-			if (opt.ToUpper() == "FIND_IN_SET")
+			if (opt.ToUpper() == RelationType.IN.ToString())
 			{
 				builder.Append($@" FIND_IN_SET({left}, @{right})>0 ");
 			}
-			else if (opt.ToUpper() == "LIKE")
+			else if (opt.ToUpper() == RelationType.LIKE.ToString())
 			{
 				builder.Append($@" {left} {opt} CONCAT('%',@{right},'%') ");
 			}
