@@ -11,10 +11,13 @@ namespace NewLibCore.Data.Mapper
 	internal class BuildEntry<TModel> where TModel : class, new()
 	{
 		private Stack<String> _parameterStack = new Stack<String>();
+
 		private Stack<String> _operationalCharacterStack = new Stack<String>();
+
 		private StringBuilder _builder = new StringBuilder();
+
 		private IList<ParameterMapper> _parameters = new List<ParameterMapper>();
-		private RelationType _temp;
+
 		private TModel _model;
 
 		internal BuildEntry(TModel model)
@@ -63,11 +66,8 @@ namespace NewLibCore.Data.Mapper
 								obj = methodCallExp.Object;
 							}
 
-
-
 							if (argumentType == typeof(String))
 							{
-								_temp = RelationType.LIKE;
 								_operationalCharacterStack.Push(RelationType.LIKE.ToString());
 								InternalBuildWhere(obj);
 								InternalBuildWhere(argument);

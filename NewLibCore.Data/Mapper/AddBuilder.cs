@@ -33,6 +33,7 @@ namespace NewLibCore.Data.Mapper
 			}
 
 			buildEntry.AppendSqlPart($@" INSERT {ModelType.Name} ({String.Join(",", columns.Select(c => c.Name))} ) VALUES ({String.Join(",", columns.Select(key => $@"@{key.Name}"))}) {_maxIdentity} ");
+
 			buildEntry.AppendParameter(columns.ToList());
 			return buildEntry;
 		}
