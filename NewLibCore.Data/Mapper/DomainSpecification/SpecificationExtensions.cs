@@ -58,18 +58,5 @@ namespace NewLibCore.Data.Mapper.DomainSpecification
             var newExpression = Expression.Not(left.Expression.Body);
             left.Expression = Expression.Lambda<Func<T, Boolean>>(newExpression, internalParameter);
         }
-
-        /// <summary>
-        /// 逻辑倒序排序
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="left"></param>
-        /// <param name="right"></param>
-        /// <returns></returns>
-        public static Specification<T> OrderByDescending<T>(this Specification<T> left, Expression<Func<T, Object>> right) where T : PropertyMonitor, new()
-		{
-            left.AddOrderByExpression(right);
-            return left;
-        }
     }
 }

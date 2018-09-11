@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq.Expressions;
-using NewCRM.Domain.Entitys;
 using NewLibCore.Data.Mapper.PropertyExtension;
 
 namespace NewLibCore.Data.Mapper.DomainSpecification.Factory
