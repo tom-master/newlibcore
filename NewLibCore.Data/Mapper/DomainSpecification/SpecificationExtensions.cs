@@ -19,14 +19,12 @@ namespace NewLibCore.Data.Mapper.DomainSpecification
         /// <returns></returns>
         public static void And<T>(this Specification<T> left, Expression<Func<T, Boolean>> right) where T : PropertyMonitor, new()
 		{
-
             var internalParameter = Expression.Parameter(typeof(T), "entity");
             var parameterVister = new ParameterVisitor(internalParameter);
             var leftBody = parameterVister.Replace(left.Expression.Body);
             var rightBody = parameterVister.Replace(right.Body);
             var newExpression = Expression.And(leftBody, rightBody);
             left.Expression = Expression.Lambda<Func<T, Boolean>>(newExpression, internalParameter);
-
         }
 
         /// <summary>

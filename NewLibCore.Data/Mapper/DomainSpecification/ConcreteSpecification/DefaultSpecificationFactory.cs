@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 using NewLibCore.Data.Mapper.DomainSpecification.Factory;
+using NewLibCore.Data.Mapper.PropertyExtension;
 
 namespace NewLibCore.Data.Mapper.DomainSpecification.ConcreteSpecification
 {
@@ -9,9 +10,22 @@ namespace NewLibCore.Data.Mapper.DomainSpecification.ConcreteSpecification
 	/// </summary>
 	public sealed class DefaultSpecificationFactory : SpecificationFactory
 	{
-		public override Specification<T> Create<T>(Expression<Func<T, Boolean>> expression = default(Expression<Func<T, Boolean>>))
+		private static DefaultSpecificationFactory _defaultSpecificationFactory;
+
+		static DefaultSpecificationFactory()
 		{
-			return expression == default(Expression<Func<T, Boolean>>) ? new DefaultSpecification<T>() : new DefaultSpecification<T>(expression);
+			_defaultSpecificationFactory = new DefaultSpecificationFactory();
+		}
+
+
+		internal override Specification<T> Create<T>(Expression<Func<T, Boolean>> expression = null)
+		{
+			return expression == null ? new DefaultSpecification<T>() : new DefaultSpecification<T>(expression);
+		}
+
+		public static Specification<T> CreateFilter<T>(Expression<Func<T, Boolean>> expression = null) where T : PropertyMonitor, new()
+		{
+			return _defaultSpecificationFactory.Create(expression);
 		}
 	}
 }
