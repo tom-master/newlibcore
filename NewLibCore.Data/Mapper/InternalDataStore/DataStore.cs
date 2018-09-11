@@ -6,7 +6,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using MySql.Data.MySqlClient;
 using NewLibCore.Data.Mapper.DataExtension;
-using NewLibCore.Data.Mapper.DomainSpecification;
 using NewLibCore.Data.Mapper.PropertyExtension;
 
 namespace NewLibCore.Data.Mapper.InternalDataStore
@@ -83,33 +82,33 @@ namespace NewLibCore.Data.Mapper.InternalDataStore
 			return SqlExecute($@"{entry.ToString()}", entry.ParameterMappers, CommandType.Text);
 		}
 
-		public Int32 Modify<TModel>(TModel model, Specification<TModel> where = null) where TModel : PropertyMonitor, new()
+		public Int32 Modify<TModel>(TModel model, Expression<Func<TModel, Boolean>> where = null) where TModel : PropertyMonitor, new()
 		{
-			SqlBuilder<TModel> builder = new ModifyBuilder<TModel>(model, where.Expression, true);
+			SqlBuilder<TModel> builder = new ModifyBuilder<TModel>(model, where, true);
 			var entry = builder.Build();
 			return SqlExecute(entry.ToString(), entry.ParameterMappers, CommandType.Text, true);
 		}
 
-		public List<TModel> Find<TModel>(Specification<TModel> where, Expression<Func<TModel, Object>> fields) where TModel : PropertyMonitor, new()
+		public List<TModel> Find<TModel>(Expression<Func<TModel, Boolean>> where, Expression<Func<TModel, Object>> fields) where TModel : PropertyMonitor, new()
 		{
-			var builder = new SelectBuilder<TModel>(null, where.Expression, fields);
+			var builder = new SelectBuilder<TModel>(null, where, fields);
 			var entry = builder.Build();
 			return Find<TModel>(entry.FormatSql(), entry.ParameterMappers, CommandType.Text);
 		}
 
-		public TModel FindOne<TModel>(Specification<TModel> where, Expression<Func<TModel, Object>> fields) where TModel : PropertyMonitor, new()
+		public TModel FindOne<TModel>(Expression<Func<TModel, Boolean>> where, Expression<Func<TModel, Object>> fields) where TModel : PropertyMonitor, new()
 		{
-			var builder = new SelectBuilder<TModel>(null, where.Expression, fields);
+			var builder = new SelectBuilder<TModel>(null, where, fields);
 			var entry = builder.Build();
 			return Find<TModel>(entry.FormatSql(), entry.ParameterMappers, CommandType.Text).FirstOrDefault();
 		}
 
-		public TModel FindOne<TModel>(String sqlStr, IEnumerable<ParameterMapper> parameters = null, CommandType commandType = CommandType.Text) where TModel : PropertyMonitor, new()
+		public TModel FindOne<TModel>(String sqlStr, IEnumerable<ParameterMapper> parameters = null, CommandType commandType = CommandType.Text) where TModel : class, new()
 		{
 			return Find<TModel>(sqlStr, parameters, commandType).FirstOrDefault();
 		}
 
-		public List<TModel> Find<TModel>(String sqlStr, IEnumerable<ParameterMapper> parameters = null, CommandType commandType = CommandType.Text) where TModel : PropertyMonitor, new()
+		public List<TModel> Find<TModel>(String sqlStr, IEnumerable<ParameterMapper> parameters = null, CommandType commandType = CommandType.Text) where TModel : class, new()
 		{
 			Open();
 			using (DbCommand cmd = _connection.CreateCommand())

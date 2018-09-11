@@ -1,5 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Linq.Expressions;
+using NewLibCore.Data.Mapper.DomainSpecification.ConcreteSpecification;
 using NewLibCore.Data.Mapper.InternalDataStore;
 using NewLibCore.Data.Mapper.MapperExtension;
 using NewLibCore.Data.Mapper.PropertyExtension;
@@ -10,6 +12,9 @@ namespace NewLibCore.Run
 	{
 		static void Main(string[] args)
 		{
+			Expression<Func<Notify, Boolean>> aa = a => a.IsDeleted;
+			aa = b => b.IsNotify;
+			var a1 = aa;
 
 			using (var dataStore = new DataStore("Server=39.106.106.137;Database=NewCrmContext;Uid=root;Pwd=xiaofan@.1;port=6033;SslMode=none;Pooling=True;Min Pool Size=5;Max Pool Size=10;Treat Tiny As Boolean=false"))
 			{

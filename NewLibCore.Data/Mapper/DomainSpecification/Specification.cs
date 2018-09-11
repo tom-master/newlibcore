@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq.Expressions;
+using NewLibCore.Data.Mapper.DomainSpecification.ConcreteSpecification;
 using NewLibCore.Data.Mapper.PropertyExtension;
 
 namespace NewLibCore.Data.Mapper.DomainSpecification
@@ -15,9 +16,9 @@ namespace NewLibCore.Data.Mapper.DomainSpecification
         /// </summary>
         public abstract Expression<Func<T, Boolean>> Expression { get; internal set; }
 
-        //public static explicit operator Specification<T>(Expression<Func<T, Boolean>> expression)
-        //{
-        //    return new DefaultSpecification<T>(expression);
-        //}
-    }
+		public static implicit operator Specification<T>(Expression<Func<T, Boolean>> expression)
+		{
+			return new DefaultSpecification<T>(expression);
+		}
+	}
 }
