@@ -8,13 +8,13 @@ namespace NewLibCore.Data.Mapper.DomainSpecification.ConcreteSpecification
 	/// <summary>
 	/// 默认规约工厂
 	/// </summary>
-	public sealed class DefaultSpecificationFactory : SpecificationFactory
+	public sealed class FilterFactory : SpecificationFactory
 	{
-		private static DefaultSpecificationFactory _defaultSpecificationFactory;
+		private static FilterFactory _filterFactory;
 
-		static DefaultSpecificationFactory()
+		static FilterFactory()
 		{
-			_defaultSpecificationFactory = new DefaultSpecificationFactory();
+			_filterFactory = new FilterFactory();
 		}
 
 
@@ -25,7 +25,7 @@ namespace NewLibCore.Data.Mapper.DomainSpecification.ConcreteSpecification
 
 		public static Specification<T> CreateFilter<T>(Expression<Func<T, Boolean>> expression = null) where T : PropertyMonitor, new()
 		{
-			return _defaultSpecificationFactory.Create(expression);
+			return _filterFactory.Create(expression);
 		}
 	}
 }
