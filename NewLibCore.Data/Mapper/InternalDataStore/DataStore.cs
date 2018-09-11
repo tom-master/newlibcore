@@ -103,12 +103,12 @@ namespace NewLibCore.Data.Mapper.InternalDataStore
 			return Find<TModel>(entry.FormatSql(), entry.ParameterMappers, CommandType.Text).FirstOrDefault();
 		}
 
-		public TModel FindOne<TModel>(String sqlStr, IEnumerable<ParameterMapper> parameters = null, CommandType commandType = CommandType.Text) where TModel : class, new()
+		public TModel FindOne<TModel>(String sqlStr, IEnumerable<ParameterMapper> parameters = null, CommandType commandType = CommandType.Text) where TModel : PropertyMonitor, new()
 		{
 			return Find<TModel>(sqlStr, parameters, commandType).FirstOrDefault();
 		}
 
-		public List<TModel> Find<TModel>(String sqlStr, IEnumerable<ParameterMapper> parameters = null, CommandType commandType = CommandType.Text) where TModel : class, new()
+		public List<TModel> Find<TModel>(String sqlStr, IEnumerable<ParameterMapper> parameters = null, CommandType commandType = CommandType.Text) where TModel : PropertyMonitor, new()
 		{
 			Open();
 			using (DbCommand cmd = _connection.CreateCommand())
