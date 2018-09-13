@@ -79,7 +79,7 @@ namespace NewLibCore.Data.Mapper.InternalDataStore
         {
             SqlBuilder<TModel> builder = new AddBuilder<TModel>(model, true);
             var entry = builder.Build();
-            return SqlExecute($@"{entry.FormatSql()}", entry.ParameterMappers, CommandType.Text);
+            return SqlExecute(entry.FormatSql(), entry.ParameterMappers, CommandType.Text);
         }
 
         public Int32 Modify<TModel>(TModel model, Expression<Func<TModel, Boolean>> where = null) where TModel : PropertyMonitor, new()
