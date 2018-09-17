@@ -5,7 +5,7 @@ using System.Text;
 
 namespace NewLibCore
 {
-	public static class FileHelper
+    public static class FileHelper
     {
         /// <summary>
         /// 检测指定目录是否存在
@@ -283,7 +283,12 @@ namespace NewLibCore
             {
                 sb.Append(t.ToString("X2"));
             }
-            stream.Position = 0;
+
+			if (stream.CanSeek)
+			{
+				stream.Position = 0;
+			}
+
             return sb.ToString();
         }
     }
