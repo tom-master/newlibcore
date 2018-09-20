@@ -50,7 +50,6 @@ namespace NewLibCore.Security
                 value = Regex.Replace(value, "net user", "", RegexOptions.IgnoreCase);
                 value = Regex.Replace(value, "or", "", RegexOptions.IgnoreCase);
                 value = Regex.Replace(value, "net", "", RegexOptions.IgnoreCase);
-                value = Regex.Replace(value, "*", "", RegexOptions.IgnoreCase);
                 value = Regex.Replace(value, "-", "", RegexOptions.IgnoreCase);
                 value = Regex.Replace(value, "delete", "", RegexOptions.IgnoreCase);
                 value = Regex.Replace(value, "drop", "", RegexOptions.IgnoreCase);
