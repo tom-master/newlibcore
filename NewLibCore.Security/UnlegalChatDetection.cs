@@ -63,7 +63,7 @@ namespace NewLibCore.Security
                 value = value.Replace("?", "");
                 value = value.Replace("'", "''");
                 value = value.Replace(",", "");
-                value = value.Replace("/", "");
+                //value = value.Replace("/", "");
                 value = value.Replace(";", "");
                 value = value.Replace("*/", "");
                 value = value.Replace("\r\n", "");
