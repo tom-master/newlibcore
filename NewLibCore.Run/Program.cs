@@ -12,14 +12,13 @@ namespace NewLibCore.Run
     {
         static void Main(string[] args)
         {
-            var a1 = "wasdaa";
-            aa(ref a1);
+            var a1 = "/images/uploads/shortcut/20130505/13677380592462.png";
+            var a2 = NewLibCore.Security.UnlegalChatDetection.FilterBadChat(a1);
+
+            var a3 = "or";
+            var a4 = NewLibCore.Security.UnlegalChatDetection.FilterBadChat(a3);
         }
 
-        private static void aa(ref String a)
-        {
-            a = a.Replace("aa", "bb");
-        }
     }
 
     [Serializable, Description("消息")]
