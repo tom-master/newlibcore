@@ -59,7 +59,7 @@ namespace NewLibCore.Data.Mapper.MapperExtension
 		{
 			get
 			{
-				return 2;
+				return 1;
 			}
 		}
 

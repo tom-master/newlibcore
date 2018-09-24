@@ -3,39 +3,43 @@
 namespace NewLibCore.Data.Mapper.MapperExtension
 {
 
-    public class InputRangeAttribute : ValidateBase
+    public class PropertyInputRangeAttribute : ValidateBase
     {
         private Int32 _min;
 
         private Int32 _max;
 
+        private Boolean _canbeEmpty;
+
         public override Int32 Order
         {
-            get { return 1; }
+            get { return 2; }
         }
 
-        public InputRangeAttribute(Int32 min, Int32 max)
+        public PropertyInputRangeAttribute(Int32 min, Int32 max, Boolean canbeEmpty = false)
         {
             _min = min;
             _max = max;
+            _canbeEmpty = canbeEmpty;
         }
 
-        public InputRangeAttribute(Int32 max)
+        public PropertyInputRangeAttribute(Int32 max, Boolean canbeEmpty = false) : this(0, max, canbeEmpty)
         {
-            _min = 0;
-            _max = max;
         }
 
         public override Boolean IsValidate(Object value)
         {
-            if (value == null)
+            var internalValue = (value + "").ToString();
+            if (_canbeEmpty && String.IsNullOrEmpty(internalValue))
+            {
+                return true;
+            }
+
+            var valueLength = internalValue.Length;
+            if (valueLength == 0)
             {
                 return false;
             }
-
-            var internalValue = value.ToString();
-
-            var valueLength = internalValue.Length;
 
             if (_min == 0 && valueLength <= _max)
             {
