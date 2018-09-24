@@ -13,7 +13,7 @@ namespace NewLibCore.Data.Mapper.MapperExtension
 
         public override Int32 Order
         {
-            get { return 2; }
+            get { return 1; }
         }
 
         public PropertyInputRangeAttribute(Int32 min, Int32 max, Boolean canbeEmpty = false)
@@ -30,17 +30,13 @@ namespace NewLibCore.Data.Mapper.MapperExtension
         public override Boolean IsValidate(Object value)
         {
             var internalValue = (value + "").ToString();
-            if (_canbeEmpty && String.IsNullOrEmpty(internalValue))
+            /*if (_canbeEmpty && String.IsNullOrEmpty(internalValue))
             {
                 return true;
-            }
+            }*/
 
             var valueLength = internalValue.Length;
-            if (valueLength == 0)
-            {
-                return false;
-            }
-
+           
             if (_min == 0 && valueLength <= _max)
             {
                 return true;
