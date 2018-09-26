@@ -2,88 +2,104 @@
 
 namespace NewLibCore.Data.Mapper.MapperExtension
 {
-	public class PropertyDefaultValueAttribute : ValidateBase
-	{
-		private readonly Type _type;
+    public class PropertyDefaultValueAttribute : ValidateBase
+    {
+        private readonly Type _type;
 
-		private readonly Object _value;
+        private readonly Object _value;
 
-		public PropertyDefaultValueAttribute(Type type, Object value)
-		{
-			_type = type ?? throw new ArgumentException($@"{nameof(type)} 不能为空");
-			_value = value ?? throw new ArgumentException($@"{nameof(value)} 不能为空");
-		}
+        public PropertyDefaultValueAttribute(Type type, Object value)
+        {
 
-		public PropertyDefaultValueAttribute(Type type)
-		{
-			if (type == null)
-			{
-				throw new ArgumentException($@"{nameof(type)} 不能为空");
-			}
+            if (type == null)
+            {
+                throw new ArgumentException($@"{nameof(type)} 不能为空");
+            }
 
-			if (type.BaseType == typeof(ValueType))
-			{
-				_value = 0;
-			}
-			else
-			{
-				if (type == typeof(String))
-				{
-					_value = "";
-				}
-				else
-				{
-					_value = null;
-				}
-			}
-			_type = type;
-		}
+            if (value != default(Object))
+            {
+                Object internalValue;
+                try
+                {
+                    internalValue = Convert.ChangeType(value, type);
+                }
+                catch (System.Exception)
+                {
+                    throw new Exception($@"默认值 {(value + "" == "" ? "空字符串" : value)} 与类型 {type.ToString()} 不存在显式或隐式转换");
+                }
+                _value = internalValue;
+            }
+            else
+            {
+                if (type.BaseType == typeof(ValueType))
+                {
+                    _value = 0;
+                }
+                else
+                {
+                    if (type == typeof(String))
+                    {
+                        _value = "";
+                    }
+                    else
+                    {
+                        _value = null;
+                    }
+                }
+            }
+            _type = type;
+        }
 
-		public Type Type
-		{
-			get
-			{
-				return _type;
-			}
-		}
+        public PropertyDefaultValueAttribute(Type type) : this(type, default(Object))
+        {
 
-		public Object Value
-		{
-			get
-			{
-				return _value;
-			}
-		}
+        }
 
-		public override Int32 Order
-		{
-			get
-			{
-				return 2;
-			}
-		}
+        public Type Type
+        {
+            get
+            {
+                return _type;
+            }
+        }
 
-		public override String FailReason(String fieldName)
-		{
-			return $@"{fieldName} 的默认值类型转换失败";
-		}
+        public Object Value
+        {
+            get
+            {
+                return _value;
+            }
+        }
 
-		public override bool IsValidate(object value)
-		{
-			if (value == null)
-			{
-				value = _value;
-			}
+        public override Int32 Order
+        {
+            get
+            {
+                return 2;
+            }
+        }
 
-			try
-			{
-				Convert.ChangeType(value, _type);
-				return true;
-			}
-			catch (Exception)
-			{
-				return false;
-			}
-		}
-	}
+        public override String FailReason(String fieldName)
+        {
+            return $@"{fieldName} 的默认值类型转换失败";
+        }
+
+        public override bool IsValidate(object value)
+        {
+            if (value == null)
+            {
+                value = _value;
+            }
+
+            try
+            {
+                Convert.ChangeType(value, _type);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+    }
 }

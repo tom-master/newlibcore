@@ -12,8 +12,7 @@ namespace NewLibCore.Run
     {
         static void Main(string[] args)
         {
-            var att = new PropertyInputRangeAttribute(5);
-            att.IsValidate("");
+            var att = new PropertyDefaultValueAttribute(typeof(Int32), "");
         }
 
     }
