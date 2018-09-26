@@ -12,10 +12,16 @@ namespace NewLibCore.Run
     {
         static void Main(string[] args)
         {
-            var att = new PropertyDefaultValueAttribute(typeof(Int32), "");
+            var att = new PropertyDefaultValueAttribute(typeof(AA));
         }
-
     }
 
+    public enum AA
+    {
+        A1 = 1,
 
+        A2 = 2,
+
+        A3 = 3
+    }
 }

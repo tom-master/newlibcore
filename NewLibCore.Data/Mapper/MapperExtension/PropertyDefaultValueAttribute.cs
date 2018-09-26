@@ -16,6 +16,14 @@ namespace NewLibCore.Data.Mapper.MapperExtension
                 throw new ArgumentException($@"{nameof(type)} 不能为空");
             }
 
+            if (type.BaseType == typeof(Enum))
+            {
+                if (value == default(Object))
+                {
+                    throw new ArgumentException($@"枚举类型 {type.ToString()} 的默认值必须被手动指定");
+                }
+            }
+
             if (value != default(Object))
             {
                 Object internalValue;
@@ -23,9 +31,9 @@ namespace NewLibCore.Data.Mapper.MapperExtension
                 {
                     internalValue = Convert.ChangeType(value, type);
                 }
-                catch (System.Exception)
+                catch (ArgumentException)
                 {
-                    throw new Exception($@"默认值 {(value + "" == "" ? "空字符串" : value)} 与类型 {type.ToString()} 不存在显式或隐式转换");
+                    throw new ArgumentException($@"默认值 {(value + "" == "" ? "空字符串" : value)} 与类型 {type.ToString()} 不存在显式或隐式转换");
                 }
                 _value = internalValue;
             }
@@ -33,7 +41,14 @@ namespace NewLibCore.Data.Mapper.MapperExtension
             {
                 if (type.BaseType == typeof(ValueType))
                 {
-                    _value = 0;
+                    if (type == typeof(Boolean))
+                    {
+                        _value = false;
+                    }
+                    else
+                    {
+                        _value = 0;
+                    }
                 }
                 else
                 {
