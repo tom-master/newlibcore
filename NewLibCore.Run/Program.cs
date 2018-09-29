@@ -12,12 +12,13 @@ namespace NewLibCore.Run
     {
         static void Main(string[] args)
         {
-            var att = new PropertyDefaultValueAttribute(typeof(AA));
+            var att = EnumExtensions.GetDescription(AA.A1);
         }
     }
 
     public enum AA
     {
+        [Description("123")]
         A1 = 1,
 
         A2 = 2,
