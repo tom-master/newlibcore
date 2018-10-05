@@ -19,19 +19,20 @@ namespace NewLibCore.Data.Mapper
 
         protected internal override BuildEntry<TModel> Build()
         {
-            if (!ModelInstance.Args.Any())
+            var args = ModelInstance.Args;
+            ModelInstance.SetUpdateTime();
+            if (!args.Any())
             {
                 throw new ArgumentNullException("没有找到需要更新的字段");
             }
 
-            var columns = ModelInstance.Args;
             if (_isValidate)
             {
-                ValidateModel(columns.Select(s => s.PropertyInfo).ToList());
+                ValidateModel(args.Select(s => s.PropertyInfo).ToList());
             }
 
             var buildEntry = new BuildEntry<TModel>(ModelInstance);
-            buildEntry.AppendSqlPart($@"UPDATE {ModelType.Name} SET {String.Join(",", columns.Select(s => $@"{s.PropertyName}=@{s.PropertyName}"))},LastModifyTime='$@{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}'");
+            buildEntry.AppendSqlPart($@"UPDATE {ModelType.Name} SET {String.Join(",", args.Select(s => $@"{s.PropertyName}=@{s.PropertyName}"))}");
 
             if (_where != null)
             {
@@ -41,8 +42,7 @@ namespace NewLibCore.Data.Mapper
                 buildEntry.ParameterMappers.AddRange(builderWhere.WhereParameters);
             }
             buildEntry.AppendSqlPart(_rowCount);
-
-            buildEntry.AppendParameter(ModelInstance.Args.Select(s => s.PropertyInfo).ToList());
+            buildEntry.AppendParameter(args.Select(s => s.PropertyInfo).ToList());
 
             return buildEntry;
         }
