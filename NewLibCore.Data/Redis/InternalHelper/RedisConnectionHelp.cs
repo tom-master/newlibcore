@@ -44,6 +44,11 @@ namespace NewLibCore.Data.Redis.InternalHelper
 		/// <returns></returns>
 		public static ConnectionMultiplexer GetConnectionMultiplexer(String connectionString)
 		{
+            if (String.IsNullOrEmpty(connectionString))
+            {
+                throw new ArgumentException("connectionString不能为空");
+            }
+
 			if (!_connectionCache.ContainsKey(connectionString))
 			{
 				_connectionCache[connectionString] = GetManager(connectionString);
