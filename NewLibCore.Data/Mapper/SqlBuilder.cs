@@ -40,23 +40,37 @@ namespace NewLibCore.Data.Mapper
                 }
 
                 var validateBases = GetValidateAttributes(propertyItem);
-                foreach (var validateItem in validateBases)
+                for (int i = 0; i < validateBases.Count; i++)
                 {
-                    if (!validateItem.IsValidate(propertyItem.GetValue(ModelInstance)))
+                    if (!validateBases[i].IsValidate(propertyItem.GetValue(ModelInstance)))
                     {
-                        throw new Exception(validateItem.FailReason($@"{propertyItem.DeclaringType.FullName}.{propertyItem.Name}"));
-                    }
-
-                    if (validateItem is PropertyDefaultValueAttribute defaultValueAttribute)
-                    {
-                        var propertyInstanceValue = propertyItem.GetValue(ModelInstance);
-                        if (String.IsNullOrEmpty(propertyInstanceValue + "") || (propertyInstanceValue.GetType() == typeof(DateTime) && (DateTime)propertyInstanceValue == default(DateTime)))
+                        if (SetPropertyDefaultValue(validateBases[i + 1], propertyItem))
                         {
-                            propertyItem.SetValue(ModelInstance, defaultValueAttribute.Value);
+                            i = i + 1;
+                            continue;
                         }
+                        throw new Exception(validateBases[i].FailReason($@"{propertyItem.DeclaringType.FullName}.{propertyItem.Name}"));
+                    }
+                    else
+                    {
+                        SetPropertyDefaultValue(validateBases[i], propertyItem);
                     }
                 }
             }
+        }
+
+        private Boolean SetPropertyDefaultValue(ValidateBase validateItem, PropertyInfo propertyItem)
+        {
+            if (validateItem is PropertyDefaultValueAttribute defaultValueAttribute)
+            {
+                var propertyInstanceValue = propertyItem.GetValue(ModelInstance);
+                if (String.IsNullOrEmpty(propertyInstanceValue + "") || (propertyInstanceValue.GetType() == typeof(DateTime) && (DateTime)propertyInstanceValue == default(DateTime)))
+                {
+                    propertyItem.SetValue(ModelInstance, defaultValueAttribute.Value);
+                }
+                return true;
+            }
+            return false;
         }
 
         private IList<ValidateBase> GetValidateAttributes(PropertyInfo propertyInfo)

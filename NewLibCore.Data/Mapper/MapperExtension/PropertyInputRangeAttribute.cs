@@ -9,21 +9,19 @@ namespace NewLibCore.Data.Mapper.MapperExtension
 
         private Int32 _max;
 
-        private Boolean _canbeEmpty;
 
         public override Int32 Order
         {
             get { return 1; }
         }
 
-        public PropertyInputRangeAttribute(Int32 min, Int32 max, Boolean canbeEmpty = false)
+        public PropertyInputRangeAttribute(Int32 min, Int32 max)
         {
             _min = min;
             _max = max;
-            _canbeEmpty = canbeEmpty;
         }
 
-        public PropertyInputRangeAttribute(Int32 max, Boolean canbeEmpty = false) : this(0, max, canbeEmpty)
+        public PropertyInputRangeAttribute(Int32 max, Boolean canbeEmpty = false) : this(0, max)
         {
         }
 
@@ -36,7 +34,7 @@ namespace NewLibCore.Data.Mapper.MapperExtension
             }*/
 
             var valueLength = internalValue.Length;
-           
+
             if (_min == 0 && valueLength <= _max)
             {
                 return true;
