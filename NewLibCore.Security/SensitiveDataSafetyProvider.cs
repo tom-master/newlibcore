@@ -13,7 +13,12 @@ namespace NewLibCore.Security
 		public static String Encrypt(String source)
 		{
 			try
-			{
+            {
+                if (String.IsNullOrEmpty(source))
+                {
+                    throw new ArgumentException("source不能为空")
+                }
+
 				var aes = new AesCryptoServiceProvider();
 				var md5 = new MD5CryptoServiceProvider();
 				var sha256 = new SHA256CryptoServiceProvider();
