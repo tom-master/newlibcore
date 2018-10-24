@@ -61,6 +61,11 @@ namespace NewLibCore.Security
 
         private static Byte[] HashString(String str)
         {
+            if (String.IsNullOrEmpty(str))
+            {
+                throw new ArgumentException("str不能为空")
+            }
+
             var pwd = Encoding.UTF8.GetBytes(str);
 
             var sha1 = SHA1.Create();
