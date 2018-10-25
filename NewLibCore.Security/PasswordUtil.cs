@@ -45,6 +45,11 @@ namespace NewLibCore.Security
 
         public static String CreateDbPassword(String userPassword)
         {
+            if (String.IsNullOrEmpty(userPassword))
+            {
+                throw new ArgumentException("userPassword不能为空")
+            }
+
             var unsaltedPassword = HashString(userPassword);
             var saltValue = new Byte[_saltLength];
             var rng = new RNGCryptoServiceProvider();
