@@ -17,6 +17,11 @@ namespace NewLibCore.Security
                 throw new ArgumentException("dbPassword不能为空")
             }
 
+            if (String.IsNullOrEmpty(userPassword))
+            {
+                throw new ArgumentException("userPassword不能为空")
+            }
+
             var dbPwd = Convert.FromBase64String(dbPassword);
             var hashedPwd = HashString(userPassword);
 
