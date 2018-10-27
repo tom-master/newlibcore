@@ -12,6 +12,11 @@ namespace NewLibCore.Security
 
         public static Boolean ComparePasswords(String dbPassword, String userPassword)
         {
+            if (String.IsNullOrEmpty(dbPassword))
+            {
+                throw new ArgumentException("dbPassword不能为空")
+            }
+
             var dbPwd = Convert.FromBase64String(dbPassword);
             var hashedPwd = HashString(userPassword);
 
