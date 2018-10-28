@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using NewLibCore.Data.Mapper.BuildExtension;
 using NewLibCore.Data.Mapper.MapperExtension;
 using NewLibCore.Data.Mapper.PropertyExtension;
 

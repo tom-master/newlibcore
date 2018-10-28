@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Text;
 using NewLibCore.Data.Mapper.InternalDataStore;
 
-namespace NewLibCore.Data.Mapper
+namespace NewLibCore.Data.Mapper.BuildExtension
 {
 	internal class BuildEntry<TModel> where TModel : class, new()
 	{
@@ -22,7 +22,7 @@ namespace NewLibCore.Data.Mapper
 
 		public List<ParameterMapper> ParameterMappers { get; private set; } = new List<ParameterMapper>();
 
-		internal void AppendSqlPart(String value)
+		internal void Append(String value)
 		{
 			_builder.Append(value);
 		}

@@ -1,4 +1,5 @@
-﻿using NewLibCore.Data.Mapper.PropertyExtension;
+﻿using NewLibCore.Data.Mapper.BuildExtension;
+using NewLibCore.Data.Mapper.PropertyExtension;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
@@ -32,16 +33,16 @@ namespace NewLibCore.Data.Mapper
             }
 
             var buildEntry = new BuildEntry<TModel>(ModelInstance);
-            buildEntry.AppendSqlPart($@"UPDATE {ModelType.Name} SET {String.Join(",", args.Select(s => $@"{s.PropertyName}=@{s.PropertyName}"))}");
+            buildEntry.Append($@"UPDATE {ModelType.Name} SET {String.Join(",", args.Select(s => $@"{s.PropertyName}=@{s.PropertyName}"))}");
 
             if (_where != null)
             {
                 var builderWhere = new BuilderWhere<TModel>();
                 builderWhere.Where(_where);
-                buildEntry.AppendSqlPart(builderWhere.ToString());
+                buildEntry.Append(builderWhere.ToString());
                 buildEntry.ParameterMappers.AddRange(builderWhere.WhereParameters);
             }
-            buildEntry.AppendSqlPart(_rowCount);
+            buildEntry.Append(_rowCount);
             buildEntry.AppendParameter(args.Select(s => s.PropertyInfo).ToList());
 
             return buildEntry;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using NewLibCore.Data.Mapper.BuildExtension;
 using NewLibCore.Data.Mapper.MapperExtension;
 using NewLibCore.Data.Mapper.PropertyExtension;
 
@@ -32,7 +33,7 @@ namespace NewLibCore.Data.Mapper
 				ValidateModel(columns.ToList());
 			}
 
-			buildEntry.AppendSqlPart($@" INSERT {ModelType.Name} ({String.Join(",", columns.Select(c => c.Name))} ) VALUES ({String.Join(",", columns.Select(key => $@"@{key.Name}"))}) {_maxIdentity} ");
+			buildEntry.Append($@" INSERT {ModelType.Name} ({String.Join(",", columns.Select(c => c.Name))} ) VALUES ({String.Join(",", columns.Select(key => $@"@{key.Name}"))}) {_maxIdentity} ");
 
 			buildEntry.AppendParameter(columns.ToList());
 			return buildEntry;
