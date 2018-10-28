@@ -1,4 +1,5 @@
 ﻿using NewLibCore.Data.Mapper.BuildExtension;
+using NewLibCore.Data.Mapper.InternalDataStore;
 using NewLibCore.Data.Mapper.PropertyExtension;
 using System;
 using System.Linq;
@@ -43,7 +44,7 @@ namespace NewLibCore.Data.Mapper
                 buildEntry.ParameterMappers.AddRange(builderWhere.WhereParameters);
             }
             buildEntry.Append(_rowCount);
-            buildEntry.AppendParameter(args.Select(s => s.PropertyInfo).ToList());
+            buildEntry.AppendParameter(args.Select(s => s.PropertyInfo).ToList().Select(c => new ParameterMapper($@"@{c.Name}", c.GetValue(ModelInstance))));
 
             return buildEntry;
         }

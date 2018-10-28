@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using NewLibCore.Data.Mapper.BuildExtension;
+using NewLibCore.Data.Mapper.InternalDataStore;
 using NewLibCore.Data.Mapper.MapperExtension;
 using NewLibCore.Data.Mapper.PropertyExtension;
 
@@ -34,8 +35,8 @@ namespace NewLibCore.Data.Mapper
 			}
 
 			buildEntry.Append($@" INSERT {ModelType.Name} ({String.Join(",", columns.Select(c => c.Name))} ) VALUES ({String.Join(",", columns.Select(key => $@"@{key.Name}"))}) {_maxIdentity} ");
-
-			buildEntry.AppendParameter(columns.ToList());
+			buildEntry.AppendParameter(columns.ToList().Select(c => new ParameterMapper($@"@{c.Name}", c.GetValue(ModelInstance))));
+			
 			return buildEntry;
 		}
 	}
