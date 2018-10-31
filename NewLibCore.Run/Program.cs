@@ -28,7 +28,8 @@ namespace NewLibCore.Run
             {
                 App app = new App();
                 app.ModifyName("xiaofan");
-                dataStore.Modify<App>(app,a=>a.Name.StartsWith("hao"));
+                var ids = new[] { 1, 2, 3, 4 };
+                dataStore.Modify(app, a => ids.Contains(a.Id));
             }
         }
     }

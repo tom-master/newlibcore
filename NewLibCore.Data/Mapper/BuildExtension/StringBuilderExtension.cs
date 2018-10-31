@@ -5,7 +5,7 @@ namespace NewLibCore.Data.Mapper.BuildExtension
 {
     public static class StringBuilderExtension
     {
-        public static void MySqlAppend(this StringBuilder builder, String left, String opt, String right)
+        public static void Append(this StringBuilder builder, String left, String opt, String right)
         {
             if (opt.ToUpper() == RelationType.IN.ToString())
             {
@@ -14,6 +14,14 @@ namespace NewLibCore.Data.Mapper.BuildExtension
             else if (opt.ToUpper() == RelationType.LIKE.ToString())
             {
                 builder.Append($@" {left} {opt} CONCAT('%',@{right},'%') ");
+            }
+            else if (opt.ToUpper() == RelationType.START_LIKE.ToString())
+            {
+                builder.Append($@" {left} {RelationType.LIKE} CONCAT('',@{right},'%') ");
+            }
+            else if (opt.ToUpper() == RelationType.END_LIKE.ToString())
+            {
+                builder.Append($@" {left} {RelationType.LIKE} CONCAT('%',@{right},'') ");
             }
             else
             {
