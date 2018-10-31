@@ -16,7 +16,7 @@ namespace NewLibCore.Data.Mapper.BuildExtension
 
         internal IList<ParameterMapper> WhereParameters { get; private set; } = new List<ParameterMapper>();
 
-        internal void Where(Expression expression)
+        internal void Translate(Expression expression)
         {
             _builder.Append(" WHERE ");
             InternalBuildWhere(expression);
@@ -42,37 +42,35 @@ namespace NewLibCore.Data.Mapper.BuildExtension
                 case ExpressionType.Call:
                     {
                         var methodCallExp = (MethodCallExpression)expression;
-                        if (methodCallExp.Method.Name == "Contains")
-                        {
-                            var methodCallArguments = methodCallExp.Arguments;
-                            Type argumentType = null;
-                            Expression argument = null;
-                            Expression obj = null;
-                            if (methodCallArguments.Count > 1)
-                            {
-                                argumentType = methodCallArguments[0].Type;
-                                argument = methodCallArguments[1];
-                                obj = methodCallArguments[0];
-                            }
-                            else
-                            {
-                                argumentType = methodCallExp.Object.Type;
-                                argument = methodCallArguments[0];
-                                obj = methodCallExp.Object;
-                            }
 
-                            if (argumentType == typeof(String))
-                            {
-                                _operationalCharacterStack.Push(RelationType.LIKE.ToString());
-                                InternalBuildWhere(obj);
-                                InternalBuildWhere(argument);
-                            }
-                            else if (argumentType == typeof(Int32[]) || (argumentType.Name == "List`1" || argumentType.Name == "IList`1"))
-                            {
-                                _operationalCharacterStack.Push(RelationType.IN.ToString());
-                                InternalBuildWhere(argument);
-                                InternalBuildWhere(obj);
-                            }
+                        var methodCallArguments = methodCallExp.Arguments;
+                        Type argumentType = null;
+                        Expression argument = null;
+                        Expression obj = null;
+                        if (methodCallArguments.Count > 1)
+                        {
+                            argumentType = methodCallArguments[0].Type;
+                            argument = methodCallArguments[1];
+                            obj = methodCallArguments[0];
+                        }
+                        else
+                        {
+                            argumentType = methodCallExp.Object.Type;
+                            argument = methodCallArguments[0];
+                            obj = methodCallExp.Object;
+                        }
+
+                        if (argumentType == typeof(String))
+                        {
+                            _operationalCharacterStack.Push(RelationType.LIKE.ToString());
+                            InternalBuildWhere(obj);
+                            InternalBuildWhere(argument);
+                        }
+                        else if (argumentType == typeof(Int32[]) || (argumentType.Name == "List`1" || argumentType.Name == "IList`1"))
+                        {
+                            _operationalCharacterStack.Push(RelationType.IN.ToString());
+                            InternalBuildWhere(argument);
+                            InternalBuildWhere(obj);
                         }
                         break;
                     }
@@ -219,5 +217,5 @@ namespace NewLibCore.Data.Mapper.BuildExtension
         IN = 4
     }
 
-    
+
 }

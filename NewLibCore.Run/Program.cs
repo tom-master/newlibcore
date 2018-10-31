@@ -11,6 +11,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 using System.Xml;
+using NewLibCore.Data.Mapper;
 using NewLibCore.Data.Mapper.DomainSpecification.ConcreteSpecification;
 using NewLibCore.Data.Mapper.InternalDataStore;
 using NewLibCore.Data.Mapper.MapperExtension;
@@ -23,12 +24,13 @@ namespace NewLibCore.Run
     {
         static void Main(string[] args)
         {
-            using (var aa = new DataStore("", true))
+            using (var dataStore = new DataStore(""))
             {
-                aa.Add<App>(new App());
+                App app = new App();
+                app.ModifyName("xiaofan");
+                dataStore.Modify<App>(app,a=>a.Name.StartsWith("hao"));
             }
         }
-
     }
 
     [Serializable, Description("应用")]
@@ -40,7 +42,40 @@ namespace NewLibCore.Run
         [PropertyRequired, PropertyDefaultValue(typeof(String), "wasd"), PropertyInputRange(2, 10)]
         public String Name { get; set; }
 
+        /// <summary>
+        /// 宽度
+        /// </summary>
+        [PropertyRequired]
+        public Int32 Width { get; set; }
+
+        /// <summary>
+        /// 高度
+        /// </summary>
+        [PropertyRequired]
+        public Int32 Height { get; set; }
+
+        /// <summary>
+        /// 使用数
+        /// </summary>
+        [PropertyDefaultValue(typeof(Int32))]
+        public Int32 UseCount { get; set; }
+
+        /// <summary>
+        /// 是否显示app底部的按钮
+        /// </summary>
+        [PropertyDefaultValue(typeof(Boolean))]
+        public Boolean IsSetbar { get; private set; }
+
         public App() { }
+    }
+
+    public partial class App
+    {
+        public void ModifyName(String name)
+        {
+            Name = "xiaofan";
+            OnPropertyChanged(new PropertyArgs(nameof(Name), name));
+        }
     }
 
 

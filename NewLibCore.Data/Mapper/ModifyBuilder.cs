@@ -39,7 +39,7 @@ namespace NewLibCore.Data.Mapper
             if (_where != null)
             {
                 var builderWhere = new BuilderWhere<TModel>();
-                builderWhere.Where(_where);
+                builderWhere.Translate(_where);
                 buildEntry.Append(builderWhere.ToString());
                 buildEntry.ParameterMappers.AddRange(builderWhere.WhereParameters);
             }
