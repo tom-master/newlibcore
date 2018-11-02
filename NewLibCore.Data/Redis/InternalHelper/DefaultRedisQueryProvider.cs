@@ -704,7 +704,12 @@ namespace NewLibCore.Data.Redis.InternalHelper
 		/// </summary>
 		public void SetSysCustomKey(String customKey)
 		{
-			_customKey = customKey;
+            if (String.IsNullOrEmpty(customKey))
+            {
+                throw new ArgumentException("customKey不能为空")
+            }
+
+            _customKey = customKey;
 		}
 
 		#endregion 其他
