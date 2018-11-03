@@ -713,6 +713,11 @@ namespace NewLibCore.Data.Redis.InternalHelper
 
 		private String AddSysCustomKey(String oldKey)
 		{
+            if (String.IsNullOrEmpty(oldKey))
+            {
+                throw new ArgumentException("oldKey不能为空")
+            }
+
 			var prefixKey = _customKey ?? RedisConnectionHelp.SysCustomKey;
 			return prefixKey + oldKey;
 		}
