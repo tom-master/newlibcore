@@ -6,7 +6,7 @@ using NewLibCore.Data.Mapper.InternalDataStore;
 
 namespace NewLibCore.Data.Mapper.BuildExtension
 {
-    internal class BuilderWhere<TModel> : ExpressionVisitor where TModel : class, new()
+    internal class BuilderWhere<TModel> where TModel : class, new()
     {
         private StringBuilder _builder = new StringBuilder();
 

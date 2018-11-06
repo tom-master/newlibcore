@@ -26,10 +26,7 @@ namespace NewLibCore.Run
         {
             using (var dataStore = new DataStore(""))
             {
-                App app = new App();
-                app.ModifyName("xiaofan");
-                var ids = new[] { 1, 2, 3, 4 };
-                dataStore.Modify(app, a => ids.Contains(a.Id));
+               
             }
         }
     }
