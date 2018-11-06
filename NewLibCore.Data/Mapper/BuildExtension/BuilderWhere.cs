@@ -27,7 +27,6 @@ namespace NewLibCore.Data.Mapper.BuildExtension
             return _builder.ToString();
         }
 
-
         private void InternalBuildWhere(Expression expression)
         {
             switch (expression.NodeType)
