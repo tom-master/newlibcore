@@ -70,9 +70,12 @@ namespace NewLibCore.Data.Mapper
                         }
                         SetPropertyDefaultValue((PropertyDefaultValueAttribute)validateBases[i + 1], propertyItem);
                     }
-                    if (!validateBases[i].IsValidate(propertyValue))
+                    if (validateBases[i] is PropertyInputRangeAttribute)
                     {
-                        ThrowValidateException(validateBases[i], propertyItem);
+                        if (!validateBases[i].IsValidate(propertyValue))
+                        {
+                            ThrowValidateException(validateBases[i], propertyItem);
+                        }
                     }
 
                     // var isValid = validateBases[i].IsValidate(propertyItem.GetValue(ModelInstance));
