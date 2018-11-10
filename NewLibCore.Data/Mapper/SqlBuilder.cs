@@ -41,37 +41,70 @@ namespace NewLibCore.Data.Mapper
                 }
 
                 var validateBases = GetValidateAttributes(propertyItem);
+                var propertyValue = propertyItem.GetValue(ModelInstance);
                 for (int i = 0; i < validateBases.Count; i++)
                 {
-                    if (!validateBases[i].IsValidate(propertyItem.GetValue(ModelInstance)))
+                    if (validateBases[i] is PropertyRequiredAttribute)
                     {
-                        if (SetPropertyDefaultValue(validateBases[i + 1], propertyItem))
+                        if (!validateBases[i].IsValidate(propertyValue))
                         {
-                            i = i + 1;
-                            continue;
+                            if (i + 1 == validateBases.Count)
+                            {
+                                ThrowValidateException(validateBases[i + 1], propertyItem);
+                            }
+
+                            if (validateBases[i + 1] is PropertyDefaultValueAttribute)
+                            {
+                                SetPropertyDefaultValue((PropertyDefaultValueAttribute)validateBases[i + 1], propertyItem);
+                                i = i + 1;
+                                continue;
+                            }
+                            ThrowValidateException(validateBases[i + 1], propertyItem);
                         }
-                        throw new Exception(validateBases[i].FailReason($@"{propertyItem.DeclaringType.FullName}.{propertyItem.Name}"));
                     }
-                    else
+                    if (validateBases[i] is PropertyDefaultValueAttribute)
                     {
-                        SetPropertyDefaultValue(validateBases[i], propertyItem);
+                        if (!validateBases[i].IsValidate(propertyValue))
+                        {
+                            ThrowValidateException(validateBases[i], propertyItem);
+                        }
+                        SetPropertyDefaultValue((PropertyDefaultValueAttribute)validateBases[i + 1], propertyItem);
                     }
+                    if (!validateBases[i].IsValidate(propertyValue))
+                    {
+                        ThrowValidateException(validateBases[i], propertyItem);
+                    }
+
+                    // var isValid = validateBases[i].IsValidate(propertyItem.GetValue(ModelInstance));
+                    // if (!isValid)
+                    // {
+                    //     if (SetPropertyDefaultValue(validateBases[i + 1], propertyItem))
+                    //     {
+                    //         i = i + 1;
+                    //         continue;
+                    //     }
+                    //     throw new Exception(validateBases[i].FailReason($@"{propertyItem.DeclaringType.FullName}.{propertyItem.Name}"));
+                    // }
+                    // else
+                    // {
+                    //     SetPropertyDefaultValue(validateBases[i], propertyItem);
+                    // }
                 }
             }
         }
 
-        private Boolean SetPropertyDefaultValue(ValidateBase validateItem, PropertyInfo propertyItem)
+        private void SetPropertyDefaultValue(PropertyDefaultValueAttribute defaultValueAttribute, PropertyInfo propertyItem)
         {
-            if (validateItem is PropertyDefaultValueAttribute defaultValueAttribute)
+            var propertyInstanceValue = propertyItem.GetValue(ModelInstance);
+            if (String.IsNullOrEmpty(propertyInstanceValue + "") || (propertyInstanceValue.GetType() == typeof(DateTime) && (DateTime)propertyInstanceValue == default(DateTime)))
             {
-                var propertyInstanceValue = propertyItem.GetValue(ModelInstance);
-                if (String.IsNullOrEmpty(propertyInstanceValue + "") || (propertyInstanceValue.GetType() == typeof(DateTime) && (DateTime)propertyInstanceValue == default(DateTime)))
-                {
-                    propertyItem.SetValue(ModelInstance, defaultValueAttribute.Value);
-                }
-                return true;
+                propertyItem.SetValue(ModelInstance, defaultValueAttribute.Value);
             }
-            return false;
+        }
+
+        private void ThrowValidateException(ValidateBase validateBase, PropertyInfo propertyItem)
+        {
+            throw new Exception(validateBase.FailReason($@"{propertyItem.DeclaringType.FullName}.{propertyItem.Name}"));
         }
 
         private IList<ValidateBase> GetValidateAttributes(PropertyInfo propertyInfo)

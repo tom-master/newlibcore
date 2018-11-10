@@ -26,57 +26,45 @@ namespace NewLibCore.Run
         {
             using (var dataStore = new DataStore(""))
             {
-               
+                dataStore.Add(new VisitorRecord(1, "2222222222222222", "123", "123", "123", "123", "123"));
             }
         }
     }
-
-    [Serializable, Description("应用")]
-    public partial class App : DomainModelBase
+    public partial class VisitorRecord : DomainModelBase
     {
-        /// <summary>
-        /// 名称
-        /// </summary>
-        [PropertyRequired, PropertyDefaultValue(typeof(String), "wasd"), PropertyInputRange(2, 10)]
-        public String Name { get; set; }
+        public Int32 UserId { get; private set; }
 
-        /// <summary>
-        /// 宽度
-        /// </summary>
+        [PropertyRequired, PropertyInputRange(10), PropertyDefaultValue(typeof(String), "11111")]
+        public String UserName { get; private set; }
+
+        [PropertyRequired, PropertyInputRange(25)]
+        public String Controller { get; private set; }
+
+        [PropertyRequired, PropertyInputRange(30)]
+        public String Action { get; private set; }
+
         [PropertyRequired]
-        public Int32 Width { get; set; }
+        public String Ip { get; private set; }
 
-        /// <summary>
-        /// 高度
-        /// </summary>
-        [PropertyRequired]
-        public Int32 Height { get; set; }
+        [PropertyRequired, PropertyInputRange(150)]
+        public String VisitorUrl { get; private set; }
 
-        /// <summary>
-        /// 使用数
-        /// </summary>
-        [PropertyDefaultValue(typeof(Int32))]
-        public Int32 UseCount { get; set; }
+        [PropertyRequired, PropertyInputRange(150)]
+        public String UrlParameter { get; private set; }
 
-        /// <summary>
-        /// 是否显示app底部的按钮
-        /// </summary>
-        [PropertyDefaultValue(typeof(Boolean))]
-        public Boolean IsSetbar { get; private set; }
-
-        public App() { }
-    }
-
-    public partial class App
-    {
-        public void ModifyName(String name)
+        public VisitorRecord(Int32 userId, String userName, String controller, String action, String ip, String visitorUrl, String urlParameter)
         {
-            Name = "xiaofan";
-            OnPropertyChanged(new PropertyArgs(nameof(Name), name));
+            UserId = userId;
+            UserName = userName;
+            Controller = controller;
+            Action = action;
+            Ip = ip;
+            VisitorUrl = visitorUrl;
+            UrlParameter = urlParameter;
         }
+
+        public VisitorRecord() { }
     }
-
-
     public abstract class DomainModelBase : PropertyMonitor
     {
         protected DomainModelBase()
