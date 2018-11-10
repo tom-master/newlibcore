@@ -26,7 +26,7 @@ namespace NewLibCore.Run
         {
             using (var dataStore = new DataStore(""))
             {
-                dataStore.Add(new VisitorRecord(1, "2222222222222222", "123", "123", "123", "123", "123"));
+                dataStore.Add(new VisitorRecord(1, ""));
             }
         }
     }
@@ -36,31 +36,11 @@ namespace NewLibCore.Run
 
         [PropertyRequired, PropertyInputRange(10), PropertyDefaultValue(typeof(String), "11111")]
         public String UserName { get; private set; }
-
-        [PropertyRequired, PropertyInputRange(25)]
-        public String Controller { get; private set; }
-
-        [PropertyRequired, PropertyInputRange(30)]
-        public String Action { get; private set; }
-
-        [PropertyRequired]
-        public String Ip { get; private set; }
-
-        [PropertyRequired, PropertyInputRange(150)]
-        public String VisitorUrl { get; private set; }
-
-        [PropertyRequired, PropertyInputRange(150)]
-        public String UrlParameter { get; private set; }
-
-        public VisitorRecord(Int32 userId, String userName, String controller, String action, String ip, String visitorUrl, String urlParameter)
+        
+        public VisitorRecord(Int32 userId, String userName)
         {
             UserId = userId;
             UserName = userName;
-            Controller = controller;
-            Action = action;
-            Ip = ip;
-            VisitorUrl = visitorUrl;
-            UrlParameter = urlParameter;
         }
 
         public VisitorRecord() { }

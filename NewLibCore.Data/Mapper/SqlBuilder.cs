@@ -48,57 +48,45 @@ namespace NewLibCore.Data.Mapper
                     {
                         if (!validateBases[i].IsValidate(propertyValue))
                         {
-                            if (i + 1 == validateBases.Count)
+                            if (i + 1 >= validateBases.Count)
                             {
                                 ThrowValidateException(validateBases[i + 1], propertyItem);
                             }
 
                             if (validateBases[i + 1] is PropertyDefaultValueAttribute)
                             {
-                                SetPropertyDefaultValue((PropertyDefaultValueAttribute)validateBases[i + 1], propertyItem);
+                                SetPropertyDefaultValue((PropertyDefaultValueAttribute)validateBases[i + 1], propertyItem, propertyValue);
                                 i = i + 1;
                                 continue;
                             }
-                            ThrowValidateException(validateBases[i + 1], propertyItem);
+                            ThrowValidateException(validateBases[i], propertyItem);
                         }
                     }
-                    if (validateBases[i] is PropertyDefaultValueAttribute)
+                    else if (validateBases[i] is PropertyDefaultValueAttribute)
                     {
                         if (!validateBases[i].IsValidate(propertyValue))
                         {
                             ThrowValidateException(validateBases[i], propertyItem);
                         }
-                        SetPropertyDefaultValue((PropertyDefaultValueAttribute)validateBases[i], propertyItem);
+                        if (String.IsNullOrEmpty(propertyValue + ""))
+                        {
+                            SetPropertyDefaultValue((PropertyDefaultValueAttribute)validateBases[i], propertyItem, propertyValue);
+                        }
                     }
-                    if (validateBases[i] is PropertyInputRangeAttribute)
+                    else if (validateBases[i] is PropertyInputRangeAttribute)
                     {
                         if (!validateBases[i].IsValidate(propertyValue))
                         {
                             ThrowValidateException(validateBases[i], propertyItem);
                         }
                     }
-
-                    // var isValid = validateBases[i].IsValidate(propertyItem.GetValue(ModelInstance));
-                    // if (!isValid)
-                    // {
-                    //     if (SetPropertyDefaultValue(validateBases[i + 1], propertyItem))
-                    //     {
-                    //         i = i + 1;
-                    //         continue;
-                    //     }
-                    //     throw new Exception(validateBases[i].FailReason($@"{propertyItem.DeclaringType.FullName}.{propertyItem.Name}"));
-                    // }
-                    // else
-                    // {
-                    //     SetPropertyDefaultValue(validateBases[i], propertyItem);
-                    // }
                 }
             }
         }
 
-        private void SetPropertyDefaultValue(PropertyDefaultValueAttribute defaultValueAttribute, PropertyInfo propertyItem)
+        private void SetPropertyDefaultValue(PropertyDefaultValueAttribute defaultValueAttribute, PropertyInfo propertyItem, Object rawPropertyValue)
         {
-            var propertyInstanceValue = propertyItem.GetValue(ModelInstance);
+            var propertyInstanceValue = rawPropertyValue;
             if (String.IsNullOrEmpty(propertyInstanceValue + "") || (propertyInstanceValue.GetType() == typeof(DateTime) && (DateTime)propertyInstanceValue == default(DateTime)))
             {
                 propertyItem.SetValue(ModelInstance, defaultValueAttribute.Value);
