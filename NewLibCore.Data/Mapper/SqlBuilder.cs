@@ -68,7 +68,7 @@ namespace NewLibCore.Data.Mapper
                         {
                             ThrowValidateException(validateBases[i], propertyItem);
                         }
-                        SetPropertyDefaultValue((PropertyDefaultValueAttribute)validateBases[i + 1], propertyItem);
+                        SetPropertyDefaultValue((PropertyDefaultValueAttribute)validateBases[i], propertyItem);
                     }
                     if (validateBases[i] is PropertyInputRangeAttribute)
                     {
