@@ -8,6 +8,12 @@ namespace NewLibCore.Data.Mapper.MapperExtension
 
         private readonly Object _value;
 
+
+        public PropertyDefaultValueAttribute(Object value) : this(value.GetType(), value)
+        {
+
+        }
+
         public PropertyDefaultValueAttribute(Type type, Object value)
         {
 
