@@ -2,7 +2,7 @@
 
 namespace NewLibCore.Data.Mapper.MapperExtension
 {
-    public class PropertyDefaultValueAttribute : ValidateBase
+    public class PropertyDefaultValueAttribute : PropertyValidate
     {
         private readonly Type _type;
 

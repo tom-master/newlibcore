@@ -22,7 +22,7 @@ namespace NewLibCore.Data.Mapper.Builder
 		protected internal override BuildEntry<TModel> Build()
 		{
 			var buildEntry = new BuildEntry<TModel>(ModelInstance);
-			var columns = ModelType.GetProperties().Where(w => w.GetCustomAttributes<ValidateBase>().Any());
+			var columns = ModelType.GetProperties().Where(w => w.GetCustomAttributes<PropertyValidate>().Any());
 
 			if (!columns.Any())
 			{

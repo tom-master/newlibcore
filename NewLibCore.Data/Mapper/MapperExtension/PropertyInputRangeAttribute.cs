@@ -3,7 +3,7 @@
 namespace NewLibCore.Data.Mapper.MapperExtension
 {
 
-    public class PropertyInputRangeAttribute : ValidateBase
+    public class PropertyInputRangeAttribute : PropertyValidate
     {
         private Int32 _min;
 

@@ -93,14 +93,14 @@ namespace NewLibCore.Data.Mapper.Builder
             }
         }
 
-        private void ThrowValidateException(ValidateBase validateBase, PropertyInfo propertyItem)
+        private void ThrowValidateException(PropertyValidate validateBase, PropertyInfo propertyItem)
         {
             throw new Exception(validateBase.FailReason($@"{propertyItem.DeclaringType.FullName}.{propertyItem.Name}"));
         }
 
-        private IList<ValidateBase> GetValidateAttributes(PropertyInfo propertyInfo)
+        private IList<PropertyValidate> GetValidateAttributes(PropertyInfo propertyInfo)
         {
-            var validateAttributes = propertyInfo.GetCustomAttributes<ValidateBase>(true);
+            var validateAttributes = propertyInfo.GetCustomAttributes<PropertyValidate>(true);
 
             if (validateAttributes.GroupBy(g => g.Order).Where(w => w.Count() > 1).Any())
             {
