@@ -5,7 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace NewLibCore.Data.Mapper.DataExtension
+namespace NewLibCore.Data.SQL.DataExtension
 {
     public static class DataTableExtension
     {

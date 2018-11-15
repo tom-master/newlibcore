@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NewLibCore.Data.Mapper.MapperExtension
+namespace NewLibCore.Data.SQL.MapperExtension
 {
     public class PropertyRequiredAttribute : PropertyValidate
     {

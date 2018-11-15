@@ -4,9 +4,9 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
-using NewLibCore.Data.Mapper.InternalDataStore;
+using NewLibCore.Data.SQL.InternalDataStore;
 
-namespace NewLibCore.Data.Mapper.BuildExtension
+namespace NewLibCore.Data.SQL.BuildExtension
 {
     internal class BuildEntry<TModel> where TModel : class, new()
     {

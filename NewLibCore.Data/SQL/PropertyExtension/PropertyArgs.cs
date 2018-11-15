@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 
-namespace NewLibCore.Data.Mapper.PropertyExtension
+namespace NewLibCore.Data.SQL.PropertyExtension
 {
 	public class PropertyArgs
 	{

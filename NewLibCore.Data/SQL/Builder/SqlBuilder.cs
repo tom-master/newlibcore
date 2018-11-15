@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using NewLibCore.Data.Mapper.BuildExtension;
-using NewLibCore.Data.Mapper.MapperExtension;
-using NewLibCore.Data.Mapper.PropertyExtension;
+using NewLibCore.Data.SQL.BuildExtension;
+using NewLibCore.Data.SQL.MapperExtension;
+using NewLibCore.Data.SQL.PropertyExtension;
 
-namespace NewLibCore.Data.Mapper.Builder
+namespace NewLibCore.Data.SQL.Builder
 {
     internal abstract class SqlBuilder<TModel> where TModel : PropertyMonitor, new()
     {

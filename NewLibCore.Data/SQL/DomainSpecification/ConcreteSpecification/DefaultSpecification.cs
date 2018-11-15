@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq.Expressions;
-using NewLibCore.Data.Mapper.PropertyExtension;
+using NewLibCore.Data.SQL.PropertyExtension;
 
-namespace NewLibCore.Data.Mapper.DomainSpecification.ConcreteSpecification
+namespace NewLibCore.Data.SQL.DomainSpecification.ConcreteSpecification
 {
 
 	/// <summary>

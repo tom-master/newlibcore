@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace NewLibCore.Data.Mapper.DomainSpecification
+namespace NewLibCore.Data.SQL.DomainSpecification
 {
 
     internal sealed class ParameterVisitor : ExpressionVisitor
