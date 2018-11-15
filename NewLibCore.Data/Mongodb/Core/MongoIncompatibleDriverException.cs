@@ -15,9 +15,9 @@
 
 using System;
 using System.Runtime.Serialization;
-using NewLib.Data.Mongodb.Core.Core.Clusters;
+using NewLibCore.Data.Mongodb.Core.Core.Clusters;
 
-namespace NewLib.Data.Mongodb.Core
+namespace NewLibCore.Data.Mongodb.Core
 {
     /// <summary>
     /// Represents a MongoDB incompatible driver exception.

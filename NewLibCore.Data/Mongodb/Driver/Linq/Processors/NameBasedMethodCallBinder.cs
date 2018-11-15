@@ -17,9 +17,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using NewLib.Data.Mongodb.Driver.Linq.Expressions;
+using NewLibCore.Data.Mongodb.Driver.Linq.Expressions;
 
-namespace NewLib.Data.Mongodb.Driver.Linq.Processors
+namespace NewLibCore.Data.Mongodb.Driver.Linq.Processors
 {
     internal sealed class NameBasedMethodCallBinder<TBindingContext> : IMethodCallBinder<TBindingContext> where TBindingContext : IBindingContext
     {

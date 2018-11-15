@@ -13,7 +13,7 @@
 * limitations under the License.
 */
 
-namespace NewLib.Data.Mongodb.Bson.Serialization.Attributes
+namespace NewLibCore.Data.Mongodb.Bson.Serialization.Attributes
 {
     /// <summary>
     /// Represents an attribute used to modify a creator map.

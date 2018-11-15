@@ -15,10 +15,10 @@
 
 using System;
 using System.Linq.Expressions;
-using NewLib.Data.Mongodb.Bson.Serialization;
-using NewLib.Data.Mongodb.Bson.Serialization.Serializers;
+using NewLibCore.Data.Mongodb.Bson.Serialization;
+using NewLibCore.Data.Mongodb.Bson.Serialization.Serializers;
 
-namespace NewLib.Data.Mongodb.Driver.Linq.Expressions.ResultOperators
+namespace NewLibCore.Data.Mongodb.Driver.Linq.Expressions.ResultOperators
 {
     internal sealed class AnyResultOperator : ResultOperator, IResultTransformer
     {

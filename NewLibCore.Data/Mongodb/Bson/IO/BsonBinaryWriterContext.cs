@@ -13,7 +13,7 @@
 * limitations under the License.
 */
 
-namespace NewLib.Data.Mongodb.Bson.IO
+namespace NewLibCore.Data.Mongodb.Bson.IO
 {
     internal class BsonBinaryWriterContext
     {

@@ -18,9 +18,9 @@ using System.Linq;
 using System.Net.Security;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
-using NewLib.Data.Mongodb.Core.Core.Misc;
+using NewLibCore.Data.Mongodb.Core.Core.Misc;
 
-namespace NewLib.Data.Mongodb.Core.Core.Configuration
+namespace NewLibCore.Data.Mongodb.Core.Core.Configuration
 {
     /// <summary>
     /// Represents settings for an SSL stream.

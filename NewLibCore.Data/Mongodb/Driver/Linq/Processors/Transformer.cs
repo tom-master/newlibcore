@@ -14,9 +14,9 @@
 */
 
 using System.Linq.Expressions;
-using NewLib.Data.Mongodb.Driver.Linq.Processors.Transformers;
+using NewLibCore.Data.Mongodb.Driver.Linq.Processors.Transformers;
 
-namespace NewLib.Data.Mongodb.Driver.Linq.Processors
+namespace NewLibCore.Data.Mongodb.Driver.Linq.Processors
 {
     internal sealed class Transformer : ExpressionVisitor
     {

@@ -17,7 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace NewLib.Data.Mongodb.Bson.ObjectModel
+namespace NewLibCore.Data.Mongodb.Bson.ObjectModel
 {
     /// <summary>
     /// Represents a BSON value (this is an abstract class, see the various subclasses).

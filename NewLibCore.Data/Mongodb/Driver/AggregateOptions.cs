@@ -14,9 +14,9 @@
 */
 
 using System;
-using NewLib.Data.Mongodb.Core.Core.Misc;
+using NewLibCore.Data.Mongodb.Core.Core.Misc;
 
-namespace NewLib.Data.Mongodb.Driver
+namespace NewLibCore.Data.Mongodb.Driver
 {
     /// <summary>
     /// Options for an aggregate operation.

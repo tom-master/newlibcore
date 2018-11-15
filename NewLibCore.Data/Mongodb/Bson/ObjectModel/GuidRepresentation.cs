@@ -15,7 +15,7 @@
 
 using System;
 
-namespace NewLib.Data.Mongodb.Bson.ObjectModel
+namespace NewLibCore.Data.Mongodb.Bson.ObjectModel
 {
     /// <summary>
     /// Represents the representation to use when converting a Guid to a BSON binary value.

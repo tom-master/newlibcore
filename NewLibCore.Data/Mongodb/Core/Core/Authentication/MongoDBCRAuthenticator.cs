@@ -18,15 +18,15 @@ using System.Security;
 using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
-using NewLib.Data.Mongodb.Bson;
-using NewLib.Data.Mongodb.Bson.IO;
-using NewLib.Data.Mongodb.Bson.ObjectModel;
-using NewLib.Data.Mongodb.Bson.Serialization.Serializers;
-using NewLib.Data.Mongodb.Core.Core.Connections;
-using NewLib.Data.Mongodb.Core.Core.Misc;
-using NewLib.Data.Mongodb.Core.Core.WireProtocol;
+using NewLibCore.Data.Mongodb.Bson;
+using NewLibCore.Data.Mongodb.Bson.IO;
+using NewLibCore.Data.Mongodb.Bson.ObjectModel;
+using NewLibCore.Data.Mongodb.Bson.Serialization.Serializers;
+using NewLibCore.Data.Mongodb.Core.Core.Connections;
+using NewLibCore.Data.Mongodb.Core.Core.Misc;
+using NewLibCore.Data.Mongodb.Core.Core.WireProtocol;
 
-namespace NewLib.Data.Mongodb.Core.Core.Authentication
+namespace NewLibCore.Data.Mongodb.Core.Core.Authentication
 {
     /// <summary>
     /// A MONGODB-CR authenticator.

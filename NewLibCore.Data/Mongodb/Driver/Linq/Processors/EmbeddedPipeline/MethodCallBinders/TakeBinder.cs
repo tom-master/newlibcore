@@ -17,9 +17,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using NewLib.Data.Mongodb.Driver.Linq.Expressions;
+using NewLibCore.Data.Mongodb.Driver.Linq.Expressions;
 
-namespace NewLib.Data.Mongodb.Driver.Linq.Processors.EmbeddedPipeline.MethodCallBinders
+namespace NewLibCore.Data.Mongodb.Driver.Linq.Processors.EmbeddedPipeline.MethodCallBinders
 {
     internal sealed class TakeBinder : IMethodCallBinder<EmbeddedPipelineBindingContext>
     {

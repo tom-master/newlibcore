@@ -15,7 +15,7 @@
 
 using System;
 
-namespace NewLib.Data.Mongodb.Core.Core.Operations
+namespace NewLibCore.Data.Mongodb.Core.Core.Operations
 {
     /// <summary>
     /// Represents a request to write something to the database.

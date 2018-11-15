@@ -13,7 +13,7 @@
 * limitations under the License.
 */
 
-namespace NewLib.Data.Mongodb.Driver
+namespace NewLibCore.Data.Mongodb.Driver
 {
     /// <summary>
     /// Options for a bulk write operation.

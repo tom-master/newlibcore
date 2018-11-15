@@ -15,15 +15,15 @@
 
 using System;
 using System.IO;
-using NewLib.Data.Mongodb.Bson.IO;
-using NewLib.Data.Mongodb.Bson.ObjectModel;
-using NewLib.Data.Mongodb.Bson.Serialization;
-using NewLib.Data.Mongodb.Bson.Serialization.Serializers;
-using NewLib.Data.Mongodb.Core.Core.Misc;
-using BsonDeserializationContext = NewLib.Data.Mongodb.Bson.Serialization.BsonDeserializationContext;
-using BsonSerializationContext = NewLib.Data.Mongodb.Bson.Serialization.BsonSerializationContext;
+using NewLibCore.Data.Mongodb.Bson.IO;
+using NewLibCore.Data.Mongodb.Bson.ObjectModel;
+using NewLibCore.Data.Mongodb.Bson.Serialization;
+using NewLibCore.Data.Mongodb.Bson.Serialization.Serializers;
+using NewLibCore.Data.Mongodb.Core.Core.Misc;
+using BsonDeserializationContext = NewLibCore.Data.Mongodb.Bson.Serialization.BsonDeserializationContext;
+using BsonSerializationContext = NewLibCore.Data.Mongodb.Bson.Serialization.BsonSerializationContext;
 
-namespace NewLib.Data.Mongodb.Core.Core.WireProtocol.Messages.Encoders.BinaryEncoders
+namespace NewLibCore.Data.Mongodb.Core.Core.WireProtocol.Messages.Encoders.BinaryEncoders
 {
     /// <summary>
     /// Represents a binary encoder for a Delete message.

@@ -18,10 +18,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using NewLib.Data.Mongodb.Core.Core.Misc;
-using NewLib.Data.Mongodb.Core.Core.Operations;
+using NewLibCore.Data.Mongodb.Core.Core.Misc;
+using NewLibCore.Data.Mongodb.Core.Core.Operations;
 
-namespace NewLib.Data.Mongodb.Core
+namespace NewLibCore.Data.Mongodb.Core
 {
     /// <summary>
     /// Represents an asynchronous cursor.

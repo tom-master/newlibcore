@@ -16,7 +16,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace NewLib.Data.Mongodb.Driver.Linq.Translators
+namespace NewLibCore.Data.Mongodb.Driver.Linq.Translators
 {
     internal sealed class ProjectedObject
     {

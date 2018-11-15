@@ -17,7 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NewLib.Data.Mongodb.Bson.Serialization.Conventions
+namespace NewLibCore.Data.Mongodb.Bson.Serialization.Conventions
 {
     /// <summary>
     /// Runs the conventions against a BsonClassMap and its BsonMemberMaps.

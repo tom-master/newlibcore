@@ -19,7 +19,7 @@ using System.Security;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace NewLib.Data.Mongodb.Driver
+namespace NewLibCore.Data.Mongodb.Driver
 {
     /// <summary>
     /// Various static utility methods.

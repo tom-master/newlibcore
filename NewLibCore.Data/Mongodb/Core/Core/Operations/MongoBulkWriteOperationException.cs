@@ -17,9 +17,9 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
-using NewLib.Data.Mongodb.Core.Core.Connections;
+using NewLibCore.Data.Mongodb.Core.Core.Connections;
 
-namespace NewLib.Data.Mongodb.Core.Core.Operations
+namespace NewLibCore.Data.Mongodb.Core.Core.Operations
 {
     /// <summary>
     /// Represents a bulk write operation exception.

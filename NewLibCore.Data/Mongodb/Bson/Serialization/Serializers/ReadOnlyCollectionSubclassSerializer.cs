@@ -17,7 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace NewLib.Data.Mongodb.Bson.Serialization.Serializers
+namespace NewLibCore.Data.Mongodb.Bson.Serialization.Serializers
 {
     /// <summary>
     /// Represents a serializer for a subclass of ReadOnlyCollection.

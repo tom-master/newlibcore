@@ -20,15 +20,15 @@ using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text.RegularExpressions;
-using NewLib.Data.Mongodb.Bson.ObjectModel;
-using NewLib.Data.Mongodb.Bson.Serialization;
-using NewLib.Data.Mongodb.Bson.Serialization.Options;
-using NewLib.Data.Mongodb.Driver.Linq.Expressions;
-using NewLib.Data.Mongodb.Driver.Linq.Expressions.ResultOperators;
-using NewLib.Data.Mongodb.Driver.Linq.Processors;
-using NewLib.Data.Mongodb.Driver.Linq.Processors.Pipeline;
+using NewLibCore.Data.Mongodb.Bson.ObjectModel;
+using NewLibCore.Data.Mongodb.Bson.Serialization;
+using NewLibCore.Data.Mongodb.Bson.Serialization.Options;
+using NewLibCore.Data.Mongodb.Driver.Linq.Expressions;
+using NewLibCore.Data.Mongodb.Driver.Linq.Expressions.ResultOperators;
+using NewLibCore.Data.Mongodb.Driver.Linq.Processors;
+using NewLibCore.Data.Mongodb.Driver.Linq.Processors.Pipeline;
 
-namespace NewLib.Data.Mongodb.Driver.Linq.Translators
+namespace NewLibCore.Data.Mongodb.Driver.Linq.Translators
 {
     internal sealed class PredicateTranslator
     {

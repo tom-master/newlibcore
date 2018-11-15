@@ -13,7 +13,7 @@
 * limitations under the License.
 */
 
-namespace NewLib.Data.Mongodb.Bson.Serialization.Serializers
+namespace NewLibCore.Data.Mongodb.Bson.Serialization.Serializers
 {
     /// <summary>
     /// Represents an abstract base class for struct serializers.

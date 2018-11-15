@@ -15,12 +15,12 @@
 
 using System;
 using System.Collections.Generic;
-using NewLib.Data.Mongodb.Bson.IO;
-using NewLib.Data.Mongodb.Bson.Serialization;
-using NewLib.Data.Mongodb.Bson.Serialization.Attributes;
-using NewLib.Data.Mongodb.Bson.Serialization.Serializers;
+using NewLibCore.Data.Mongodb.Bson.IO;
+using NewLibCore.Data.Mongodb.Bson.Serialization;
+using NewLibCore.Data.Mongodb.Bson.Serialization.Attributes;
+using NewLibCore.Data.Mongodb.Bson.Serialization.Serializers;
 
-namespace NewLib.Data.Mongodb.Bson.ObjectModel
+namespace NewLibCore.Data.Mongodb.Bson.ObjectModel
 {
     /// <summary>
     /// Represents a BSON array that is deserialized lazily.

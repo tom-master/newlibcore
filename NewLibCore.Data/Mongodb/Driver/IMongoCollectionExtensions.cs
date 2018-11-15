@@ -18,11 +18,11 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
-using NewLib.Data.Mongodb.Core;
-using NewLib.Data.Mongodb.Core.Core.Misc;
-using NewLib.Data.Mongodb.Driver.Linq;
+using NewLibCore.Data.Mongodb.Core;
+using NewLibCore.Data.Mongodb.Core.Core.Misc;
+using NewLibCore.Data.Mongodb.Driver.Linq;
 
-namespace NewLib.Data.Mongodb.Driver
+namespace NewLibCore.Data.Mongodb.Driver
 {
     /// <summary>
     /// Extension methods for <see cref="IMongoCollection{T}"/>.

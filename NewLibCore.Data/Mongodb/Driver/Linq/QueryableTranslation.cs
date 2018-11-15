@@ -13,9 +13,9 @@
 * limitations under the License.
 */
 
-using NewLib.Data.Mongodb.Core.Core.Misc;
+using NewLibCore.Data.Mongodb.Core.Core.Misc;
 
-namespace NewLib.Data.Mongodb.Driver.Linq
+namespace NewLibCore.Data.Mongodb.Driver.Linq
 {
     internal sealed class QueryableTranslation
     {

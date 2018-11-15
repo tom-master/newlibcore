@@ -14,9 +14,9 @@
 */
 
 using System;
-using NewLib.Data.Mongodb.Bson.ObjectModel;
+using NewLibCore.Data.Mongodb.Bson.ObjectModel;
 
-namespace NewLib.Data.Mongodb.Core.Core.Operations
+namespace NewLibCore.Data.Mongodb.Core.Core.Operations
 {
     /// <summary>
     /// Represents the details of a write concern error.

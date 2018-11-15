@@ -14,9 +14,9 @@
 */
 
 using System.Net;
-using NewLib.Data.Mongodb.Core.Core.Servers;
+using NewLibCore.Data.Mongodb.Core.Core.Servers;
 
-namespace NewLib.Data.Mongodb.Core.Core.Connections
+namespace NewLibCore.Data.Mongodb.Core.Core.Connections
 {
     /// <summary>
     /// Represents a connection factory.

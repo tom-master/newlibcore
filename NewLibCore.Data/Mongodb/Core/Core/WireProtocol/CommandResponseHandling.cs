@@ -13,7 +13,7 @@
 * limitations under the License.
 */
 
-namespace NewLib.Data.Mongodb.Core.Core.WireProtocol
+namespace NewLibCore.Data.Mongodb.Core.Core.WireProtocol
 {
     /// <summary>
     /// Instructions for handling the response from a command.

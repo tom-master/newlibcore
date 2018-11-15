@@ -15,10 +15,10 @@
 
 using System.Collections.Generic;
 using System.Dynamic;
-using NewLib.Data.Mongodb.Bson.ObjectModel;
-using NewLib.Data.Mongodb.Bson.Serialization;
+using NewLibCore.Data.Mongodb.Bson.ObjectModel;
+using NewLibCore.Data.Mongodb.Bson.Serialization;
 
-namespace NewLib.Data.Mongodb.Bson
+namespace NewLibCore.Data.Mongodb.Bson
 {
     /// <summary>
     /// A static helper class containing BSON defaults.

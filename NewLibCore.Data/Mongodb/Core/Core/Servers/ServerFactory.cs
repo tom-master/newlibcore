@@ -14,14 +14,14 @@
 */
 
 using System.Net;
-using NewLib.Data.Mongodb.Core.Core.Clusters;
-using NewLib.Data.Mongodb.Core.Core.Configuration;
-using NewLib.Data.Mongodb.Core.Core.ConnectionPools;
-using NewLib.Data.Mongodb.Core.Core.Connections;
-using NewLib.Data.Mongodb.Core.Core.Events;
-using NewLib.Data.Mongodb.Core.Core.Misc;
+using NewLibCore.Data.Mongodb.Core.Core.Clusters;
+using NewLibCore.Data.Mongodb.Core.Core.Configuration;
+using NewLibCore.Data.Mongodb.Core.Core.ConnectionPools;
+using NewLibCore.Data.Mongodb.Core.Core.Connections;
+using NewLibCore.Data.Mongodb.Core.Core.Events;
+using NewLibCore.Data.Mongodb.Core.Core.Misc;
 
-namespace NewLib.Data.Mongodb.Core.Core.Servers
+namespace NewLibCore.Data.Mongodb.Core.Core.Servers
 {
     internal class ServerFactory : IClusterableServerFactory
     {

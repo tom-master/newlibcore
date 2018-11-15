@@ -16,7 +16,7 @@
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace NewLib.Data.Mongodb.Driver.Linq
+namespace NewLibCore.Data.Mongodb.Driver.Linq
 {
     internal static class ExpressionHelper
     {

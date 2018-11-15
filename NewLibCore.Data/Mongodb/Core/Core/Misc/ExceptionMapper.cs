@@ -15,11 +15,11 @@
 
 using System;
 using System.Linq;
-using NewLib.Data.Mongodb.Bson;
-using NewLib.Data.Mongodb.Bson.ObjectModel;
-using NewLib.Data.Mongodb.Core.Core.Connections;
+using NewLibCore.Data.Mongodb.Bson;
+using NewLibCore.Data.Mongodb.Bson.ObjectModel;
+using NewLibCore.Data.Mongodb.Core.Core.Connections;
 
-namespace NewLib.Data.Mongodb.Core.Core.Misc
+namespace NewLibCore.Data.Mongodb.Core.Core.Misc
 {
     /// <summary>
     /// A mapper from error responses to custom exceptions.

@@ -14,10 +14,10 @@
 */
 
 using System;
-using NewLib.Data.Mongodb.Bson.Serialization.Attributes;
-using NewLib.Data.Mongodb.Driver.GeoJsonObjectModel.Serializers;
+using NewLibCore.Data.Mongodb.Bson.Serialization.Attributes;
+using NewLibCore.Data.Mongodb.Driver.GeoJsonObjectModel.Serializers;
 
-namespace NewLib.Data.Mongodb.Driver.GeoJsonObjectModel
+namespace NewLibCore.Data.Mongodb.Driver.GeoJsonObjectModel
 {
     /// <summary>
     /// Represents a GeoJson MultiLineString object.

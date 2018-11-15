@@ -13,7 +13,7 @@
 * limitations under the License.
 */
 
-namespace NewLib.Data.Mongodb.Core.Core.Clusters
+namespace NewLibCore.Data.Mongodb.Core.Core.Clusters
 {
     /// <summary>
     /// Represents the type of a cluster.

@@ -17,11 +17,11 @@ using System;
 using System.Collections.Concurrent;
 using System.Net;
 using System.Reflection;
-using NewLib.Data.Mongodb.Core.Core.Connections;
-using NewLib.Data.Mongodb.Core.Core.Events.Diagnostics.PerformanceCounters;
-using NewLib.Data.Mongodb.Core.Core.Servers;
+using NewLibCore.Data.Mongodb.Core.Core.Connections;
+using NewLibCore.Data.Mongodb.Core.Core.Events.Diagnostics.PerformanceCounters;
+using NewLibCore.Data.Mongodb.Core.Core.Servers;
 
-namespace NewLib.Data.Mongodb.Core.Core.Events.Diagnostics
+namespace NewLibCore.Data.Mongodb.Core.Core.Events.Diagnostics
 {
     /// <preliminary/>
     /// <summary>

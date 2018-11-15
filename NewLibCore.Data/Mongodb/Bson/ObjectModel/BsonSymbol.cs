@@ -15,7 +15,7 @@
 
 using System;
 
-namespace NewLib.Data.Mongodb.Bson.ObjectModel
+namespace NewLibCore.Data.Mongodb.Bson.ObjectModel
 {
     // TODO: [Serializable] // must have custom deserialization to do SymbolTable lookup
     /// <summary>

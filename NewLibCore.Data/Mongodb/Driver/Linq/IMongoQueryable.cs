@@ -14,9 +14,9 @@
 */
 
 using System.Linq;
-using NewLib.Data.Mongodb.Core;
+using NewLibCore.Data.Mongodb.Core;
 
-namespace NewLib.Data.Mongodb.Driver.Linq
+namespace NewLibCore.Data.Mongodb.Driver.Linq
 {
     /// <summary>
     /// Provides functionality to evaluate queries against MongoDB.

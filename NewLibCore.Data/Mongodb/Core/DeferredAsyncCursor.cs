@@ -17,9 +17,9 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using NewLib.Data.Mongodb.Core.Core.Misc;
+using NewLibCore.Data.Mongodb.Core.Core.Misc;
 
-namespace NewLib.Data.Mongodb.Core
+namespace NewLibCore.Data.Mongodb.Core
 {
     /// <summary>
     /// Represents a cursor for an operation that is not actually executed until MoveNextAsync is called for the first time.

@@ -17,10 +17,10 @@ using System;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Security.Cryptography;
-using NewLib.Data.Mongodb.Bson;
-using NewLib.Data.Mongodb.Bson.IO;
+using NewLibCore.Data.Mongodb.Bson;
+using NewLibCore.Data.Mongodb.Bson.IO;
 
-namespace NewLib.Data.Mongodb.Driver
+namespace NewLibCore.Data.Mongodb.Driver
 {
     /// <summary>
     /// Evidence of a MongoIdentity via a shared secret.

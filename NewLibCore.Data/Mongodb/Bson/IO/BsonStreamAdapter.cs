@@ -18,9 +18,9 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using NewLib.Data.Mongodb.Bson.ObjectModel;
+using NewLibCore.Data.Mongodb.Bson.ObjectModel;
 
-namespace NewLib.Data.Mongodb.Bson.IO
+namespace NewLibCore.Data.Mongodb.Bson.IO
 {
     /// <summary>
     /// A Stream that wraps another Stream while implementing the BsonStream abstract methods.

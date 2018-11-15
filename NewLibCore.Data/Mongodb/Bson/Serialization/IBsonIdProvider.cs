@@ -15,7 +15,7 @@
 
 using System;
 
-namespace NewLib.Data.Mongodb.Bson.Serialization
+namespace NewLibCore.Data.Mongodb.Bson.Serialization
 {
     /// <summary>
     /// Contract for serializers that can get and set Id values.

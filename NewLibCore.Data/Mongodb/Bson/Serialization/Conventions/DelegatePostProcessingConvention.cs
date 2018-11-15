@@ -15,7 +15,7 @@
 
 using System;
 
-namespace NewLib.Data.Mongodb.Bson.Serialization.Conventions
+namespace NewLibCore.Data.Mongodb.Bson.Serialization.Conventions
 {
     /// <summary>
     /// A post processing convention that wraps a delegate.

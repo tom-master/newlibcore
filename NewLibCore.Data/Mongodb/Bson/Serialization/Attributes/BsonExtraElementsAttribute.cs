@@ -15,7 +15,7 @@
 
 using System;
 
-namespace NewLib.Data.Mongodb.Bson.Serialization.Attributes
+namespace NewLibCore.Data.Mongodb.Bson.Serialization.Attributes
 {
     /// <summary>
     /// Indicates that this property or field will be used to hold any extra elements found during deserialization.

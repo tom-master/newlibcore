@@ -16,7 +16,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace NewLib.Data.Mongodb.Bson.Serialization.Conventions
+namespace NewLibCore.Data.Mongodb.Bson.Serialization.Conventions
 {
     /// <summary>
     /// Represents a registry of conventions.

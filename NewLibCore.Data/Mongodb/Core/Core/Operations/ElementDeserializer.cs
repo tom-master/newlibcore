@@ -13,12 +13,12 @@
 * limitations under the License.
 */
 
-using NewLib.Data.Mongodb.Bson.IO;
-using NewLib.Data.Mongodb.Bson.ObjectModel;
-using NewLib.Data.Mongodb.Bson.Serialization;
-using NewLib.Data.Mongodb.Bson.Serialization.Serializers;
+using NewLibCore.Data.Mongodb.Bson.IO;
+using NewLibCore.Data.Mongodb.Bson.ObjectModel;
+using NewLibCore.Data.Mongodb.Bson.Serialization;
+using NewLibCore.Data.Mongodb.Bson.Serialization.Serializers;
 
-namespace NewLib.Data.Mongodb.Core.Core.Operations
+namespace NewLibCore.Data.Mongodb.Core.Core.Operations
 {
     /// <summary>
     /// Represents a deserializer that deserializes the selected element and skips any others.

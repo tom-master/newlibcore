@@ -15,12 +15,12 @@
 
 using System;
 using System.Linq.Expressions;
-using NewLib.Data.Mongodb.Bson.Serialization;
-using NewLib.Data.Mongodb.Driver.Linq.Expressions;
-using NewLib.Data.Mongodb.Driver.Linq.Processors.EmbeddedPipeline.MethodCallBinders;
-using NewLib.Data.Mongodb.Driver.Support;
+using NewLibCore.Data.Mongodb.Bson.Serialization;
+using NewLibCore.Data.Mongodb.Driver.Linq.Expressions;
+using NewLibCore.Data.Mongodb.Driver.Linq.Processors.EmbeddedPipeline.MethodCallBinders;
+using NewLibCore.Data.Mongodb.Driver.Support;
 
-namespace NewLib.Data.Mongodb.Driver.Linq.Processors.EmbeddedPipeline
+namespace NewLibCore.Data.Mongodb.Driver.Linq.Processors.EmbeddedPipeline
 {
     internal sealed class EmbeddedPipelineBinder : PipelineBinderBase<EmbeddedPipelineBindingContext>
     {

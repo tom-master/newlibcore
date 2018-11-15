@@ -19,7 +19,7 @@ using System.Runtime.CompilerServices;
 using System.Security;
 using System.Threading;
 
-namespace NewLib.Data.Mongodb.Bson.ObjectModel
+namespace NewLibCore.Data.Mongodb.Bson.ObjectModel
 {
     /// <summary>
     /// Represents an ObjectId (see also BsonObjectId).

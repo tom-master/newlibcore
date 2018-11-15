@@ -17,7 +17,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
-namespace NewLib.Data.Mongodb.Core.Core.Authentication.Sspi
+namespace NewLibCore.Data.Mongodb.Core.Core.Authentication.Sspi
 {
     /// <summary>
     /// A SecBufferDesc structure.

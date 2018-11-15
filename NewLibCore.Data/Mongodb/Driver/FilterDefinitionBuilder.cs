@@ -17,14 +17,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using NewLib.Data.Mongodb.Bson;
-using NewLib.Data.Mongodb.Bson.IO;
-using NewLib.Data.Mongodb.Bson.ObjectModel;
-using NewLib.Data.Mongodb.Bson.Serialization;
-using NewLib.Data.Mongodb.Core.Core.Misc;
-using NewLib.Data.Mongodb.Driver.GeoJsonObjectModel;
+using NewLibCore.Data.Mongodb.Bson;
+using NewLibCore.Data.Mongodb.Bson.IO;
+using NewLibCore.Data.Mongodb.Bson.ObjectModel;
+using NewLibCore.Data.Mongodb.Bson.Serialization;
+using NewLibCore.Data.Mongodb.Core.Core.Misc;
+using NewLibCore.Data.Mongodb.Driver.GeoJsonObjectModel;
 
-namespace NewLib.Data.Mongodb.Driver
+namespace NewLibCore.Data.Mongodb.Driver
 {
     /// <summary>
     /// A builder for a <see cref="FilterDefinition{TDocument}"/>.

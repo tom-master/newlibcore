@@ -15,11 +15,11 @@
 
 using System;
 using System.Linq.Expressions;
-using NewLib.Data.Mongodb.Bson.Serialization;
-using NewLib.Data.Mongodb.Driver.Linq.Expressions;
-using NewLib.Data.Mongodb.Driver.Linq.Processors.Pipeline.MethodCallBinders;
+using NewLibCore.Data.Mongodb.Bson.Serialization;
+using NewLibCore.Data.Mongodb.Driver.Linq.Expressions;
+using NewLibCore.Data.Mongodb.Driver.Linq.Processors.Pipeline.MethodCallBinders;
 
-namespace NewLib.Data.Mongodb.Driver.Linq.Processors.Pipeline
+namespace NewLibCore.Data.Mongodb.Driver.Linq.Processors.Pipeline
 {
     internal sealed class PipelineBinder : PipelineBinderBase<PipelineBindingContext>
     {

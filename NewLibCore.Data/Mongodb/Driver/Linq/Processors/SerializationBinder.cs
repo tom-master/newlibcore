@@ -16,12 +16,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using NewLib.Data.Mongodb.Bson.Serialization;
-using NewLib.Data.Mongodb.Core;
-using NewLib.Data.Mongodb.Driver.Linq.Expressions;
-using NewLib.Data.Mongodb.Driver.Linq.Processors.EmbeddedPipeline;
+using NewLibCore.Data.Mongodb.Bson.Serialization;
+using NewLibCore.Data.Mongodb.Core;
+using NewLibCore.Data.Mongodb.Driver.Linq.Expressions;
+using NewLibCore.Data.Mongodb.Driver.Linq.Processors.EmbeddedPipeline;
 
-namespace NewLib.Data.Mongodb.Driver.Linq.Processors
+namespace NewLibCore.Data.Mongodb.Driver.Linq.Processors
 {
     internal sealed class SerializationBinder : ExtensionExpressionVisitor
     {

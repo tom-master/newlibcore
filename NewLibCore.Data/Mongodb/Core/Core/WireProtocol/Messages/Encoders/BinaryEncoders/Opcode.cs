@@ -13,7 +13,7 @@
 * limitations under the License.
 */
 
-namespace NewLib.Data.Mongodb.Core.Core.WireProtocol.Messages.Encoders.BinaryEncoders
+namespace NewLibCore.Data.Mongodb.Core.Core.WireProtocol.Messages.Encoders.BinaryEncoders
 {
     internal enum Opcode
     {

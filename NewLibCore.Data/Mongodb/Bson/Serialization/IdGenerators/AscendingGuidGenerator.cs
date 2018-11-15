@@ -20,9 +20,9 @@ using System.Security;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
-using NewLib.Data.Mongodb.Bson.ObjectModel;
+using NewLibCore.Data.Mongodb.Bson.ObjectModel;
 
-namespace NewLib.Data.Mongodb.Bson.Serialization.IdGenerators
+namespace NewLibCore.Data.Mongodb.Bson.Serialization.IdGenerators
 {
     /// <summary>
     /// A GUID generator that generates GUIDs in ascending order. To enable 

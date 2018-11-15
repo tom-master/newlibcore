@@ -14,11 +14,11 @@
 */
 
 using System;
-using NewLib.Data.Mongodb.Bson.IO;
-using NewLib.Data.Mongodb.Bson.Serialization;
-using NewLib.Data.Mongodb.Bson.Serialization.Serializers;
+using NewLibCore.Data.Mongodb.Bson.IO;
+using NewLibCore.Data.Mongodb.Bson.Serialization;
+using NewLibCore.Data.Mongodb.Bson.Serialization.Serializers;
 
-namespace NewLib.Data.Mongodb.Driver.GeoJsonObjectModel.Serializers
+namespace NewLibCore.Data.Mongodb.Driver.GeoJsonObjectModel.Serializers
 {
     /// <summary>
     /// Represents a serializer for a GeoJsonGeometry value.

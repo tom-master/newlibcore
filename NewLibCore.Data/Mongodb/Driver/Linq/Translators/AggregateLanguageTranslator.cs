@@ -18,14 +18,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using NewLib.Data.Mongodb.Bson.ObjectModel;
-using NewLib.Data.Mongodb.Core;
-using NewLib.Data.Mongodb.Driver.Linq.Expressions;
-using NewLib.Data.Mongodb.Driver.Linq.Expressions.ResultOperators;
-using NewLib.Data.Mongodb.Driver.Linq.Processors;
-using NewLib.Data.Mongodb.Driver.Support;
+using NewLibCore.Data.Mongodb.Bson.ObjectModel;
+using NewLibCore.Data.Mongodb.Core;
+using NewLibCore.Data.Mongodb.Driver.Linq.Expressions;
+using NewLibCore.Data.Mongodb.Driver.Linq.Expressions.ResultOperators;
+using NewLibCore.Data.Mongodb.Driver.Linq.Processors;
+using NewLibCore.Data.Mongodb.Driver.Support;
 
-namespace NewLib.Data.Mongodb.Driver.Linq.Translators
+namespace NewLibCore.Data.Mongodb.Driver.Linq.Translators
 {
     internal sealed class AggregateLanguageTranslator
     {

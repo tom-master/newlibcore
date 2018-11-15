@@ -15,9 +15,9 @@
 
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using NewLib.Data.Mongodb.Driver.Linq.Expressions;
+using NewLibCore.Data.Mongodb.Driver.Linq.Expressions;
 
-namespace NewLib.Data.Mongodb.Driver.Linq.Processors
+namespace NewLibCore.Data.Mongodb.Driver.Linq.Processors
 {
     internal interface IMethodCallBinder<TBindingContext> where TBindingContext : IBindingContext
     {

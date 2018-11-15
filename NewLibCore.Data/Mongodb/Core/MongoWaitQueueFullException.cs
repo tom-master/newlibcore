@@ -16,9 +16,9 @@
 using System;
 using System.Net;
 using System.Runtime.Serialization;
-using NewLib.Data.Mongodb.Core.Core.Misc;
+using NewLibCore.Data.Mongodb.Core.Core.Misc;
 
-namespace NewLib.Data.Mongodb.Core
+namespace NewLibCore.Data.Mongodb.Core
 {
     /// <summary>
     /// Represents a MongoDB connection pool wait queue full exception.

@@ -18,7 +18,7 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace NewLib.Data.Mongodb.Core.Core.Connections
+namespace NewLibCore.Data.Mongodb.Core.Core.Connections
 {
     /// <summary>
     /// Represents a stream factory.

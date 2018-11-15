@@ -15,7 +15,7 @@
 
 using System;
 
-namespace NewLib.Data.Mongodb.Bson.Serialization
+namespace NewLibCore.Data.Mongodb.Bson.Serialization
 {
     /// <summary>
     /// An interface implemented by a serializer.

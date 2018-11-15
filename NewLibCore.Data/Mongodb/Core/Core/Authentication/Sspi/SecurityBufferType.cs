@@ -13,7 +13,7 @@
 * limitations under the License.
 */
 
-namespace NewLib.Data.Mongodb.Core.Core.Authentication.Sspi
+namespace NewLibCore.Data.Mongodb.Core.Core.Authentication.Sspi
 {
     /// <summary>
     /// Types for the SecurityBuffer structure.

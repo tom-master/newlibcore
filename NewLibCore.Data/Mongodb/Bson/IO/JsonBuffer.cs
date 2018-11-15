@@ -17,7 +17,7 @@ using System;
 using System.IO;
 using System.Text;
 
-namespace NewLib.Data.Mongodb.Bson.IO
+namespace NewLibCore.Data.Mongodb.Bson.IO
 {
     /// <summary>
     /// Represents a wrapper around a TextReader to provide some buffering functionality.

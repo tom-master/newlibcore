@@ -16,10 +16,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using NewLib.Data.Mongodb.Core.Core.Misc;
-using NewLib.Data.Mongodb.Core.Core.Servers;
+using NewLibCore.Data.Mongodb.Core.Core.Misc;
+using NewLibCore.Data.Mongodb.Core.Core.Servers;
 
-namespace NewLib.Data.Mongodb.Core.Core.Clusters.ServerSelectors
+namespace NewLibCore.Data.Mongodb.Core.Core.Clusters.ServerSelectors
 {
     /// <summary>
     /// Represents a selector that selects servers based on an end point.

@@ -16,9 +16,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using NewLib.Data.Mongodb.Core.Core.Misc;
+using NewLibCore.Data.Mongodb.Core.Core.Misc;
 
-namespace NewLib.Data.Mongodb.Driver.Linq.Expressions
+namespace NewLibCore.Data.Mongodb.Driver.Linq.Expressions
 {
     internal sealed class GroupByWithResultSelectorExpression : ExtensionExpression, ISourcedExpression
     {

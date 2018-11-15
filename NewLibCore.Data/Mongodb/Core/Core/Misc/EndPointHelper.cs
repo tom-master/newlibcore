@@ -20,7 +20,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text.RegularExpressions;
 
-namespace NewLib.Data.Mongodb.Core.Core.Misc
+namespace NewLibCore.Data.Mongodb.Core.Core.Misc
 {
     /// <summary>
     /// Represents helper methods for EndPoints.

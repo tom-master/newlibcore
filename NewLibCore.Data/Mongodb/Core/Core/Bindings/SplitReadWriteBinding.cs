@@ -16,10 +16,10 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using NewLib.Data.Mongodb.Core.Core.Clusters;
-using NewLib.Data.Mongodb.Core.Core.Misc;
+using NewLibCore.Data.Mongodb.Core.Core.Clusters;
+using NewLibCore.Data.Mongodb.Core.Core.Misc;
 
-namespace NewLib.Data.Mongodb.Core.Core.Bindings
+namespace NewLibCore.Data.Mongodb.Core.Core.Bindings
 {
     /// <summary>
     /// Represents a split read-write binding, where the reads use one binding and the writes use another.

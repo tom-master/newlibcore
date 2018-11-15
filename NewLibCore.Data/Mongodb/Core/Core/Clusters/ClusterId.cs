@@ -14,9 +14,9 @@
 */
 
 using System;
-using NewLib.Data.Mongodb.Core.Core.Misc;
+using NewLibCore.Data.Mongodb.Core.Core.Misc;
 
-namespace NewLib.Data.Mongodb.Core.Core.Clusters
+namespace NewLibCore.Data.Mongodb.Core.Core.Clusters
 {
     /// <summary>
     /// Represents a cluster identifier.

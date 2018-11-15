@@ -18,11 +18,11 @@ using System.Diagnostics;
 using System.Net.Security;
 using System.Net.Sockets;
 using System.Security.Cryptography.X509Certificates;
-using NewLib.Data.Mongodb.Core.Core.Authentication;
-using NewLib.Data.Mongodb.Core.Core.Events.Diagnostics;
-using NewLib.Data.Mongodb.Core.Core.Misc;
+using NewLibCore.Data.Mongodb.Core.Core.Authentication;
+using NewLibCore.Data.Mongodb.Core.Core.Events.Diagnostics;
+using NewLibCore.Data.Mongodb.Core.Core.Misc;
 
-namespace NewLib.Data.Mongodb.Core.Core.Configuration
+namespace NewLibCore.Data.Mongodb.Core.Core.Configuration
 {
     /// <summary>
     /// Extension methods for a ClusterBuilder.

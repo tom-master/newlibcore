@@ -15,12 +15,12 @@
 
 using System.Threading;
 using System.Threading.Tasks;
-using NewLib.Data.Mongodb.Core.Core.Bindings;
-using NewLib.Data.Mongodb.Core.Core.Events;
-using NewLib.Data.Mongodb.Core.Core.Misc;
-using NewLib.Data.Mongodb.Core.Core.WireProtocol.Messages.Encoders;
+using NewLibCore.Data.Mongodb.Core.Core.Bindings;
+using NewLibCore.Data.Mongodb.Core.Core.Events;
+using NewLibCore.Data.Mongodb.Core.Core.Misc;
+using NewLibCore.Data.Mongodb.Core.Core.WireProtocol.Messages.Encoders;
 
-namespace NewLib.Data.Mongodb.Core.Core.Operations
+namespace NewLibCore.Data.Mongodb.Core.Core.Operations
 {
     /// <summary>
     /// Represents a delete operation using the delete opcode.

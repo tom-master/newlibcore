@@ -14,9 +14,9 @@
 */
 
 using System;
-using NewLib.Data.Mongodb.Bson.ObjectModel;
+using NewLibCore.Data.Mongodb.Bson.ObjectModel;
 
-namespace NewLib.Data.Mongodb.Bson.Serialization.Conventions
+namespace NewLibCore.Data.Mongodb.Bson.Serialization.Conventions
 {
     /// <summary>
     /// A convention that allows you to set the Enum serialization representation

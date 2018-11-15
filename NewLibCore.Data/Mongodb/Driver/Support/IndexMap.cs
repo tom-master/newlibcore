@@ -15,7 +15,7 @@
 
 using System.Collections.Generic;
 
-namespace NewLib.Data.Mongodb.Driver.Support
+namespace NewLibCore.Data.Mongodb.Driver.Support
 {
     internal abstract class IndexMap
     {

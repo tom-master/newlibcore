@@ -17,7 +17,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Security;
 
-namespace NewLib.Data.Mongodb.Core.Core.Authentication.Sspi
+namespace NewLibCore.Data.Mongodb.Core.Core.Authentication.Sspi
 {
     /// <summary>
     /// SEC_WINNT_AUTH_IDENTITY

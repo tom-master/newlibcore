@@ -13,10 +13,10 @@
 * limitations under the License.
 */
 
-using NewLib.Data.Mongodb.Bson.IO;
-using NewLib.Data.Mongodb.Bson.ObjectModel;
+using NewLibCore.Data.Mongodb.Bson.IO;
+using NewLibCore.Data.Mongodb.Bson.ObjectModel;
 
-namespace NewLib.Data.Mongodb.Bson.Serialization.Serializers
+namespace NewLibCore.Data.Mongodb.Bson.Serialization.Serializers
 {
     /// <summary>
     /// Represents a serializer for a BsonValue that can round trip C# null.

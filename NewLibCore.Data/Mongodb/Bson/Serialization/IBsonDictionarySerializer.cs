@@ -13,9 +13,9 @@
 * limitations under the License.
 */
 
-using NewLib.Data.Mongodb.Bson.Serialization.Options;
+using NewLibCore.Data.Mongodb.Bson.Serialization.Options;
 
-namespace NewLib.Data.Mongodb.Bson.Serialization
+namespace NewLibCore.Data.Mongodb.Bson.Serialization
 {
     /// <summary>
     /// Represents a dictionary serializer that can be used in LINQ queries.

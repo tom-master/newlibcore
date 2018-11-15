@@ -15,10 +15,10 @@
 
 using System;
 using System.Linq.Expressions;
-using NewLib.Data.Mongodb.Bson.Serialization;
-using NewLib.Data.Mongodb.Core.Core.Misc;
+using NewLibCore.Data.Mongodb.Bson.Serialization;
+using NewLibCore.Data.Mongodb.Core.Core.Misc;
 
-namespace NewLib.Data.Mongodb.Driver.Linq.Expressions
+namespace NewLibCore.Data.Mongodb.Driver.Linq.Expressions
 {
     internal sealed class FieldExpression : SerializationExpression, IFieldExpression
     {

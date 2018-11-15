@@ -14,9 +14,9 @@
 */
 
 using System;
-using NewLib.Data.Mongodb.Bson;
+using NewLibCore.Data.Mongodb.Bson;
 
-namespace NewLib.Data.Mongodb.Core.Core.Misc
+namespace NewLibCore.Data.Mongodb.Core.Core.Misc
 {
     /// <summary>
     /// Represents a range between a minimum and a maximum value.

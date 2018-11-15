@@ -14,12 +14,12 @@
 */
 
 using System;
-using NewLib.Data.Mongodb.Bson.IO;
-using NewLib.Data.Mongodb.Bson.ObjectModel;
-using NewLib.Data.Mongodb.Bson.Serialization;
-using NewLib.Data.Mongodb.Bson.Serialization.Serializers;
+using NewLibCore.Data.Mongodb.Bson.IO;
+using NewLibCore.Data.Mongodb.Bson.ObjectModel;
+using NewLibCore.Data.Mongodb.Bson.Serialization;
+using NewLibCore.Data.Mongodb.Bson.Serialization.Serializers;
 
-namespace NewLib.Data.Mongodb.Driver.Linq.Processors.Pipeline.MethodCallBinders
+namespace NewLibCore.Data.Mongodb.Driver.Linq.Processors.Pipeline.MethodCallBinders
 {
     internal class JoinSerializer<T> : SerializerBase<T>, IBsonDocumentSerializer
     {

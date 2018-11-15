@@ -16,9 +16,9 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Security;
-using NewLib.Data.Mongodb.Core.Core.Misc;
+using NewLibCore.Data.Mongodb.Core.Core.Misc;
 
-namespace NewLib.Data.Mongodb.Core.Core.Authentication
+namespace NewLibCore.Data.Mongodb.Core.Core.Authentication
 {
     /// <summary>
     /// Represents a username/password credential.

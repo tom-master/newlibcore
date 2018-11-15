@@ -13,7 +13,7 @@
 * limitations under the License.
 */
 
-namespace NewLib.Data.Mongodb.Bson.IO
+namespace NewLibCore.Data.Mongodb.Bson.IO
 {
     /// <summary>
     /// Represents an element name validator. Used by BsonWriters when WriteName is called

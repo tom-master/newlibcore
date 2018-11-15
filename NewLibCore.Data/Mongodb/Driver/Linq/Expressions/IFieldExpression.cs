@@ -15,7 +15,7 @@
 
 using System.Linq.Expressions;
 
-namespace NewLib.Data.Mongodb.Driver.Linq.Expressions
+namespace NewLibCore.Data.Mongodb.Driver.Linq.Expressions
 {
     internal interface IFieldExpression : ISerializationExpression
     {

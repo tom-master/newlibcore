@@ -16,10 +16,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NewLib.Data.Mongodb.Bson;
-using NewLib.Data.Mongodb.Core.Core.Configuration;
+using NewLibCore.Data.Mongodb.Bson;
+using NewLibCore.Data.Mongodb.Core.Core.Configuration;
 
-namespace NewLib.Data.Mongodb.Driver
+namespace NewLibCore.Data.Mongodb.Driver
 {
     internal class ClusterKey
     {

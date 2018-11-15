@@ -19,12 +19,12 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
-using NewLib.Data.Mongodb.Bson.IO;
-using NewLib.Data.Mongodb.Bson.ObjectModel;
-using NewLib.Data.Mongodb.Core.Core.Clusters;
-using NewLib.Data.Mongodb.Core.Core.Misc;
+using NewLibCore.Data.Mongodb.Bson.IO;
+using NewLibCore.Data.Mongodb.Bson.ObjectModel;
+using NewLibCore.Data.Mongodb.Core.Core.Clusters;
+using NewLibCore.Data.Mongodb.Core.Core.Misc;
 
-namespace NewLib.Data.Mongodb.Core.Core.Configuration
+namespace NewLibCore.Data.Mongodb.Core.Core.Configuration
 {
     /// <summary>
     /// Represents a connection string.

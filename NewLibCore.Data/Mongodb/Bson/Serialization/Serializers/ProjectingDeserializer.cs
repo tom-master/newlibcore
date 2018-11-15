@@ -15,7 +15,7 @@
 
 using System;
 
-namespace NewLib.Data.Mongodb.Bson.Serialization.Serializers
+namespace NewLibCore.Data.Mongodb.Bson.Serialization.Serializers
 {
     /// <summary>
     /// Wraps a serializer and projects using a function.

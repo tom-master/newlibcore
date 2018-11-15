@@ -17,7 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NewLib.Data.Mongodb.Core.Core.Misc
+namespace NewLibCore.Data.Mongodb.Core.Core.Misc
 {
     /// <summary>
     /// Represents a source of items that can be broken into batches.

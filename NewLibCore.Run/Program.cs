@@ -24,10 +24,7 @@ namespace NewLibCore.Run
     {
         static void Main(string[] args)
         {
-            using (var dataStore = new DataStore(""))
-            {
-                dataStore.Add(new VisitorRecord(1, ""));
-            }
+            //MongoServiceApi api = new MongoServiceApi();
         }
     }
     public partial class VisitorRecord : DomainModelBase

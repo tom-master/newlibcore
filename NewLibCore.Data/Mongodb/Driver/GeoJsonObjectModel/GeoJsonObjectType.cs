@@ -13,7 +13,7 @@
 * limitations under the License.
 */
 
-namespace NewLib.Data.Mongodb.Driver.GeoJsonObjectModel
+namespace NewLibCore.Data.Mongodb.Driver.GeoJsonObjectModel
 {
     /// <summary>
     /// Represents the type of a GeoJson object.

@@ -16,7 +16,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace NewLib.Data.Mongodb.Bson.IO
+namespace NewLibCore.Data.Mongodb.Bson.IO
 {
     /// <summary>
     /// Represents a factory for IBsonBuffers.

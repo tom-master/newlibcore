@@ -16,7 +16,7 @@
 using System;
 using System.Threading;
 
-namespace NewLib.Data.Mongodb.Core.Core.WireProtocol.Messages
+namespace NewLibCore.Data.Mongodb.Core.Core.WireProtocol.Messages
 {
     /// <summary>
     /// Represents a base class for request messages.

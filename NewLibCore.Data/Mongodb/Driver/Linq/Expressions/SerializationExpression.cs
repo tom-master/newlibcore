@@ -13,9 +13,9 @@
 * limitations under the License.
 */
 
-using NewLib.Data.Mongodb.Bson.Serialization;
+using NewLibCore.Data.Mongodb.Bson.Serialization;
 
-namespace NewLib.Data.Mongodb.Driver.Linq.Expressions
+namespace NewLibCore.Data.Mongodb.Driver.Linq.Expressions
 {
     internal abstract class SerializationExpression : ExtensionExpression, ISerializationExpression
     {

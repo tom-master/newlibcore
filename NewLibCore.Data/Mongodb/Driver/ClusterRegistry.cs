@@ -18,13 +18,13 @@ using System.Linq;
 using System.Net.Security;
 using System.Net.Sockets;
 using System.Security.Cryptography.X509Certificates;
-using NewLib.Data.Mongodb.Core;
-using NewLib.Data.Mongodb.Core.Core.Clusters;
-using NewLib.Data.Mongodb.Core.Core.Clusters.ServerSelectors;
-using NewLib.Data.Mongodb.Core.Core.Configuration;
-using NewLib.Data.Mongodb.Core.Core.Misc;
+using NewLibCore.Data.Mongodb.Core;
+using NewLibCore.Data.Mongodb.Core.Core.Clusters;
+using NewLibCore.Data.Mongodb.Core.Core.Clusters.ServerSelectors;
+using NewLibCore.Data.Mongodb.Core.Core.Configuration;
+using NewLibCore.Data.Mongodb.Core.Core.Misc;
 
-namespace NewLib.Data.Mongodb.Driver
+namespace NewLibCore.Data.Mongodb.Driver
 {
     /// <summary>
     /// Represents a registry of already created clusters.

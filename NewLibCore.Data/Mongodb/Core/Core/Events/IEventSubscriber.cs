@@ -15,7 +15,7 @@
 
 using System;
 
-namespace NewLib.Data.Mongodb.Core.Core.Events
+namespace NewLibCore.Data.Mongodb.Core.Core.Events
 {
     /// <summary>
     /// A subscriber to events.

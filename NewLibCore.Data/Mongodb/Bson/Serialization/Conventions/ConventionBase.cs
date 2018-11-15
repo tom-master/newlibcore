@@ -15,7 +15,7 @@
 
 using System;
 
-namespace NewLib.Data.Mongodb.Bson.Serialization.Conventions
+namespace NewLibCore.Data.Mongodb.Bson.Serialization.Conventions
 {
     /// <summary>
     /// Base class for a convention.

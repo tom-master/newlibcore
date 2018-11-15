@@ -13,7 +13,7 @@
 * limitations under the License.
 */
 
-namespace NewLib.Data.Mongodb.Core
+namespace NewLibCore.Data.Mongodb.Core
 {
     /// <summary>
     /// The leve of the read concern.

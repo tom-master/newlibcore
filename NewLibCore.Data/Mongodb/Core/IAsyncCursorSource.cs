@@ -17,9 +17,9 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using NewLib.Data.Mongodb.Core.Core.Operations;
+using NewLibCore.Data.Mongodb.Core.Core.Operations;
 
-namespace NewLib.Data.Mongodb.Core
+namespace NewLibCore.Data.Mongodb.Core
 {
     /// <summary>
     /// Represents an operation that will return a cursor when executed.

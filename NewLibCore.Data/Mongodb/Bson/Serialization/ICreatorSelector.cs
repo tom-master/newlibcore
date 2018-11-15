@@ -15,7 +15,7 @@
 
 using System.Collections.Generic;
 
-namespace NewLib.Data.Mongodb.Bson.Serialization
+namespace NewLibCore.Data.Mongodb.Bson.Serialization
 {
     internal interface ICreatorSelector
     {

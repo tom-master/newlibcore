@@ -15,7 +15,7 @@
 
 using System;
 
-namespace NewLib.Data.Mongodb.Bson.Serialization.Attributes
+namespace NewLibCore.Data.Mongodb.Bson.Serialization.Attributes
 {
     /// <summary>
     /// Abstract base class for serialization options attributes.

@@ -16,7 +16,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace NewLib.Data.Mongodb.Core
+namespace NewLibCore.Data.Mongodb.Core
 {
     /// <summary>
     /// Represents a MongoDB exception.

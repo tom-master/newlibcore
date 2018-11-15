@@ -14,9 +14,9 @@
 */
 
 using System;
-using NewLib.Data.Mongodb.Bson.IO;
+using NewLibCore.Data.Mongodb.Bson.IO;
 
-namespace NewLib.Data.Mongodb.Bson.Serialization
+namespace NewLibCore.Data.Mongodb.Bson.Serialization
 {
     /// <summary>
     /// Represents all the contextual information needed by a serializer to deserialize a value.

@@ -16,7 +16,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace NewLib.Data.Mongodb.Core.Core.Authentication.Sspi
+namespace NewLibCore.Data.Mongodb.Core.Core.Authentication.Sspi
 {
     /// <summary>
     /// Thrown from a win32 wrapped operation.

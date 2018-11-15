@@ -16,7 +16,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace NewLib.Data.Mongodb.Core.Core.Operations
+namespace NewLibCore.Data.Mongodb.Core.Core.Operations
 {
     /// <summary>
     /// Represents the result of a bulk write operation.

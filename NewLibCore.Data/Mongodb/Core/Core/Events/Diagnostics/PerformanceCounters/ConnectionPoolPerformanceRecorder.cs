@@ -13,7 +13,7 @@
 * limitations under the License.
 */
 
-namespace NewLib.Data.Mongodb.Core.Core.Events.Diagnostics.PerformanceCounters
+namespace NewLibCore.Data.Mongodb.Core.Core.Events.Diagnostics.PerformanceCounters
 {
     internal class ConnectionPoolPerformanceRecorder
     {

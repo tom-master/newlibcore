@@ -17,9 +17,9 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using NewLib.Data.Mongodb.Bson.IO;
+using NewLibCore.Data.Mongodb.Bson.IO;
 
-namespace NewLib.Data.Mongodb.Core.Core.Misc
+namespace NewLibCore.Data.Mongodb.Core.Core.Misc
 {
     internal static class StreamExtensionMethods
     {

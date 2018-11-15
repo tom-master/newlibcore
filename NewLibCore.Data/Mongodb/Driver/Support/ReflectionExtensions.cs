@@ -17,7 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NewLib.Data.Mongodb.Driver.Support
+namespace NewLibCore.Data.Mongodb.Driver.Support
 {
     internal static class ReflectionExtensions
     {

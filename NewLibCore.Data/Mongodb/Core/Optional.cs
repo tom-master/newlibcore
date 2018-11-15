@@ -16,7 +16,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace NewLib.Data.Mongodb.Core
+namespace NewLibCore.Data.Mongodb.Core
 {
     /// <summary>
     /// Represents helper methods for use with the <see cref="Optional{T}"/> struct.

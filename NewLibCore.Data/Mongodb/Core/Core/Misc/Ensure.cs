@@ -17,7 +17,7 @@ using System;
 using System.Diagnostics;
 using System.Threading;
 
-namespace NewLib.Data.Mongodb.Core.Core.Misc
+namespace NewLibCore.Data.Mongodb.Core.Core.Misc
 {
     /// <summary>
     /// Represents methods that can be used to ensure that parameter values meet expected conditions.

@@ -16,12 +16,12 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using NewLib.Data.Mongodb.Bson.IO;
-using NewLib.Data.Mongodb.Bson.Serialization;
-using NewLib.Data.Mongodb.Core.Core.Misc;
-using NewLib.Data.Mongodb.Core.Core.Operations.ElementNameValidators;
+using NewLibCore.Data.Mongodb.Bson.IO;
+using NewLibCore.Data.Mongodb.Bson.Serialization;
+using NewLibCore.Data.Mongodb.Core.Core.Misc;
+using NewLibCore.Data.Mongodb.Core.Core.Operations.ElementNameValidators;
 
-namespace NewLib.Data.Mongodb.Core.Core.WireProtocol.Messages.Encoders.BinaryEncoders
+namespace NewLibCore.Data.Mongodb.Core.Core.WireProtocol.Messages.Encoders.BinaryEncoders
 {
     /// <summary>
     /// Represents a binary encoder for an Insert message.

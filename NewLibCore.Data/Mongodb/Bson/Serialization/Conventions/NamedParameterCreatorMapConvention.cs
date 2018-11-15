@@ -16,9 +16,9 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using NewLib.Data.Mongodb.Bson.Exceptions;
+using NewLibCore.Data.Mongodb.Bson.Exceptions;
 
-namespace NewLib.Data.Mongodb.Bson.Serialization.Conventions
+namespace NewLibCore.Data.Mongodb.Bson.Serialization.Conventions
 {
     /// <summary>
     /// A convention that uses the names of the creator parameters to find the matching members.

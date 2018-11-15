@@ -16,7 +16,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace NewLib.Data.Mongodb.Bson.Exceptions
+namespace NewLibCore.Data.Mongodb.Bson.Exceptions
 {
     /// <summary>
     /// Represents a BSON internal exception (almost surely the result of a bug).

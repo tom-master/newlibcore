@@ -14,10 +14,10 @@
 */
 
 using System;
-using NewLib.Data.Mongodb.Bson.ObjectModel;
-using NewLib.Data.Mongodb.Core.Core.Misc;
+using NewLibCore.Data.Mongodb.Bson.ObjectModel;
+using NewLibCore.Data.Mongodb.Core.Core.Misc;
 
-namespace NewLib.Data.Mongodb.Core.Core.Connections
+namespace NewLibCore.Data.Mongodb.Core.Core.Connections
 {
     /// <summary>
     /// Represents the result of a buildInfo command.

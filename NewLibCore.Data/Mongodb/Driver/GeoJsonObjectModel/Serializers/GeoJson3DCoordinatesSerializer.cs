@@ -13,10 +13,10 @@
 * limitations under the License.
 */
 
-using NewLib.Data.Mongodb.Bson.Serialization;
-using NewLib.Data.Mongodb.Bson.Serialization.Serializers;
+using NewLibCore.Data.Mongodb.Bson.Serialization;
+using NewLibCore.Data.Mongodb.Bson.Serialization.Serializers;
 
-namespace NewLib.Data.Mongodb.Driver.GeoJsonObjectModel.Serializers
+namespace NewLibCore.Data.Mongodb.Driver.GeoJsonObjectModel.Serializers
 {
     /// <summary>
     /// Represents a serializer for a GeoJson3DCoordinates value.

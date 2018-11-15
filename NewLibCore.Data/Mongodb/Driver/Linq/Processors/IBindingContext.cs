@@ -16,9 +16,9 @@
 using System;
 using System.Linq.Expressions;
 using System.Reflection;
-using NewLib.Data.Mongodb.Bson.Serialization;
+using NewLibCore.Data.Mongodb.Bson.Serialization;
 
-namespace NewLib.Data.Mongodb.Driver.Linq.Processors
+namespace NewLibCore.Data.Mongodb.Driver.Linq.Processors
 {
     internal interface IBindingContext
     {

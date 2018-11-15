@@ -17,9 +17,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
-using NewLib.Data.Mongodb.Core.Core.Misc;
+using NewLibCore.Data.Mongodb.Core.Core.Misc;
 
-namespace NewLib.Data.Mongodb.Core.Core.Operations
+namespace NewLibCore.Data.Mongodb.Core.Core.Operations
 {
     internal class AsyncCursorEnumerableOneTimeAdapter<TDocument> : IEnumerable<TDocument>
     {

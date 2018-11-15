@@ -13,7 +13,7 @@
 * limitations under the License.
 */
 
-namespace NewLib.Data.Mongodb.Bson.Serialization.Serializers
+namespace NewLibCore.Data.Mongodb.Bson.Serialization.Serializers
 {
     /// <summary>
     /// Represents a serializer for interfaces and base classes that delegates to the actual type interface without writing a discriminator.

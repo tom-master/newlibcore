@@ -15,10 +15,10 @@
 
 using System.Threading;
 using System.Threading.Tasks;
-using NewLib.Data.Mongodb.Core.Core.Connections;
-using NewLib.Data.Mongodb.Core.Core.Misc;
+using NewLibCore.Data.Mongodb.Core.Core.Connections;
+using NewLibCore.Data.Mongodb.Core.Core.Misc;
 
-namespace NewLib.Data.Mongodb.Core.Core.Authentication
+namespace NewLibCore.Data.Mongodb.Core.Core.Authentication
 {
     /// <summary>
     /// The default authenticator (uses SCRAM-SHA1 if possible, falls back to MONGODB-CR otherwise).

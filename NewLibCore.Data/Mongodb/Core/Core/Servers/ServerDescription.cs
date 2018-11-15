@@ -16,11 +16,11 @@
 using System;
 using System.Net;
 using System.Text;
-using NewLib.Data.Mongodb.Bson;
-using NewLib.Data.Mongodb.Core.Core.Clusters;
-using NewLib.Data.Mongodb.Core.Core.Misc;
+using NewLibCore.Data.Mongodb.Bson;
+using NewLibCore.Data.Mongodb.Core.Core.Clusters;
+using NewLibCore.Data.Mongodb.Core.Core.Misc;
 
-namespace NewLib.Data.Mongodb.Core.Core.Servers
+namespace NewLibCore.Data.Mongodb.Core.Core.Servers
 {
     /// <summary>
     /// Represents information about a server.

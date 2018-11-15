@@ -15,9 +15,9 @@
 
 using System;
 using System.Collections.Generic;
-using NewLib.Data.Mongodb.Core.Core.Misc;
+using NewLibCore.Data.Mongodb.Core.Core.Misc;
 
-namespace NewLib.Data.Mongodb.Core.Core.Events
+namespace NewLibCore.Data.Mongodb.Core.Core.Events
 {
     internal class EventAggregator : IEventSubscriber
     {

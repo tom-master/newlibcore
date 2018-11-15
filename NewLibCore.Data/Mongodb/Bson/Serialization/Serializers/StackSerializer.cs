@@ -17,7 +17,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NewLib.Data.Mongodb.Bson.Serialization.Serializers
+namespace NewLibCore.Data.Mongodb.Bson.Serialization.Serializers
 {
     /// <summary>
     /// Represents a serializer for Stacks.

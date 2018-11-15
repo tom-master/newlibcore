@@ -13,7 +13,7 @@
 * limitations under the License.
 */
 
-namespace NewLib.Data.Mongodb.Driver.Linq.Expressions
+namespace NewLibCore.Data.Mongodb.Driver.Linq.Expressions
 {
     internal enum AccumulatorType
     {

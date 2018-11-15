@@ -15,7 +15,7 @@
 
 using System.Threading;
 
-namespace NewLib.Data.Mongodb.Core.Core.Misc
+namespace NewLibCore.Data.Mongodb.Core.Core.Misc
 {
     internal static class IdGenerator<T>
     {

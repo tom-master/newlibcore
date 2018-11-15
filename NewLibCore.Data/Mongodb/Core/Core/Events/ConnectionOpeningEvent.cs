@@ -13,12 +13,12 @@
 * limitations under the License.
 */
 
-using NewLib.Data.Mongodb.Core.Core.Clusters;
-using NewLib.Data.Mongodb.Core.Core.Configuration;
-using NewLib.Data.Mongodb.Core.Core.Connections;
-using NewLib.Data.Mongodb.Core.Core.Servers;
+using NewLibCore.Data.Mongodb.Core.Core.Clusters;
+using NewLibCore.Data.Mongodb.Core.Core.Configuration;
+using NewLibCore.Data.Mongodb.Core.Core.Connections;
+using NewLibCore.Data.Mongodb.Core.Core.Servers;
 
-namespace NewLib.Data.Mongodb.Core.Core.Events
+namespace NewLibCore.Data.Mongodb.Core.Core.Events
 {
     /// <preliminary/>
     /// <summary>

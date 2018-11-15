@@ -15,7 +15,7 @@
 
 using System.Linq.Expressions;
 
-namespace NewLib.Data.Mongodb.Driver.Linq.Processors.Transformers
+namespace NewLibCore.Data.Mongodb.Driver.Linq.Processors.Transformers
 {
     /// <remarks>
     /// VB introduces a Convert on the LHS with a Nothing comparison, so we make it look like 

@@ -19,15 +19,15 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using NewLib.Data.Mongodb.Bson.Serialization;
-using NewLib.Data.Mongodb.Core;
-using NewLib.Data.Mongodb.Core.Core.Misc;
-using NewLib.Data.Mongodb.Driver.Linq.Processors;
-using NewLib.Data.Mongodb.Driver.Linq.Processors.Pipeline;
-using NewLib.Data.Mongodb.Driver.Linq.Translators;
-using NewLib.Data.Mongodb.Driver.Support;
+using NewLibCore.Data.Mongodb.Bson.Serialization;
+using NewLibCore.Data.Mongodb.Core;
+using NewLibCore.Data.Mongodb.Core.Core.Misc;
+using NewLibCore.Data.Mongodb.Driver.Linq.Processors;
+using NewLibCore.Data.Mongodb.Driver.Linq.Processors.Pipeline;
+using NewLibCore.Data.Mongodb.Driver.Linq.Translators;
+using NewLibCore.Data.Mongodb.Driver.Support;
 
-namespace NewLib.Data.Mongodb.Driver.Linq
+namespace NewLibCore.Data.Mongodb.Driver.Linq
 {
     internal sealed class MongoQueryProviderImpl<TDocument> : IMongoQueryProvider
     {
