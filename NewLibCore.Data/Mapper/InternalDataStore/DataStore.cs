@@ -5,6 +5,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
 using MySql.Data.MySqlClient;
+using NewLibCore.Data.Mapper.Builder;
 using NewLibCore.Data.Mapper.DataExtension;
 using NewLibCore.Data.Mapper.PropertyExtension;
 

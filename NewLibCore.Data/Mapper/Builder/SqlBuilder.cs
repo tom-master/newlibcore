@@ -6,7 +6,7 @@ using NewLibCore.Data.Mapper.BuildExtension;
 using NewLibCore.Data.Mapper.MapperExtension;
 using NewLibCore.Data.Mapper.PropertyExtension;
 
-namespace NewLibCore.Data.Mapper
+namespace NewLibCore.Data.Mapper.Builder
 {
     internal abstract class SqlBuilder<TModel> where TModel : PropertyMonitor, new()
     {

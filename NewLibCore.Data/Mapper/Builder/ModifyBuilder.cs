@@ -5,7 +5,7 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace NewLibCore.Data.Mapper
+namespace NewLibCore.Data.Mapper.Builder
 {
     internal class ModifyBuilder<TModel> : SqlBuilder<TModel> where TModel : PropertyMonitor, new()
     {
