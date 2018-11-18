@@ -1,32 +1,59 @@
-using System;
+﻿using System;
 using System.Text;
 
 namespace NewLibCore.Data.SQL.BuildExtension
 {
-    public static class StringBuilderExtension
+    internal class MysqlSyntaxBuilder : DatabaseSyntaxBuilder
     {
-        public static void Append(this StringBuilder builder, String left, String opt, String right)
+        private StringBuilder _syntaxBuilder = new StringBuilder();
+        internal override String SyntaxBuilder(String relationType, String left, String right)
         {
-            if (opt.ToUpper() == RelationType.IN.ToString())
+            var type = ParseRelationType(relationType);
+
+            if (type == RelationType.IN)
             {
-                builder.Append($@" FIND_IN_SET({left}, @{right})>0 ");
+                _syntaxBuilder.Append($@" FIND_IN_SET({left}, @{right})>0 ");
             }
-            else if (opt.ToUpper() == RelationType.LIKE.ToString())
+            else if (type == RelationType.LIKE)
             {
-                builder.Append($@" {left} {opt} CONCAT('%',@{right},'%') ");
+                _syntaxBuilder.Append($@" {left} LIKE CONCAT('%',@{right},'%') ");
             }
-            else if (opt.ToUpper() == RelationType.START_LIKE.ToString())
+            else if (type == RelationType.START_LIKE)
             {
-                builder.Append($@" {left} {RelationType.LIKE} CONCAT('',@{right},'%') ");
+                _syntaxBuilder.Append($@" {left} {RelationType.LIKE} CONCAT('',@{right},'%') ");
             }
-            else if (opt.ToUpper() == RelationType.END_LIKE.ToString())
+            else if (type == RelationType.END_LIKE)
             {
-                builder.Append($@" {left} {RelationType.LIKE} CONCAT('%',@{right},'') ");
+                _syntaxBuilder.Append($@" {left} {RelationType.LIKE} CONCAT('%',@{right},'') ");
             }
             else
             {
-                builder.Append($@" {left} {opt} @{right} ");
+                //_syntaxBuilder.Append($@" {left} {opt} @{right} ");
             }
+
+            return _syntaxBuilder.ToString();
         }
+
+        private RelationType ParseRelationType(String relation)
+        {
+            if (String.IsNullOrEmpty(relation))
+            {
+                throw new InvalidOperationException($@"无效的转换类型:{relation}");
+            }
+
+            RelationType _relation;
+
+            if (Enum.TryParse(relation, out _relation))
+            {
+                return _relation;
+            }
+
+            throw new InvalidOperationException($@"无效的转换类型:{relation}");
+        }
+    }
+
+    internal abstract class DatabaseSyntaxBuilder
+    {
+        internal abstract String SyntaxBuilder(String relationType, String left, String right);
     }
 }

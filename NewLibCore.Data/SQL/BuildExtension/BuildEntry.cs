@@ -1,10 +1,7 @@
-﻿using System;
+﻿using NewLibCore.Data.SQL.InternalDataStore;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
 using System.Text;
-using NewLibCore.Data.SQL.InternalDataStore;
 
 namespace NewLibCore.Data.SQL.BuildExtension
 {

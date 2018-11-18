@@ -16,6 +16,12 @@ namespace NewLibCore.Data.SQL.BuildExtension
 
         internal IList<ParameterMapper> WhereParameters { get; private set; } = new List<ParameterMapper>();
 
+        private DatabaseSyntaxBuilder _syntaxBuilder;
+        internal BuilderWhere()
+        {
+            _syntaxBuilder = new MysqlSyntaxBuilder();
+        }
+
         internal void Translate(Expression expression)
         {
             _builder.Append(" WHERE ");
@@ -194,7 +200,8 @@ namespace NewLibCore.Data.SQL.BuildExtension
                         }
                         else
                         {
-                            _builder.Append($@"{memberName}", _operationalCharacterStack.Pop(), newParameterName);
+                            var syntax = _syntaxBuilder.SyntaxBuilder(_operationalCharacterStack.Pop(), memberName, newParameterName);
+                            _builder.Append(syntax);
                             _parameterStack.Push(newParameterName);
                         }
                     }
