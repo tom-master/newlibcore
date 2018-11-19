@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 
 namespace NewLibCore.Data.SQL.Builder
 {
-    internal class ModifyBuilder<TModel> : SqlBuilder<TModel> where TModel : PropertyMonitor, new()
+    internal class ModifyBuilder<TModel> : BuilderBase<TModel> where TModel : PropertyMonitor, new()
     {
         private Expression<Func<TModel, Boolean>> _where;
         private Boolean _isValidate;

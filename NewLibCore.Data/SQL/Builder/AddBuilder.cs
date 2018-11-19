@@ -8,7 +8,7 @@ using NewLibCore.Data.SQL.PropertyExtension;
 
 namespace NewLibCore.Data.SQL.Builder
 {
-	internal class AddBuilder<TModel> : SqlBuilder<TModel> where TModel : PropertyMonitor, new()
+	internal class AddBuilder<TModel> : BuilderBase<TModel> where TModel : PropertyMonitor, new()
 	{
 		private Boolean _isVerifyModel;
 

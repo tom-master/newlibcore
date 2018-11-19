@@ -8,13 +8,13 @@ using NewLibCore.Data.SQL.PropertyExtension;
 
 namespace NewLibCore.Data.SQL.Builder
 {
-    internal abstract class SqlBuilder<TModel> where TModel : PropertyMonitor, new()
+    internal abstract class BuilderBase<TModel> where TModel : PropertyMonitor, new()
     {
         protected Type ModelType { get; }
 
         protected TModel ModelInstance { get; }
 
-        protected SqlBuilder(TModel model)
+        protected BuilderBase(TModel model)
         {
             if (model == null)
             {

@@ -78,14 +78,14 @@ namespace NewLibCore.Data.SQL.InternalDataStore
 
 		public Int32 Add<TModel>(TModel model) where TModel : PropertyMonitor, new()
 		{
-			SqlBuilder<TModel> builder = new AddBuilder<TModel>(model, true);
+            BuilderBase<TModel> builder = new AddBuilder<TModel>(model, true);
 			var entry = builder.Build();
 			return SqlExecute(entry.FormatSql(), entry.ParameterMappers, CommandType.Text);
 		}
 
 		public Boolean Modify<TModel>(TModel model, Expression<Func<TModel, Boolean>> where = null) where TModel : PropertyMonitor, new()
 		{
-			SqlBuilder<TModel> builder = new ModifyBuilder<TModel>(model, where, true);
+            BuilderBase<TModel> builder = new ModifyBuilder<TModel>(model, where, true);
 			var entry = builder.Build();
 			return SqlExecute(entry.FormatSql(), entry.ParameterMappers, CommandType.Text, true) > 0;
 		}
