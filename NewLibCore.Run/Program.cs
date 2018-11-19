@@ -1,22 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Net;
-using System.Net.Http;
-using System.Net.Security;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading;
-using System.Xml;
-using NewLibCore.Data.SQL;
-using NewLibCore.Data.SQL.DomainSpecification.ConcreteSpecification;
-using NewLibCore.Data.SQL.InternalDataStore;
-using NewLibCore.Data.SQL.MapperExtension;
+﻿using NewLibCore.Data.SQL.MapperExtension;
 using NewLibCore.Data.SQL.PropertyExtension;
-using Newtonsoft.Json;
+using System;
 
 namespace NewLibCore.Run
 {
