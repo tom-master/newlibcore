@@ -16,7 +16,7 @@
 using System;
 using System.Text;
 
-namespace NewLib.Data.Mongodb.Bson.IO
+namespace NewLibCore.Data.Mongodb.Bson.IO
 {
     /// <summary>
     /// Represents settings for a BsonBinaryWriter.

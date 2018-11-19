@@ -14,9 +14,9 @@
 */
 
 using System;
-using NewLib.Data.Mongodb.Core.Core.Clusters;
+using NewLibCore.Data.Mongodb.Core.Core.Clusters;
 
-namespace NewLib.Data.Mongodb.Core.Core.Events
+namespace NewLibCore.Data.Mongodb.Core.Core.Events
 {
     /// <preliminary/>
     /// <summary>

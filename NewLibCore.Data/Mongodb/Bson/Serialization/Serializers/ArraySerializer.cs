@@ -15,7 +15,7 @@
 
 using System.Collections.Generic;
 
-namespace NewLib.Data.Mongodb.Bson.Serialization.Serializers
+namespace NewLibCore.Data.Mongodb.Bson.Serialization.Serializers
 {
     /// <summary>
     /// Represents a serializer for one-dimensional arrays.

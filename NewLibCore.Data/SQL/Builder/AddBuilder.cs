@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
-using NewLibCore.Data.Mapper.BuildExtension;
-using NewLibCore.Data.Mapper.InternalDataStore;
-using NewLibCore.Data.Mapper.MapperExtension;
-using NewLibCore.Data.Mapper.PropertyExtension;
+using NewLibCore.Data.SQL.BuildExtension;
+using NewLibCore.Data.SQL.InternalDataStore;
+using NewLibCore.Data.SQL.MapperExtension;
+using NewLibCore.Data.SQL.PropertyExtension;
 
-namespace NewLibCore.Data.Mapper
+namespace NewLibCore.Data.SQL.Builder
 {
 	internal class AddBuilder<TModel> : SqlBuilder<TModel> where TModel : PropertyMonitor, new()
 	{
@@ -22,7 +22,7 @@ namespace NewLibCore.Data.Mapper
 		protected internal override BuildEntry<TModel> Build()
 		{
 			var buildEntry = new BuildEntry<TModel>(ModelInstance);
-			var columns = ModelType.GetProperties().Where(w => w.GetCustomAttributes<ValidateBase>().Any());
+			var columns = ModelType.GetProperties().Where(w => w.GetCustomAttributes<PropertyValidate>().Any());
 
 			if (!columns.Any())
 			{

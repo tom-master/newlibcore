@@ -16,7 +16,7 @@
 using System;
 using System.Diagnostics;
 
-namespace NewLib.Data.Mongodb.Core.Core.Events.Diagnostics.PerformanceCounters
+namespace NewLibCore.Data.Mongodb.Core.Core.Events.Diagnostics.PerformanceCounters
 {
     [AttributeUsage(AttributeTargets.Property)]
     internal class PerformanceCounterAttribute : Attribute

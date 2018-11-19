@@ -17,7 +17,7 @@ using System;
 using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
 
-namespace NewLib.Data.Mongodb.Core.Core.Authentication.Sspi
+namespace NewLibCore.Data.Mongodb.Core.Core.Authentication.Sspi
 {
     internal static class NativeMethods
     {

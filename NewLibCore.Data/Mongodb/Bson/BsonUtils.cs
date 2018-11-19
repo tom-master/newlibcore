@@ -17,7 +17,7 @@ using System;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace NewLib.Data.Mongodb.Bson
+namespace NewLibCore.Data.Mongodb.Bson
 {
 
     /// <summary>

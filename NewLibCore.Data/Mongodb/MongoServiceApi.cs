@@ -6,11 +6,11 @@ using System.Linq.Expressions;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using NewLib.Data.Mongodb.Bson.ObjectModel;
-using NewLib.Data.Mongodb.Core;
-using NewLib.Data.Mongodb.Driver;
+using NewLibCore.Data.Mongodb.Bson.ObjectModel;
+using NewLibCore.Data.Mongodb.Core;
+using NewLibCore.Data.Mongodb.Driver;
 
-namespace NewLib.Data.Mongodb
+namespace NewLibCore.Data.Mongodb
 {
 
 	public sealed class MongoServiceApi

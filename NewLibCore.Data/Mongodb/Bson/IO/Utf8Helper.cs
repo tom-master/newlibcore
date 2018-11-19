@@ -15,7 +15,7 @@
 
 using System.Text;
 
-namespace NewLib.Data.Mongodb.Bson.IO
+namespace NewLibCore.Data.Mongodb.Bson.IO
 {
     /// <summary>
     /// Represents a class that has some helper methods for decoding UTF8 strings.

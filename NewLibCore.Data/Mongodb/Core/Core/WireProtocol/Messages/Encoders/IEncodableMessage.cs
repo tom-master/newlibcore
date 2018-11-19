@@ -13,7 +13,7 @@
 * limitations under the License.
 */
 
-namespace NewLib.Data.Mongodb.Core.Core.WireProtocol.Messages.Encoders
+namespace NewLibCore.Data.Mongodb.Core.Core.WireProtocol.Messages.Encoders
 {
     /// <summary>
     /// Represents an encodable message.

@@ -5,10 +5,11 @@ using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
 using MySql.Data.MySqlClient;
-using NewLibCore.Data.Mapper.DataExtension;
-using NewLibCore.Data.Mapper.PropertyExtension;
+using NewLibCore.Data.SQL.Builder;
+using NewLibCore.Data.SQL.DataExtension;
+using NewLibCore.Data.SQL.PropertyExtension;
 
-namespace NewLibCore.Data.Mapper.InternalDataStore
+namespace NewLibCore.Data.SQL.InternalDataStore
 {
 	public class DataStore : IDisposable
 	{

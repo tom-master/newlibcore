@@ -13,11 +13,11 @@
 * limitations under the License.
 */
 
-using NewLib.Data.Mongodb.Bson.ObjectModel;
-using NewLib.Data.Mongodb.Core.Core.Connections;
-using NewLib.Data.Mongodb.Core.Core.Misc;
+using NewLibCore.Data.Mongodb.Bson.ObjectModel;
+using NewLibCore.Data.Mongodb.Core.Core.Connections;
+using NewLibCore.Data.Mongodb.Core.Core.Misc;
 
-namespace NewLib.Data.Mongodb.Core.Core.Events
+namespace NewLibCore.Data.Mongodb.Core.Core.Events
 {
     /// <summary>
     /// Occurs when a command has started.

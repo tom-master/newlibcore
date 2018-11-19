@@ -14,9 +14,9 @@
 */
 
 using System;
-using NewLib.Data.Mongodb.Bson.Exceptions;
+using NewLibCore.Data.Mongodb.Bson.Exceptions;
 
-namespace NewLib.Data.Mongodb.Bson.ObjectModel
+namespace NewLibCore.Data.Mongodb.Bson.ObjectModel
 {
     /// <summary>
     /// A static class containing methods to convert to and from Guids and byte arrays in various byte orders.

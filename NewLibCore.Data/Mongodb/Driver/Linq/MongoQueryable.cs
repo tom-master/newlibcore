@@ -21,7 +21,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace NewLib.Data.Mongodb.Driver.Linq
+namespace NewLibCore.Data.Mongodb.Driver.Linq
 {
     /// <summary>
     /// Extension for <see cref="IMongoQueryable" />.

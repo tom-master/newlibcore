@@ -15,9 +15,9 @@
 
 using System.Threading;
 using System.Threading.Tasks;
-using NewLib.Data.Mongodb.Core.Core.Connections;
+using NewLibCore.Data.Mongodb.Core.Core.Connections;
 
-namespace NewLib.Data.Mongodb.Core.Core.Authentication
+namespace NewLibCore.Data.Mongodb.Core.Core.Authentication
 {
     /// <summary>
     /// Represents a connection authenticator.

@@ -16,7 +16,7 @@
 using System;
 using System.Text.RegularExpressions;
 
-namespace NewLib.Data.Mongodb.Core.Core.Misc
+namespace NewLibCore.Data.Mongodb.Core.Core.Misc
 {
     /// <summary>
     /// Represents a semantic version number.

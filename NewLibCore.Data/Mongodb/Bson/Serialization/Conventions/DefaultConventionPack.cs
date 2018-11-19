@@ -15,7 +15,7 @@
 
 using System.Collections.Generic;
 
-namespace NewLib.Data.Mongodb.Bson.Serialization.Conventions
+namespace NewLibCore.Data.Mongodb.Bson.Serialization.Conventions
 {
     /// <summary>
     /// Convention pack of defaults.

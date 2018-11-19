@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using NewLibCore.Data.Mapper.BuildExtension;
-using NewLibCore.Data.Mapper.MapperExtension;
-using NewLibCore.Data.Mapper.PropertyExtension;
+using NewLibCore.Data.SQL.BuildExtension;
+using NewLibCore.Data.SQL.MapperExtension;
+using NewLibCore.Data.SQL.PropertyExtension;
 
-namespace NewLibCore.Data.Mapper
+namespace NewLibCore.Data.SQL.Builder
 {
     internal abstract class SqlBuilder<TModel> where TModel : PropertyMonitor, new()
     {
@@ -93,14 +93,14 @@ namespace NewLibCore.Data.Mapper
             }
         }
 
-        private void ThrowValidateException(ValidateBase validateBase, PropertyInfo propertyItem)
+        private void ThrowValidateException(PropertyValidate validateBase, PropertyInfo propertyItem)
         {
             throw new Exception(validateBase.FailReason($@"{propertyItem.DeclaringType.FullName}.{propertyItem.Name}"));
         }
 
-        private IList<ValidateBase> GetValidateAttributes(PropertyInfo propertyInfo)
+        private IList<PropertyValidate> GetValidateAttributes(PropertyInfo propertyInfo)
         {
-            var validateAttributes = propertyInfo.GetCustomAttributes<ValidateBase>(true);
+            var validateAttributes = propertyInfo.GetCustomAttributes<PropertyValidate>(true);
 
             if (validateAttributes.GroupBy(g => g.Order).Where(w => w.Count() > 1).Any())
             {

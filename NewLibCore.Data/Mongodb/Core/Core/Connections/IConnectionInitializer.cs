@@ -16,7 +16,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace NewLib.Data.Mongodb.Core.Core.Connections
+namespace NewLibCore.Data.Mongodb.Core.Core.Connections
 {
     internal interface IConnectionInitializer
     {

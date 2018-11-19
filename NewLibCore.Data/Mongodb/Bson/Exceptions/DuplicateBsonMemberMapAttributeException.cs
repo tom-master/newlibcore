@@ -15,7 +15,7 @@
 
 using System;
 
-namespace NewLib.Data.Mongodb.Bson.Exceptions
+namespace NewLibCore.Data.Mongodb.Bson.Exceptions
 {
     /// <summary>
     /// Indicates that an attribute restricted to one member has been applied to multiple members.

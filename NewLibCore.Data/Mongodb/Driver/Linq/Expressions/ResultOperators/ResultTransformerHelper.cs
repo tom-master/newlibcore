@@ -19,9 +19,9 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
-using NewLib.Data.Mongodb.Core;
+using NewLibCore.Data.Mongodb.Core;
 
-namespace NewLib.Data.Mongodb.Driver.Linq.Expressions.ResultOperators
+namespace NewLibCore.Data.Mongodb.Driver.Linq.Expressions.ResultOperators
 {
     internal static class ResultTransformerHelper
     {

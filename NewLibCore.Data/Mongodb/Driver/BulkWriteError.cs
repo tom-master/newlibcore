@@ -14,11 +14,11 @@
 */
 
 using System;
-using NewLib.Data.Mongodb.Bson.ObjectModel;
-using NewLib.Data.Mongodb.Core;
-using NewLib.Data.Mongodb.Driver.Support;
+using NewLibCore.Data.Mongodb.Bson.ObjectModel;
+using NewLibCore.Data.Mongodb.Core;
+using NewLibCore.Data.Mongodb.Driver.Support;
 
-namespace NewLib.Data.Mongodb.Driver
+namespace NewLibCore.Data.Mongodb.Driver
 {
     /// <summary>
     /// Represents the details of a write error for a particular request.

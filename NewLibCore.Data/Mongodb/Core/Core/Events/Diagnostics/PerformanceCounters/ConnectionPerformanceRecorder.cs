@@ -15,7 +15,7 @@
 
 using System.Diagnostics;
 
-namespace NewLib.Data.Mongodb.Core.Core.Events.Diagnostics.PerformanceCounters
+namespace NewLibCore.Data.Mongodb.Core.Core.Events.Diagnostics.PerformanceCounters
 {
     internal class ConnectionPerformanceRecorder
     {

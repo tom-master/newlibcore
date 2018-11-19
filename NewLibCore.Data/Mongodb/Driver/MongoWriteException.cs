@@ -16,10 +16,10 @@
 using System;
 using System.Runtime.Serialization;
 using System.Text;
-using NewLib.Data.Mongodb.Core;
-using NewLib.Data.Mongodb.Core.Core.Connections;
+using NewLibCore.Data.Mongodb.Core;
+using NewLibCore.Data.Mongodb.Core.Core.Connections;
 
-namespace NewLib.Data.Mongodb.Driver
+namespace NewLibCore.Data.Mongodb.Driver
 {
     /// <summary>
     /// Represents a write exception.

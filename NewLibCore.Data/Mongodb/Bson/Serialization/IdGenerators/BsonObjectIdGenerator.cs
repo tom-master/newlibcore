@@ -13,9 +13,9 @@
 * limitations under the License.
 */
 
-using NewLib.Data.Mongodb.Bson.ObjectModel;
+using NewLibCore.Data.Mongodb.Bson.ObjectModel;
 
-namespace NewLib.Data.Mongodb.Bson.Serialization.IdGenerators
+namespace NewLibCore.Data.Mongodb.Bson.Serialization.IdGenerators
 {
     /// <summary>
     /// Represents an Id generator for BsonObjectIds.

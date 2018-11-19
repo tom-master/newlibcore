@@ -18,10 +18,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
-using NewLib.Data.Mongodb.Bson.Exceptions;
-using NewLib.Data.Mongodb.Bson.IO;
+using NewLibCore.Data.Mongodb.Bson.Exceptions;
+using NewLibCore.Data.Mongodb.Bson.IO;
 
-namespace NewLib.Data.Mongodb.Bson.ObjectModel
+namespace NewLibCore.Data.Mongodb.Bson.ObjectModel
 {
     /// <summary>
     /// A static class that maps between .NET objects and BsonValues.

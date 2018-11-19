@@ -16,17 +16,17 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using NewLib.Data.Mongodb.Bson.ObjectModel;
-using NewLib.Data.Mongodb.Bson.Serialization;
-using NewLib.Data.Mongodb.Bson.Serialization.Serializers;
-using NewLib.Data.Mongodb.Core.Core.Bindings;
-using NewLib.Data.Mongodb.Core.Core.Events;
-using NewLib.Data.Mongodb.Core.Core.Misc;
-using NewLib.Data.Mongodb.Core.Core.Servers;
-using NewLib.Data.Mongodb.Core.Core.WireProtocol;
-using NewLib.Data.Mongodb.Core.Core.WireProtocol.Messages.Encoders;
+using NewLibCore.Data.Mongodb.Bson.ObjectModel;
+using NewLibCore.Data.Mongodb.Bson.Serialization;
+using NewLibCore.Data.Mongodb.Bson.Serialization.Serializers;
+using NewLibCore.Data.Mongodb.Core.Core.Bindings;
+using NewLibCore.Data.Mongodb.Core.Core.Events;
+using NewLibCore.Data.Mongodb.Core.Core.Misc;
+using NewLibCore.Data.Mongodb.Core.Core.Servers;
+using NewLibCore.Data.Mongodb.Core.Core.WireProtocol;
+using NewLibCore.Data.Mongodb.Core.Core.WireProtocol.Messages.Encoders;
 
-namespace NewLib.Data.Mongodb.Core.Core.Operations
+namespace NewLibCore.Data.Mongodb.Core.Core.Operations
 {
     /// <summary>
     /// Represents a Find command operation.

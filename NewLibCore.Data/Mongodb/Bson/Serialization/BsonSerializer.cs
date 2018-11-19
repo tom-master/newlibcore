@@ -17,16 +17,16 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
-using NewLib.Data.Mongodb.Bson.Exceptions;
-using NewLib.Data.Mongodb.Bson.IO;
-using NewLib.Data.Mongodb.Bson.ObjectModel;
-using NewLib.Data.Mongodb.Bson.Serialization.Attributes;
-using NewLib.Data.Mongodb.Bson.Serialization.Conventions;
-using NewLib.Data.Mongodb.Bson.Serialization.IdGenerators;
+using NewLibCore.Data.Mongodb.Bson.Exceptions;
+using NewLibCore.Data.Mongodb.Bson.IO;
+using NewLibCore.Data.Mongodb.Bson.ObjectModel;
+using NewLibCore.Data.Mongodb.Bson.Serialization.Attributes;
+using NewLibCore.Data.Mongodb.Bson.Serialization.Conventions;
+using NewLibCore.Data.Mongodb.Bson.Serialization.IdGenerators;
 
 // don't add using statement for MongoDB.Bson.Serialization.Serializers to minimize dependencies on DefaultSerializer
 
-namespace NewLib.Data.Mongodb.Bson.Serialization
+namespace NewLibCore.Data.Mongodb.Bson.Serialization
 {
     /// <summary>
     /// A static class that represents the BSON serialization functionality.

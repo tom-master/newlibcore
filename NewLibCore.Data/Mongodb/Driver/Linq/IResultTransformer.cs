@@ -16,7 +16,7 @@
 using System;
 using System.Linq.Expressions;
 
-namespace NewLib.Data.Mongodb.Driver.Linq
+namespace NewLibCore.Data.Mongodb.Driver.Linq
 {
     internal interface IResultTransformer
     {

@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace NewLib.Data.Mongodb.Bson
+namespace NewLibCore.Data.Mongodb.Bson
 {
     internal class Hasher
     {

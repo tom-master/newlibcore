@@ -15,9 +15,9 @@
 
 using System;
 using System.Collections.Concurrent;
-using NewLib.Data.Mongodb.Bson.Exceptions;
+using NewLibCore.Data.Mongodb.Bson.Exceptions;
 
-namespace NewLib.Data.Mongodb.Bson.Serialization
+namespace NewLibCore.Data.Mongodb.Bson.Serialization
 {
     /// <summary>
     /// Represents a serialization provider based on a mapping from value types to serializer types.

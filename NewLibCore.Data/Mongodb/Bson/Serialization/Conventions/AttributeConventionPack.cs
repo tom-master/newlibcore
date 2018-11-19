@@ -17,10 +17,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using NewLib.Data.Mongodb.Bson.Exceptions;
-using NewLib.Data.Mongodb.Bson.Serialization.Attributes;
+using NewLibCore.Data.Mongodb.Bson.Exceptions;
+using NewLibCore.Data.Mongodb.Bson.Serialization.Attributes;
 
-namespace NewLib.Data.Mongodb.Bson.Serialization.Conventions
+namespace NewLibCore.Data.Mongodb.Bson.Serialization.Conventions
 {
     /// <summary>
     /// Convention pack for applying attributes.

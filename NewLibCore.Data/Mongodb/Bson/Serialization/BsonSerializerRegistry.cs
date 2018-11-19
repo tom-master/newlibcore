@@ -15,10 +15,10 @@
 
 using System;
 using System.Collections.Concurrent;
-using NewLib.Data.Mongodb.Bson.Exceptions;
-using NewLib.Data.Mongodb.Bson.ObjectModel;
+using NewLibCore.Data.Mongodb.Bson.Exceptions;
+using NewLibCore.Data.Mongodb.Bson.ObjectModel;
 
-namespace NewLib.Data.Mongodb.Bson.Serialization
+namespace NewLibCore.Data.Mongodb.Bson.Serialization
 {
     /// <summary>
     /// Default, global implementation of an <see cref="IBsonSerializerRegistry"/>.

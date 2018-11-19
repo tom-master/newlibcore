@@ -15,9 +15,9 @@
 
 using System;
 using System.Runtime.Serialization;
-using NewLib.Data.Mongodb.Core.Core.Connections;
+using NewLibCore.Data.Mongodb.Core.Core.Connections;
 
-namespace NewLib.Data.Mongodb.Core
+namespace NewLibCore.Data.Mongodb.Core
 {
     /// <summary>
     /// Represents a MongoDB duplicate key exception.

@@ -14,9 +14,9 @@
 */
 
 using System;
-using NewLib.Data.Mongodb.Bson.Serialization.Attributes;
+using NewLibCore.Data.Mongodb.Bson.Serialization.Attributes;
 
-namespace NewLib.Data.Mongodb.Bson.Serialization
+namespace NewLibCore.Data.Mongodb.Bson.Serialization
 {
     /// <summary>
     /// Provides serializers based on an attribute.

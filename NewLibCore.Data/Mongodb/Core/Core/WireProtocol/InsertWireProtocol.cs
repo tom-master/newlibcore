@@ -14,13 +14,13 @@
 */
 
 using System;
-using NewLib.Data.Mongodb.Bson.Serialization;
-using NewLib.Data.Mongodb.Core.Core.Connections;
-using NewLib.Data.Mongodb.Core.Core.Misc;
-using NewLib.Data.Mongodb.Core.Core.WireProtocol.Messages;
-using NewLib.Data.Mongodb.Core.Core.WireProtocol.Messages.Encoders;
+using NewLibCore.Data.Mongodb.Bson.Serialization;
+using NewLibCore.Data.Mongodb.Core.Core.Connections;
+using NewLibCore.Data.Mongodb.Core.Core.Misc;
+using NewLibCore.Data.Mongodb.Core.Core.WireProtocol.Messages;
+using NewLibCore.Data.Mongodb.Core.Core.WireProtocol.Messages.Encoders;
 
-namespace NewLib.Data.Mongodb.Core.Core.WireProtocol
+namespace NewLibCore.Data.Mongodb.Core.Core.WireProtocol
 {
     internal class InsertWireProtocol<TDocument> : WriteWireProtocolBase
     {

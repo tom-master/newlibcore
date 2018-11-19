@@ -14,10 +14,10 @@
 */
 
 using System;
-using NewLib.Data.Mongodb.Bson.Serialization;
-using NewLib.Data.Mongodb.Core.Core.Misc;
+using NewLibCore.Data.Mongodb.Bson.Serialization;
+using NewLibCore.Data.Mongodb.Core.Core.Misc;
 
-namespace NewLib.Data.Mongodb.Driver.Linq.Expressions.ResultOperators
+namespace NewLibCore.Data.Mongodb.Driver.Linq.Expressions.ResultOperators
 {
     internal sealed class ListResultOperator : ResultOperator
     {

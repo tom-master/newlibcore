@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace NewLibCore.Data.Mapper.MapperExtension
+namespace NewLibCore.Data.SQL.MapperExtension
 {
-
-    public class PropertyRequiredAttribute : ValidateBase
+    public class PropertyRequiredAttribute : PropertyValidate
     {
         public override Int32 Order
         {

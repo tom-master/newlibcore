@@ -13,7 +13,7 @@
 * limitations under the License.
 */
 
-namespace NewLib.Data.Mongodb.Bson.Serialization
+namespace NewLibCore.Data.Mongodb.Bson.Serialization
 {
     // this interface is public so custom serializers can choose to implement it
     // but typically you would choose to implement this interface explicitly

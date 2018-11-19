@@ -15,7 +15,7 @@
 
 using System.Text;
 
-namespace NewLib.Data.Mongodb.Bson.IO
+namespace NewLibCore.Data.Mongodb.Bson.IO
 {
     /// <summary>
     /// Represents a UTF8 name decoder.

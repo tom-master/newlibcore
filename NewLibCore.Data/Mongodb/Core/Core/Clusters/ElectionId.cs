@@ -14,9 +14,9 @@
 */
 
 using System;
-using NewLib.Data.Mongodb.Bson.ObjectModel;
+using NewLibCore.Data.Mongodb.Bson.ObjectModel;
 
-namespace NewLib.Data.Mongodb.Core.Core.Clusters
+namespace NewLibCore.Data.Mongodb.Core.Core.Clusters
 {
     /// <summary>
     /// An election id from the server.

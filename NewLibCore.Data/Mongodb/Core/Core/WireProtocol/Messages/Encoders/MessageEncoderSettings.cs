@@ -16,7 +16,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace NewLib.Data.Mongodb.Core.Core.WireProtocol.Messages.Encoders
+namespace NewLibCore.Data.Mongodb.Core.Core.WireProtocol.Messages.Encoders
 {
     /// <summary>
     /// Represents the names of different encoder settings.

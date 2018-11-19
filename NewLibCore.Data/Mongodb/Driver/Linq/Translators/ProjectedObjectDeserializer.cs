@@ -15,13 +15,13 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using NewLib.Data.Mongodb.Bson.IO;
-using NewLib.Data.Mongodb.Bson.ObjectModel;
-using NewLib.Data.Mongodb.Bson.Serialization;
-using NewLib.Data.Mongodb.Bson.Serialization.Serializers;
-using NewLib.Data.Mongodb.Core;
+using NewLibCore.Data.Mongodb.Bson.IO;
+using NewLibCore.Data.Mongodb.Bson.ObjectModel;
+using NewLibCore.Data.Mongodb.Bson.Serialization;
+using NewLibCore.Data.Mongodb.Bson.Serialization.Serializers;
+using NewLibCore.Data.Mongodb.Core;
 
-namespace NewLib.Data.Mongodb.Driver.Linq.Translators
+namespace NewLibCore.Data.Mongodb.Driver.Linq.Translators
 {
     internal sealed class ProjectedObjectDeserializer : SerializerBase<ProjectedObject>, IBsonDocumentSerializer
     {

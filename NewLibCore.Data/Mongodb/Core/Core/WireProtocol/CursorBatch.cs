@@ -14,9 +14,9 @@
 */
 
 using System.Collections.Generic;
-using NewLib.Data.Mongodb.Core.Core.Misc;
+using NewLibCore.Data.Mongodb.Core.Core.Misc;
 
-namespace NewLib.Data.Mongodb.Core.Core.WireProtocol
+namespace NewLibCore.Data.Mongodb.Core.Core.WireProtocol
 {
     /// <summary>
     /// Represents one result batch (returned from either a Query or a GetMore message)

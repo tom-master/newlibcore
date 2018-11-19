@@ -8,10 +8,10 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NewLibCore;
-using NewLibCore.Data.Mapper.DataExtension;
-using NewLibCore.Data.Mapper.InternalDataStore;
-using NewLibCore.Data.Mapper.MapperExtension;
-using NewLibCore.Data.Mapper.PropertyExtension;
+using NewLibCore.Data.SQL.DataExtension;
+using NewLibCore.Data.SQL.InternalDataStore;
+using NewLibCore.Data.SQL.MapperExtension;
+using NewLibCore.Data.SQL.PropertyExtension;
 
 
 namespace UnitTestProject1

@@ -15,7 +15,7 @@
 
 using System.Linq.Expressions;
 
-namespace NewLib.Data.Mongodb.Driver.Linq.Processors.Transformers
+namespace NewLibCore.Data.Mongodb.Driver.Linq.Processors.Transformers
 {
     internal interface IExpressionTransformer<TExpression> where TExpression : Expression
     {

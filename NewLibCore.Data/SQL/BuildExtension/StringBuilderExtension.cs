@@ -1,7 +1,7 @@
 using System;
 using System.Text;
 
-namespace NewLibCore.Data.Mapper.BuildExtension
+namespace NewLibCore.Data.SQL.BuildExtension
 {
     public static class StringBuilderExtension
     {

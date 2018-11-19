@@ -13,7 +13,7 @@
 * limitations under the License.
 */
 
-namespace NewLib.Data.Mongodb.Bson.Serialization.Options
+namespace NewLibCore.Data.Mongodb.Bson.Serialization.Options
 {
     /// <summary>
     /// Represents the representation to use for dictionaries.

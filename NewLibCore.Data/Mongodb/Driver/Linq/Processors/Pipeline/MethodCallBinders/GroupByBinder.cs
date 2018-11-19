@@ -18,12 +18,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using NewLib.Data.Mongodb.Bson.IO;
-using NewLib.Data.Mongodb.Bson.Serialization;
-using NewLib.Data.Mongodb.Bson.Serialization.Serializers;
-using NewLib.Data.Mongodb.Driver.Linq.Expressions;
+using NewLibCore.Data.Mongodb.Bson.IO;
+using NewLibCore.Data.Mongodb.Bson.Serialization;
+using NewLibCore.Data.Mongodb.Bson.Serialization.Serializers;
+using NewLibCore.Data.Mongodb.Driver.Linq.Expressions;
 
-namespace NewLib.Data.Mongodb.Driver.Linq.Processors.Pipeline.MethodCallBinders
+namespace NewLibCore.Data.Mongodb.Driver.Linq.Processors.Pipeline.MethodCallBinders
 {
     internal sealed class GroupByBinder : IMethodCallBinder<PipelineBindingContext>
     {

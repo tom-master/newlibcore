@@ -13,10 +13,10 @@
 * limitations under the License.
 */
 
-using NewLib.Data.Mongodb.Bson.Serialization;
-using NewLib.Data.Mongodb.Core.Core.Misc;
+using NewLibCore.Data.Mongodb.Bson.Serialization;
+using NewLibCore.Data.Mongodb.Core.Core.Misc;
 
-namespace NewLib.Data.Mongodb.Core.Core.WireProtocol.Messages.Encoders
+namespace NewLibCore.Data.Mongodb.Core.Core.WireProtocol.Messages.Encoders
 {
     /// <summary>
     /// Represents a message encoder selector for ReplyMessages.

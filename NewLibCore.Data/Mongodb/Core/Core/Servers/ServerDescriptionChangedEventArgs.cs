@@ -14,9 +14,9 @@
 */
 
 using System;
-using NewLib.Data.Mongodb.Core.Core.Misc;
+using NewLibCore.Data.Mongodb.Core.Core.Misc;
 
-namespace NewLib.Data.Mongodb.Core.Core.Servers
+namespace NewLibCore.Data.Mongodb.Core.Core.Servers
 {
     /// <summary>
     /// Represents the arguments to the event that occurs when the server description changes.

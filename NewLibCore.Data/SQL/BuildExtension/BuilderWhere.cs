@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
-using NewLibCore.Data.Mapper.InternalDataStore;
+using NewLibCore.Data.SQL.InternalDataStore;
 
-namespace NewLibCore.Data.Mapper.BuildExtension
+namespace NewLibCore.Data.SQL.BuildExtension
 {
     internal class BuilderWhere<TModel> where TModel : class, new()
     {

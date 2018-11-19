@@ -15,7 +15,7 @@
 
 using System;
 
-namespace NewLib.Data.Mongodb.Bson.Serialization.Attributes
+namespace NewLibCore.Data.Mongodb.Bson.Serialization.Attributes
 {
     /// <summary>
     /// Specifies whether extra elements should be ignored when this class is deserialized.

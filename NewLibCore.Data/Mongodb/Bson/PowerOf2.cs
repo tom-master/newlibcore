@@ -15,7 +15,7 @@
 
 using System;
 
-namespace NewLib.Data.Mongodb.Bson
+namespace NewLibCore.Data.Mongodb.Bson
 {
     internal static class PowerOf2
     {

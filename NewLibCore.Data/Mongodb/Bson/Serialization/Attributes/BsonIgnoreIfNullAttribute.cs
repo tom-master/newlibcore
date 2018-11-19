@@ -15,7 +15,7 @@
 
 using System;
 
-namespace NewLib.Data.Mongodb.Bson.Serialization.Attributes
+namespace NewLibCore.Data.Mongodb.Bson.Serialization.Attributes
 {
     /// <summary>
     /// Indicates whether a field or property equal to null should be ignored when serializing this class.

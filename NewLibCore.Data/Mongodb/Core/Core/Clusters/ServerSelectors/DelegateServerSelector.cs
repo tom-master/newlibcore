@@ -15,10 +15,10 @@
 
 using System;
 using System.Collections.Generic;
-using NewLib.Data.Mongodb.Core.Core.Misc;
-using NewLib.Data.Mongodb.Core.Core.Servers;
+using NewLibCore.Data.Mongodb.Core.Core.Misc;
+using NewLibCore.Data.Mongodb.Core.Core.Servers;
 
-namespace NewLib.Data.Mongodb.Core.Core.Clusters.ServerSelectors
+namespace NewLibCore.Data.Mongodb.Core.Core.Clusters.ServerSelectors
 {
     /// <summary>
     /// Represents a server selector that wraps a delegate.

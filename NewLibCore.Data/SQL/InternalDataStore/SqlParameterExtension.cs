@@ -5,7 +5,7 @@ using System.Data.Common;
 using MySql.Data.MySqlClient;
 using NewLibCore.Security;
 
-namespace NewLibCore.Data.Mapper.InternalDataStore
+namespace NewLibCore.Data.SQL.InternalDataStore
 {
     public class ParameterMapper
     {

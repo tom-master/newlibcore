@@ -19,7 +19,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 
-namespace NewLib.Data.Mongodb.Core.Core.Events.Diagnostics.PerformanceCounters
+namespace NewLibCore.Data.Mongodb.Core.Core.Events.Diagnostics.PerformanceCounters
 {
     internal sealed class PerformanceCounterPackage : IDisposable
     {

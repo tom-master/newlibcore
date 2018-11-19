@@ -17,11 +17,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using NewLib.Data.Mongodb.Bson.IO;
-using NewLib.Data.Mongodb.Bson.Serialization;
-using NewLib.Data.Mongodb.Bson.Serialization.Serializers;
+using NewLibCore.Data.Mongodb.Bson.IO;
+using NewLibCore.Data.Mongodb.Bson.Serialization;
+using NewLibCore.Data.Mongodb.Bson.Serialization.Serializers;
 
-namespace NewLib.Data.Mongodb.Bson.ObjectModel
+namespace NewLibCore.Data.Mongodb.Bson.ObjectModel
 {
     // this class is a wrapper for an object that we intend to serialize as a BsonDocument
     // it is a subclass of BsonDocument so that it may be used where a BsonDocument is expected

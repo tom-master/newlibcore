@@ -16,7 +16,7 @@
 using System;
 using System.Globalization;
 
-namespace NewLib.Data.Mongodb.Bson.IO
+namespace NewLibCore.Data.Mongodb.Bson.IO
 {
     /// <summary>
     /// Encodes and decodes scalar values to JSON compatible strings.

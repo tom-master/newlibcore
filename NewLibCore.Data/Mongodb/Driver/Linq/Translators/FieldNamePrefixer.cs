@@ -14,9 +14,9 @@
 */
 
 using System.Linq.Expressions;
-using NewLib.Data.Mongodb.Driver.Linq.Expressions;
+using NewLibCore.Data.Mongodb.Driver.Linq.Expressions;
 
-namespace NewLib.Data.Mongodb.Driver.Linq.Translators
+namespace NewLibCore.Data.Mongodb.Driver.Linq.Translators
 {
     internal class FieldNamePrefixer : ExtensionExpressionVisitor
     {

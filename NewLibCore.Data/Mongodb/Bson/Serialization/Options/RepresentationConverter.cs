@@ -14,9 +14,9 @@
 */
 
 using System;
-using NewLib.Data.Mongodb.Bson.Exceptions;
+using NewLibCore.Data.Mongodb.Bson.Exceptions;
 
-namespace NewLib.Data.Mongodb.Bson.Serialization.Options
+namespace NewLibCore.Data.Mongodb.Bson.Serialization.Options
 {
     /// <summary>
     /// Represents the external representation of a field or property.

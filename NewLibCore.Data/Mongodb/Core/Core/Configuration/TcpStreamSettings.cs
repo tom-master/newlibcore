@@ -16,9 +16,9 @@
 using System;
 using System.Net.Sockets;
 using System.Threading;
-using NewLib.Data.Mongodb.Core.Core.Misc;
+using NewLibCore.Data.Mongodb.Core.Core.Misc;
 
-namespace NewLib.Data.Mongodb.Core.Core.Configuration
+namespace NewLibCore.Data.Mongodb.Core.Core.Configuration
 {
     /// <summary>
     /// Represents settings for a TCP stream.

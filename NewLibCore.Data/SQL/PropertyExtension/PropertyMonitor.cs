@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace NewLibCore.Data.Mapper.PropertyExtension
+namespace NewLibCore.Data.SQL.PropertyExtension
 {
     public abstract class PropertyMonitor
     {

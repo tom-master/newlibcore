@@ -13,16 +13,16 @@
 * limitations under the License.
 */
 
-using NewLib.Data.Mongodb.Bson.ObjectModel;
-using NewLib.Data.Mongodb.Bson.Serialization;
-using NewLib.Data.Mongodb.Bson.Serialization.Serializers;
-using BsonDeserializationArgs = NewLib.Data.Mongodb.Bson.Serialization.BsonDeserializationArgs;
-using BsonDeserializationContext = NewLib.Data.Mongodb.Bson.Serialization.BsonDeserializationContext;
-using BsonSerializationArgs = NewLib.Data.Mongodb.Bson.Serialization.BsonSerializationArgs;
-using BsonSerializationContext = NewLib.Data.Mongodb.Bson.Serialization.BsonSerializationContext;
-using BsonSerializer = NewLib.Data.Mongodb.Bson.Serialization.BsonSerializer;
+using NewLibCore.Data.Mongodb.Bson.ObjectModel;
+using NewLibCore.Data.Mongodb.Bson.Serialization;
+using NewLibCore.Data.Mongodb.Bson.Serialization.Serializers;
+using BsonDeserializationArgs = NewLibCore.Data.Mongodb.Bson.Serialization.BsonDeserializationArgs;
+using BsonDeserializationContext = NewLibCore.Data.Mongodb.Bson.Serialization.BsonDeserializationContext;
+using BsonSerializationArgs = NewLibCore.Data.Mongodb.Bson.Serialization.BsonSerializationArgs;
+using BsonSerializationContext = NewLibCore.Data.Mongodb.Bson.Serialization.BsonSerializationContext;
+using BsonSerializer = NewLibCore.Data.Mongodb.Bson.Serialization.BsonSerializer;
 
-namespace NewLib.Data.Mongodb.Driver.GeoJsonObjectModel.Serializers
+namespace NewLibCore.Data.Mongodb.Driver.GeoJsonObjectModel.Serializers
 {
     /// <summary>
     /// Represents a serializer for a GeoJsonFeature value.

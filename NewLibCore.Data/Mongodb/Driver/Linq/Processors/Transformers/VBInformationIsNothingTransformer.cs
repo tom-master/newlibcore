@@ -15,7 +15,7 @@
 
 using System.Linq.Expressions;
 
-namespace NewLib.Data.Mongodb.Driver.Linq.Processors.Transformers
+namespace NewLibCore.Data.Mongodb.Driver.Linq.Processors.Transformers
 {
     /// <remarks>
     /// VB creates an IsNothing comparison using a method call. We'll translate this to a simple

@@ -11,11 +11,11 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 using System.Xml;
-using NewLibCore.Data.Mapper;
-using NewLibCore.Data.Mapper.DomainSpecification.ConcreteSpecification;
-using NewLibCore.Data.Mapper.InternalDataStore;
-using NewLibCore.Data.Mapper.MapperExtension;
-using NewLibCore.Data.Mapper.PropertyExtension;
+using NewLibCore.Data.SQL;
+using NewLibCore.Data.SQL.DomainSpecification.ConcreteSpecification;
+using NewLibCore.Data.SQL.InternalDataStore;
+using NewLibCore.Data.SQL.MapperExtension;
+using NewLibCore.Data.SQL.PropertyExtension;
 using Newtonsoft.Json;
 
 namespace NewLibCore.Run
@@ -24,10 +24,7 @@ namespace NewLibCore.Run
     {
         static void Main(string[] args)
         {
-            using (var dataStore = new DataStore(""))
-            {
-                dataStore.Add(new VisitorRecord(1, ""));
-            }
+            //MongoServiceApi api = new MongoServiceApi();
         }
     }
     public partial class VisitorRecord : DomainModelBase

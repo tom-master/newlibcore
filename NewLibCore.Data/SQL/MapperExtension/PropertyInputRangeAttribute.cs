@@ -1,9 +1,9 @@
 ﻿using System;
 
-namespace NewLibCore.Data.Mapper.MapperExtension
+namespace NewLibCore.Data.SQL.MapperExtension
 {
 
-    public class PropertyInputRangeAttribute : ValidateBase
+    public class PropertyInputRangeAttribute : PropertyValidate
     {
         private Int32 _min;
 

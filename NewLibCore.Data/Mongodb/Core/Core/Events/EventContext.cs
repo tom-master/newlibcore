@@ -15,9 +15,9 @@
 
 using System;
 using System.Runtime.Remoting.Messaging;
-using NewLib.Data.Mongodb.Core.Core.Misc;
+using NewLibCore.Data.Mongodb.Core.Core.Misc;
 
-namespace NewLib.Data.Mongodb.Core.Core.Events
+namespace NewLibCore.Data.Mongodb.Core.Core.Events
 {
     internal static class EventContext
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NewLib.Data.Mongodb.Bson.Serialization.IdGenerators
+namespace NewLibCore.Data.Mongodb.Bson.Serialization.IdGenerators
 {
     public class StringGiudGenerator : IIdGenerator
     {

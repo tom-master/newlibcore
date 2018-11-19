@@ -1,9 +1,9 @@
 ﻿using System;
 
-namespace NewLibCore.Data.Mapper.MapperExtension
+namespace NewLibCore.Data.SQL.MapperExtension
 {
 	[AttributeUsage(AttributeTargets.Property, AllowMultiple = true, Inherited = true)]
-	public abstract class ValidateBase: Attribute
+	public abstract class PropertyValidate: Attribute
 	{
 		public abstract Boolean IsValidate(Object value);
 

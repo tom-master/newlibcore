@@ -14,11 +14,11 @@
 */
 
 using System.Net;
-using NewLib.Data.Mongodb.Core.Core.Clusters;
-using NewLib.Data.Mongodb.Core.Core.Connections;
-using NewLib.Data.Mongodb.Core.Core.Servers;
+using NewLibCore.Data.Mongodb.Core.Core.Clusters;
+using NewLibCore.Data.Mongodb.Core.Core.Connections;
+using NewLibCore.Data.Mongodb.Core.Core.Servers;
 
-namespace NewLib.Data.Mongodb.Core.Core.Events.Diagnostics
+namespace NewLibCore.Data.Mongodb.Core.Core.Events.Diagnostics
 {
     internal static class TraceSourceEventHelper
     {

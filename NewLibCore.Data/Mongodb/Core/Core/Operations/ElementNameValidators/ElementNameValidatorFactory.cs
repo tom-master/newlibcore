@@ -13,9 +13,9 @@
 * limitations under the License.
 */
 
-using NewLib.Data.Mongodb.Bson.IO;
+using NewLibCore.Data.Mongodb.Bson.IO;
 
-namespace NewLib.Data.Mongodb.Core.Core.Operations.ElementNameValidators
+namespace NewLibCore.Data.Mongodb.Core.Core.Operations.ElementNameValidators
 {
     /// <summary>
     /// Represents a factory for element name validators based on the update type.

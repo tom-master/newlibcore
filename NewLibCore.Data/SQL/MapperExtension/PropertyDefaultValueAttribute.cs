@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace NewLibCore.Data.Mapper.MapperExtension
+namespace NewLibCore.Data.SQL.MapperExtension
 {
-    public class PropertyDefaultValueAttribute : ValidateBase
+    public class PropertyDefaultValueAttribute : PropertyValidate
     {
         public PropertyDefaultValueAttribute(Object value) : this(value.GetType(), value)
         {

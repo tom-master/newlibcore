@@ -16,7 +16,7 @@
 using System;
 using System.Threading;
 
-namespace NewLib.Data.Mongodb.Core.Core.Misc
+namespace NewLibCore.Data.Mongodb.Core.Core.Misc
 {
     internal sealed class ReferenceCounted<T> where T : class, IDisposable
     {

@@ -15,10 +15,10 @@
 
 using System.Threading;
 using System.Threading.Tasks;
-using NewLib.Data.Mongodb.Core.Core.Bindings;
-using NewLib.Data.Mongodb.Core.Core.Operations;
+using NewLibCore.Data.Mongodb.Core.Core.Bindings;
+using NewLibCore.Data.Mongodb.Core.Core.Operations;
 
-namespace NewLib.Data.Mongodb.Driver
+namespace NewLibCore.Data.Mongodb.Driver
 {
     internal interface IOperationExecutor
     {

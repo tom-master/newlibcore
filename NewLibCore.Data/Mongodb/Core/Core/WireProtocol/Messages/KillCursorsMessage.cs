@@ -15,10 +15,10 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using NewLib.Data.Mongodb.Core.Core.Misc;
-using NewLib.Data.Mongodb.Core.Core.WireProtocol.Messages.Encoders;
+using NewLibCore.Data.Mongodb.Core.Core.Misc;
+using NewLibCore.Data.Mongodb.Core.Core.WireProtocol.Messages.Encoders;
 
-namespace NewLib.Data.Mongodb.Core.Core.WireProtocol.Messages
+namespace NewLibCore.Data.Mongodb.Core.Core.WireProtocol.Messages
 {
     /// <summary>
     /// Represents a KillCursors message.

@@ -15,7 +15,7 @@
 
 using System.Reflection;
 
-namespace NewLib.Data.Mongodb.Bson.Serialization.Conventions
+namespace NewLibCore.Data.Mongodb.Bson.Serialization.Conventions
 {
     /// <summary>
     /// A convention that finds readable and writeable members and adds them to the class map.

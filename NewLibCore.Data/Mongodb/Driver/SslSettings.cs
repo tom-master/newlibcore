@@ -20,9 +20,9 @@ using System.Linq;
 using System.Net.Security;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
-using NewLib.Data.Mongodb.Bson;
+using NewLibCore.Data.Mongodb.Bson;
 
-namespace NewLib.Data.Mongodb.Driver
+namespace NewLibCore.Data.Mongodb.Driver
 {
     /// <summary>
     /// Represents the settings for using SSL.

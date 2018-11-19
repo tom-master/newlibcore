@@ -14,9 +14,9 @@
 */
 
 using System.Linq.Expressions;
-using NewLib.Data.Mongodb.Driver.Support;
+using NewLibCore.Data.Mongodb.Driver.Support;
 
-namespace NewLib.Data.Mongodb.Driver.Linq.Processors.Transformers
+namespace NewLibCore.Data.Mongodb.Driver.Linq.Processors.Transformers
 {
     /// <remarks>
     /// VB creates coalescing operations when dealing with nullable value comparisons, so we try and make this look like C#

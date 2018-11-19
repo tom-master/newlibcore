@@ -14,7 +14,7 @@
 */
 
 
-namespace NewLib.Data.Mongodb.Core.Core.Clusters
+namespace NewLibCore.Data.Mongodb.Core.Core.Clusters
 {
     /// <summary>
     /// Represents a cluster factory.

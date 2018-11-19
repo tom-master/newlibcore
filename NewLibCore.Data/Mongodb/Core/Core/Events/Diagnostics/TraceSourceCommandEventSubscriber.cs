@@ -16,9 +16,9 @@
 using System;
 using System.Diagnostics;
 using System.Reflection;
-using NewLib.Data.Mongodb.Core.Core.Misc;
+using NewLibCore.Data.Mongodb.Core.Core.Misc;
 
-namespace NewLib.Data.Mongodb.Core.Core.Events.Diagnostics
+namespace NewLibCore.Data.Mongodb.Core.Core.Events.Diagnostics
 {
     /// <summary>
     /// An event subscriber that writes command events to a trace source.

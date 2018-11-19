@@ -22,16 +22,16 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using NewLib.Data.Mongodb.Bson.IO;
-using NewLib.Data.Mongodb.Core.Core.Configuration;
-using NewLib.Data.Mongodb.Core.Core.Events;
-using NewLib.Data.Mongodb.Core.Core.Misc;
-using NewLib.Data.Mongodb.Core.Core.Servers;
-using NewLib.Data.Mongodb.Core.Core.WireProtocol.Messages;
-using NewLib.Data.Mongodb.Core.Core.WireProtocol.Messages.Encoders;
-using NewLib.Data.Mongodb.Core.Core.WireProtocol.Messages.Encoders.BinaryEncoders;
+using NewLibCore.Data.Mongodb.Bson.IO;
+using NewLibCore.Data.Mongodb.Core.Core.Configuration;
+using NewLibCore.Data.Mongodb.Core.Core.Events;
+using NewLibCore.Data.Mongodb.Core.Core.Misc;
+using NewLibCore.Data.Mongodb.Core.Core.Servers;
+using NewLibCore.Data.Mongodb.Core.Core.WireProtocol.Messages;
+using NewLibCore.Data.Mongodb.Core.Core.WireProtocol.Messages.Encoders;
+using NewLibCore.Data.Mongodb.Core.Core.WireProtocol.Messages.Encoders.BinaryEncoders;
 
-namespace NewLib.Data.Mongodb.Core.Core.Connections
+namespace NewLibCore.Data.Mongodb.Core.Core.Connections
 {
     /// <summary>
     /// Represents a connection using the binary wire protocol over a binary stream.

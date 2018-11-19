@@ -16,7 +16,7 @@
 using System;
 using System.Text.RegularExpressions;
 
-namespace NewLib.Data.Mongodb.Bson.ObjectModel
+namespace NewLibCore.Data.Mongodb.Bson.ObjectModel
 {
     /// <summary>
     /// Represents a BSON regular expression value.

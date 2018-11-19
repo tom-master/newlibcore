@@ -17,10 +17,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security;
-using NewLib.Data.Mongodb.Bson;
-using NewLib.Data.Mongodb.Core.Core.Authentication;
+using NewLibCore.Data.Mongodb.Bson;
+using NewLibCore.Data.Mongodb.Core.Core.Authentication;
 
-namespace NewLib.Data.Mongodb.Driver
+namespace NewLibCore.Data.Mongodb.Driver
 {
     /// <summary>
     /// Credential to access a MongoDB database.

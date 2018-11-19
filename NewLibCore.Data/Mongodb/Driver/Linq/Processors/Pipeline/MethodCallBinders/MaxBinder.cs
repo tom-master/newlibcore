@@ -16,11 +16,11 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using NewLib.Data.Mongodb.Bson.Serialization;
-using NewLib.Data.Mongodb.Driver.Linq.Expressions;
-using NewLib.Data.Mongodb.Driver.Linq.Expressions.ResultOperators;
+using NewLibCore.Data.Mongodb.Bson.Serialization;
+using NewLibCore.Data.Mongodb.Driver.Linq.Expressions;
+using NewLibCore.Data.Mongodb.Driver.Linq.Expressions.ResultOperators;
 
-namespace NewLib.Data.Mongodb.Driver.Linq.Processors.Pipeline.MethodCallBinders
+namespace NewLibCore.Data.Mongodb.Driver.Linq.Processors.Pipeline.MethodCallBinders
 {
     internal sealed class MaxBinder : SelectingResultOperatorBinderBase
     {

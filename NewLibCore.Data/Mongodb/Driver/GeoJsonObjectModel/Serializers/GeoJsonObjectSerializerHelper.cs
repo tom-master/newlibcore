@@ -16,16 +16,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NewLib.Data.Mongodb.Bson.Exceptions;
-using NewLib.Data.Mongodb.Bson.IO;
-using NewLib.Data.Mongodb.Bson.ObjectModel;
-using NewLib.Data.Mongodb.Bson.Serialization;
-using NewLib.Data.Mongodb.Bson.Serialization.Serializers;
-using BsonDeserializationContext = NewLib.Data.Mongodb.Bson.Serialization.BsonDeserializationContext;
-using BsonSerializationContext = NewLib.Data.Mongodb.Bson.Serialization.BsonSerializationContext;
-using BsonSerializer = NewLib.Data.Mongodb.Bson.Serialization.BsonSerializer;
+using NewLibCore.Data.Mongodb.Bson.Exceptions;
+using NewLibCore.Data.Mongodb.Bson.IO;
+using NewLibCore.Data.Mongodb.Bson.ObjectModel;
+using NewLibCore.Data.Mongodb.Bson.Serialization;
+using NewLibCore.Data.Mongodb.Bson.Serialization.Serializers;
+using BsonDeserializationContext = NewLibCore.Data.Mongodb.Bson.Serialization.BsonDeserializationContext;
+using BsonSerializationContext = NewLibCore.Data.Mongodb.Bson.Serialization.BsonSerializationContext;
+using BsonSerializer = NewLibCore.Data.Mongodb.Bson.Serialization.BsonSerializer;
 
-namespace NewLib.Data.Mongodb.Driver.GeoJsonObjectModel.Serializers
+namespace NewLibCore.Data.Mongodb.Driver.GeoJsonObjectModel.Serializers
 {
     /// <summary>
     /// Represents a serializer helper for GeoJsonObjects.

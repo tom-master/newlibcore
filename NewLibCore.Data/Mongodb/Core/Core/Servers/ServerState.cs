@@ -13,7 +13,7 @@
 * limitations under the License.
 */
 
-namespace NewLib.Data.Mongodb.Core.Core.Servers
+namespace NewLibCore.Data.Mongodb.Core.Core.Servers
 {
     /// <summary>
     /// Represents the server state.

@@ -17,7 +17,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace NewLib.Data.Mongodb.Core.Core.Bindings
+namespace NewLibCore.Data.Mongodb.Core.Core.Bindings
 {
     /// <summary>
     /// Represents a binding that determines which channel source gets used for read operations.

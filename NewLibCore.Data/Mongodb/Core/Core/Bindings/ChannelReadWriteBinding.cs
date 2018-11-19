@@ -16,10 +16,10 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using NewLib.Data.Mongodb.Core.Core.Misc;
-using NewLib.Data.Mongodb.Core.Core.Servers;
+using NewLibCore.Data.Mongodb.Core.Core.Misc;
+using NewLibCore.Data.Mongodb.Core.Core.Servers;
 
-namespace NewLib.Data.Mongodb.Core.Core.Bindings
+namespace NewLibCore.Data.Mongodb.Core.Core.Bindings
 {
     /// <summary>
     /// Represents a read-write binding that is bound to a channel.

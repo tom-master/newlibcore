@@ -16,7 +16,7 @@
 using System.Collections.Generic;
 using System.Dynamic;
 
-namespace NewLib.Data.Mongodb.Bson.Serialization.Serializers
+namespace NewLibCore.Data.Mongodb.Bson.Serialization.Serializers
 {
     /// <summary>
     /// Serializer for <see cref="ExpandoObject"/>.

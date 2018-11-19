@@ -1,11 +1,11 @@
-﻿using NewLibCore.Data.Mapper.BuildExtension;
-using NewLibCore.Data.Mapper.InternalDataStore;
-using NewLibCore.Data.Mapper.PropertyExtension;
+﻿using NewLibCore.Data.SQL.BuildExtension;
+using NewLibCore.Data.SQL.InternalDataStore;
+using NewLibCore.Data.SQL.PropertyExtension;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace NewLibCore.Data.Mapper
+namespace NewLibCore.Data.SQL.Builder
 {
     internal class ModifyBuilder<TModel> : SqlBuilder<TModel> where TModel : PropertyMonitor, new()
     {

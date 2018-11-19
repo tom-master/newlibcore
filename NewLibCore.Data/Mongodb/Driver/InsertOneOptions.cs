@@ -14,7 +14,7 @@
  * 
 */
 
-namespace NewLib.Data.Mongodb.Driver
+namespace NewLibCore.Data.Mongodb.Driver
 {
     /// <summary>
     /// Options for inserting one document.

@@ -16,9 +16,9 @@
 using System;
 using System.IO;
 using System.Text;
-using NewLib.Data.Mongodb.Bson.ObjectModel;
+using NewLibCore.Data.Mongodb.Bson.ObjectModel;
 
-namespace NewLib.Data.Mongodb.Bson.IO
+namespace NewLibCore.Data.Mongodb.Bson.IO
 {
     /// <summary>
     /// Represents a Stream has additional methods to suport reading and writing BSON values.

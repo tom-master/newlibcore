@@ -13,9 +13,9 @@
 * limitations under the License.
 */
 
-using NewLib.Data.Mongodb.Bson.IO;
+using NewLibCore.Data.Mongodb.Bson.IO;
 
-namespace NewLib.Data.Mongodb.Core.Core.Operations.ElementNameValidators
+namespace NewLibCore.Data.Mongodb.Core.Core.Operations.ElementNameValidators
 {
     /// <summary>
     /// Represents an element name validator that will validate element names for either an update or a replacement based on whether the first element name starts with a "$".

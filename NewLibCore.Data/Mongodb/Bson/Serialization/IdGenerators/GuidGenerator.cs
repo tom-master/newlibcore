@@ -15,7 +15,7 @@
 
 using System;
 
-namespace NewLib.Data.Mongodb.Bson.Serialization.IdGenerators
+namespace NewLibCore.Data.Mongodb.Bson.Serialization.IdGenerators
 {
     /// <summary>
     /// Represents an Id generator for Guids.
