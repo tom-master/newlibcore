@@ -4,11 +4,6 @@ namespace NewLibCore.Data.Mapper.MapperExtension
 {
     public class PropertyDefaultValueAttribute : ValidateBase
     {
-        private readonly Type _type;
-
-        private readonly Object _value;
-
-
         public PropertyDefaultValueAttribute(Object value) : this(value.GetType(), value)
         {
 
@@ -41,7 +36,7 @@ namespace NewLibCore.Data.Mapper.MapperExtension
                 {
                     throw new ArgumentException($@"默认值 {(value + "" == "" ? "空字符串" : value)} 与类型 {type.ToString()} 不存在显式或隐式转换");
                 }
-                _value = internalValue;
+                Value = internalValue;
             }
             else
             {
@@ -49,26 +44,26 @@ namespace NewLibCore.Data.Mapper.MapperExtension
                 {
                     if (type == typeof(Boolean))
                     {
-                        _value = false;
+                        Value = false;
                     }
                     else
                     {
-                        _value = 0;
+                        Value = 0;
                     }
                 }
                 else
                 {
                     if (type == typeof(String))
                     {
-                        _value = "";
+                        Value = "";
                     }
                     else
                     {
-                        _value = null;
+                        Value = null;
                     }
                 }
             }
-            _type = type;
+            Type = type;
         }
 
         public PropertyDefaultValueAttribute(Type type) : this(type, default(Object))
@@ -76,21 +71,10 @@ namespace NewLibCore.Data.Mapper.MapperExtension
 
         }
 
-        public Type Type
-        {
-            get
-            {
-                return _type;
-            }
-        }
+        public Type Type { get; private set; }
 
-        public Object Value
-        {
-            get
-            {
-                return _value;
-            }
-        }
+        public Object Value { get; private set; }
+
 
         public override Int32 Order
         {
@@ -109,12 +93,12 @@ namespace NewLibCore.Data.Mapper.MapperExtension
         {
             if (value == null)
             {
-                value = _value;
+                value = Value;
             }
 
             try
             {
-                Convert.ChangeType(value, _type);
+                Convert.ChangeType(value, Type);
                 return true;
             }
             catch (Exception)
