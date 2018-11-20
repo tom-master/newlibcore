@@ -29,7 +29,6 @@ namespace ConsoleApp1
             LoggerMessage.Write($@"[tcp-info]--start {"192.168.0.100"}:{8090}");
         }
 
-
         public void SendMessage(String message)
         {
             if (!_mappers.Any())
@@ -43,7 +42,10 @@ namespace ConsoleApp1
                     if (_mappers.ContainsKey(key))
                     {
                         var ip = _mappers[key];
-                        pool.SendMessage(ip, message);
+                        if (pool.GetOnlines().Any(a => a == ip))
+                        {
+                            pool.SendMessage(ip, message);
+                        }
                     }
                 }
             }
@@ -154,9 +156,24 @@ namespace ConsoleApp1
                 else
                 {
                     if ((allSize - currentIndex) < bufferSize) return false;
-                    e.SetBuffer(buffers, 0, bufferSize);
+                    e.SetBuffer(buffers, currentIndex, bufferSize);
                     currentIndex += bufferSize;
                 }
+                return true;
+            }
+
+            internal Boolean RecycleBuffer(SocketAsyncEventArgs e)
+            {
+                if ((currentIndex - bufferSize) >= 0)
+                {
+                    currentIndex -= bufferSize;
+                }
+                else
+                {
+                    currentIndex = 0;
+                }
+                e.SetBuffer(buffers, currentIndex, bufferSize);
+
                 return true;
             }
 
@@ -472,6 +489,7 @@ namespace ConsoleApp1
                     int rec = e.BytesTransferred;
                     if (rec == 0)
                     {
+                        //buffer.RecycleBuffer(e);
                         CloseSocket(unit);
                         return;
                     }
@@ -483,7 +501,7 @@ namespace ConsoleApp1
                         client.SendAsync(unit.RecArg);
                         return;
                     }
-                    byte[] data = e.Buffer;
+                    byte[] data = e.Buffer.Where(w => w != 0).ToArray();
                     int len = rec;
                     if (unit.tempArray.Count != 0)
                     {
