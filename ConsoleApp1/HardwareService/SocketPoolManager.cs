@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 
-namespace Yikating.Service.HardwareService
+namespace ConsoleApp1.HardwareService
 {
 
     public class SocketPoolManager : IDisposable

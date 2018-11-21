@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Net.Sockets;
 
-namespace Yikating.Service.HardwareService
+namespace ConsoleApp1.HardwareService
 {
     internal class BufferPoolManager : IDisposable
     {

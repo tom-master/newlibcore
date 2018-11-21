@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Text;
 
-namespace Yikating.Service.HardwareService
+namespace ConsoleApp1.HardwareService
 {
     internal class LoggerMessage
     {

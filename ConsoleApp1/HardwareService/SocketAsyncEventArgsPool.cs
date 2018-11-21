@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Yikating.Service.HardwareService
+namespace ConsoleApp1.HardwareService
 {
 
     internal class SocketAsyncEventArgsPool : IDisposable

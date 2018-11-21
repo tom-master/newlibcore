@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ConsoleApp1.HardwareService;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,8 +11,8 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
-            var tcp = new TcpService();
-
+            var tcp = new SocketServer();
+            tcp.SocketInit();
             while (true)
             {
                 var message = Console.ReadLine();
