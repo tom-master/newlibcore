@@ -19,6 +19,11 @@ namespace NewLibCore.Data.Redis.InternalHelper
 
         public DefaultRedisQueryProvider(Int32 dbIndex, String connectionString)
         {
+            if (String.IsNullOrEmpty(connectionString))
+            {
+                throw new ArgumentException("connectionString不能为空")
+            }
+
             _conn = RedisConnectionHelp.GetConnectionMultiplexer(connectionString);
             _database = _conn.GetDatabase(dbIndex);
         }
