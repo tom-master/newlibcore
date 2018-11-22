@@ -637,6 +637,11 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public void Subscribe(String subChannel, Action<RedisChannel, RedisValue> handler = null)
         {
+            if (String.IsNullOrEmpty(subChannel))
+            {
+                throw new ArgumentException("subChannel不能为空")
+            }
+
             var sub = _conn.GetSubscriber();
             sub.Subscribe(subChannel, (channel, message) =>
             {
