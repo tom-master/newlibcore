@@ -656,6 +656,11 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public Int64 Publish<T>(String channel, T msg)
         {
+            if (String.IsNullOrEmpty(channel))
+            {
+                throw new ArgumentException("channel不能为空")
+            }
+
             var sub = _conn.GetSubscriber();
             return sub.Publish(channel, ConvertJson(msg));
         }
