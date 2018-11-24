@@ -665,6 +665,11 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public void Unsubscribe(String channel)
         {
+            if (String.IsNullOrEmpty(channel))
+            {
+                throw new ArgumentException("channel不能为空")
+            }
+
             var sub = _conn.GetSubscriber();
             sub.Unsubscribe(channel);
         }
