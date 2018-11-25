@@ -15,7 +15,7 @@ namespace NewLibCore.Data.SQL.Builder
         protected TModel ModelInstance { get; }
 
         protected BuilderBase(TModel model)
-        {
+        { 
             if (model == null)
             {
                 ModelInstance = Activator.CreateInstance<TModel>();
