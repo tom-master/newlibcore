@@ -31,13 +31,13 @@ namespace NewLibCore.Data.SQL.Mapper
 
             if (type.BaseType == typeof(Enum))
             {
-                if (value == default)
+                if (value == null)
                 {
                     throw new ArgumentException($@"枚举类型 {type.ToString()} 的默认值必须被手动指定");
                 }
             }
 
-            if (value != default)
+            if (value != null)
             {
                 Object internalValue;
                 try
