@@ -8,6 +8,11 @@ namespace NewLibCore
     {
         public static T ToEnum<T>(String value) where T : struct
         {
+            if (String.IsNullOrEmpty(value))
+            {
+                throw new ArgumentException("value不能为空")
+            }
+
             T t;
             if (Enum.TryParse(value, true, out t))
             {
