@@ -12,6 +12,11 @@ namespace NewLibCore
 		/// <returns></returns>
 		public static String GetHostVar(String varName)
 		{
+            if (String.IsNullOrEmpty(varName))
+            {
+                throw new ArgumentException("varName不能为空")
+            }
+
 			var v1 = Environment.GetEnvironmentVariable(varName, EnvironmentVariableTarget.Machine);
 			if (!String.IsNullOrEmpty(v1))
 			{
