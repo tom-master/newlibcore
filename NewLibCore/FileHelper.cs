@@ -287,8 +287,7 @@ namespace NewLibCore
             if (String.IsNullOrEmpty(directoryPath))
             {
                 throw new ArgumentException("directoryPath不能为空")
-              }
-
+            }
 
             if (IsExistDirectory(directoryPath))
             {
@@ -315,6 +314,11 @@ namespace NewLibCore
         /// </summary>
         public static void DeleteFile(String filePath)
         {
+            if (String.IsNullOrEmpty(filePath))
+            {
+                throw new ArgumentException("filePath不能为空")
+            }
+
             if (IsExistFile(filePath))
             {
                 File.Delete(filePath);
@@ -328,6 +332,11 @@ namespace NewLibCore
         /// </summary>
         public static void DeleteDirectory(String directoryPath)
         {
+            if (String.IsNullOrEmpty(directoryPath))
+            {
+                throw new ArgumentException("directoryPath不能为空")
+            }
+
             if (IsExistDirectory(directoryPath))
             {
                 Directory.Delete(directoryPath, true);
