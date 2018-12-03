@@ -284,6 +284,12 @@ namespace NewLibCore
         /// </summary>
         public static void ClearDirectory(String directoryPath)
         {
+            if (String.IsNullOrEmpty(directoryPath))
+            {
+                throw new ArgumentException("directoryPath不能为空")
+              }
+
+
             if (IsExistDirectory(directoryPath))
             {
                 //删除目录中所有的文件
