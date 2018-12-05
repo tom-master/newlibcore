@@ -269,6 +269,11 @@ namespace NewLibCore
         /// </summary>
         public static String GetExtension(String filePath)
         {
+            if (String.IsNullOrEmpty(filePath))
+            {
+                throw new ArgumentException("filePath不能为空")
+            }
+
             return new FileInfo(filePath).Extension;
         }
         #endregion
