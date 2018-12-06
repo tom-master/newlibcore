@@ -6,10 +6,10 @@ namespace NewLibCore.Data.SQL.BuildExtension
     internal class MysqlSyntaxBuilder : DatabaseSyntaxBuilder
     {
         private StringBuilder _syntaxBuilder = new StringBuilder();
-        internal override String SyntaxBuilder(String relationType, String left, String right)
+        
+        internal override String SyntaxBuilder(RelationType relationType, String left, String right)
         {
-            var type = ParseRelationType(relationType);
-
+            var type = relationType;
             if (type == RelationType.IN)
             {
                 _syntaxBuilder.Append($@" FIND_IN_SET({left}, @{right})>0 ");
@@ -26,34 +26,37 @@ namespace NewLibCore.Data.SQL.BuildExtension
             {
                 _syntaxBuilder.Append($@" {left} {RelationType.LIKE} CONCAT('%',@{right},'') ");
             }
-            else
+            else if (type == RelationType.EQ)
             {
-                //_syntaxBuilder.Append($@" {left} {opt} @{right} ");
+                _syntaxBuilder.Append($@" {left} = @{right} ");
             }
-
+            else if (type == RelationType.NQ)
+            {
+                _syntaxBuilder.Append($@" {left} <> @{right} ");
+            }
+            else if (type == RelationType.GT)
+            {
+                _syntaxBuilder.Append($@" {left} > @{right} ");
+            }
+            else if (type == RelationType.LT)
+            {
+                _syntaxBuilder.Append($@" {left} < @{right} ");
+            }
+            else if (type == RelationType.GE)
+            {
+                _syntaxBuilder.Append($@" {left} >= @{right} ");
+            }
+            else if (type == RelationType.LE)
+            {
+                _syntaxBuilder.Append($@" {left} <= @{right} ");
+            }
             return _syntaxBuilder.ToString();
         }
 
-        private RelationType ParseRelationType(String relation)
-        {
-            if (String.IsNullOrEmpty(relation))
-            {
-                throw new InvalidOperationException($@"无效的转换类型:{relation}");
-            }
-
-            RelationType _relation;
-
-            if (Enum.TryParse(relation, out _relation))
-            {
-                return _relation;
-            }
-
-            throw new InvalidOperationException($@"无效的转换类型:{relation}");
-        }
     }
 
     internal abstract class DatabaseSyntaxBuilder
     {
-        internal abstract String SyntaxBuilder(String relationType, String left, String right);
+        internal abstract String SyntaxBuilder(RelationType relationType, String left, String right);
     }
 }
