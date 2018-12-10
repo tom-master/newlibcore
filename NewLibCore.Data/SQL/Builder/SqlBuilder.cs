@@ -15,7 +15,7 @@ namespace NewLibCore.Data.SQL.Builder
         protected TModel ModelInstance { get; }
 
         protected BuilderBase(TModel model)
-        { 
+        {
             if (model == null)
             {
                 ModelInstance = Activator.CreateInstance<TModel>();
@@ -68,10 +68,7 @@ namespace NewLibCore.Data.SQL.Builder
                         {
                             ThrowValidateException(validateBases[i], propertyItem);
                         }
-                        if (String.IsNullOrEmpty(propertyValue + ""))
-                        {
-                            SetPropertyDefaultValue((PropertyDefaultValueAttribute)validateBases[i], propertyItem, propertyValue);
-                        }
+                        SetPropertyDefaultValue((PropertyDefaultValueAttribute)validateBases[i], propertyItem, propertyValue);
                     }
                     else if (validateBases[i] is PropertyInputRangeAttribute)
                     {
