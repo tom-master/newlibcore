@@ -208,6 +208,15 @@ namespace NewLibCore
         /// </summary>
         public static void Move(String sourceFilePath, String descDirectoryPath)
         {
+            if (String.IsNullOrEmpty(sourceFilePath))
+            {
+                throw new ArgumentException("sourceFilePath不能为空")
+            }
+            if (String.IsNullOrEmpty(destFilePath))
+            {
+                throw new ArgumentException("destFilePath不能为空")
+            }
+
             //获取源文件的名称
             var sourceFileName = GetFileName(sourceFilePath);
 
