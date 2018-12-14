@@ -6,9 +6,20 @@ using System.Text;
 
 namespace NewLibCore.Data.SQL.BuildExtension
 {
-    internal class BuilderWhere<TModel> : BuilderBase where TModel : class, new()
+    internal class BuilderWhere<TModel> where TModel : class, new()
     {
-        internal override void Translate(Expression expression)
+        internal DatabaseSyntaxBuilder _syntaxBuilder = new MysqlSyntaxBuilder(true);
+
+        internal StringBuilder _builder = new StringBuilder();
+
+        internal Stack<String> _parameterNameStack = new Stack<String>();
+
+        internal Stack<RelationType> _operationalCharacterStack = new Stack<RelationType>();
+
+        internal IList<SqlParameterMapper> WhereParameters { get; private set; } = new List<SqlParameterMapper>();
+
+
+        internal void Translate(Expression expression)
         {
             _builder.Append(" WHERE ");
             InternalTranslate(expression);
@@ -101,8 +112,8 @@ namespace NewLibCore.Data.SQL.BuildExtension
                 {
                     var binaryExp = (ConstantExpression)expression;
                     WhereParameters.Add(new SqlParameterMapper($@"@{_parameterNameStack.Pop()}", binaryExp.Value));
+                    break;
                 }
-                break;
                 case ExpressionType.Equal:
                 {
                     var binaryExp = (BinaryExpression)expression;
@@ -191,7 +202,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
                         }
                         else
                         {
-                            var syntax = SyntaxBuilder.SyntaxBuilder(_operationalCharacterStack.Pop(), memberName, newParameterName);
+                            var syntax = _syntaxBuilder.SyntaxBuilder(_operationalCharacterStack.Pop(), memberName, newParameterName);
                             _builder.Append(syntax);
                             _parameterNameStack.Push(newParameterName);
                         }
