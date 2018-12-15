@@ -35,7 +35,7 @@ namespace NewLibCore.Data.SQL.Builder
 			}
 
 			buildEntry.Append($@" INSERT {ModelType.Name} ({String.Join(",", columns.Select(c => c.Name))} ) VALUES ({String.Join(",", columns.Select(key => $@"@{key.Name}"))}) {_maxIdentity} ");
-			buildEntry.AppendParameter(columns.ToList().Select(c => new ParameterMapper($@"@{c.Name}", c.GetValue(ModelInstance))));
+			buildEntry.AppendParameter(columns.ToList().Select(c => new SqlParameterMapper($@"@{c.Name}", c.GetValue(ModelInstance))));
 			
 			return buildEntry;
 		}

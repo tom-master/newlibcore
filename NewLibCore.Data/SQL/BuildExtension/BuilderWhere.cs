@@ -8,16 +8,6 @@ namespace NewLibCore.Data.SQL.BuildExtension
 {
     internal class BuilderWhere<TModel> : BuilderBase where TModel : class, new()
     {
-        private DatabaseSyntaxBuilder _syntaxBuilder = new MysqlSyntaxBuilder(true);
-
-        private StringBuilder _builder = new StringBuilder();
-
-        private Stack<String> _parameterNameStack = new Stack<String>();
-
-        private Stack<RelationType> _operationalCharacterStack = new Stack<RelationType>();
-
-        internal IList<ParameterMapper> WhereParameters { get; private set; } = new List<ParameterMapper>();
-
         internal override void Translate(Expression expression)
         {
             _builder.Append(" WHERE ");
@@ -110,7 +100,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
                 case ExpressionType.Constant:
                 {
                     var binaryExp = (ConstantExpression)expression;
-                    WhereParameters.Add(new ParameterMapper($@"@{_parameterNameStack.Pop()}", binaryExp.Value));
+                    WhereParameters.Add(new SqlParameterMapper($@"@{_parameterNameStack.Pop()}", binaryExp.Value));
                 }
                 break;
                 case ExpressionType.Equal:
@@ -201,7 +191,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
                         }
                         else
                         {
-                            var syntax = _syntaxBuilder.SyntaxBuilder(_operationalCharacterStack.Pop(), memberName, newParameterName);
+                            var syntax = SyntaxBuilder.SyntaxBuilder(_operationalCharacterStack.Pop(), memberName, newParameterName);
                             _builder.Append(syntax);
                             _parameterNameStack.Push(newParameterName);
                         }
@@ -210,7 +200,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
                     {
                         var getter = Expression.Lambda(memberExp).Compile();
                         Object result = result = getter.DynamicInvoke();
-                        WhereParameters.Add(new ParameterMapper($@"@{_parameterNameStack.Pop()}", result));
+                        WhereParameters.Add(new SqlParameterMapper($@"@{_parameterNameStack.Pop()}", result));
                         break;
                     }
                     break;

@@ -1,5 +1,4 @@
-﻿using NewLibCore.Data.SQL.BuildExtension;
-using NewLibCore.Data.SQL.MapperExtension;
+﻿using NewLibCore.Data.SQL.MapperExtension;
 using NewLibCore.Data.SQL.PropertyExtension;
 using System;
 
@@ -9,8 +8,7 @@ namespace NewLibCore.Run
     {
         private static void Main(String[] args)
         {
-            var where = new BuilderWhere<VisitorRecord>();
-            where.Translate<VisitorRecord, VisitorRecord>((a, b) => a.UserId == b.UserId && a.Id == a.Id);
+
         }
     }
     public partial class VisitorRecord : DomainModelBase

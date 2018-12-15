@@ -44,7 +44,7 @@ namespace NewLibCore.Data.SQL.Builder
                 buildEntry.ParameterMappers.AddRange(builderWhere.WhereParameters);
             }
             buildEntry.Append(_rowCount);
-            buildEntry.AppendParameter(args.Select(s => s.PropertyInfo).ToList().Select(c => new ParameterMapper($@"@{c.Name}", c.GetValue(ModelInstance))));
+            buildEntry.AppendParameter(args.Select(s => s.PropertyInfo).ToList().Select(c => new SqlParameterMapper($@"@{c.Name}", c.GetValue(ModelInstance))));
 
             return buildEntry;
         }

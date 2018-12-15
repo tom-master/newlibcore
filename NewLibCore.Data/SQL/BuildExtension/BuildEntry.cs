@@ -17,14 +17,14 @@ namespace NewLibCore.Data.SQL.BuildExtension
             _builder = new StringBuilder();
         }
 
-        public List<ParameterMapper> ParameterMappers { get; private set; } = new List<ParameterMapper>();
+        public List<SqlParameterMapper> ParameterMappers { get; private set; } = new List<SqlParameterMapper>();
 
         internal void Append(String value)
         {
             _builder.Append(value);
         }
 
-        internal void AppendParameter(IEnumerable<ParameterMapper> mappers)
+        internal void AppendParameter(IEnumerable<SqlParameterMapper> mappers)
         {
             ParameterMappers.AddRange(mappers);
         }

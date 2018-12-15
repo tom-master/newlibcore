@@ -90,12 +90,12 @@ namespace NewLibCore.Data.SQL.InternalDataStore
 			return SqlExecute(entry.FormatSql(), entry.ParameterMappers, CommandType.Text, true) > 0;
 		}
 
-		public TModel FindOne<TModel>(String sqlStr, IEnumerable<ParameterMapper> parameters = null, CommandType commandType = CommandType.Text) where TModel : class, new()
+		public TModel FindOne<TModel>(String sqlStr, IEnumerable<SqlParameterMapper> parameters = null, CommandType commandType = CommandType.Text) where TModel : class, new()
 		{
 			return Find<TModel>(sqlStr, parameters, commandType).FirstOrDefault();
 		}
 
-		public List<TModel> Find<TModel>(String sqlStr, IEnumerable<ParameterMapper> parameters = null, CommandType commandType = CommandType.Text) where TModel : class, new()
+		public List<TModel> Find<TModel>(String sqlStr, IEnumerable<SqlParameterMapper> parameters = null, CommandType commandType = CommandType.Text) where TModel : class, new()
 		{
 			Open();
 			using (DbCommand cmd = _connection.CreateCommand())
@@ -119,7 +119,7 @@ namespace NewLibCore.Data.SQL.InternalDataStore
 			}
 		}
 
-		public TValue FindSingleValue<TValue>(String sqlStr, IEnumerable<ParameterMapper> parameters = null, CommandType commandType = CommandType.Text)
+		public TValue FindSingleValue<TValue>(String sqlStr, IEnumerable<SqlParameterMapper> parameters = null, CommandType commandType = CommandType.Text)
 		{
 			Open();
 			using (DbCommand cmd = _connection.CreateCommand())
@@ -142,7 +142,7 @@ namespace NewLibCore.Data.SQL.InternalDataStore
 			}
 		}
 
-		private Int32 SqlExecute(String sqlStr, IEnumerable<ParameterMapper> parameters = null, CommandType commandType = CommandType.Text, Boolean isModify = false)
+		private Int32 SqlExecute(String sqlStr, IEnumerable<SqlParameterMapper> parameters = null, CommandType commandType = CommandType.Text, Boolean isModify = false)
 		{
 			Open();
 			using (DbCommand cmd = _connection.CreateCommand())
