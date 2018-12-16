@@ -5,8 +5,15 @@ namespace NewLibCore.Data.SQL.BuildExtension
 {
     internal class MysqlSyntaxBuilder : DatabaseSyntaxBuilder
     {
+        private readonly Boolean _isJoin = false;
+
+        internal MysqlSyntaxBuilder(Boolean isJoin = false)
+        {
+            _isJoin = isJoin;
+        }
+
         private StringBuilder _syntaxBuilder = new StringBuilder();
-        
+
         internal override String SyntaxBuilder(RelationType relationType, String left, String right)
         {
             var type = relationType;

@@ -6,9 +6,9 @@ using System.Text;
 
 namespace NewLibCore.Data.SQL.BuildExtension
 {
-    public class BuilderWhere<TModel> : BuilderBase where TModel : class, new()
+    internal class BuilderWhere<TModel> : BuilderBase where TModel : class, new()
     {
-        private DatabaseSyntaxBuilder _syntaxBuilder;
+        private DatabaseSyntaxBuilder _syntaxBuilder = new MysqlSyntaxBuilder(true);
 
         private StringBuilder _builder = new StringBuilder();
 
@@ -18,12 +18,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
 
         internal IList<ParameterMapper> WhereParameters { get; private set; } = new List<ParameterMapper>();
 
-        public BuilderWhere()
-        {
-            _syntaxBuilder = new MysqlSyntaxBuilder();
-        }
-
-        public override void Translate(Expression expression)
+        internal override void Translate(Expression expression)
         {
             _builder.Append(" WHERE ");
             InternalTranslate(expression);

@@ -4,6 +4,6 @@ namespace NewLibCore.Data.SQL.BuildExtension
 {
     public abstract class BuilderBase
     {
-        public abstract void Translate(Expression expression);
+        internal abstract void Translate(Expression expression);
     }
 }
