@@ -23,14 +23,20 @@ namespace NewLibCore.Data.SQL.InternalDataStore
 
         private readonly Boolean _noExecuteMode = false;
 
+        private readonly ILogger _logger;
+
         public DataStore(String connection, Boolean noExecuteMode = false)
         {
             _connection = new MySqlConnection(connection);
             _noExecuteMode = noExecuteMode;
+            _logger = new ConsoleLogger(this);
+
+            _logger.Write("INFO", $@"datastore init connectionstring:{connection}");
         }
 
         public void OpenTransaction()
         {
+            _logger.Write("INFO", "open transaction");
             _useTransaction = true;
         }
 
@@ -52,6 +58,7 @@ namespace NewLibCore.Data.SQL.InternalDataStore
         {
             if (_useTransaction)
             {
+                _logger.Write("INFO", "commit transaction");
                 _dataTransaction.Commit();
                 return;
             }
@@ -62,6 +69,7 @@ namespace NewLibCore.Data.SQL.InternalDataStore
         {
             if (_useTransaction)
             {
+                _logger.Write("INFO", "rollback transaction ");
                 _dataTransaction?.Rollback();
                 return;
             }
@@ -72,15 +80,25 @@ namespace NewLibCore.Data.SQL.InternalDataStore
         {
             if (_connection.State == ConnectionState.Closed)
             {
+                _logger.Write("INFO", "open connection");
                 _connection.Open();
             }
         }
 
         public Int32 Add<TModel>(TModel model) where TModel : PropertyMonitor, new()
         {
-            BuilderBase<TModel> builder = new AddBuilder<TModel>(model, true);
-            var entry = builder.Build();
-            return SqlExecute(entry.FormatSql(), entry.ParameterMappers, CommandType.Text);
+            try
+            {
+                BuilderBase<TModel> builder = new AddBuilder<TModel>(model, true);
+                var entry = builder.Build();
+                _logger.Write("INFO", $@"add execute result:{entry.FormatSql()}");
+                return SqlExecute(entry.FormatSql(), entry.ParameterMappers, CommandType.Text);
+            }
+            catch (Exception ex)
+            {
+                _logger.Write("ERROR", $@"add execute error:{ex.ToString()}");
+                throw;
+            }
         }
 
         public Boolean Modify<TModel>(TModel model, Expression<Func<TModel, Boolean>> where = null) where TModel : PropertyMonitor, new()
