@@ -16,6 +16,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
 		private readonly ConnectionMultiplexer _conn;
 		private String _customKey;
 		private IDatabase _database = null;
+
 		#region 构造函数
 
 		public DefaultRedisQueryProvider(Int32 dbIndex, String connectionString)

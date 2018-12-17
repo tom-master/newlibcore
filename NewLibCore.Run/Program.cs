@@ -1,34 +1,17 @@
-﻿using NewLibCore.Data.SQL.MapperExtension;
+﻿using NewLibCore.Data.SQL.BuildExtension;
+using NewLibCore.Data.SQL.MapperExtension;
 using NewLibCore.Data.SQL.PropertyExtension;
 using System;
-using System.Collections.Generic;
 
 namespace NewLibCore.Run
 {
-    class Program
+    internal class Program
     {
-        private static readonly IDictionary<String, String> _mapper = new Dictionary<String, String>();
-
-        static void Main(string[] args)
+        private static void Main(String[] args)
         {
-            BuildTestData();
-
-            //var inputValue = "wasd1223";
-
-
+            var where = new BuilderWhere<VisitorRecord>();
         }
 
-        private static void BuildTestData()
-        {
-            _mapper.Add($@"192.168.0.100:8080:wasd1232", "192.168.0.100:8080");
-            _mapper.Add($@"192.168.0.100:8082:wasd1213", "192.168.0.100:8082");
-            _mapper.Add($@"192.168.0.100:8083:wa2sd1213", "192.168.0.100:8083");
-            _mapper.Add($@"192.168.0.100:8081:wasd1223", "192.168.0.100:8081");
-            _mapper.Add($@"192.168.0.100:8081:wa2sd1323", "192.168.0.100:8081");
-            _mapper.Add($@"192.168.0.100:8080:wasd15423", "192.168.0.100:8080");
-            _mapper.Add($@"192.168.0.100:8081:wa5sd123", "192.168.0.100:8081");
-            _mapper.Add($@"192.168.0.100:8084:w6asd123", "192.168.0.100:8084");
-        }
     }
     public partial class VisitorRecord : DomainModelBase
     {
