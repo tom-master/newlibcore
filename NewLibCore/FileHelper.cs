@@ -190,6 +190,14 @@ namespace NewLibCore
         /// </summary>
         public static void Copy(String sourceFilePath, String destFilePath)
         {
+            if (String.IsNullOrEmpty(sourceFilePath))
+            {
+                throw new ArgumentException("sourceFilePath不能为空")
+            }
+            if (String.IsNullOrEmpty(destFilePath))
+            {
+                throw new ArgumentException("destFilePath不能为空")
+            }
             File.Copy(sourceFilePath, destFilePath, true);
         }
         #endregion
