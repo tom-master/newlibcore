@@ -176,6 +176,10 @@ namespace NewLibCore
         /// </summary>
         public static void AppendText(String filePath, String content)
         {
+            if (String.IsNullOrEmpty(filePath))
+            {
+                throw new ArgumentException("filepath不能为空")
+            }
             File.AppendAllText(filePath, content);
         }
         #endregion
