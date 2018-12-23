@@ -111,7 +111,6 @@ namespace NewLibCore.Data.SQL.InternalDataStore
         public DataStore InnerJoin<TLeft, TRight>(Expression<Func<TLeft, TRight>> expression) where TLeft : PropertyMonitor, new()
             where TRight : PropertyMonitor, new()
         {
-
             return this;
         }
 
@@ -128,9 +127,6 @@ namespace NewLibCore.Data.SQL.InternalDataStore
 
             return this;
         }
-
-
-
 
         public TModel FindOne<TModel>(String sqlStr, IEnumerable<SqlParameterMapper> parameters = null, CommandType commandType = CommandType.Text) where TModel : class, new()
         {
