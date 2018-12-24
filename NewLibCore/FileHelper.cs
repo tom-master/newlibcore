@@ -134,6 +134,11 @@ namespace NewLibCore
         /// </summary>
         public static String[] GetDirectories(String directoryPath, String searchPattern, Boolean isSearchChild)
         {
+            if (String.IsNullOrEmpty(searchPattern))
+            {
+                throw new ArgumentException("searchPattern不能为空")
+            }
+
             try
             {
                 if (isSearchChild)
