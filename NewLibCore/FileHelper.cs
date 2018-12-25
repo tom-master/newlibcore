@@ -114,6 +114,11 @@ namespace NewLibCore
         /// </summary>
         public static String[] GetDirectories(String directoryPath)
         {
+            if (String.IsNullOrEmpty(directoryPath))
+            {
+                throw new ArgumentException("directoryPath不能为空")
+            }
+
             try
             {
                 return Directory.GetDirectories(directoryPath);
