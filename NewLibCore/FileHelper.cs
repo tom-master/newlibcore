@@ -88,6 +88,11 @@ namespace NewLibCore
                 throw new FileNotFoundException();
             }
 
+            if (String.IsNullOrEmpty(searchPattern))
+            {
+                throw new ArgumentException("searchPattern参数不能为空");
+            }
+
             try
             {
                 if (isSearchChild)
