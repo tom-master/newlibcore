@@ -52,7 +52,10 @@ namespace NewLibCore
 
             //将文本文件的各行读到一个字符串数组中
             var rows = File.ReadAllLines(filePath);
-
+            if (rows==null||rows.Length)
+            {
+                throw new Exception("没有从指定的路径中获取文件的行数");
+            }
             //返回行数
             return rows.Length;
         }
