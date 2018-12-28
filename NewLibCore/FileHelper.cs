@@ -160,6 +160,11 @@ namespace NewLibCore
         /// </summary>
         public static void WriteText(String filePath, String content)
         {
+            if (String.IsNullOrEmpty(filePath))
+            {
+                throw new ArgumentException("filepath不能为空")
+            }
+
             //向文件写入内容
             File.WriteAllText(filePath, content);
         }
