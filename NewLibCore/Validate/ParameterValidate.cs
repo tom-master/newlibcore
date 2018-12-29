@@ -4,7 +4,6 @@ using NewLibCore.Security;
 
 namespace NewLibCore.Validate
 {
-
     public static class Parameter
     {
         /// <summary>

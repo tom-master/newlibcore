@@ -8,7 +8,7 @@ namespace NewLibCore.InternalExtension
 	internal static class ObjectExtensions
 	{
 		/// <summary>
-		///     把对象类型转化为指定类型，转化失败时返回该类型默认值
+		/// 把对象类型转化为指定类型，转化失败时返回该类型默认值
 		/// </summary>
 		/// <typeparam name="T"> 动态类型 </typeparam>
 		/// <param name="value"> 要转化的源对象 </param>
@@ -41,7 +41,7 @@ namespace NewLibCore.InternalExtension
 		}
 
 		/// <summary>
-		///     把对象类型转化为指定类型，转化失败时返回指定的默认值
+		/// 把对象类型转化为指定类型，转化失败时返回指定的默认值
 		/// </summary>
 		/// <typeparam name="T"> 动态类型 </typeparam>
 		/// <param name="value"> 要转化的源对象 </param>

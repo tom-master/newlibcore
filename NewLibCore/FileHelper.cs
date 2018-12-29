@@ -45,6 +45,11 @@ namespace NewLibCore
         /// </summary>
         public static Int32 GetLineCount(String filePath)
         {
+            if (String.IsNullOrEmpty(filePath))
+            {
+                throw new ArgumentException("filePath长度不能为0或null")
+            }
+
             //将文本文件的各行读到一个字符串数组中
             var rows = File.ReadAllLines(filePath);
 
