@@ -26,10 +26,16 @@ namespace NewLibCore.Validate
             }
         }
 
+
+        public static void Validate(ValueType valueType)
+        {
+            return Validate(ValueType valueType, false);
+        }
+
         /// <summary>
         /// 验证值类型是否合法
         /// </summary>
-        public static void Validate(ValueType valueType, Boolean canZero = false)
+        public static void Validate(ValueType valueType, Boolean canZero)
         {
             Type type = valueType.GetType();
 
