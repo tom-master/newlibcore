@@ -10,7 +10,15 @@ namespace NewLibCore.Validate
         /// <summary>
         /// 验证引用类型是否合法
         /// </summary>
-        public static void Validate(Object vaildateParameter, Boolean canNull = false)
+        public static void Validate(Object validateParameter)
+        {
+            return Validate(validateParameter,false)
+        }
+
+        /// <summary>
+        /// 验证引用类型是否合法
+        /// </summary>
+        public static void Validate(Object vaildateParameter, Boolean canNull)
         {
             if (!canNull && vaildateParameter == null)
             {
