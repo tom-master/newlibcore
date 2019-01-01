@@ -25,13 +25,4 @@ namespace NewLibCore.Data.SQL.InternalDataStore
             _joins.Add(new JoinManager(joinExpression, joinType));
         }
     }
-
-    public enum JoinType
-    {
-        Inner = 1,
-
-        Left = 2,
-
-        Right = 3
-    }
 }
