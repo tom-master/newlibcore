@@ -108,26 +108,6 @@ namespace NewLibCore.Data.SQL.InternalDataStore
             return SqlExecute(entry.FormatSql(), entry.ParameterMappers, CommandType.Text, true) > 0;
         }
 
-        public DataStore InnerJoin<TLeft, TRight>(Expression<Func<TLeft, TRight>> expression) where TLeft : PropertyMonitor, new()
-            where TRight : PropertyMonitor, new()
-        {
-            return this;
-        }
-
-        public DataStore LeftJoin<TLeft, TRight>(Expression<Func<TLeft, TRight>> expression) where TLeft : PropertyMonitor, new()
-            where TRight : PropertyMonitor, new()
-        {
-
-            return this;
-        }
-
-        public DataStore RightJoin<TLeft, TRight>(Expression<Func<TLeft, TRight>> expression) where TLeft : PropertyMonitor, new()
-            where TRight : PropertyMonitor, new()
-        {
-
-            return this;
-        }
-
         public TModel FindOne<TModel>(String sqlStr, IEnumerable<SqlParameterMapper> parameters = null, CommandType commandType = CommandType.Text) where TModel : class, new()
         {
             return Find<TModel>(sqlStr, parameters, commandType).FirstOrDefault();
