@@ -2,6 +2,7 @@
 using NewLibCore.Data.SQL.MapperExtension;
 using NewLibCore.Data.SQL.PropertyExtension;
 using System;
+using System.Linq.Expressions;
 
 namespace NewLibCore.Run
 {
@@ -9,12 +10,15 @@ namespace NewLibCore.Run
     {
         private static void Main(String[] args)
         {
-            using (var dataStore = new DataStore(""))
-            {
-                var visitor = new VisitorRecord();
-                visitor.Remove();
-                dataStore.Modify(visitor, a => a.Id == 1);
-            }
+            Expression<Func<VisitorRecord, VisitorRecord, Boolean>> expression = (a, b) => a.UserName == b.UserName && a.Id == b.Id;
+            var statement = new StatementManager(expression);
+            
+            //using (var dataStore = new DataStore(""))
+            //{
+            //    var visitor = new VisitorRecord();
+            //    visitor.Remove();
+            //    dataStore.Modify(visitor, a => a.Id == 1);
+            //}
         }
     }
     public partial class VisitorRecord : DomainModelBase
