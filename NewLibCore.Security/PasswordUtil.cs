@@ -14,12 +14,12 @@ namespace NewLibCore.Security
         {
             if (String.IsNullOrEmpty(dbPassword))
             {
-                throw new ArgumentException("dbPassword不能为空")
+                throw new ArgumentException("dbPassword不能为空");
             }
 
             if (String.IsNullOrEmpty(userPassword))
             {
-                throw new ArgumentException("userPassword不能为空")
+                throw new ArgumentException("userPassword不能为空");
             }
 
             var dbPwd = Convert.FromBase64String(dbPassword);
@@ -47,7 +47,7 @@ namespace NewLibCore.Security
         {
             if (String.IsNullOrEmpty(userPassword))
             {
-                throw new ArgumentException("userPassword不能为空")
+                throw new ArgumentException("userPassword不能为空");
             }
 
             var unsaltedPassword = HashString(userPassword);
@@ -63,7 +63,7 @@ namespace NewLibCore.Security
         {
             if (String.IsNullOrEmpty(str))
             {
-                throw new ArgumentException("str不能为空")
+                throw new ArgumentException("str不能为空");
             }
 
             var pwd = Encoding.UTF8.GetBytes(str);

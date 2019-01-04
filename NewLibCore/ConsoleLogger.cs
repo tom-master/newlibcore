@@ -11,9 +11,14 @@ namespace NewLibCore
             _type = type;
         }
 
+        public ConsoleLogger()
+        {
+
+        }
+
         public void Write(String level, String message)
         {
-            Console.WriteLine($@"[{DateTime.Now:yyyy-MM-dd}][{level.ToUpper()}][{_type.GetType().Name}]:{message}");
+            Console.WriteLine($@"[{DateTime.Now:yyyy-MM-dd}][{level.ToUpper()}][{(_type != null ? _type.GetType().Name : "")}]:{message}");
         }
     }
 }

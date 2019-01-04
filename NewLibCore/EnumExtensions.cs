@@ -10,7 +10,7 @@ namespace NewLibCore
         {
             if (String.IsNullOrEmpty(value))
             {
-                throw new ArgumentException("value不能为空")
+                throw new ArgumentException("value不能为空");
             }
 
             T t;

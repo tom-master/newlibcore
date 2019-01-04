@@ -47,12 +47,12 @@ namespace NewLibCore
         {
             if (String.IsNullOrEmpty(filePath))
             {
-                throw new ArgumentException("filePath长度不能为0或null")
+                throw new ArgumentException("filePath长度不能为0或null");
             }
 
             //将文本文件的各行读到一个字符串数组中
             var rows = File.ReadAllLines(filePath);
-            if (rows==null||rows.Length)
+            if (rows == null || rows.Length == 0)
             {
                 throw new Exception("没有从指定的路径中获取文件的行数");
             }
@@ -116,7 +116,7 @@ namespace NewLibCore
         {
             if (String.IsNullOrEmpty(directoryPath))
             {
-                throw new ArgumentException("directoryPath不能为空")
+                throw new ArgumentException("directoryPath不能为空");
             }
 
             try
@@ -136,7 +136,7 @@ namespace NewLibCore
         {
             if (String.IsNullOrEmpty(searchPattern))
             {
-                throw new ArgumentException("searchPattern不能为空")
+                throw new ArgumentException("searchPattern不能为空");
             }
 
             try
@@ -162,7 +162,7 @@ namespace NewLibCore
         {
             if (String.IsNullOrEmpty(filePath))
             {
-                throw new ArgumentException("filepath不能为空")
+                throw new ArgumentException("filepath不能为空");
             }
 
             //向文件写入内容
@@ -178,7 +178,7 @@ namespace NewLibCore
         {
             if (String.IsNullOrEmpty(filePath))
             {
-                throw new ArgumentException("filepath不能为空")
+                throw new ArgumentException("filepath不能为空");
             }
             File.AppendAllText(filePath, content);
         }
@@ -192,11 +192,11 @@ namespace NewLibCore
         {
             if (String.IsNullOrEmpty(sourceFilePath))
             {
-                throw new ArgumentException("sourceFilePath不能为空")
+                throw new ArgumentException("sourceFilePath不能为空");
             }
             if (String.IsNullOrEmpty(destFilePath))
             {
-                throw new ArgumentException("destFilePath不能为空")
+                throw new ArgumentException("destFilePath不能为空");
             }
             File.Copy(sourceFilePath, destFilePath, true);
         }
@@ -210,11 +210,11 @@ namespace NewLibCore
         {
             if (String.IsNullOrEmpty(sourceFilePath))
             {
-                throw new ArgumentException("sourceFilePath不能为空")
+                throw new ArgumentException("sourceFilePath不能为空");
             }
-            if (String.IsNullOrEmpty(destFilePath))
+            if (String.IsNullOrEmpty(descDirectoryPath))
             {
-                throw new ArgumentException("destFilePath不能为空")
+                throw new ArgumentException("destFilePath不能为空");
             }
 
             //获取源文件的名称
@@ -241,7 +241,7 @@ namespace NewLibCore
         {
             if (String.IsNullOrEmpty(filePath))
             {
-                throw new ArgumentException("filePath不能为空")
+                throw new ArgumentException("filePath不能为空");
             }
 
             return new FileInfo(filePath).Name;
@@ -256,7 +256,7 @@ namespace NewLibCore
         {
             if (String.IsNullOrEmpty(filePath))
             {
-                throw new ArgumentException("filePath不能为空")
+                throw new ArgumentException("filePath不能为空");
             }
 
             return new FileInfo(filePath).Name.Split('.')[0];
@@ -271,7 +271,7 @@ namespace NewLibCore
         {
             if (String.IsNullOrEmpty(filePath))
             {
-                throw new ArgumentException("filePath不能为空")
+                throw new ArgumentException("filePath不能为空");
             }
 
             return new FileInfo(filePath).Extension;
@@ -286,21 +286,21 @@ namespace NewLibCore
         {
             if (String.IsNullOrEmpty(directoryPath))
             {
-                throw new ArgumentException("directoryPath不能为空")
+                throw new ArgumentException("directoryPath不能为空");
             }
 
             if (IsExistDirectory(directoryPath))
             {
                 //删除目录中所有的文件
                 var fileNames = GetFileNames(directoryPath);
-                foreach (String t in fileNames)
+                foreach (var t in fileNames)
                 {
                     DeleteFile(t);
                 }
 
                 //删除目录中所有的子目录
                 var directoryNames = GetDirectories(directoryPath);
-                foreach (String t in directoryNames)
+                foreach (var t in directoryNames)
                 {
                     DeleteDirectory(t);
                 }
@@ -316,7 +316,7 @@ namespace NewLibCore
         {
             if (String.IsNullOrEmpty(filePath))
             {
-                throw new ArgumentException("filePath不能为空")
+                throw new ArgumentException("filePath不能为空");
             }
 
             if (IsExistFile(filePath))
@@ -334,7 +334,7 @@ namespace NewLibCore
         {
             if (String.IsNullOrEmpty(directoryPath))
             {
-                throw new ArgumentException("directoryPath不能为空")
+                throw new ArgumentException("directoryPath不能为空");
             }
 
             if (IsExistDirectory(directoryPath))
@@ -363,10 +363,10 @@ namespace NewLibCore
                 sb.Append(t.ToString("X2"));
             }
 
-			if (stream.CanSeek)
-			{
-				stream.Position = 0;
-			}
+            if (stream.CanSeek)
+            {
+                stream.Position = 0;
+            }
 
             return sb.ToString();
         }

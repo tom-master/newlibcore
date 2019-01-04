@@ -16,7 +16,7 @@ namespace NewLibCore.Security
             {
                 if (String.IsNullOrEmpty(source))
                 {
-                    throw new ArgumentException("source不能为空")
+                    throw new ArgumentException("source不能为空");
                 }
 
 				var aes = new AesCryptoServiceProvider();
@@ -48,7 +48,7 @@ namespace NewLibCore.Security
 			{
                 if (String.IsNullOrEmpty(source))
                 {
-                    throw new ArgumentException("source不能为空")
+                    throw new ArgumentException("source不能为空");
                 }
 
                 var aes = new AesCryptoServiceProvider();

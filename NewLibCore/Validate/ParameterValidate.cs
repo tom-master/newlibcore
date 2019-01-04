@@ -1,6 +1,5 @@
-﻿using System;
-using NewLibCore.InternalExtension;
-using NewLibCore.Security;
+﻿using NewLibCore.InternalExtension;
+using System;
 
 namespace NewLibCore.Validate
 {
@@ -11,7 +10,7 @@ namespace NewLibCore.Validate
         /// </summary>
         public static void Validate(Object validateParameter)
         {
-            return Validate(validateParameter,false)
+            Validate(validateParameter, false);
         }
 
         /// <summary>
@@ -28,7 +27,7 @@ namespace NewLibCore.Validate
 
         public static void Validate(ValueType valueType)
         {
-            return Validate(ValueType valueType, false);
+            Validate(valueType, false);
         }
 
         /// <summary>
@@ -36,11 +35,11 @@ namespace NewLibCore.Validate
         /// </summary>
         public static void Validate(ValueType valueType, Boolean canZero)
         {
-            Type type = valueType.GetType();
+            var type = valueType.GetType();
 
             if (type.IsValueType && type.IsNumeric())
             {
-                Boolean flag = !canZero ? valueType.CastTo(0.0) <= 0.0 : valueType.CastTo(0.0) < 0.0;
+                var flag = !canZero ? valueType.CastTo(0.0) <= 0.0 : valueType.CastTo(0.0) < 0.0;
 
                 if (flag)
                 {

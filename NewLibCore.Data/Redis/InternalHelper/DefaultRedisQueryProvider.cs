@@ -21,7 +21,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         {
             if (String.IsNullOrEmpty(connectionString))
             {
-                throw new ArgumentException("connectionString不能为空")
+                throw new ArgumentException("connectionString不能为空");
             }
 
             _conn = RedisConnectionHelp.GetConnectionMultiplexer(connectionString);
@@ -644,7 +644,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         {
             if (String.IsNullOrEmpty(subChannel))
             {
-                throw new ArgumentException("subChannel不能为空")
+                throw new ArgumentException("subChannel不能为空");
             }
 
             var sub = _conn.GetSubscriber();
@@ -668,7 +668,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         {
             if (String.IsNullOrEmpty(channel))
             {
-                throw new ArgumentException("channel不能为空")
+                throw new ArgumentException("channel不能为空");
             }
 
             var sub = _conn.GetSubscriber();
@@ -682,7 +682,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         {
             if (String.IsNullOrEmpty(channel))
             {
-                throw new ArgumentException("channel不能为空")
+                throw new ArgumentException("channel不能为空");
             }
 
             var sub = _conn.GetSubscriber();
@@ -716,7 +716,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         {
             if (String.IsNullOrEmpty(hostAndPort))
             {
-                throw new ArgumentException("hostAndPort不能为空")
+                throw new ArgumentException("hostAndPort不能为空");
             }
 
             return _conn.GetServer(hostAndPort);
@@ -729,7 +729,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         {
             if (String.IsNullOrEmpty(customKey))
             {
-                throw new ArgumentException("customKey不能为空")
+                throw new ArgumentException("customKey不能为空");
             }
 
             _customKey = customKey;
@@ -743,7 +743,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         {
             if (String.IsNullOrEmpty(oldKey))
             {
-                throw new ArgumentException("oldKey不能为空")
+                throw new ArgumentException("oldKey不能为空");
             }
 
             var prefixKey = _customKey ?? RedisConnectionHelp.SysCustomKey;

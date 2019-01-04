@@ -14,7 +14,7 @@ namespace NewLibCore
 		{
             if (String.IsNullOrEmpty(varName))
             {
-                throw new ArgumentException("varName不能为空")
+                throw new ArgumentException("varName不能为空");
             }
 
 			var v1 = Environment.GetEnvironmentVariable(varName, EnvironmentVariableTarget.Machine);
