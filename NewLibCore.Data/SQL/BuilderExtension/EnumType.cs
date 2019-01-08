@@ -7,13 +7,13 @@ namespace NewLibCore.Data.SQL.BuildExtension
 {
     public enum JoinType
     {
-        [Description("Inner")]
+        [Description("INNER JOIN")]
         Inner = 1,
 
-        [Description("Left")]
+        [Description("LEFT JOIN")]
         Left = 2,
 
-        [Description("Left")]
+        [Description("RIGHT JOIN")]
         Right = 3
     }
 
