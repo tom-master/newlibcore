@@ -2,6 +2,8 @@
 using NewLibCore.Data.SQL.MapperExtension;
 using NewLibCore.Data.SQL.PropertyExtension;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 
 namespace NewLibCore.Run
@@ -12,7 +14,6 @@ namespace NewLibCore.Run
         {
             Expression<Func<VisitorRecord, VisitorRecord, Boolean>> expression = (a, b) => a.UserName == b.UserName && a.Id == b.Id;
             var statement = new StatementManager(expression);
-            
             //using (var dataStore = new DataStore(""))
             //{
             //    var visitor = new VisitorRecord();
