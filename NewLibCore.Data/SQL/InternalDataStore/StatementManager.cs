@@ -24,15 +24,17 @@ namespace NewLibCore.Data.SQL.InternalDataStore
     {
         private static readonly StringBuilder _joinBuilder = new StringBuilder();
 
-        public void Parse(Expression expression,JoinType joinType = JoinType.Inner)
+        public void Parse(Expression expression, JoinType joinType = JoinType.Inner)
         {
             var lamdbaExp = (LambdaExpression)expression;
-            var parameter = (ParameterExpression)lamdbaExp.Parameters[0];
-
-            parameter.Type.Name;
-
-            _joinBuilder.Append($@"");
+            var parameterName = GetAliasName(lamdbaExp.Parameters[0]);
+            _joinBuilder.Append($@"{joinType.GetDescription()} {parameterName} AS {parameterName.ToLower()} ON ");
             this.Visit(expression);
+        }
+
+        private String GetAliasName(ParameterExpression parameterExpression)
+        {
+            return parameterExpression.Type.Name;
         }
 
         protected override Expression VisitLambda<T>(Expression<T> node)
@@ -78,8 +80,8 @@ namespace NewLibCore.Data.SQL.InternalDataStore
 
         protected override Expression VisitMember(MemberExpression node)
         {
-            var aliasName = ((ParameterExpression)node.Expression).Type.Name;
-            _joinBuilder.Append($@"{aliasName}.{node.Member.Name}");
+            var parameterName = GetAliasName((ParameterExpression)node.Expression).ToLower();
+            _joinBuilder.Append($@"{parameterName}.{node.Member.Name}");
             return base.VisitMember(node);
         }
     }
