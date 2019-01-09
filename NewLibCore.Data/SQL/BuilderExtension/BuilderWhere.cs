@@ -16,6 +16,10 @@ namespace NewLibCore.Data.SQL.BuildExtension
 
         internal Stack<RelationType> _operationalCharacterStack = new Stack<RelationType>();
 
+        private JoinType _joinType;
+
+        private IDictionary<Type, String> _typeToAliaMappers = new Dictionary<Type, String>();
+
         internal IList<SqlParameterMapper> WhereParameters { get; private set; } = new List<SqlParameterMapper>();
 
         public void Translate(Expression expression, JoinType joinType = JoinType.None, Boolean alias = false)
@@ -30,6 +34,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
                 {
                     _builder.Append($@" AS {aliasName.ToLower()} ON ");
                 }
+                _joinType = joinType;
             }
             else
             {
@@ -206,6 +211,11 @@ namespace NewLibCore.Data.SQL.BuildExtension
                 {
                     var memberExp = (MemberExpression)expression;
                     var memberName = memberExp.Member.Name;
+
+                    if (_joinType != JoinType.None)
+                    {
+
+                    }
                     var newParameterName = $@"{Guid.NewGuid().ToString().Replace("-", "")}";
                     if (memberExp.Expression.NodeType == ExpressionType.Parameter)
                     {
