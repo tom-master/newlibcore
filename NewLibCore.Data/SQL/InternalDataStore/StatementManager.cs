@@ -7,28 +7,44 @@ namespace NewLibCore.Data.SQL.InternalDataStore
 {
     public class StatementManager
     {
+        private readonly Expression _expression;
+
         private readonly JoinType _joinType;
 
         public StatementManager(Expression expression, JoinType joinType = JoinType.Inner)
         {
-            GetEntityAliasName(expression);
+            _expression = expression;
+            _joinType = joinType;
         }
 
-        private void GetEntityAliasName(Expression expression)
+        public void GetJoin()
         {
-            new JoinParse().Parse(expression);
+            new JoinParse().Parse(_expression, _joinType);
         }
     }
 
     internal class JoinParse : ExpressionVisitor
     {
         private static readonly StringBuilder _joinBuilder = new StringBuilder();
+        private readonly Boolean _alias;
+        internal JoinParse(Boolean alias = false)
+        {
+            _alias = alias;
+        }
 
         public void Parse(Expression expression, JoinType joinType = JoinType.Inner)
         {
+            _joinBuilder.Clear();
             var lamdbaExp = (LambdaExpression)expression;
             var parameterName = GetAliasName(lamdbaExp.Parameters[0]);
-            _joinBuilder.Append($@"{joinType.GetDescription()} {parameterName} AS {parameterName.ToLower()} ON ");
+            _joinBuilder.Append($@"{joinType.GetDescription()} {parameterName}");
+            if (_alias)
+            {
+                _joinBuilder.Append($@" AS {parameterName.ToLower()}");
+            }
+
+            _joinBuilder.Append(" ON ");
+
             this.Visit(expression);
         }
 
@@ -81,7 +97,11 @@ namespace NewLibCore.Data.SQL.InternalDataStore
         protected override Expression VisitMember(MemberExpression node)
         {
             var parameterName = GetAliasName((ParameterExpression)node.Expression).ToLower();
-            _joinBuilder.Append($@"{parameterName}.{node.Member.Name}");
+            if (_alias)
+            {
+                _joinBuilder.Append($@"{parameterName}.");
+            }
+            _joinBuilder.Append($@"{node.Member.Name}");
             return base.VisitMember(node);
         }
     }

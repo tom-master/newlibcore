@@ -7,6 +7,8 @@ namespace NewLibCore.Data.SQL.BuildExtension
 {
     public enum JoinType
     {
+        None = 0,
+
         [Description("INNER JOIN")]
         Inner = 1,
 

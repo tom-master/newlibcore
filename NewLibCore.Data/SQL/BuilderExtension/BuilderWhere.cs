@@ -6,7 +6,7 @@ using System.Text;
 
 namespace NewLibCore.Data.SQL.BuildExtension
 {
-    internal class BuilderWhere<TModel> : ITranslate where TModel : class, new()
+    public class BuilderWhere<TModel> : ITranslate where TModel : class, new()
     {
         internal DatabaseSyntaxBuilder _syntaxBuilder = new MysqlSyntaxBuilder();
 
@@ -18,10 +18,30 @@ namespace NewLibCore.Data.SQL.BuildExtension
 
         internal IList<SqlParameterMapper> WhereParameters { get; private set; } = new List<SqlParameterMapper>();
 
-        public void Translate(Expression expression)
+        public void Translate(Expression expression, JoinType joinType = JoinType.None, Boolean alias = false)
         {
-            _builder.Append(" WHERE ");
+            _builder.Clear();
+            if (joinType != JoinType.None)
+            {
+                var lamdbaExp = (LambdaExpression)expression;
+                var aliasName = GetAliasName(lamdbaExp.Parameters[0]);
+                _builder.Append($@"{joinType.GetDescription()} {aliasName}");
+                if (alias)
+                {
+                    _builder.Append($@" AS {aliasName.ToLower()} ON ");
+                }
+            }
+            else
+            {
+                _builder.Append(" WHERE ");
+            }
+
             InternalTranslate(expression);
+        }
+
+        private String GetAliasName(ParameterExpression parameterExpression)
+        {
+            return parameterExpression.Type.Name;
         }
 
         private void InternalTranslate(Expression expression)
