@@ -153,13 +153,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
 
                     if (_joinType != JoinType.None)
                     {
-                        var leftMemberExp = (MemberExpression)binaryExp.Left;
-                        var leftAliasName = _expressionParameterNameToTableAliasNameMappers[((ParameterExpression)leftMemberExp.Expression).Name];
-
-                        var rightMemberExp = (MemberExpression)binaryExp.Right;
-                        var rightAliasName = _expressionParameterNameToTableAliasNameMappers[((ParameterExpression)rightMemberExp.Expression).Name];
-
-                        _builder.Append($@"{leftAliasName}.{leftMemberExp.Member.Name} = {rightAliasName}.{rightMemberExp.Member.Name}");
+                        GetJoinString(binaryExp, RelationType.EQ);
                     }
                     else
                     {
@@ -290,5 +284,15 @@ namespace NewLibCore.Data.SQL.BuildExtension
             }
         }
 
+        private void GetJoinString(BinaryExpression binaryExp, RelationType relationType)
+        {
+            var leftMemberExp = (MemberExpression)binaryExp.Left;
+            var leftAliasName = _expressionParameterNameToTableAliasNameMappers[((ParameterExpression)leftMemberExp.Expression).Name];
+
+            var rightMemberExp = (MemberExpression)binaryExp.Right;
+            var rightAliasName = _expressionParameterNameToTableAliasNameMappers[((ParameterExpression)rightMemberExp.Expression).Name];
+
+            _builder.Append($@"{leftAliasName}.{leftMemberExp.Member.Name} {relationType.GetDescription()} {rightAliasName}.{rightMemberExp.Member.Name}");
+        }
     }
 }
