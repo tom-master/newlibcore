@@ -156,13 +156,18 @@ namespace NewLibCore.Data.SQL.BuildExtension
                         var leftMemberExp = (MemberExpression)binaryExp.Left;
                         var leftAliasName = _expressionParameterNameToTableAliasNameMappers[((ParameterExpression)leftMemberExp.Expression).Name];
 
-                        var rightMemberExp = binaryExp.Right;
-                        //_builder.Append($@"{}")
+                        var rightMemberExp = (MemberExpression)binaryExp.Right;
+                        var rightAliasName = _expressionParameterNameToTableAliasNameMappers[((ParameterExpression)rightMemberExp.Expression).Name];
+
+                        _builder.Append($@"{leftAliasName}.{leftMemberExp.Member.Name} = {rightAliasName}.{rightMemberExp.Member.Name}");
+                    }
+                    else
+                    {
+                        _operationalCharacterStack.Push(RelationType.EQ);
+                        InternalBuildWhere(binaryExp.Left);
+                        InternalBuildWhere(binaryExp.Right);
                     }
 
-                    _operationalCharacterStack.Push(RelationType.EQ);
-                    InternalBuildWhere(binaryExp.Left);
-                    InternalBuildWhere(binaryExp.Right);
                     break;
                 }
                 case ExpressionType.GreaterThan:
