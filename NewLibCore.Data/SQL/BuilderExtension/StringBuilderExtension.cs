@@ -52,8 +52,8 @@ namespace NewLibCore.Data.SQL.BuildExtension
             }
             return _syntaxBuilder.ToString();
         }
-
     }
+
 
     internal abstract class DatabaseSyntaxBuilder
     {

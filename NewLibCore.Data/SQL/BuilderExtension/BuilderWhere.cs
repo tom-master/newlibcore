@@ -18,7 +18,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
 
         private JoinType _joinType;
 
-        private IDictionary<Type, String> _typeToAliaMappers = new Dictionary<Type, String>();
+        private readonly IDictionary<String, String> _expressionParameterNameToTableAliasNameMappers = new Dictionary<String, String>();
 
         internal IList<SqlParameterMapper> WhereParameters { get; private set; } = new List<SqlParameterMapper>();
 
@@ -28,7 +28,8 @@ namespace NewLibCore.Data.SQL.BuildExtension
             if (joinType != JoinType.None)
             {
                 var lamdbaExp = (LambdaExpression)expression;
-                var aliasName = GetAliasName(lamdbaExp.Parameters[0]);
+                var aliasName = GetLeftTableAliasName(lamdbaExp.Parameters[0]);
+                InitExpressionParameterMapper(lamdbaExp.Parameters);
                 _builder.Append($@"{joinType.GetDescription()} {aliasName}");
                 if (alias)
                 {
@@ -44,7 +45,15 @@ namespace NewLibCore.Data.SQL.BuildExtension
             InternalTranslate(expression);
         }
 
-        private String GetAliasName(ParameterExpression parameterExpression)
+        private void InitExpressionParameterMapper(IList<ParameterExpression> parameters)
+        {
+            foreach (var item in parameters)
+            {
+                _expressionParameterNameToTableAliasNameMappers.Add(item.Name, item.Type.Name.ToLower());
+            }
+        }
+
+        private String GetLeftTableAliasName(ParameterExpression parameterExpression)
         {
             return parameterExpression.Type.Name;
         }
@@ -141,6 +150,16 @@ namespace NewLibCore.Data.SQL.BuildExtension
                 case ExpressionType.Equal:
                 {
                     var binaryExp = (BinaryExpression)expression;
+
+                    if (_joinType != JoinType.None)
+                    {
+                        var leftMemberExp = (MemberExpression)binaryExp.Left;
+                        var leftAliasName = _expressionParameterNameToTableAliasNameMappers[((ParameterExpression)leftMemberExp.Expression).Name];
+
+                        var rightMemberExp = binaryExp.Right;
+                        //_builder.Append($@"{}")
+                    }
+
                     _operationalCharacterStack.Push(RelationType.EQ);
                     InternalBuildWhere(binaryExp.Left);
                     InternalBuildWhere(binaryExp.Right);
@@ -212,10 +231,6 @@ namespace NewLibCore.Data.SQL.BuildExtension
                     var memberExp = (MemberExpression)expression;
                     var memberName = memberExp.Member.Name;
 
-                    if (_joinType != JoinType.None)
-                    {
-
-                    }
                     var newParameterName = $@"{Guid.NewGuid().ToString().Replace("-", "")}";
                     if (memberExp.Expression.NodeType == ExpressionType.Parameter)
                     {
@@ -243,6 +258,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
                         WhereParameters.Add(new SqlParameterMapper($@"@{_parameterNameStack.Pop()}", result));
                         break;
                     }
+
                     break;
                 }
                 case ExpressionType.Not:
