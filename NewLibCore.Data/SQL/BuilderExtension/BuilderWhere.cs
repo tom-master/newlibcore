@@ -153,7 +153,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
 
                     if (_joinType != JoinType.None)
                     {
-                        GetJoinString(binaryExp, RelationType.EQ);
+                        GetJoin(binaryExp, RelationType.EQ);
                     }
                     else
                     {
@@ -175,9 +175,18 @@ namespace NewLibCore.Data.SQL.BuildExtension
                 case ExpressionType.NotEqual:
                 {
                     var binaryExp = (BinaryExpression)expression;
-                    _operationalCharacterStack.Push(RelationType.NQ);
-                    InternalBuildWhere(binaryExp.Left);
-                    InternalBuildWhere(binaryExp.Right);
+
+                    if (_joinType != JoinType.None)
+                    {
+                        GetJoin(binaryExp, RelationType.NQ);
+                    }
+                    else
+                    {
+                        _operationalCharacterStack.Push(RelationType.NQ);
+                        InternalBuildWhere(binaryExp.Left);
+                        InternalBuildWhere(binaryExp.Right);
+                    }
+
                     break;
                 }
                 case ExpressionType.GreaterThanOrEqual:
@@ -237,8 +246,8 @@ namespace NewLibCore.Data.SQL.BuildExtension
                         {
                             if (memberExp.Type == typeof(Boolean))
                             {
-                                var left = Expression.Parameter(typeof(TModel), ((ParameterExpression)memberExp.Expression).Name);
-                                var newMember = Expression.MakeMemberAccess(left, left.Type.GetMember(memberName)[0]);
+                                var parameterExp = (ParameterExpression)memberExp.Expression;
+                                var newMember = Expression.MakeMemberAccess(parameterExp, parameterExp.Type.GetMember(memberName)[0]);
                                 var newExpression = Expression.Equal(newMember, Expression.Constant(true));
                                 InternalBuildWhere(newExpression);
                             }
@@ -284,7 +293,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
             }
         }
 
-        private void GetJoinString(BinaryExpression binaryExp, RelationType relationType)
+        private void GetJoin(BinaryExpression binaryExp, RelationType relationType)
         {
             var leftMemberExp = (MemberExpression)binaryExp.Left;
             var leftAliasName = _expressionParameterNameToTableAliasNameMappers[((ParameterExpression)leftMemberExp.Expression).Name];
@@ -292,7 +301,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
             var rightMemberExp = (MemberExpression)binaryExp.Right;
             var rightAliasName = _expressionParameterNameToTableAliasNameMappers[((ParameterExpression)rightMemberExp.Expression).Name];
 
-            _builder.Append($@"{leftAliasName}.{leftMemberExp.Member.Name} {relationType.GetDescription()} {rightAliasName}.{rightMemberExp.Member.Name}");
+            _builder.Append($@" {leftAliasName}.{leftMemberExp.Member.Name} {relationType.GetDescription()} {rightAliasName}.{rightMemberExp.Member.Name} ");
         }
     }
 }

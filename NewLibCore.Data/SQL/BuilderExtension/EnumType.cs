@@ -50,6 +50,6 @@ namespace NewLibCore.Data.SQL.BuildExtension
         GE = 11,
 
         [Description(" >= ")]
-        LE = 12,
+        LE = 12
     }
 }
