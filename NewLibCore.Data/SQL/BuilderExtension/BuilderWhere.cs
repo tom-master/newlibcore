@@ -26,17 +26,19 @@ namespace NewLibCore.Data.SQL.BuildExtension
         {
             WhereParameters = new List<SqlParameterMapper>();
             _operationalCharacterStack = new Stack<RelationType>();
+            _parameterNameStack = new Stack<String>();
             _expressionParameterNameToTableAliasNameMappers = new Dictionary<String, String>();
-            _parameterNameStack = new Stack<string>();
         }
 
         public void Translate(Expression expression, JoinType joinType = JoinType.None, Boolean alias = false)
         {
             _builder.Clear();
+            _expressionParameterNameToTableAliasNameMappers.Clear();
+
             if (joinType != JoinType.None)
             {
                 var lamdbaExp = (LambdaExpression)expression;
-                var aliasName = GetLeftTableAliasName(lamdbaExp.Parameters[0]);
+                var aliasName = lamdbaExp.Parameters[0].Type.Name;
                 InitExpressionParameterMapper(lamdbaExp.Parameters);
                 _builder.Append($@"{joinType.GetDescription()} {aliasName}");
                 if (alias)
@@ -59,11 +61,6 @@ namespace NewLibCore.Data.SQL.BuildExtension
             {
                 _expressionParameterNameToTableAliasNameMappers.Add(item.Name, item.Type.Name.ToLower());
             }
-        }
-
-        private String GetLeftTableAliasName(ParameterExpression parameterExpression)
-        {
-            return parameterExpression.Type.Name;
         }
 
         private void InternalTranslate(Expression expression)
