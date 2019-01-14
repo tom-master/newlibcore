@@ -22,7 +22,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
 
         internal IList<SqlParameterMapper> WhereParameters { get; }
 
-        internal BuilderWhere()
+        public BuilderWhere()
         {
             WhereParameters = new List<SqlParameterMapper>();
             _operationalCharacterStack = new Stack<RelationType>();
@@ -51,8 +51,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
             {
                 _builder.Append(" WHERE ");
             }
-
-            InternalTranslate(expression);
+            InternalBuildWhere(expression);
         }
 
         private void InitExpressionParameterMapper(IList<ParameterExpression> parameters)
@@ -61,11 +60,6 @@ namespace NewLibCore.Data.SQL.BuildExtension
             {
                 _expressionParameterNameToTableAliasNameMappers.Add(item.Name, item.Type.Name.ToLower());
             }
-        }
-
-        private void InternalTranslate(Expression expression)
-        {
-            InternalBuildWhere(expression);
         }
 
         public override String ToString()

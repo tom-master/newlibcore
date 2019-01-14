@@ -13,7 +13,8 @@ namespace NewLibCore.Run
         {
             Expression<Func<VisitorRecord, User, Boolean>> expression = (a, b) => a.UserName != b.Name && a.Id == b.Id || !b.IsOnline && a.Id == 10;
             //Expression<Func<User, Boolean>> expression = (a) => a.IsOnline;
-            new BuilderWhere<VisitorRecord>().Translate(expression, JoinType.Inner);
+            var builder = new BuilderWhere<VisitorRecord>();
+            builder.Translate(expression, JoinType.Inner);
             //using (var dataStore = new DataStore(""))
             //{
             //    var visitor = new VisitorRecord();

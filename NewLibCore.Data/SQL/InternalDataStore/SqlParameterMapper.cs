@@ -1,9 +1,9 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using NewLibCore.Security;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data.Common;
-using MySql.Data.MySqlClient;
-using NewLibCore.Security;
 
 namespace NewLibCore.Data.SQL.InternalDataStore
 {
@@ -47,7 +47,7 @@ namespace NewLibCore.Data.SQL.InternalDataStore
             }
             if (obj.GetType() == typeof(Boolean))
             {
-                if (((Boolean)obj))
+                if ((Boolean)obj)
                 {
                     return 1;
                 }

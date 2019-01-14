@@ -11,7 +11,7 @@ using System.Linq.Expressions;
 
 namespace NewLibCore.Data.SQL.InternalDataStore
 {
-    public class DataStore : IDisposable
+    public class SqlContext : IDisposable
     {
         private DbConnection _connection;
 
@@ -25,12 +25,11 @@ namespace NewLibCore.Data.SQL.InternalDataStore
 
         private readonly ILogger _logger;
 
-        public DataStore(String connection, Boolean noExecuteMode = false)
+        public SqlContext(String connection, Boolean noExecuteMode = false)
         {
             _connection = new MySqlConnection(connection);
             _noExecuteMode = noExecuteMode;
             _logger = new ConsoleLogger(this);
-
             _logger.Write("INFO", $@"datastore init connectionstring:{connection}");
         }
 
@@ -91,12 +90,10 @@ namespace NewLibCore.Data.SQL.InternalDataStore
             {
                 BuilderBase<TModel> builder = new AddBuilder<TModel>(model, true);
                 var entry = builder.Build();
-                _logger.Write("INFO", $@"add execute result:{entry.FormatSql()}");
                 return SqlExecute(entry.FormatSql(), entry.ParameterMappers, CommandType.Text);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                _logger.Write("ERROR", $@"add execute error:{ex.ToString()}");
                 throw;
             }
         }
