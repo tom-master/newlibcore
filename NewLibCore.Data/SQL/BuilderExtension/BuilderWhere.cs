@@ -325,10 +325,26 @@ namespace NewLibCore.Data.SQL.BuildExtension
             var leftMemberExp = (MemberExpression)binaryExp.Left;
             var leftAliasName = _expressionParameterNameToTableAliasNameMappers[((ParameterExpression)leftMemberExp.Expression).Name];
 
-            var rightMemberExp = (MemberExpression)binaryExp.Right;
-            var rightAliasName = _expressionParameterNameToTableAliasNameMappers[((ParameterExpression)rightMemberExp.Expression).Name];
+            if (binaryExp.Right.GetType() == typeof(ConstantExpression))
+            {
+                var constant = (ConstantExpression)binaryExp.Right;
+                Boolean result;
+                if (Boolean.TryParse(constant.Value.ToString(), out result))
+                {
+                    _builder.Append($@" {leftAliasName}.{leftMemberExp.Member.Name} {relationType.GetDescription()} {(result ? 1 : 0)} ");
+                }
+                else
+                {
+                    _builder.Append($@" {leftAliasName}.{leftMemberExp.Member.Name} {relationType.GetDescription()} {constant.Value} ");
+                }
+            }
+            else
+            {
+                var rightMemberExp = (MemberExpression)binaryExp.Right;
+                var rightAliasName = _expressionParameterNameToTableAliasNameMappers[((ParameterExpression)rightMemberExp.Expression).Name];
 
-            _builder.Append($@" {leftAliasName}.{leftMemberExp.Member.Name} {relationType.GetDescription()} {rightAliasName}.{rightMemberExp.Member.Name} ");
+                _builder.Append($@" {leftAliasName}.{leftMemberExp.Member.Name} {relationType.GetDescription()} {rightAliasName}.{rightMemberExp.Member.Name} ");
+            }
         }
     }
 }
