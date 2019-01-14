@@ -167,6 +167,10 @@ namespace NewLibCore.Data.SQL.BuildExtension
                 case ExpressionType.GreaterThan:
                 {
                     var binaryExp = (BinaryExpression)expression;
+                    if (_joinType != JoinType.None)
+                    {
+                        GetJoin(binaryExp, RelationType.GT);
+                    }
                     _operationalCharacterStack.Push(RelationType.GT);
                     InternalBuildWhere(binaryExp.Left);
                     InternalBuildWhere(binaryExp.Right);
