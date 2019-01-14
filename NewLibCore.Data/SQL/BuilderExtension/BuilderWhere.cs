@@ -8,19 +8,27 @@ namespace NewLibCore.Data.SQL.BuildExtension
 {
     public class BuilderWhere<TModel> : ITranslate where TModel : class, new()
     {
-        internal DatabaseSyntaxBuilder _syntaxBuilder = new MysqlSyntaxBuilder();
+        private DatabaseSyntaxBuilder _syntaxBuilder = new MysqlSyntaxBuilder();
 
-        internal StringBuilder _builder = new StringBuilder();
+        private StringBuilder _builder = new StringBuilder();
 
-        internal Stack<String> _parameterNameStack = new Stack<String>();
+        private Stack<String> _parameterNameStack;
 
-        internal Stack<RelationType> _operationalCharacterStack = new Stack<RelationType>();
+        private Stack<RelationType> _operationalCharacterStack;
 
         private JoinType _joinType;
 
-        private readonly IDictionary<String, String> _expressionParameterNameToTableAliasNameMappers = new Dictionary<String, String>();
+        private readonly IDictionary<String, String> _expressionParameterNameToTableAliasNameMappers;
 
-        internal IList<SqlParameterMapper> WhereParameters { get; private set; } = new List<SqlParameterMapper>();
+        internal IList<SqlParameterMapper> WhereParameters { get; }
+
+        internal BuilderWhere()
+        {
+            WhereParameters = new List<SqlParameterMapper>();
+            _operationalCharacterStack = new Stack<RelationType>();
+            _expressionParameterNameToTableAliasNameMappers = new Dictionary<String, String>();
+            _parameterNameStack = new Stack<string>();
+        }
 
         public void Translate(Expression expression, JoinType joinType = JoinType.None, Boolean alias = false)
         {
@@ -249,8 +257,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
                 }
                 case ExpressionType.Not:
                 {
-                    var unaryExpression = (UnaryExpression)expression;
-                    var memberExpression = (MemberExpression)unaryExpression.Operand;
+                    var memberExpression = (MemberExpression)((UnaryExpression)expression).Operand;
                     var parameterExp = (ParameterExpression)memberExpression.Expression;
                     var memberName = memberExpression.Member.Name;
                     var newMember = Expression.MakeMemberAccess(parameterExp, parameterExp.Type.GetMember(memberName)[0]);
