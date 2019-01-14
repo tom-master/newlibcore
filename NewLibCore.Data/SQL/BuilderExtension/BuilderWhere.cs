@@ -192,9 +192,16 @@ namespace NewLibCore.Data.SQL.BuildExtension
                 case ExpressionType.GreaterThanOrEqual:
                 {
                     var binaryExp = (BinaryExpression)expression;
-                    _operationalCharacterStack.Push(RelationType.GE);
-                    InternalBuildWhere(binaryExp.Left);
-                    InternalBuildWhere(binaryExp.Right);
+                    if (_joinType != JoinType.None)
+                    {
+                        GetJoin(binaryExp, RelationType.GE);
+                    }
+                    else
+                    {
+                        _operationalCharacterStack.Push(RelationType.GE);
+                        InternalBuildWhere(binaryExp.Left);
+                        InternalBuildWhere(binaryExp.Right);
+                    }
                     break;
                 }
                 case ExpressionType.Lambda:
@@ -221,17 +228,33 @@ namespace NewLibCore.Data.SQL.BuildExtension
                 case ExpressionType.LessThan:
                 {
                     var binaryExp = (BinaryExpression)expression;
-                    _operationalCharacterStack.Push(RelationType.LT);
-                    InternalBuildWhere(binaryExp.Left);
-                    InternalBuildWhere(binaryExp.Right);
+
+                    if (_joinType != JoinType.None)
+                    {
+                        GetJoin(binaryExp, RelationType.LT);
+                    }
+                    else
+                    {
+                        _operationalCharacterStack.Push(RelationType.LT);
+                        InternalBuildWhere(binaryExp.Left);
+                        InternalBuildWhere(binaryExp.Right);
+                    }
                     break;
                 }
                 case ExpressionType.LessThanOrEqual:
                 {
                     var binaryExp = (BinaryExpression)expression;
-                    _operationalCharacterStack.Push(RelationType.LE);
-                    InternalBuildWhere(binaryExp.Left);
-                    InternalBuildWhere(binaryExp.Right);
+                    if (_joinType != JoinType.None)
+                    {
+                        GetJoin(binaryExp, RelationType.LE);
+                    }
+                    else
+                    {
+                        _operationalCharacterStack.Push(RelationType.LE);
+                        InternalBuildWhere(binaryExp.Left);
+                        InternalBuildWhere(binaryExp.Right);
+                    }
+
                     break;
                 }
                 case ExpressionType.MemberAccess:
