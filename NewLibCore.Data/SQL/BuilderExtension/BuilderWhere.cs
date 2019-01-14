@@ -300,9 +300,10 @@ namespace NewLibCore.Data.SQL.BuildExtension
                 {
                     var unaryExpression = (UnaryExpression)expression;
                     var memberExpression = (MemberExpression)unaryExpression.Operand;
+                    var parameterExp = (ParameterExpression)memberExpression.Expression;
                     var memberName = memberExpression.Member.Name;
-                    var left = Expression.Parameter(typeof(TModel), ((ParameterExpression)memberExpression.Expression).Name);
-                    var newMember = Expression.MakeMemberAccess(left, left.Type.GetMember(memberName)[0]);
+                    //var left = Expression.Parameter(typeof(TModel), ((ParameterExpression)memberExpression.Expression).Name);
+                    var newMember = Expression.MakeMemberAccess(parameterExp, parameterExp.Type.GetMember(memberName)[0]);
                     var newExpression = Expression.NotEqual(newMember, Expression.Constant(true));
                     InternalBuildWhere(newExpression);
                     break;
