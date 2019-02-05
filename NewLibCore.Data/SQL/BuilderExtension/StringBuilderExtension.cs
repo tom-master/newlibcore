@@ -9,6 +9,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
 
         internal override String SyntaxBuilder(RelationType relationType, String left, String right)
         {
+            Clear();
             var type = relationType;
             if (type == RelationType.IN)
             {
@@ -52,11 +53,18 @@ namespace NewLibCore.Data.SQL.BuildExtension
             }
             return _syntaxBuilder.ToString();
         }
+
+        internal override void Clear()
+        {
+            _syntaxBuilder.Clear();
+        }
     }
 
 
     internal abstract class DatabaseSyntaxBuilder
     {
         internal abstract String SyntaxBuilder(RelationType relationType, String left, String right);
+
+        internal virtual void Clear() { throw new NotImplementedException(); }
     }
 }
