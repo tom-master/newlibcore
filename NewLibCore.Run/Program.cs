@@ -1,9 +1,8 @@
-﻿using NewLibCore.Data.SQL.BuildExtension;
+﻿using NewLibCore.Data.SQL.InternalDataStore;
 using NewLibCore.Data.SQL.MapperExtension;
 using NewLibCore.Data.SQL.PropertyExtension;
 using System;
 using System.ComponentModel;
-using System.Linq.Expressions;
 
 namespace NewLibCore.Run
 {
@@ -11,16 +10,15 @@ namespace NewLibCore.Run
     {
         private static void Main(String[] args)
         {
-            Expression<Func<VisitorRecord, User, Boolean>> expression = (a, b) => a.UserName != b.Name && a.Id == b.Id || !b.IsOnline && a.Id == 10;
-            //Expression<Func<User, Boolean>> expression = (a) => a.IsOnline;
-            var builder = new BuilderWhere<VisitorRecord>();
-            builder.Translate(expression, JoinType.Inner);
-            //using (var dataStore = new DataStore(""))
-            //{
-            //    var visitor = new VisitorRecord();
-            //    visitor.Remove();
-            //    dataStore.Modify(visitor, a => a.Id == 1);
-            //}
+            //Expression<Func<VisitorRecord, User, Boolean>> expression = (a, b) => a.UserName != b.Name && a.Id == b.Id || !b.IsOnline && a.Id == 10;
+            ////Expression<Func<User, Boolean>> expression = (a) => a.IsOnline;
+            //var builder = new BuilderWhere<VisitorRecord>();
+            //builder.Translate(expression, JoinType.Inner);
+            using (var dataStore = new SqlContext(""))
+            {
+                var user = new User();
+                user.ModifyLoginPassword("123123123");
+            }
         }
     }
 
@@ -112,7 +110,7 @@ namespace NewLibCore.Run
             }
 
             LoginPassword = password;
-            OnPropertyChanged(new PropertyArgs(nameof(LoginPassword), password));
+            OnPropertyChanged(nameof(LoginPassword));
             return this;
         }
 
@@ -127,7 +125,7 @@ namespace NewLibCore.Run
             }
 
             LockScreenPassword = password;
-            OnPropertyChanged(new PropertyArgs(nameof(LockScreenPassword), password));
+            OnPropertyChanged(nameof(LockScreenPassword));
             return this;
         }
 
@@ -137,7 +135,7 @@ namespace NewLibCore.Run
         public User ModifyConfigId(Int32 configId)
         {
             ConfigId = configId;
-            OnPropertyChanged(new PropertyArgs(nameof(ConfigId), configId));
+            OnPropertyChanged(nameof(ConfigId));
             return this;
         }
 
@@ -147,7 +145,7 @@ namespace NewLibCore.Run
         public User Enable()
         {
             IsDisable = false;
-            OnPropertyChanged(new PropertyArgs(nameof(IsDisable), IsDisable));
+            OnPropertyChanged(nameof(IsDisable));
             return this;
         }
 
@@ -157,7 +155,7 @@ namespace NewLibCore.Run
         public User Disable()
         {
             IsDisable = true;
-            OnPropertyChanged(new PropertyArgs(nameof(IsDisable), IsDisable));
+            OnPropertyChanged(nameof(IsDisable));
             return this;
         }
 
@@ -168,8 +166,10 @@ namespace NewLibCore.Run
         public User Online()
         {
             IsOnline = true;
+            OnPropertyChanged(nameof(IsOnline));
+
             LastLoginTime = DateTime.Now;
-            OnPropertyChanged(new PropertyArgs(nameof(IsOnline), IsOnline), new PropertyArgs(nameof(LastLoginTime), LastLoginTime));
+            OnPropertyChanged(nameof(LastLoginTime));
             return this;
         }
 
@@ -180,7 +180,7 @@ namespace NewLibCore.Run
         public User Offline()
         {
             IsOnline = false;
-            OnPropertyChanged(new PropertyArgs(nameof(IsOnline), IsOnline));
+            OnPropertyChanged(nameof(IsOnline));
             return this;
         }
 
@@ -202,7 +202,7 @@ namespace NewLibCore.Run
         public User DetachAdminRole()
         {
             IsAdmin = false;
-            OnPropertyChanged(new PropertyArgs(nameof(IsAdmin), IsAdmin));
+            OnPropertyChanged(nameof(IsAdmin));
             return this;
         }
 
@@ -213,7 +213,7 @@ namespace NewLibCore.Run
         public User AttachAdminRole()
         {
             IsAdmin = true;
-            OnPropertyChanged(new PropertyArgs(nameof(IsAdmin), IsAdmin));
+            OnPropertyChanged(nameof(IsAdmin));
             return this;
         }
     }
@@ -254,7 +254,7 @@ namespace NewLibCore.Run
         public void Remove()
         {
             IsDeleted = true;
-            OnPropertyChanged(new PropertyArgs(nameof(IsDeleted), IsDeleted));
+            OnPropertyChanged(nameof(IsDeleted));
         }
     }
 }

@@ -13,22 +13,23 @@ namespace NewLibCore.Data.SQL.InternalDataStore
 {
     public class SqlContext : IDisposable
     {
-        private DbConnection _connection;
-
-        private DbTransaction _dataTransaction;
-
         private Boolean disposed = false;
 
         private Boolean _useTransaction;
+
+        private DbConnection _connection;
+
+        private DbTransaction _dataTransaction;
 
         private readonly Boolean _noExecuteMode = false;
 
         private readonly ILogger _logger;
 
-        public SqlContext(String connection, Boolean noExecuteMode = false)
+        public SqlContext(String connection)
         {
+            _noExecuteMode = String.IsNullOrEmpty(connection);
+
             _connection = new MySqlConnection(connection);
-            _noExecuteMode = noExecuteMode;
             _logger = new ConsoleLogger(this);
             _logger.Write("INFO", $@"datastore init connectionstring:{connection}");
         }

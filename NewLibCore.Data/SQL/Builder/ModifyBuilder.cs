@@ -9,8 +9,8 @@ namespace NewLibCore.Data.SQL.Builder
 {
     internal class ModifyBuilder<TModel> : BuilderBase<TModel> where TModel : PropertyMonitor, new()
     {
-        private Expression<Func<TModel, Boolean>> _where;
-        private Boolean _isValidate;
+        private readonly Expression<Func<TModel, Boolean>> _where;
+        private readonly Boolean _isValidate;
         private static readonly String _rowCount = " ; SELECT CAST(ROW_COUNT() AS SIGNED) AS c";
 
         public ModifyBuilder(TModel model, Expression<Func<TModel, Boolean>> where = null, Boolean isValidate = false) : base(model)
@@ -21,20 +21,20 @@ namespace NewLibCore.Data.SQL.Builder
 
         protected internal override BuildEntry<TModel> Build()
         {
-            var args = ModelInstance.Args;
+            var properties = ModelInstance.PropertyInfos;
             ModelInstance.SetUpdateTime();
-            if (!args.Any())
+            if (!properties.Any())
             {
                 throw new ArgumentNullException("没有找到需要更新的字段");
             }
 
             if (_isValidate)
             {
-                ValidateModel(args.Select(s => s.PropertyInfo).ToList());
+                ValidateModel(properties);
             }
 
             var buildEntry = new BuildEntry<TModel>(ModelInstance);
-            buildEntry.Append($@"UPDATE {ModelType.Name} SET {String.Join(",", args.Select(s => $@"{s.PropertyName}=@{s.PropertyName}"))}");
+            buildEntry.Append($@"UPDATE {ModelType.Name} SET {String.Join(",", properties.Select(s => $@"{s.Name}=@{s.Name}"))}");
 
             if (_where != null)
             {
@@ -44,7 +44,7 @@ namespace NewLibCore.Data.SQL.Builder
                 buildEntry.ParameterMappers.AddRange(builderWhere.WhereParameters);
             }
             buildEntry.Append(_rowCount);
-            buildEntry.AppendParameter(args.Select(s => s.PropertyInfo).ToList().Select(c => new SqlParameterMapper($@"@{c.Name}", c.GetValue(ModelInstance))));
+            buildEntry.AppendParameter(properties.ToList().Select(c => new SqlParameterMapper($@"@{c.Name}", c.GetValue(ModelInstance))));
 
             return buildEntry;
         }

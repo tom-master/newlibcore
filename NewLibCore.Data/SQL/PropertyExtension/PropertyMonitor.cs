@@ -1,32 +1,30 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
 
 namespace NewLibCore.Data.SQL.PropertyExtension
 {
     public abstract class PropertyMonitor
     {
+        public IList<PropertyInfo> PropertyInfos { get; }
+
         protected PropertyMonitor()
         {
-            Args = new List<PropertyArgs>();
+            PropertyInfos = new List<PropertyInfo>();
         }
-        public IList<PropertyArgs> Args { get; }
 
-        protected void OnPropertyChanged(params PropertyArgs[] propertyArgs)
+        protected void OnPropertyChanged(String propertyName)
         {
-            if (propertyArgs == null)
+            if (String.IsNullOrEmpty(propertyName))
             {
-                return;
+                throw new ArgumentNullException("需要指定更新的字段名称");
             }
-
-            if (propertyArgs.Length == 0)
+            var propertyInfo = GetType().GetProperty(propertyName);
+            if (propertyInfo == null)
             {
-                return;
+                throw new ArgumentException($@"属性：{propertyName},不属于类：{GetType().Name}");
             }
-
-            for (var i = 0; i < propertyArgs.Length; i++)
-            {
-                propertyArgs[i].SetPropertyInfo(GetType());
-                Args.Add(propertyArgs[i]);
-            }
+            PropertyInfos.Add(propertyInfo);
         }
 
         public virtual void SetUpdateTime() { }
