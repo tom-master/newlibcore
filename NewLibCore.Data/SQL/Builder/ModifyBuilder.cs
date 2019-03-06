@@ -22,12 +22,12 @@ namespace NewLibCore.Data.SQL.Builder
         protected internal override BuildEntry<TModel> Build()
         {
             var properties = ModelInstance.PropertyInfos;
-            ModelInstance.SetUpdateTime();
+          
             if (!properties.Any())
             {
                 throw new ArgumentNullException("没有找到需要更新的字段");
             }
-
+            ModelInstance.SetUpdateTime();
             if (_isValidate)
             {
                 ValidateModel(properties);
