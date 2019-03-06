@@ -15,14 +15,14 @@ namespace NewLibCore.Data.SQL.PropertyExtension
             if (propertyArgs == null)
             {
                 return;
-            } 
+            }
 
-            if (var.Length == 0)
+            if (propertyArgs.Length == 0)
             {
                 return;
             }
 
-            for (int i = 0; i < propertyArgs.Length; i++)
+            for (var i = 0; i < propertyArgs.Length; i++)
             {
                 propertyArgs[i].SetPropertyInfo(GetType());
                 Args.Add(propertyArgs[i]);
