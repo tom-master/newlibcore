@@ -10,8 +10,7 @@ namespace NewLibCore.Data.SQL.Builder
     internal class ModifyBuilder<TModel> : BuilderBase<TModel> where TModel : PropertyMonitor, new()
     {
         private readonly Expression<Func<TModel, Boolean>> _where;
-        private readonly Boolean _isValidate;
-        private static readonly String _rowCount = " ; SELECT CAST(ROW_COUNT() AS SIGNED) AS c";
+        private readonly Boolean _isValidate; 
 
         public ModifyBuilder(TModel model, Expression<Func<TModel, Boolean>> where = null, Boolean isValidate = false) : base(model)
         {
@@ -40,7 +39,7 @@ namespace NewLibCore.Data.SQL.Builder
                 buildEntry.Translate(_where);
             }
 
-            buildEntry.TemporaryStore.Append(_rowCount);
+            buildEntry.TemporaryStore.Append(" ; SELECT CAST(ROW_COUNT() AS SIGNED) AS c");
             return buildEntry.TemporaryStore;
         }
     }

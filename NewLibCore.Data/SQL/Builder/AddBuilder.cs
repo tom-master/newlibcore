@@ -12,7 +12,6 @@ namespace NewLibCore.Data.SQL.Builder
     {
         private readonly Boolean _isVerifyModel;
 
-        private static readonly String _maxIdentity = " ; SELECT CAST(@@IDENTITY AS SIGNED) AS c ";
 
         internal AddBuilder(TModel model, Boolean isVerifyModel = false) : base(model)
         {
@@ -34,7 +33,7 @@ namespace NewLibCore.Data.SQL.Builder
                 ValidateModel(propertyInfos.ToList());
             }
 
-            sqlTemporary.Append($@" INSERT {ModelType.Name} ({String.Join(",", propertyInfos.Select(c => c.Name))} ) VALUES ({String.Join(",", propertyInfos.Select(key => $@"@{key.Name}"))}) {_maxIdentity} ");
+            sqlTemporary.Append($@" INSERT {ModelType.Name} ({String.Join(",", propertyInfos.Select(c => c.Name))} ) VALUES ({String.Join(",", propertyInfos.Select(key => $@"@{key.Name}"))}) ; SELECT CAST(@@IDENTITY AS SIGNED) AS c ");
 
             sqlTemporary.AppendParameter(propertyInfos.ToList().Select(c => new SqlParameterMapper($@"@{c.Name}", c.GetValue(ModelInstance))).ToArray());
 
