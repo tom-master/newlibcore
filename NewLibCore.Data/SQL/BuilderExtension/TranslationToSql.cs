@@ -8,9 +8,9 @@ namespace NewLibCore.Data.SQL.BuildExtension
 {
     internal class TranslationToSql : ITranslate
     {
-        private DatabaseSyntaxBuilder _syntaxBuilder = new MysqlSyntaxBuilder();
+        internal SqlTemporaryStore TemporaryStore { get; private set; }
 
-        private readonly SqlTemporaryStore _temporaryStore = new SqlTemporaryStore();
+        private DatabaseSyntaxBuilder _syntaxBuilder = new MysqlSyntaxBuilder();
 
         private Stack<String> _parameterNameStack;
 
@@ -23,6 +23,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
 
         public TranslationToSql()
         {
+            TemporaryStore = new SqlTemporaryStore();
             _operationalCharacterStack = new Stack<RelationType>();
             _parameterNameStack = new Stack<String>();
             _expressionParameterNameToTableAliasNameMappers = new Dictionary<String, String>();
@@ -30,7 +31,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
 
         public SqlTemporaryStore Translate(Expression expression, JoinType joinType = JoinType.None, Boolean alias = false)
         {
-            _temporaryStore.Clear();
+            TemporaryStore.Clear();
             _expressionParameterNameToTableAliasNameMappers.Clear();
 
             if (joinType != JoinType.None)
@@ -38,20 +39,20 @@ namespace NewLibCore.Data.SQL.BuildExtension
                 var lamdbaExp = (LambdaExpression)expression;
                 var aliasName = lamdbaExp.Parameters[0].Type.Name;
                 InitExpressionParameterMapper(lamdbaExp.Parameters);
-                _temporaryStore.Append($@"{joinType.GetDescription()} {aliasName}");
+                TemporaryStore.Append($@"{joinType.GetDescription()} {aliasName}");
                 if (alias)
                 {
-                    _temporaryStore.Append($@" AS {aliasName.ToLower()} ON ");
+                    TemporaryStore.Append($@" AS {aliasName.ToLower()} ON ");
                 }
                 _joinType = joinType;
             }
             else
             {
-                _temporaryStore.Append(" WHERE ");
+                TemporaryStore.Append(" WHERE ");
             }
             InternalBuildWhere(expression);
 
-            return _temporaryStore;
+            return TemporaryStore;
         }
 
         private void InitExpressionParameterMapper(IList<ParameterExpression> parameters)
@@ -70,7 +71,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
                 {
                     var binaryExp = (BinaryExpression)expression;
                     InternalBuildWhere(binaryExp.Left);
-                    _temporaryStore.Append(RelationType.AND.ToString());
+                    TemporaryStore.Append(RelationType.AND.ToString());
                     InternalBuildWhere(binaryExp.Right);
                     break;
                 }
@@ -78,7 +79,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
                 {
                     var binaryExp = (BinaryExpression)expression;
                     InternalBuildWhere(binaryExp.Left);
-                    _temporaryStore.Append(RelationType.OR.ToString());
+                    TemporaryStore.Append(RelationType.OR.ToString());
                     InternalBuildWhere(binaryExp.Right);
                     break;
                 }
@@ -90,7 +91,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
                 case ExpressionType.Constant:
                 {
                     var binaryExp = (ConstantExpression)expression;
-                    _temporaryStore.AppendParameter(new SqlParameterMapper($@"@{_parameterNameStack.Pop()}", binaryExp.Value));
+                    TemporaryStore.AppendParameter(new SqlParameterMapper($@"@{_parameterNameStack.Pop()}", binaryExp.Value));
                     break;
                 }
                 case ExpressionType.Equal:
@@ -171,7 +172,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
                         else
                         {
                             var syntax = _syntaxBuilder.SyntaxBuilder(_operationalCharacterStack.Pop(), memberName, newParameterName);
-                            _temporaryStore.Append(syntax);
+                            TemporaryStore.Append(syntax);
                             _parameterNameStack.Push(newParameterName);
                         }
                     }
@@ -179,7 +180,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
                     {
                         var getter = Expression.Lambda(memberExp).Compile();
                         Object result = result = getter.DynamicInvoke();
-                        _temporaryStore.AppendParameter(new SqlParameterMapper($@"@{_parameterNameStack.Pop()}", result));
+                        TemporaryStore.AppendParameter(new SqlParameterMapper($@"@{_parameterNameStack.Pop()}", result));
                         break;
                     }
                     break;
@@ -286,11 +287,11 @@ namespace NewLibCore.Data.SQL.BuildExtension
                 Boolean result;
                 if (Boolean.TryParse(constant.Value.ToString(), out result))
                 {
-                    _temporaryStore.Append($@" {leftAliasName}.{leftMemberExp.Member.Name} {relationType.GetDescription()} {(result ? 1 : 0)} ");
+                    TemporaryStore.Append($@" {leftAliasName}.{leftMemberExp.Member.Name} {relationType.GetDescription()} {(result ? 1 : 0)} ");
                 }
                 else
                 {
-                    _temporaryStore.Append($@" {leftAliasName}.{leftMemberExp.Member.Name} {relationType.GetDescription()} {constant.Value} ");
+                    TemporaryStore.Append($@" {leftAliasName}.{leftMemberExp.Member.Name} {relationType.GetDescription()} {constant.Value} ");
                 }
             }
             else
@@ -298,7 +299,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
                 var rightMemberExp = (MemberExpression)binaryExp.Right;
                 var rightAliasName = _expressionParameterNameToTableAliasNameMappers[((ParameterExpression)rightMemberExp.Expression).Name];
 
-                _temporaryStore.Append($@" {leftAliasName}.{leftMemberExp.Member.Name} {relationType.GetDescription()} {rightAliasName}.{rightMemberExp.Member.Name} ");
+                TemporaryStore.Append($@" {leftAliasName}.{leftMemberExp.Member.Name} {relationType.GetDescription()} {rightAliasName}.{rightMemberExp.Member.Name} ");
             }
         }
     }

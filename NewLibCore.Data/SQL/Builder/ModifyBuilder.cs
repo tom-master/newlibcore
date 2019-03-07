@@ -1,4 +1,5 @@
 ﻿using NewLibCore.Data.SQL.BuildExtension;
+using NewLibCore.Data.SQL.InternalDataStore;
 using NewLibCore.Data.SQL.PropertyExtension;
 using System;
 using System.Linq;
@@ -32,18 +33,15 @@ namespace NewLibCore.Data.SQL.Builder
             }
 
             var buildEntry = new TranslationToSql();
-            buildEntry.Append($@"UPDATE {ModelType.Name} SET {String.Join(",", properties.Select(s => $@"{s.Name}=@{s.Name}"))}");
-            buildEntry.AppendParameter(properties.ToList().Select(c => new SqlParameterMapper($@"@{c.Name}", c.GetValue(ModelInstance))));
+            buildEntry.TemporaryStore.Append($@"UPDATE {ModelType.Name} SET {String.Join(",", properties.Select(s => $@"{s.Name}=@{s.Name}"))}");
+            buildEntry.TemporaryStore.AppendParameter(properties.ToList().Select(c => new SqlParameterMapper($@"@{c.Name}", c.GetValue(ModelInstance))).ToArray());
             if (_where != null)
             {
-                var builderWhere = new BuilderWhere<TModel>();
-                builderWhere.Translate(_where);
-                buildEntry.Append(builderWhere.ToString());
-                buildEntry.AppendParameter(builderWhere.WhereParameters);
+                buildEntry.Translate(_where);
             }
-            buildEntry.Append(_rowCount);
 
-            return buildEntry;
+            buildEntry.TemporaryStore.Append(_rowCount);
+            return buildEntry.TemporaryStore;
         }
     }
 }
