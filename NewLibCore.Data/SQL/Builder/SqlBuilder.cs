@@ -1,10 +1,10 @@
-﻿using System;
+﻿using NewLibCore.Data.SQL.BuildExtension;
+using NewLibCore.Data.SQL.MapperExtension;
+using NewLibCore.Data.SQL.PropertyExtension;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using NewLibCore.Data.SQL.BuildExtension;
-using NewLibCore.Data.SQL.MapperExtension;
-using NewLibCore.Data.SQL.PropertyExtension;
 
 namespace NewLibCore.Data.SQL.Builder
 {
@@ -42,7 +42,7 @@ namespace NewLibCore.Data.SQL.Builder
 
                 var validateBases = GetValidateAttributes(propertyItem);
                 var propertyValue = propertyItem.GetValue(ModelInstance);
-                for (int i = 0; i < validateBases.Count; i++)
+                for (var i = 0; i < validateBases.Count; i++)
                 {
                     if (validateBases[i] is PropertyRequiredAttribute)
                     {

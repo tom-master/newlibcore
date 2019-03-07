@@ -199,7 +199,6 @@ namespace NewLibCore.Data.SQL.BuildExtension
                     InternalBuildWhere(newExpression);
                     break;
                 }
-
                 default:
                     break;
             }
