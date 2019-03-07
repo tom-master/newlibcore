@@ -6,11 +6,11 @@ using System.Text;
 
 namespace NewLibCore.Data.SQL.BuildExtension
 {
-    public class BuilderWhere<TModel> : ITranslate where TModel : class, new()
+    internal class TranslationToSql : ITranslate
     {
         private DatabaseSyntaxBuilder _syntaxBuilder = new MysqlSyntaxBuilder();
 
-        private StringBuilder _builder = new StringBuilder();
+        private readonly SqlTemporaryStore _temporaryStore = new SqlTemporaryStore();
 
         private Stack<String> _parameterNameStack;
 
@@ -20,19 +20,17 @@ namespace NewLibCore.Data.SQL.BuildExtension
 
         private readonly IDictionary<String, String> _expressionParameterNameToTableAliasNameMappers;
 
-        internal IList<SqlParameterMapper> WhereParameters { get; }
 
-        public BuilderWhere()
+        public TranslationToSql()
         {
-            WhereParameters = new List<SqlParameterMapper>();
             _operationalCharacterStack = new Stack<RelationType>();
             _parameterNameStack = new Stack<String>();
             _expressionParameterNameToTableAliasNameMappers = new Dictionary<String, String>();
         }
 
-        public void Translate(Expression expression, JoinType joinType = JoinType.None, Boolean alias = false)
+        public SqlTemporaryStore Translate(Expression expression, JoinType joinType = JoinType.None, Boolean alias = false)
         {
-            _builder.Clear();
+            _temporaryStore.Clear();
             _expressionParameterNameToTableAliasNameMappers.Clear();
 
             if (joinType != JoinType.None)
@@ -40,18 +38,20 @@ namespace NewLibCore.Data.SQL.BuildExtension
                 var lamdbaExp = (LambdaExpression)expression;
                 var aliasName = lamdbaExp.Parameters[0].Type.Name;
                 InitExpressionParameterMapper(lamdbaExp.Parameters);
-                _builder.Append($@"{joinType.GetDescription()} {aliasName}");
+                _temporaryStore.Append($@"{joinType.GetDescription()} {aliasName}");
                 if (alias)
                 {
-                    _builder.Append($@" AS {aliasName.ToLower()} ON ");
+                    _temporaryStore.Append($@" AS {aliasName.ToLower()} ON ");
                 }
                 _joinType = joinType;
             }
             else
             {
-                _builder.Append(" WHERE ");
+                _temporaryStore.Append(" WHERE ");
             }
             InternalBuildWhere(expression);
+
+            return _temporaryStore;
         }
 
         private void InitExpressionParameterMapper(IList<ParameterExpression> parameters)
@@ -62,11 +62,6 @@ namespace NewLibCore.Data.SQL.BuildExtension
             }
         }
 
-        public override String ToString()
-        {
-            return _builder.ToString();
-        }
-
         private void InternalBuildWhere(Expression expression)
         {
             switch (expression.NodeType)
@@ -75,7 +70,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
                 {
                     var binaryExp = (BinaryExpression)expression;
                     InternalBuildWhere(binaryExp.Left);
-                    _builder.Append(RelationType.AND.ToString());
+                    _temporaryStore.Append(RelationType.AND.ToString());
                     InternalBuildWhere(binaryExp.Right);
                     break;
                 }
@@ -83,7 +78,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
                 {
                     var binaryExp = (BinaryExpression)expression;
                     InternalBuildWhere(binaryExp.Left);
-                    _builder.Append(RelationType.OR.ToString());
+                    _temporaryStore.Append(RelationType.OR.ToString());
                     InternalBuildWhere(binaryExp.Right);
                     break;
                 }
@@ -95,7 +90,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
                 case ExpressionType.Constant:
                 {
                     var binaryExp = (ConstantExpression)expression;
-                    WhereParameters.Add(new SqlParameterMapper($@"@{_parameterNameStack.Pop()}", binaryExp.Value));
+                    _temporaryStore.AppendParameter(new SqlParameterMapper($@"@{_parameterNameStack.Pop()}", binaryExp.Value));
                     break;
                 }
                 case ExpressionType.Equal:
@@ -176,7 +171,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
                         else
                         {
                             var syntax = _syntaxBuilder.SyntaxBuilder(_operationalCharacterStack.Pop(), memberName, newParameterName);
-                            _builder.Append(syntax);
+                            _temporaryStore.Append(syntax);
                             _parameterNameStack.Push(newParameterName);
                         }
                     }
@@ -184,9 +179,9 @@ namespace NewLibCore.Data.SQL.BuildExtension
                     {
                         var getter = Expression.Lambda(memberExp).Compile();
                         Object result = result = getter.DynamicInvoke();
-                        WhereParameters.Add(new SqlParameterMapper($@"@{_parameterNameStack.Pop()}", result));
+                        _temporaryStore.AppendParameter(new SqlParameterMapper($@"@{_parameterNameStack.Pop()}", result));
                         break;
-                    } 
+                    }
                     break;
                 }
                 case ExpressionType.Not:
@@ -281,7 +276,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
         }
 
         private void GetJoin(BinaryExpression binaryExp, RelationType relationType)
-        { 
+        {
             var leftMemberExp = (MemberExpression)binaryExp.Left;
             var leftAliasName = _expressionParameterNameToTableAliasNameMappers[((ParameterExpression)leftMemberExp.Expression).Name];
 
@@ -291,11 +286,11 @@ namespace NewLibCore.Data.SQL.BuildExtension
                 Boolean result;
                 if (Boolean.TryParse(constant.Value.ToString(), out result))
                 {
-                    _builder.Append($@" {leftAliasName}.{leftMemberExp.Member.Name} {relationType.GetDescription()} {(result ? 1 : 0)} ");
+                    _temporaryStore.Append($@" {leftAliasName}.{leftMemberExp.Member.Name} {relationType.GetDescription()} {(result ? 1 : 0)} ");
                 }
                 else
                 {
-                    _builder.Append($@" {leftAliasName}.{leftMemberExp.Member.Name} {relationType.GetDescription()} {constant.Value} ");
+                    _temporaryStore.Append($@" {leftAliasName}.{leftMemberExp.Member.Name} {relationType.GetDescription()} {constant.Value} ");
                 }
             }
             else
@@ -303,8 +298,33 @@ namespace NewLibCore.Data.SQL.BuildExtension
                 var rightMemberExp = (MemberExpression)binaryExp.Right;
                 var rightAliasName = _expressionParameterNameToTableAliasNameMappers[((ParameterExpression)rightMemberExp.Expression).Name];
 
-                _builder.Append($@" {leftAliasName}.{leftMemberExp.Member.Name} {relationType.GetDescription()} {rightAliasName}.{rightMemberExp.Member.Name} ");
+                _temporaryStore.Append($@" {leftAliasName}.{leftMemberExp.Member.Name} {relationType.GetDescription()} {rightAliasName}.{rightMemberExp.Member.Name} ");
             }
+        }
+    }
+
+    internal class SqlTemporaryStore
+    {
+        private readonly StringBuilder _stringBuilder = new StringBuilder();
+        private readonly IList<SqlParameterMapper> _sqlParameters = new List<SqlParameterMapper>();
+
+        public void Append(String sql)
+        {
+            _stringBuilder.Append(sql);
+        }
+
+        public void AppendParameter(params SqlParameterMapper[] mapper)
+        {
+            foreach (var item in mapper)
+            {
+                _sqlParameters.Add(item);
+            }
+        }
+
+        public void Clear()
+        {
+            _stringBuilder.Clear();
+            _sqlParameters.Clear();
         }
     }
 }

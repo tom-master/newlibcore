@@ -97,7 +97,8 @@ namespace NewLibCore.Data.SQL.InternalDataStore
             {
                 BuilderBase<TModel> builder = new AddBuilder<TModel>(model, true);
                 var entry = builder.Build();
-                return SqlExecute(entry.ToSql(), entry.GetParameters(), CommandType.Text);
+                return 0;
+                //return SqlExecute(entry.ToSql(), entry.GetParameters(), CommandType.Text);
             }
             catch (Exception)
             {
@@ -109,7 +110,8 @@ namespace NewLibCore.Data.SQL.InternalDataStore
         {
             BuilderBase<TModel> builder = new ModifyBuilder<TModel>(model, where, true);
             var entry = builder.Build();
-            return SqlExecute(entry.ToSql(), entry.GetParameters(), CommandType.Text, true) > 0;
+            return false;
+            //return SqlExecute(entry.ToSql(), entry.GetParameters(), CommandType.Text, true) > 0;
         }
 
         public TModel FindOne<TModel>(String sqlStr, IEnumerable<SqlParameterMapper> parameters = null, CommandType commandType = CommandType.Text) where TModel : class, new()

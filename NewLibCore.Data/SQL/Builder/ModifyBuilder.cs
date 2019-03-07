@@ -19,7 +19,7 @@ namespace NewLibCore.Data.SQL.Builder
             _isValidate = isValidate;
         }
 
-        protected internal override BuildEntry<TModel> Build()
+        protected internal override TranslationToSql Build()
         {
             var properties = ModelInstance.PropertyInfos;
             if (!properties.Any())
@@ -32,18 +32,17 @@ namespace NewLibCore.Data.SQL.Builder
                 ValidateModel(properties);
             }
 
-            var buildEntry = new BuildEntry<TModel>(ModelInstance);
-            buildEntry.Append($@"UPDATE {ModelType.Name} SET {String.Join(",", properties.Select(s => $@"{s.Name}=@{s.Name}"))}");
-
-            if (_where != null)
-            {
-                var builderWhere = new BuilderWhere<TModel>();
-                builderWhere.Translate(_where);
-                buildEntry.Append(builderWhere.ToString());
-                buildEntry.AppendParameter(builderWhere.WhereParameters);
-            }
-            buildEntry.Append(_rowCount);
-            buildEntry.AppendParameter(properties.ToList().Select(c => new SqlParameterMapper($@"@{c.Name}", c.GetValue(ModelInstance))));
+            var buildEntry = new TranslationToSql();
+            //buildEntry.Append($@"UPDATE {ModelType.Name} SET {String.Join(",", properties.Select(s => $@"{s.Name}=@{s.Name}"))}");
+            //buildEntry.AppendParameter(properties.ToList().Select(c => new SqlParameterMapper($@"@{c.Name}", c.GetValue(ModelInstance))));
+            //if (_where != null)
+            //{
+            //    var builderWhere = new BuilderWhere<TModel>();
+            //    builderWhere.Translate(_where);
+            //    buildEntry.Append(builderWhere.ToString());
+            //    buildEntry.AppendParameter(builderWhere.WhereParameters);
+            //}
+            //buildEntry.Append(_rowCount);
 
             return buildEntry;
         }

@@ -18,6 +18,7 @@ namespace NewLibCore.Run
             {
                 var user = new User();
                 user.ModifyLoginPassword("123123123");
+                dataStore.Modify(user, w => w.Id == 1 && w.Name == "wasd");
             }
         }
     }
@@ -255,6 +256,11 @@ namespace NewLibCore.Run
         {
             IsDeleted = true;
             OnPropertyChanged(nameof(IsDeleted));
+        }
+
+        public override void SetUpdateTime()
+        {
+            AddTime = DateTime.Now;
         }
     }
 }
