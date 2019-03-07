@@ -1,5 +1,4 @@
 ﻿using NewLibCore.Data.SQL.BuildExtension;
-using NewLibCore.Data.SQL.InternalDataStore;
 using NewLibCore.Data.SQL.PropertyExtension;
 using System;
 using System.Linq;
@@ -19,7 +18,7 @@ namespace NewLibCore.Data.SQL.Builder
             _isValidate = isValidate;
         }
 
-        protected internal override TranslationToSql Build()
+        protected internal override SqlTemporaryStore Build()
         {
             var properties = ModelInstance.PropertyInfos;
             if (!properties.Any())
@@ -33,16 +32,16 @@ namespace NewLibCore.Data.SQL.Builder
             }
 
             var buildEntry = new TranslationToSql();
-            //buildEntry.Append($@"UPDATE {ModelType.Name} SET {String.Join(",", properties.Select(s => $@"{s.Name}=@{s.Name}"))}");
-            //buildEntry.AppendParameter(properties.ToList().Select(c => new SqlParameterMapper($@"@{c.Name}", c.GetValue(ModelInstance))));
-            //if (_where != null)
-            //{
-            //    var builderWhere = new BuilderWhere<TModel>();
-            //    builderWhere.Translate(_where);
-            //    buildEntry.Append(builderWhere.ToString());
-            //    buildEntry.AppendParameter(builderWhere.WhereParameters);
-            //}
-            //buildEntry.Append(_rowCount);
+            buildEntry.Append($@"UPDATE {ModelType.Name} SET {String.Join(",", properties.Select(s => $@"{s.Name}=@{s.Name}"))}");
+            buildEntry.AppendParameter(properties.ToList().Select(c => new SqlParameterMapper($@"@{c.Name}", c.GetValue(ModelInstance))));
+            if (_where != null)
+            {
+                var builderWhere = new BuilderWhere<TModel>();
+                builderWhere.Translate(_where);
+                buildEntry.Append(builderWhere.ToString());
+                buildEntry.AppendParameter(builderWhere.WhereParameters);
+            }
+            buildEntry.Append(_rowCount);
 
             return buildEntry;
         }
