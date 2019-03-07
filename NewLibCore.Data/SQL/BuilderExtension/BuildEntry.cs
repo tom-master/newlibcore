@@ -7,17 +7,16 @@ namespace NewLibCore.Data.SQL.BuildExtension
 {
     internal class BuildEntry<TModel> where TModel : class, new()
     {
+        private readonly TModel _model;
         private StringBuilder _builder;
 
-        private TModel _model;
+        private List<SqlParameterMapper> _parameterMappers = new List<SqlParameterMapper>();
 
         internal BuildEntry(TModel model)
         {
             _model = model;
             _builder = new StringBuilder();
         }
-
-        public List<SqlParameterMapper> ParameterMappers { get; private set; } = new List<SqlParameterMapper>();
 
         internal void Append(String value)
         {
@@ -26,10 +25,15 @@ namespace NewLibCore.Data.SQL.BuildExtension
 
         internal void AppendParameter(IEnumerable<SqlParameterMapper> mappers)
         {
-            ParameterMappers.AddRange(mappers);
+            _parameterMappers.AddRange(mappers);
         }
 
-        public string FormatSql()
+        internal List<SqlParameterMapper> GetParameters()
+        {
+            return _parameterMappers;
+        }
+
+        public String ToSql()
         {
             return _builder.ToString();
         }

@@ -40,7 +40,7 @@ namespace NewLibCore.Data.SQL.Builder
                 var builderWhere = new BuilderWhere<TModel>();
                 builderWhere.Translate(_where);
                 buildEntry.Append(builderWhere.ToString());
-                buildEntry.ParameterMappers.AddRange(builderWhere.WhereParameters);
+                buildEntry.AppendParameter(builderWhere.WhereParameters);
             }
             buildEntry.Append(_rowCount);
             buildEntry.AppendParameter(properties.ToList().Select(c => new SqlParameterMapper($@"@{c.Name}", c.GetValue(ModelInstance))));
