@@ -17,7 +17,7 @@ namespace NewLibCore.Run
 
             using (var dataStore = new SqlContext(""))
             {
-                dataStore.Select<User>(w => w.Name == "123123" && w.Id == 1 && w.IsAdmin, w => new { w.Name, w.LoginPassword, w.LockScreenPassword, w.UserFace });
+                dataStore.Select<User>(w => w.Name == "123123" && w.Id == 1 && w.IsAdmin /*w => new { w.Name, w.LoginPassword, w.LockScreenPassword, w.UserFace }*/);
             }
         }
     }
