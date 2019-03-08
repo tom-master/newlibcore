@@ -24,20 +24,23 @@ namespace NewLibCore.Data.SQL.Builder
         {
             var translation = new TranslationToSql();
 
-            var fields = ExtractFields(_fields);
-            translation.TemporaryStore.Append($@"SELECT {fields} FROM {typeof(TModel).Name} ");
+            var fields = ExtractFieldsAndTableName(_fields);
+            translation.TemporaryStore.Append($@"SELECT {fields.fields} FROM {typeof(TModel).Name} {fields.tableAliasName} ");
             translation.Translate(_where);
             return translation.TemporaryStore;
         }
 
-        private String ExtractFields(Expression<Func<TModel, dynamic>> fields)
+        private (String fields, String tableAliasName) ExtractFieldsAndTableName(Expression<Func<TModel, dynamic>> fields)
         {
             if (fields == null)
             {
                 var propertys = typeof(TModel).GetProperties().Where(w => !w.GetCustomAttributes().Any(a => a.GetType() == typeof(IgnoreAttribute)));
-                return String.Join(",", propertys.Select(s => s.Name));
+                return (String.Join(",", propertys.Select(s => s.Name)), "");
             }
-            return "";
+
+            var modelAliasName = fields.Parameters[0].Name;
+            var dynamicFields = (fields.Body as NewExpression).Members.Select(s => $@"{modelAliasName}.{s.Name}");
+            return (String.Join(",", dynamicFields), $@"AS {modelAliasName}");
         }
     }
 }
