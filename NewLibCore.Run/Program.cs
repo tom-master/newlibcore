@@ -15,9 +15,9 @@ namespace NewLibCore.Run
             //var builder = new BuilderWhere<VisitorRecord>();
             //builder.Translate(expression, JoinType.Inner);
 
-            using (var dataStore = new SqlContext(""))
+            using (var dataStore = new AddContext(""))
             {
-                dataStore.Select<User>(w => w.Name == "123123" && w.Id == 1 && w.IsAdmin, w => new { w.Name, w.LoginPassword, w.LockScreenPassword, w.UserFace });
+                //dataStore.Select<User>(w => w.Name == "123123" && w.Id == 1 && w.IsAdmin, w => new { w.Name, w.LoginPassword, w.LockScreenPassword, w.UserFace });
             }
         }
     }
@@ -232,34 +232,5 @@ namespace NewLibCore.Run
         }
 
         public VisitorRecord() { }
-    }
-    public abstract class DomainModelBase : PropertyMonitor
-    {
-        protected DomainModelBase()
-        {
-            IsDeleted = false;
-        }
-
-        public Int32 Id { get; protected set; }
-
-        [PropertyDefaultValue(typeof(Boolean), false)]
-        public Boolean IsDeleted { get; protected set; }
-
-        [DateTimeDefaultValue]
-        public DateTime AddTime { get; protected set; }
-
-        [DateTimeDefaultValue]
-        public DateTime LastModifyTime { get; protected set; }
-
-        public void Remove()
-        {
-            IsDeleted = true;
-            OnPropertyChanged(nameof(IsDeleted));
-        }
-
-        public override void SetUpdateTime()
-        {
-            AddTime = DateTime.Now;
-        }
     }
 }
