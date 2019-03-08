@@ -93,7 +93,7 @@ namespace NewLibCore.Data.SQL.InternalDataStore
             if (_noExecuteMode)
             {
                 return null;
-            }
+            } 
 
             Open();
             using (var cmd = _connection.CreateCommand())
