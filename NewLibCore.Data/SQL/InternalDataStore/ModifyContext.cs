@@ -23,7 +23,8 @@ namespace NewLibCore.Data.SQL.InternalDataStore
 
         protected override void InternalExecute(DbCommand dbCommand, TemporaryMarshalValue temporaryMarshalValue)
         {
-
+            var count = Int32.Parse(dbCommand.ExecuteNonQuery().ToString());
+            temporaryMarshalValue.MarshalValue = count;
         }
     }
 }
