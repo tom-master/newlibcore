@@ -105,10 +105,11 @@ namespace NewLibCore.Data.SQL.InternalDataStore
             }
         }
 
-        public void Select<TModel>(Expression<Func<TModel, Boolean>> where, Expression<Func<TModel, dynamic>> fields = null) where TModel : PropertyMonitor, new()
+        public TModel FindOne<TModel>(Expression<Func<TModel, Boolean>> where, Expression<Func<TModel, dynamic>> fields = null, IEnumerable<SqlParameterMapper> parameters) where TModel : PropertyMonitor, new()
         {
             var builder = new SelectBuilder<TModel>(where, fields);
             var entry = builder.Build();
+            return FindOne<TModel>(entry.SqlStore.ToString(), parameters);
         }
 
         public Boolean Modify<TModel>(TModel model, Expression<Func<TModel, Boolean>> where = null) where TModel : PropertyMonitor, new()
