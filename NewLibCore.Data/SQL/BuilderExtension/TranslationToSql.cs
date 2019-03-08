@@ -31,9 +31,6 @@ namespace NewLibCore.Data.SQL.BuildExtension
 
         public SqlTemporaryStore Translate(Expression expression, JoinType joinType = JoinType.None, Boolean alias = false)
         {
-            TemporaryStore.Clear();
-            _expressionParameterNameToTableAliasNameMappers.Clear();
-
             if (joinType != JoinType.None)
             {
                 var lamdbaExp = (LambdaExpression)expression;
@@ -306,26 +303,33 @@ namespace NewLibCore.Data.SQL.BuildExtension
 
     internal class SqlTemporaryStore
     {
-        private readonly StringBuilder _stringBuilder = new StringBuilder();
-        private readonly IList<SqlParameterMapper> _sqlParameters = new List<SqlParameterMapper>();
+        internal StringBuilder SqlStore { get; private set; }
 
-        public void Append(String sql)
+        internal IList<SqlParameterMapper> ParameterStore { get; private set; }
+
+        internal SqlTemporaryStore()
         {
-            _stringBuilder.Append(sql);
+            SqlStore = new StringBuilder();
+            ParameterStore = new List<SqlParameterMapper>();
         }
 
-        public void AppendParameter(params SqlParameterMapper[] mapper)
+        internal void Append(String sql)
+        {
+            SqlStore.Append(sql);
+        }
+
+        internal void AppendParameter(params SqlParameterMapper[] mapper)
         {
             foreach (var item in mapper)
             {
-                _sqlParameters.Add(item);
+                ParameterStore.Add(item);
             }
         }
 
-        public void Clear()
+        internal void Clear()
         {
-            _stringBuilder.Clear();
-            _sqlParameters.Clear();
+            SqlStore.Clear();
+            ParameterStore.Clear();
         }
     }
 }

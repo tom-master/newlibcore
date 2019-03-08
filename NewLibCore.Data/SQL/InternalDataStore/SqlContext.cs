@@ -97,8 +97,7 @@ namespace NewLibCore.Data.SQL.InternalDataStore
             {
                 BuilderBase<TModel> builder = new AddBuilder<TModel>(model, true);
                 var entry = builder.Build();
-                return 0;
-                //return SqlExecute(entry.ToSql(), entry.GetParameters(), CommandType.Text);
+                return SqlExecute(entry.SqlStore.ToString(), entry.ParameterStore, CommandType.Text);
             }
             catch (Exception)
             {
@@ -106,12 +105,17 @@ namespace NewLibCore.Data.SQL.InternalDataStore
             }
         }
 
+        public void Select<TModel>(Expression<Func<TModel, Boolean>> where, Expression<Func<TModel, dynamic>> fields = null) where TModel : PropertyMonitor, new()
+        {
+            var builder = new SelectBuilder<TModel>(where, fields);
+            var entry = builder.Build();
+        }
+
         public Boolean Modify<TModel>(TModel model, Expression<Func<TModel, Boolean>> where = null) where TModel : PropertyMonitor, new()
         {
             BuilderBase<TModel> builder = new ModifyBuilder<TModel>(model, where, true);
             var entry = builder.Build();
-            return false;
-            //return SqlExecute(entry.ToSql(), entry.GetParameters(), CommandType.Text, true) > 0;
+            return SqlExecute(entry.SqlStore.ToString(), entry.ParameterStore, CommandType.Text, true) > 0;
         }
 
         public TModel FindOne<TModel>(String sqlStr, IEnumerable<SqlParameterMapper> parameters = null, CommandType commandType = CommandType.Text) where TModel : class, new()
@@ -166,9 +170,13 @@ namespace NewLibCore.Data.SQL.InternalDataStore
             }
         }
 
-
         private Int32 SqlExecute(String sqlStr, IEnumerable<SqlParameterMapper> parameters = null, CommandType commandType = CommandType.Text, Boolean isModify = false)
         {
+            if (_noExecuteMode)
+            {
+                return 0;
+            }
+
             Open();
             using (var cmd = _connection.CreateCommand())
             {

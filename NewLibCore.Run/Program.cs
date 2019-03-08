@@ -14,11 +14,10 @@ namespace NewLibCore.Run
             ////Expression<Func<User, Boolean>> expression = (a) => a.IsOnline;
             //var builder = new BuilderWhere<VisitorRecord>();
             //builder.Translate(expression, JoinType.Inner);
+
             using (var dataStore = new SqlContext(""))
             {
-                var user = new User();
-                user.ModifyLoginPassword("123123123");
-                dataStore.Modify(user, w => w.Id == 1 && w.Name == "wasd");
+                dataStore.Select<User>(w => w.Name == "123123" && w.Id == 1 && w.IsAdmin, w => new { w.Name, w.LoginPassword, w.LockScreenPassword, w.UserFace });
             }
         }
     }
