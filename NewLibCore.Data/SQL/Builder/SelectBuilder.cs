@@ -14,7 +14,7 @@ namespace NewLibCore.Data.SQL.Builder
         private readonly Expression<Func<TModel, dynamic>> _fields;
 
 
-        internal SelectBuilder(Expression<Func<TModel, Boolean>> where, Expression<Func<TModel, dynamic>> fields = null) : base(null)
+        internal SelectBuilder(Expression<Func<TModel, Boolean>> where = null, Expression<Func<TModel, dynamic>> fields = null) : base(null)
         {
             _where = where;
             _fields = fields;
@@ -26,7 +26,16 @@ namespace NewLibCore.Data.SQL.Builder
 
             var fields = ExtractFieldsAndTableName(_fields);
             translation.TemporaryStore.Append($@"SELECT {fields.fields} FROM {typeof(TModel).Name} {fields.tableAliasName} ");
-            translation.Translate(_where);
+            if (_where != null)
+            {
+                translation.Translate(_where);
+                translation.TemporaryStore.Append($@" AND {fields.tableAliasName}.IsDeleted = 0");
+            }
+            else
+            {
+                translation.TemporaryStore.Append($@" WHERE {fields.tableAliasName}.IsDeleted = 0");
+            }
+
             return translation.TemporaryStore;
         }
 

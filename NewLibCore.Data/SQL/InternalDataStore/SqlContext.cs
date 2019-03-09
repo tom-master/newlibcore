@@ -53,7 +53,7 @@ namespace NewLibCore.Data.SQL.InternalDataStore
         }
 
 
-        public IList<TModel> Find<TModel>(Expression<Func<TModel, Boolean>> where, Expression<Func<TModel, dynamic>> fields) where TModel : PropertyMonitor, new()
+        public IList<TModel> Find<TModel>(Expression<Func<TModel, Boolean>> where, Expression<Func<TModel, dynamic>> fields = null) where TModel : PropertyMonitor, new()
         {
             BuilderBase<TModel> builder = new SelectBuilder<TModel>(where, fields);
             var entry = builder.Build();
