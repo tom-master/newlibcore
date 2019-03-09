@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace NewLibCore.Data.SQL.InternalDataStore
 {
-    public abstract class SqlContextBase : IDisposable
+    public class SqlContext : IDisposable
     {
         private Boolean _disposed = false;
 
@@ -22,7 +22,7 @@ namespace NewLibCore.Data.SQL.InternalDataStore
 
         private readonly ILogger _logger;
 
-        public SqlContextBase(String connection)
+        public SqlContext(String connection)
         {
             _noExecuteMode = String.IsNullOrEmpty(connection);
 
@@ -93,7 +93,7 @@ namespace NewLibCore.Data.SQL.InternalDataStore
             if (_noExecuteMode)
             {
                 return null;
-            } 
+            }
 
             Open();
             using (var cmd = _connection.CreateCommand())
@@ -114,7 +114,7 @@ namespace NewLibCore.Data.SQL.InternalDataStore
             }
         }
 
-        protected abstract void InternalExecute(DbCommand dbCommand, TemporaryMarshalValue temporaryMarshalValue);
+        protected virtual void InternalExecute(DbCommand dbCommand, TemporaryMarshalValue temporaryMarshalValue) { }
 
         #region dispose
 

@@ -6,7 +6,7 @@ using System.Data.Common;
 
 namespace NewLibCore.Data.SQL.InternalDataStore
 {
-    public class AddContext : SqlContextBase
+    public class AddContext : SqlContext
     {
         public AddContext(String connection) : base(connection)
         {

@@ -9,7 +9,7 @@ using NewLibCore.Data.SQL.PropertyExtension;
 
 namespace NewLibCore.Data.SQL.InternalDataStore
 {
-    public class SelectContext : SqlContextBase
+    public class SelectContext : SqlContext
     {
         public SelectContext(string connection) : base(connection)
         {

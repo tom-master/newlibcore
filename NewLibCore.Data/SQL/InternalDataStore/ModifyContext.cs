@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 
 namespace NewLibCore.Data.SQL.InternalDataStore
 {
-    public class ModifyContext : SqlContextBase
+    public class ModifyContext : SqlContext
     {
         public ModifyContext(String connection) : base(connection)
         {
