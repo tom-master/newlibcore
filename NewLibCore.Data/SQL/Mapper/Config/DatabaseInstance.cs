@@ -161,6 +161,6 @@ namespace NewLibCore.Data.SQL.Mapper.Config
 
 		public String RowCount { get; internal set; }
 
-		public String Page { get; internal set; }
+ 		public String Page { get; internal set; }
 	}
 }
