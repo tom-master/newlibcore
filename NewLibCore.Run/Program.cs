@@ -10,15 +10,11 @@ namespace NewLibCore.Run
     {
         private static void Main(String[] args)
         {
-            //Expression<Func<VisitorRecord, User, Boolean>> expression = (a, b) => a.UserName != b.Name && a.Id == b.Id || !b.IsOnline && a.Id == 10;
-            ////Expression<Func<User, Boolean>> expression = (a) => a.IsOnline;
-            //var builder = new BuilderWhere<VisitorRecord>();
-            //builder.Translate(expression, JoinType.Inner);
-
-            // using (var dataStore = new AddContext(""))
-            // {
-            //     //dataStore.Select<User>(w => w.Name == "123123" && w.Id == 1 && w.IsAdmin, w => new { w.Name, w.LoginPassword, w.LockScreenPassword, w.UserFace });
-            // }
+            SwitchDatabase.SwitchTo(Database.MYSQL);
+            using (var context = new SqlContext())
+            {
+                context.Add(new User());
+            }
         }
     }
 
