@@ -9,15 +9,15 @@ namespace NewLibCore.Data.SQL.InternalDataStore
 {
     public class InternalSqlContext : IDisposable
     {
-        private Boolean _disposed = false;
-
-        private Boolean _useTransaction;
+        private readonly ILogger _logger;
 
         private DbConnection _connection;
 
         private DbTransaction _dataTransaction;
 
-        private readonly ILogger _logger;
+        private Boolean _disposed = false;
+
+        private Boolean _useTransaction = false;
 
         internal InternalSqlContext()
         {
