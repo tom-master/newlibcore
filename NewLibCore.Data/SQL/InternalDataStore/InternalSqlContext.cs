@@ -80,9 +80,8 @@ namespace NewLibCore.Data.SQL.InternalDataStore
 
                 if (executeType == ExecuteType.SELECT)
                 {
-                    using (cmd.ExecuteReader())
+                    using (var dr = cmd.ExecuteReader())
                     {
-                        var dr = cmd.ExecuteReader();
                         var dataTable = new DataTable("tmpDt");
                         dataTable.Load(dr, LoadOption.Upsert);
                         temporaryMarshalValue.MarshalValue = dataTable;

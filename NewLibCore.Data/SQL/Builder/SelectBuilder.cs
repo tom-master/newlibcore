@@ -25,31 +25,33 @@ namespace NewLibCore.Data.SQL.Builder
             var translation = new TranslationToSql();
 
             var fields = ExtractFieldsAndTableName(_fields);
-            translation.TemporaryStore.Append($@"SELECT {fields.fields} FROM {typeof(TModel).Name} {fields.tableAliasName} ");
+            translation.TemporaryStore.Append($@"SELECT {fields.fields} FROM {typeof(TModel).Name} AS {fields.tableAliasName} ");
             if (_where != null)
             {
                 translation.Translate(_where);
-                translation.TemporaryStore.Append($@" AND {fields.tableAliasName}IsDeleted = 0");
+                translation.TemporaryStore.Append($@" AND {fields.tableAliasName}.IsDeleted = 0");
             }
             else
             {
-                translation.TemporaryStore.Append($@" WHERE {fields.tableAliasName}IsDeleted = 0");
+                translation.TemporaryStore.Append($@" WHERE {fields.tableAliasName}.IsDeleted = 0");
             }
-
+            Console.WriteLine(translation.TemporaryStore.SqlStore.ToString());
             return translation.TemporaryStore;
         }
 
         private (String fields, String tableAliasName) ExtractFieldsAndTableName(Expression<Func<TModel, dynamic>> fields)
         {
+            var modelAliasName = "";
+            var modelType = typeof(TModel);
             if (fields == null)
             {
-                var propertys = typeof(TModel).GetProperties().Where(w => w.GetCustomAttributes().Any(a => a.GetType() == typeof(PropertyKeyAttribute)));
-                return (String.Join(",", propertys.Select(s => s.Name)), "");
+                modelAliasName = modelType.Name.ToLower();
+                var propertys = modelType.GetProperties().Where(w => w.GetCustomAttributes<PropertyValidate>().Any());
+                return (String.Join(",", propertys.Select(s => $@"{modelAliasName}.{s.Name}")), modelAliasName);
             }
-
-            var modelAliasName = fields.Parameters[0].Name;
+            modelAliasName = fields.Parameters[0].Name.ToLower();
             var dynamicFields = (fields.Body as NewExpression).Members.Select(s => $@"{modelAliasName}.{s.Name}");
-            return (String.Join(",", dynamicFields), $@"AS {(String.IsNullOrEmpty(modelAliasName) ? "" : modelAliasName + ".")}");
+            return (String.Join(",", dynamicFields), modelAliasName);
         }
     }
 }

@@ -7,7 +7,6 @@ namespace NewLibCore.Data.SQL.PropertyExtension
 {
     public abstract class PropertyMonitor
     {
-        [Ignore]
         public IList<PropertyInfo> PropertyInfos { get; }
 
         protected PropertyMonitor()

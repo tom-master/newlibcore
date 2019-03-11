@@ -31,21 +31,22 @@ namespace NewLibCore.Data.SQL.BuildExtension
 
         public SqlTemporaryStore Translate(Expression expression, JoinType joinType = JoinType.None, Boolean alias = false)
         {
+            var lamdbaExp = (LambdaExpression)expression;
+            var aliasName = lamdbaExp.Parameters[0].Type.Name.ToLower();
+
             if (joinType != JoinType.None)
             {
-                var lamdbaExp = (LambdaExpression)expression;
-                var aliasName = lamdbaExp.Parameters[0].Type.Name;
                 InitExpressionParameterMapper(lamdbaExp.Parameters);
                 TemporaryStore.Append($@"{joinType.GetDescription()} {aliasName}");
                 if (alias)
                 {
-                    TemporaryStore.Append($@" AS {aliasName.ToLower()} ON ");
+                    TemporaryStore.Append($@" AS {aliasName} ON ");
                 }
                 _joinType = joinType;
             }
             else
             {
-                TemporaryStore.Append(" WHERE ");
+                TemporaryStore.Append($@" WHERE {aliasName}.");
             }
             InternalBuildWhere(expression);
 
