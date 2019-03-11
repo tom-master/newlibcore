@@ -33,7 +33,6 @@ namespace NewLibCore.Data.SQL.InternalDataStore
             _logger.Write("INFO", $@"datastore init connectionstring:{connection}");
         }
 
-
         public TModel Add<TModel>(TModel model) where TModel : DomainModelBase, new()
         {
             BuilderBase<TModel> builder = new AddBuilder<TModel>(model, true);
@@ -43,7 +42,6 @@ namespace NewLibCore.Data.SQL.InternalDataStore
             return model;
         }
 
-
         public Boolean Modify<TModel>(TModel model, Expression<Func<TModel, Boolean>> where = null) where TModel : PropertyMonitor, new()
         {
             BuilderBase<TModel> builder = new ModifyBuilder<TModel>(model, where, true);
@@ -51,7 +49,6 @@ namespace NewLibCore.Data.SQL.InternalDataStore
             var returnValue = Execute(ExecuteType.UPDATE, entry.SqlStore.ToString(), entry.ParameterStore, CommandType.Text);
             return (Int32)returnValue.MarshalValue > 0;
         }
-
 
         public IList<TModel> Find<TModel>(Expression<Func<TModel, Boolean>> where, Expression<Func<TModel, dynamic>> fields = null) where TModel : PropertyMonitor, new()
         {
@@ -61,7 +58,6 @@ namespace NewLibCore.Data.SQL.InternalDataStore
             var dataTable = returnValue.MarshalValue as DataTable;
             return dataTable.AsList<TModel>();
         }
-
 
         public void OpenTransaction()
         {
@@ -121,11 +117,13 @@ namespace NewLibCore.Data.SQL.InternalDataStore
 
                 if (executeType == ExecuteType.SELECT)
                 {
-                    var dr = cmd.ExecuteReader();
-                    var dataTable = new DataTable("tmpDt");
-                    dataTable.Load(dr, LoadOption.Upsert);
-                    dr.Close();
-                    temporaryMarshalValue.MarshalValue = dataTable;
+                    using (cmd.ExecuteReader())
+                    {
+                        var dr = cmd.ExecuteReader();
+                        var dataTable = new DataTable("tmpDt");
+                        dataTable.Load(dr, LoadOption.Upsert);
+                        temporaryMarshalValue.MarshalValue = dataTable;
+                    }
                 }
                 else if (executeType == ExecuteType.UPDATE)
                 {
@@ -150,7 +148,6 @@ namespace NewLibCore.Data.SQL.InternalDataStore
             }
         }
 
-
         private DbTransaction GetNonceTransaction()
         {
             if (_useTransaction)
@@ -164,8 +161,7 @@ namespace NewLibCore.Data.SQL.InternalDataStore
             }
             throw new Exception("没有启动事务");
         }
-
-
+        
         #region dispose
 
         public void Dispose()
