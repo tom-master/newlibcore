@@ -5,6 +5,6 @@ namespace NewLibCore.Data.SQL.BuildExtension
 {
     internal interface ITranslate
     {
-        SqlTemporaryStore Translate(JoinStore joinStore);
+        SqlTemporaryStore Translate(StatementStore statementStore);
     }
 }

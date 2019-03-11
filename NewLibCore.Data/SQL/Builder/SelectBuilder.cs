@@ -2,7 +2,6 @@
 using NewLibCore.Data.SQL.MapperExtension;
 using NewLibCore.Data.SQL.PropertyExtension;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -18,35 +17,22 @@ namespace NewLibCore.Data.SQL.Builder
             _fields = fields;
         }
 
-        protected internal override SqlTemporaryStore Build(IEnumerable<JoinStore> joinStores = null)
+        protected internal override SqlTemporaryStore Build(StatementStore statementStore = null)
         {
-            if (joinStores == null)
-            {
-                throw new ArgumentNullException();
-            }
-
             var translation = new TranslationToSql();
 
             var fields = ExtractFieldsAndTableName(_fields);
             translation.TemporaryStore.Append($@"SELECT {fields.fields} FROM {typeof(TModel).Name} AS {fields.tableAliasName} ");
-
-            foreach (var item in joinStores)
+            if (statementStore != null && statementStore.Expression != null)
             {
-                if (item.Expression != null)
-                {
-                    translation.Translate(item);
-                }
+                translation.Translate(statementStore);
+                translation.TemporaryStore.Append($@" AND {fields.tableAliasName}.IsDeleted = 0");
             }
-            translation.TemporaryStore.Append($@" AND {fields.tableAliasName}.IsDeleted = 0");
-            //if (joinStore.Expression != null)
-            //{
-            //    translation.Translate(joinStore);
-            //    translation.TemporaryStore.Append($@" AND {fields.tableAliasName}.IsDeleted = 0");
-            //}
-            //else
-            //{
-            //    translation.TemporaryStore.Append($@" WHERE {fields.tableAliasName}.IsDeleted = 0");
-            //}
+            else
+            {
+                translation.TemporaryStore.Append($@" WHERE {fields.tableAliasName}.IsDeleted = 0");
+            }
+
             Console.WriteLine(translation.TemporaryStore.SqlStore.ToString());
             return translation.TemporaryStore;
         }

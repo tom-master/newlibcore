@@ -28,7 +28,7 @@ namespace NewLibCore.Data.SQL.Builder
             }
         }
 
-        protected internal abstract SqlTemporaryStore Build(IEnumerable<JoinStore> joinStores = null);
+        protected internal abstract SqlTemporaryStore Build(StatementStore statementStore = null);
 
         protected void ValidateModel(IList<PropertyInfo> propertyInfos)
         {

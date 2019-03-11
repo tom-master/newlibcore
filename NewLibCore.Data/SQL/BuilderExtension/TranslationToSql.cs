@@ -1,4 +1,5 @@
 ﻿using NewLibCore.Data.SQL.InternalDataStore;
+using NewLibCore.Data.SQL.PropertyExtension;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -19,7 +20,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
         private JoinType _joinType;
 
         private readonly IDictionary<String, String> _expressionParameterNameToTableAliasNameMappers;
-        
+
         public TranslationToSql()
         {
             TemporaryStore = new SqlTemporaryStore();
@@ -28,26 +29,26 @@ namespace NewLibCore.Data.SQL.BuildExtension
             _expressionParameterNameToTableAliasNameMappers = new Dictionary<String, String>();
         }
 
-        public SqlTemporaryStore Translate(JoinStore joinStore)
+        public SqlTemporaryStore Translate(StatementStore statementStore)
         {
-            var lamdbaExp = (LambdaExpression)joinStore.Expression;
+            var lamdbaExp = (LambdaExpression)statementStore.Expression;
             var aliasName = lamdbaExp.Parameters[0].Type.Name.ToLower();
 
-            if (joinStore.JoinType != JoinType.None)
+            if (statementStore.JoinType != JoinType.None)
             {
                 InitExpressionParameterMapper(lamdbaExp.Parameters);
-                TemporaryStore.Append($@"{joinStore.JoinType.GetDescription()} {aliasName}");
-                if (!String.IsNullOrEmpty(joinStore.AliasName))
+                TemporaryStore.Append($@"{statementStore.JoinType.GetDescription()} {aliasName}");
+                if (!String.IsNullOrEmpty(statementStore.AliasName))
                 {
                     TemporaryStore.Append($@" AS {aliasName} ON ");
                 }
-                _joinType = joinStore.JoinType;
+                _joinType = statementStore.JoinType;
             }
             else
             {
                 TemporaryStore.Append($@" WHERE {aliasName}.");
             }
-            InternalBuildWhere(joinStore.Expression);
+            InternalBuildWhere(statementStore.Expression);
 
             return TemporaryStore;
         }
@@ -301,7 +302,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
         }
     }
 
-    internal class JoinStore
+    internal class StatementStore
     {
         public Expression Expression { get; private set; }
 
@@ -309,11 +310,22 @@ namespace NewLibCore.Data.SQL.BuildExtension
 
         public String AliasName { get; private set; }
 
-        public JoinStore(Expression expression, JoinType joinType = JoinType.None, String aliasName = "")
+        public IList<StatementStore> JoinStores { get; private set; }
+
+        public StatementStore(Expression expression = null, JoinType joinType = JoinType.None, String aliasName = "")
         {
             Expression = expression;
             JoinType = joinType;
             AliasName = aliasName;
+
+            JoinStores = new List<StatementStore>();
+        }
+
+        public void AddLeftJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> expression) where TLeft : PropertyMonitor, new()
+            where TRight : TLeft
+
+        {
+            JoinStores.Add(new StatementStore(expression, JoinType.Left));
         }
     }
 

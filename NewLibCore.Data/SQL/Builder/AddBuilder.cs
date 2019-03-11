@@ -19,7 +19,7 @@ namespace NewLibCore.Data.SQL.Builder
             _isVerifyModel = isVerifyModel;
         }
 
-        protected internal override SqlTemporaryStore Build(IEnumerable<JoinStore> joinStores = null)
+        protected internal override SqlTemporaryStore Build(StatementStore statementStore = null)
         {
             var sqlTemporary = new SqlTemporaryStore();
             var propertyInfos = ModelType.GetProperties().Where(w => w.GetCustomAttributes<PropertyValidate>().Any());
