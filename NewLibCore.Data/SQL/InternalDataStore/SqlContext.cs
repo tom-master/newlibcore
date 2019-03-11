@@ -1,4 +1,5 @@
 ﻿using NewLibCore.Data.SQL.Builder;
+using NewLibCore.Data.SQL.BuildExtension;
 using NewLibCore.Data.SQL.DataExtension;
 using NewLibCore.Data.SQL.PropertyExtension;
 using System;
@@ -28,16 +29,16 @@ namespace NewLibCore.Data.SQL.InternalDataStore
 
         public Boolean Modify<TModel>(TModel model, Expression<Func<TModel, Boolean>> where = null) where TModel : PropertyMonitor, new()
         {
-            BuilderBase<TModel> builder = new ModifyBuilder<TModel>(model, where, true);
-            var entry = builder.Build();
+            BuilderBase<TModel> builder = new ModifyBuilder<TModel>(model, true);
+            var entry = builder.Build(new JoinStore(where));
             var returnValue = Context.Execute(ExecuteType.UPDATE, entry.SqlStore.ToString(), entry.ParameterStore, CommandType.Text);
             return (Int32)returnValue.MarshalValue > 0;
         }
 
         public IList<TModel> Find<TModel>(Expression<Func<TModel, Boolean>> where = null, Expression<Func<TModel, dynamic>> fields = null) where TModel : PropertyMonitor, new()
         {
-            BuilderBase<TModel> builder = new SelectBuilder<TModel>(where, fields);
-            var entry = builder.Build();
+            BuilderBase<TModel> builder = new SelectBuilder<TModel>(fields);
+            var entry = builder.Build(new JoinStore(where));
             var returnValue = Context.Execute(ExecuteType.SELECT, entry.SqlStore.ToString(), entry.ParameterStore, CommandType.Text);
             var dataTable = returnValue.MarshalValue as DataTable;
             return dataTable.AsList<TModel>();

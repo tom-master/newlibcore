@@ -10,25 +10,27 @@ namespace NewLibCore.Data.SQL.Builder
 {
     internal class SelectBuilder<TModel> : BuilderBase<TModel> where TModel : PropertyMonitor, new()
     {
-        private readonly Expression<Func<TModel, Boolean>> _where;
         private readonly Expression<Func<TModel, dynamic>> _fields;
 
-
-        internal SelectBuilder(Expression<Func<TModel, Boolean>> where = null, Expression<Func<TModel, dynamic>> fields = null) : base(null)
+        internal SelectBuilder(Expression<Func<TModel, dynamic>> fields = null) : base(null)
         {
-            _where = where;
             _fields = fields;
         }
 
-        protected internal override SqlTemporaryStore Build()
+        protected internal override SqlTemporaryStore Build(JoinStore joinStore = null)
         {
+            if (joinStore == null)
+            {
+                throw new ArgumentNullException();
+            }
+
             var translation = new TranslationToSql();
 
             var fields = ExtractFieldsAndTableName(_fields);
             translation.TemporaryStore.Append($@"SELECT {fields.fields} FROM {typeof(TModel).Name} AS {fields.tableAliasName} ");
-            if (_where != null)
+            if (joinStore.Expression != null)
             {
-                translation.Translate(_where);
+                translation.Translate(joinStore);
                 translation.TemporaryStore.Append($@" AND {fields.tableAliasName}.IsDeleted = 0");
             }
             else
@@ -49,7 +51,7 @@ namespace NewLibCore.Data.SQL.Builder
                 var propertys = modelType.GetProperties().Where(w => w.GetCustomAttributes<PropertyValidate>().Any());
                 return (String.Join(",", propertys.Select(s => $@"{modelAliasName}.{s.Name}")), modelAliasName);
             }
-            modelAliasName = fields.Parameters[0].Name.ToLower();
+            modelAliasName = fields.Parameters[0].Type.Name.ToLower();
             var dynamicFields = (fields.Body as NewExpression).Members.Select(s => $@"{modelAliasName}.{s.Name}");
             return (String.Join(",", dynamicFields), modelAliasName);
         }

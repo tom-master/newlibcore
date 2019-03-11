@@ -3,23 +3,25 @@ using NewLibCore.Data.SQL.InternalDataStore;
 using NewLibCore.Data.SQL.PropertyExtension;
 using System;
 using System.Linq;
-using System.Linq.Expressions;
 
 namespace NewLibCore.Data.SQL.Builder
 {
     internal class ModifyBuilder<TModel> : BuilderBase<TModel> where TModel : PropertyMonitor, new()
     {
-        private readonly Expression<Func<TModel, Boolean>> _where;
-        private readonly Boolean _isValidate; 
+        private readonly Boolean _isValidate;
 
-        public ModifyBuilder(TModel model, Expression<Func<TModel, Boolean>> where = null, Boolean isValidate = false) : base(model)
+        public ModifyBuilder(TModel model, Boolean isValidate = false) : base(model)
         {
-            _where = where;
             _isValidate = isValidate;
         }
 
-        protected internal override SqlTemporaryStore Build()
+        protected internal override SqlTemporaryStore Build(JoinStore joinStore = null)
         {
+            if (joinStore == null)
+            {
+                throw new ArgumentNullException();
+            }
+
             var properties = ModelInstance.PropertyInfos;
             if (!properties.Any())
             {
@@ -34,9 +36,9 @@ namespace NewLibCore.Data.SQL.Builder
             var buildEntry = new TranslationToSql();
             buildEntry.TemporaryStore.Append($@"UPDATE {ModelType.Name} SET {String.Join(",", properties.Select(s => $@"{s.Name}=@{s.Name}"))}");
             buildEntry.TemporaryStore.AppendParameter(properties.ToList().Select(c => new SqlParameterMapper($@"@{c.Name}", c.GetValue(ModelInstance))).ToArray());
-            if (_where != null)
+            if (joinStore.Expression != null)
             {
-                buildEntry.Translate(_where);
+                buildEntry.Translate(joinStore);
             }
 
             buildEntry.TemporaryStore.Append(" ; SELECT CAST(ROW_COUNT() AS SIGNED) AS c");

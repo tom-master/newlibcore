@@ -310,7 +310,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
 
         public String AliasName { get; private set; }
 
-        public JoinStore(Expression expression, JoinType joinType, String aliasName = "")
+        public JoinStore(Expression expression, JoinType joinType = JoinType.None, String aliasName = "")
         {
             Expression = expression;
             JoinType = joinType;
