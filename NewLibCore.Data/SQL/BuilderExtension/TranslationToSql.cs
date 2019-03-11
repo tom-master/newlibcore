@@ -2,6 +2,7 @@
 using NewLibCore.Data.SQL.PropertyExtension;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 
@@ -31,33 +32,38 @@ namespace NewLibCore.Data.SQL.BuildExtension
 
         public SqlTemporaryStore Translate(StatementStore statementStore)
         {
+            var masterAliasName = statementStore.AliasName;
             var lamdbaExp = (LambdaExpression)statementStore.Expression;
-            var aliasName = lamdbaExp.Parameters[0].Type.Name.ToLower();
 
-            if (statementStore.JoinType != JoinType.None)
+            foreach (var item in statementStore.JoinStores)
             {
-                InitExpressionParameterMapper(lamdbaExp.Parameters);
-                TemporaryStore.Append($@"{statementStore.JoinType.GetDescription()} {aliasName}");
-                if (!String.IsNullOrEmpty(statementStore.AliasName))
+                InitExpressionParameterMapper(item.AliasNameMappers);
+
+                foreach (var parameter in item.AliasNameMappers)
                 {
-                    TemporaryStore.Append($@" AS {aliasName} ON ");
+                    TemporaryStore.Append($@"{item.JoinType.GetDescription()} {parameter.Value} AS {parameter.Value.ToLower()} ON ");
                 }
-                _joinType = statementStore.JoinType;
+                _joinType = item.JoinType;
+                InternalBuildWhere(item.Expression);
+            }
+
+            if (statementStore.JoinType != JoinType.NONE)
+            {
+
             }
             else
             {
-                TemporaryStore.Append($@" WHERE {aliasName}.");
+                TemporaryStore.Append($@" WHERE {masterAliasName}.");
             }
-            InternalBuildWhere(statementStore.Expression);
 
             return TemporaryStore;
         }
 
-        private void InitExpressionParameterMapper(IList<ParameterExpression> parameters)
+        private void InitExpressionParameterMapper(IList<KeyValuePair<String, String>> keyValuePairs)
         {
-            foreach (var item in parameters)
+            foreach (var item in keyValuePairs)
             {
-                _expressionParameterNameToTableAliasNameMappers.Add(item.Name, item.Type.Name.ToLower());
+                _expressionParameterNameToTableAliasNameMappers.Add(item.Key, item.Value);
             }
         }
 
@@ -262,7 +268,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
         private void LogicStatementBuilder(BinaryExpression binary, RelationType relationType)
         {
             var binaryExp = binary;
-            if (_joinType != JoinType.None)
+            if (_joinType != JoinType.NONE)
             {
                 GetJoin(binaryExp, relationType);
             }
@@ -306,27 +312,56 @@ namespace NewLibCore.Data.SQL.BuildExtension
     {
         public Expression Expression { get; private set; }
 
-        public JoinType JoinType { get; private set; }
+        public String AliasName { get; set; }
 
-        public String AliasName { get; private set; }
+        public JoinType JoinType { get { return JoinType.NONE; } }
 
-        public IList<StatementStore> JoinStores { get; private set; }
+        public IList<JoinStatementStore> JoinStores { get; private set; }
 
-        public StatementStore(Expression expression = null, JoinType joinType = JoinType.None, String aliasName = "")
+        public StatementStore()
+        {
+            JoinStores = new List<JoinStatementStore>();
+        }
+
+        public void AddWhere<TModel>(Expression<Func<TModel, Boolean>> expression)
         {
             Expression = expression;
-            JoinType = joinType;
-            AliasName = aliasName;
-
-            JoinStores = new List<StatementStore>();
         }
 
-        public void AddLeftJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> expression) where TLeft : PropertyMonitor, new()
-            where TRight : TLeft
-
+        public void AddJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> expression, JoinType joinType) where TLeft : PropertyMonitor, new()
+            where TRight : PropertyMonitor, new()
         {
-            JoinStores.Add(new StatementStore(expression, JoinType.Left));
+            var joinStore = new JoinStatementStore
+            {
+                Expression = expression,
+                JoinType = joinType
+            };
+            foreach (var item in expression.Parameters)
+            {
+                if (joinStore.AliasNameMappers.Any(a => a.Key == item.Name))
+                {
+                    throw new ArgumentException($@"joinStore.AliasNameMappers中具有相同变量{item.Name}");
+                }
+
+                if (typeof(TLeft) == item.Type)
+                {
+                    continue;
+                }
+
+                joinStore.AliasNameMappers.Add(new KeyValuePair<String, String>(item.Name, item.Type.Name));
+            }
+
+            JoinStores.Add(joinStore);
         }
+    }
+
+    internal class JoinStatementStore
+    {
+        public JoinType JoinType { get; set; }
+
+        public IList<KeyValuePair<String, String>> AliasNameMappers { get; set; } = new List<KeyValuePair<String, String>>();
+
+        public Expression Expression { get; set; }
     }
 
     internal class SqlTemporaryStore

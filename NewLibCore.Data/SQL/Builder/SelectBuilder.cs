@@ -23,9 +23,10 @@ namespace NewLibCore.Data.SQL.Builder
 
             var fields = ExtractFieldsAndTableName(_fields);
             translation.TemporaryStore.Append($@"SELECT {fields.fields} FROM {typeof(TModel).Name} AS {fields.tableAliasName} ");
+            statementStore.AliasName = fields.tableAliasName;
+            translation.Translate(statementStore);
             if (statementStore != null && statementStore.Expression != null)
             {
-                translation.Translate(statementStore);
                 translation.TemporaryStore.Append($@" AND {fields.tableAliasName}.IsDeleted = 0");
             }
             else

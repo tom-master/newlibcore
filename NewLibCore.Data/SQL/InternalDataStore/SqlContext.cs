@@ -13,7 +13,7 @@ namespace NewLibCore.Data.SQL.InternalDataStore
     {
         public InternalSqlContext Context { get; private set; }
 
-        private StatementStore _statementStore;
+        private readonly StatementStore _statementStore;
 
         public SqlContext()
         {
@@ -33,7 +33,8 @@ namespace NewLibCore.Data.SQL.InternalDataStore
         public Boolean Modify<TModel>(TModel model, Expression<Func<TModel, Boolean>> where = null) where TModel : PropertyMonitor, new()
         {
             BuilderBase<TModel> builder = new ModifyBuilder<TModel>(model, true);
-            var entry = builder.Build(new StatementStore(where));
+            _statementStore.AddWhere(where);
+            var entry = builder.Build(_statementStore);
             var returnValue = Context.Execute(ExecuteType.UPDATE, entry.SqlStore.ToString(), entry.ParameterStore, CommandType.Text);
             return (Int32)returnValue.MarshalValue > 0;
         }
@@ -41,10 +42,31 @@ namespace NewLibCore.Data.SQL.InternalDataStore
         public IList<TModel> Find<TModel>(Expression<Func<TModel, Boolean>> where = null, Expression<Func<TModel, dynamic>> fields = null) where TModel : PropertyMonitor, new()
         {
             BuilderBase<TModel> builder = new SelectBuilder<TModel>(fields);
-            var entry = builder.Build(new StatementStore(where));
+            _statementStore.AddWhere(where);
+            var entry = builder.Build(_statementStore);
             var returnValue = Context.Execute(ExecuteType.SELECT, entry.SqlStore.ToString(), entry.ParameterStore, CommandType.Text);
             var dataTable = returnValue.MarshalValue as DataTable;
             return dataTable.AsList<TModel>();
+        }
+
+        public SqlContext LeftJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> expression) where TLeft : PropertyMonitor, new()
+            where TRight : PropertyMonitor, new()
+        {
+            _statementStore.AddJoin(expression, JoinType.LEFT);
+            return this;
+        }
+
+        public SqlContext RightJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> expression) where TLeft : PropertyMonitor, new()
+            where TRight : PropertyMonitor, new()
+        {
+            _statementStore.AddJoin(expression, JoinType.RIGHT);
+            return this;
+        }
+        public SqlContext InnerJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> expression) where TLeft : PropertyMonitor, new()
+            where TRight : PropertyMonitor, new()
+        {
+            _statementStore.AddJoin(expression, JoinType.INNER);
+            return this;
         }
 
         public void Dispose()

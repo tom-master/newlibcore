@@ -4,16 +4,16 @@ namespace NewLibCore.Data.SQL.BuildExtension
 {
     public enum JoinType
     {
-        None = 0,
+        NONE = 0,
 
         [Description("INNER JOIN")]
-        Inner = 1,
+        INNER = 1,
 
         [Description("LEFT JOIN")]
-        Left = 2,
+        LEFT = 2,
 
         [Description("RIGHT JOIN")]
-        Right = 3
+        RIGHT = 3
     }
 
     internal enum RelationType
