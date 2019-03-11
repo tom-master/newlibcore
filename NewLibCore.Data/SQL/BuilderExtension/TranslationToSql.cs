@@ -2,7 +2,6 @@
 using NewLibCore.Data.SQL.PropertyExtension;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 
@@ -337,10 +336,6 @@ namespace NewLibCore.Data.SQL.BuildExtension
             };
             foreach (var item in expression.Parameters)
             {
-                if (joinStore.AliasNameMappers.Any(a => a.Key == item.Name))
-                {
-                    throw new ArgumentException($@"joinStore.AliasNameMappers中具有相同变量{item.Name}");
-                }
                 if (typeof(TLeft) == item.Type)
                 {
                     continue;
