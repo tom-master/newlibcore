@@ -16,7 +16,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
             }
             else if (type == RelationType.LIKE)
             {
-                Builder.Append($@" {left} LIKE CONCAT('%',@{right},'%') ");
+                Builder.Append($@" {left} {RelationType.LIKE} CONCAT('%',@{right},'%') ");
             }
             else if (type == RelationType.START_LIKE)
             {
