@@ -37,7 +37,10 @@ namespace NewLibCore.Data.SQL.BuildExtension
 
             foreach (var item in statementStore.JoinStores)
             {
-                InitExpressionParameterMapper(item.AliasNameMappers);
+                foreach (var parameter in ((LambdaExpression)item.Expression).Parameters)
+                {
+                    InitExpressionParameterMapper(new KeyValuePair<String, String>(parameter.Name, parameter.Type.Name.ToLower()));
+                }
 
                 foreach (var parameter in item.AliasNameMappers)
                 {
@@ -46,20 +49,14 @@ namespace NewLibCore.Data.SQL.BuildExtension
                 _joinType = item.JoinType;
                 InternalBuildWhere(item.Expression);
             }
-
-            if (statementStore.JoinType != JoinType.NONE)
-            {
-
-            }
-            else
-            {
-                TemporaryStore.Append($@" WHERE {masterAliasName}.");
-            }
+            _joinType = JoinType.NONE;
+            TemporaryStore.Append($@" WHERE {masterAliasName}.");
+            InternalBuildWhere(statementStore.Expression);
 
             return TemporaryStore;
         }
 
-        private void InitExpressionParameterMapper(IList<KeyValuePair<String, String>> keyValuePairs)
+        private void InitExpressionParameterMapper(params KeyValuePair<String, String>[] keyValuePairs)
         {
             foreach (var item in keyValuePairs)
             {
@@ -303,7 +300,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
                 var rightMemberExp = (MemberExpression)binaryExp.Right;
                 var rightAliasName = _expressionParameterNameToTableAliasNameMappers[((ParameterExpression)rightMemberExp.Expression).Name];
 
-                TemporaryStore.Append($@"{leftAliasName}.{leftMemberExp.Member.Name} {relationType.GetDescription()} {rightAliasName}.{rightMemberExp.Member.Name} ");
+                TemporaryStore.Append($@" {rightAliasName}.{rightMemberExp.Member.Name} {relationType.GetDescription()} {leftAliasName}.{leftMemberExp.Member.Name}");
             }
         }
     }
