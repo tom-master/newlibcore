@@ -19,8 +19,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
         private JoinType _joinType;
 
         private readonly IDictionary<String, String> _expressionParameterNameToTableAliasNameMappers;
-
-
+        
         public TranslationToSql()
         {
             TemporaryStore = new SqlTemporaryStore();

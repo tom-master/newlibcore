@@ -30,7 +30,7 @@ namespace NewLibCore.Data.SQL.InternalDataStore
         public Boolean Modify<TModel>(TModel model, Expression<Func<TModel, Boolean>> where = null) where TModel : PropertyMonitor, new()
         {
             BuilderBase<TModel> builder = new ModifyBuilder<TModel>(model, true);
-            var entry = builder.Build(new JoinStore(where));
+            var entry = builder.Build(new List<JoinStore> { new JoinStore(where) });
             var returnValue = Context.Execute(ExecuteType.UPDATE, entry.SqlStore.ToString(), entry.ParameterStore, CommandType.Text);
             return (Int32)returnValue.MarshalValue > 0;
         }
@@ -38,7 +38,7 @@ namespace NewLibCore.Data.SQL.InternalDataStore
         public IList<TModel> Find<TModel>(Expression<Func<TModel, Boolean>> where = null, Expression<Func<TModel, dynamic>> fields = null) where TModel : PropertyMonitor, new()
         {
             BuilderBase<TModel> builder = new SelectBuilder<TModel>(fields);
-            var entry = builder.Build(new JoinStore(where));
+            var entry = builder.Build(new List<JoinStore> { new JoinStore(where) });
             var returnValue = Context.Execute(ExecuteType.SELECT, entry.SqlStore.ToString(), entry.ParameterStore, CommandType.Text);
             var dataTable = returnValue.MarshalValue as DataTable;
             return dataTable.AsList<TModel>();

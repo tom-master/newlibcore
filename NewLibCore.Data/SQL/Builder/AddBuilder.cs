@@ -3,6 +3,7 @@ using NewLibCore.Data.SQL.InternalDataStore;
 using NewLibCore.Data.SQL.MapperExtension;
 using NewLibCore.Data.SQL.PropertyExtension;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
@@ -18,7 +19,7 @@ namespace NewLibCore.Data.SQL.Builder
             _isVerifyModel = isVerifyModel;
         }
 
-        protected internal override SqlTemporaryStore Build(JoinStore joinStore = null)
+        protected internal override SqlTemporaryStore Build(IEnumerable<JoinStore> joinStores = null)
         {
             var sqlTemporary = new SqlTemporaryStore();
             var propertyInfos = ModelType.GetProperties().Where(w => w.GetCustomAttributes<PropertyValidate>().Any());
