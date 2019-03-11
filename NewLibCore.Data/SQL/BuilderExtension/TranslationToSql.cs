@@ -29,26 +29,26 @@ namespace NewLibCore.Data.SQL.BuildExtension
             _expressionParameterNameToTableAliasNameMappers = new Dictionary<String, String>();
         }
 
-        public SqlTemporaryStore Translate(Expression expression, JoinType joinType = JoinType.None, Boolean alias = false)
+        public SqlTemporaryStore Translate(JoinStore joinStore)
         {
-            var lamdbaExp = (LambdaExpression)expression;
+            var lamdbaExp = (LambdaExpression)joinStore.Expression;
             var aliasName = lamdbaExp.Parameters[0].Type.Name.ToLower();
 
-            if (joinType != JoinType.None)
+            if (joinStore.JoinType != JoinType.None)
             {
                 InitExpressionParameterMapper(lamdbaExp.Parameters);
-                TemporaryStore.Append($@"{joinType.GetDescription()} {aliasName}");
-                if (alias)
+                TemporaryStore.Append($@"{joinStore.JoinType.GetDescription()} {aliasName}");
+                if (!String.IsNullOrEmpty(joinStore.AliasName))
                 {
                     TemporaryStore.Append($@" AS {aliasName} ON ");
                 }
-                _joinType = joinType;
+                _joinType = joinStore.JoinType;
             }
             else
             {
                 TemporaryStore.Append($@" WHERE {aliasName}.");
             }
-            InternalBuildWhere(expression);
+            InternalBuildWhere(joinStore.Expression);
 
             return TemporaryStore;
         }
@@ -297,8 +297,24 @@ namespace NewLibCore.Data.SQL.BuildExtension
                 var rightMemberExp = (MemberExpression)binaryExp.Right;
                 var rightAliasName = _expressionParameterNameToTableAliasNameMappers[((ParameterExpression)rightMemberExp.Expression).Name];
 
-                TemporaryStore.Append($@" {leftAliasName}.{leftMemberExp.Member.Name} {relationType.GetDescription()} {rightAliasName}.{rightMemberExp.Member.Name} ");
+                TemporaryStore.Append($@"{leftAliasName}.{leftMemberExp.Member.Name} {relationType.GetDescription()} {rightAliasName}.{rightMemberExp.Member.Name} ");
             }
+        }
+    }
+
+    internal class JoinStore
+    {
+        public Expression Expression { get; private set; }
+
+        public JoinType JoinType { get; private set; }
+
+        public String AliasName { get; private set; }
+
+        public JoinStore(Expression expression, JoinType joinType, String aliasName = "")
+        {
+            Expression = expression;
+            JoinType = joinType;
+            AliasName = aliasName;
         }
     }
 
