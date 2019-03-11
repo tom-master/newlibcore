@@ -44,15 +44,17 @@ namespace NewLibCore.Data.SQL.BuildExtension
 
                 foreach (var parameter in item.AliasNameMappers)
                 {
-                    TemporaryStore.Append($@"{item.JoinType.GetDescription()} {parameter.Value} AS {parameter.Value.ToLower()} ON ");
+                    TemporaryStore.Append($@" {item.JoinType.GetDescription()} {parameter.Value} AS {parameter.Value.ToLower()} ON ");
                 }
                 _joinType = item.JoinType;
                 InternalBuildWhere(item.Expression);
+                _expressionParameterNameToTableAliasNameMappers.Clear();
             }
             _joinType = JoinType.NONE;
             TemporaryStore.Append($@" WHERE {masterAliasName}.");
             InternalBuildWhere(statementStore.Expression);
 
+            Console.WriteLine(TemporaryStore.SqlStore.ToString());
             return TemporaryStore;
         }
 
@@ -339,12 +341,10 @@ namespace NewLibCore.Data.SQL.BuildExtension
                 {
                     throw new ArgumentException($@"joinStore.AliasNameMappers中具有相同变量{item.Name}");
                 }
-
                 if (typeof(TLeft) == item.Type)
                 {
                     continue;
                 }
-
                 joinStore.AliasNameMappers.Add(new KeyValuePair<String, String>(item.Name, item.Type.Name));
             }
 
@@ -359,6 +359,8 @@ namespace NewLibCore.Data.SQL.BuildExtension
         public IList<KeyValuePair<String, String>> AliasNameMappers { get; set; } = new List<KeyValuePair<String, String>>();
 
         public Expression Expression { get; set; }
+
+        public String AliasName { get { return Guid.NewGuid().ToString().Replace("-", ""); } }
     }
 
     internal class SqlTemporaryStore

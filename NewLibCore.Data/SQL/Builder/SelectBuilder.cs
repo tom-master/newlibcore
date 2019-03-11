@@ -33,8 +33,6 @@ namespace NewLibCore.Data.SQL.Builder
             {
                 translation.TemporaryStore.Append($@" WHERE {fields.tableAliasName}.IsDeleted = 0");
             }
-
-            Console.WriteLine(translation.TemporaryStore.SqlStore.ToString());
             return translation.TemporaryStore;
         }
 
