@@ -10,6 +10,7 @@ namespace NewLibCore.Data.SQL.PropertyExtension
             IsDeleted = false;
         }
 
+        [PropertyKey]
         public Int32 Id { get; internal set; }
 
         [PropertyDefaultValue(typeof(Boolean))]

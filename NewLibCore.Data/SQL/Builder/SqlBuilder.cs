@@ -44,6 +44,11 @@ namespace NewLibCore.Data.SQL.Builder
                 var propertyValue = propertyItem.GetValue(ModelInstance);
                 for (var i = 0; i < validateBases.Count; i++)
                 {
+                    if (validateBases[i] is PropertyKeyAttribute)
+                    {
+                        continue;
+                    }
+
                     if (validateBases[i] is PropertyRequiredAttribute)
                     {
                         if (!validateBases[i].IsValidate(propertyValue))

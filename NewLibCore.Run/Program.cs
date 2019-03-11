@@ -13,7 +13,7 @@ namespace NewLibCore.Run
             SwitchDatabase.SwitchTo(Database.MYSQL);
             using (var context = new SqlContext())
             {
-                
+                var a = context.Find<User>(w => !w.IsDeleted);
             }
         }
     }

@@ -29,11 +29,11 @@ namespace NewLibCore.Data.SQL.Builder
             if (_where != null)
             {
                 translation.Translate(_where);
-                translation.TemporaryStore.Append($@" AND {fields.tableAliasName}.IsDeleted = 0");
+                translation.TemporaryStore.Append($@" AND {fields.tableAliasName}IsDeleted = 0");
             }
             else
             {
-                translation.TemporaryStore.Append($@" WHERE {fields.tableAliasName}.IsDeleted = 0");
+                translation.TemporaryStore.Append($@" WHERE {fields.tableAliasName}IsDeleted = 0");
             }
 
             return translation.TemporaryStore;
@@ -43,13 +43,13 @@ namespace NewLibCore.Data.SQL.Builder
         {
             if (fields == null)
             {
-                var propertys = typeof(TModel).GetProperties().Where(w => !w.GetCustomAttributes().Any(a => a.GetType() == typeof(IgnoreAttribute)));
+                var propertys = typeof(TModel).GetProperties().Where(w => w.GetCustomAttributes().Any(a => a.GetType() == typeof(PropertyKeyAttribute)));
                 return (String.Join(",", propertys.Select(s => s.Name)), "");
             }
 
             var modelAliasName = fields.Parameters[0].Name;
             var dynamicFields = (fields.Body as NewExpression).Members.Select(s => $@"{modelAliasName}.{s.Name}");
-            return (String.Join(",", dynamicFields), $@"AS {modelAliasName}");
+            return (String.Join(",", dynamicFields), $@"AS {(String.IsNullOrEmpty(modelAliasName) ? "" : modelAliasName + ".")}");
         }
     }
 }
