@@ -74,13 +74,13 @@ namespace NewLibCore.Data.SQL.BuildExtension
     }
 
 
-    internal abstract class DatabaseSyntaxBuilder
+    public abstract class DatabaseSyntaxBuilder
     {
         protected StringBuilder Builder = new StringBuilder();
 
         internal abstract String SyntaxBuilder(RelationType relationType, String left, String right);
 
-        protected void SyntaxBuilderBase(RelationType relationType, String left, String right)
+        internal void SyntaxBuilderBase(RelationType relationType, String left, String right)
         {
             if (relationType == RelationType.EQ)
             {

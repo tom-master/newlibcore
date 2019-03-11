@@ -11,7 +11,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
     {
         internal SqlTemporaryStore TemporaryStore { get; private set; }
 
-        private DatabaseSyntaxBuilder _syntaxBuilder = new MysqlSyntaxBuilder();
+        private DatabaseSyntaxBuilder _syntaxBuilder = SwitchDatabase.DatabaseSyntax;
 
         private Stack<String> _parameterNameStack;
 
