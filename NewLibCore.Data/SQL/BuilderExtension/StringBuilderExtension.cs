@@ -5,66 +5,111 @@ namespace NewLibCore.Data.SQL.BuildExtension
 {
     internal class MysqlSyntaxBuilder : DatabaseSyntaxBuilder
     {
-        private StringBuilder _syntaxBuilder = new StringBuilder();
-
         internal override String SyntaxBuilder(RelationType relationType, String left, String right)
         {
             Clear();
+
             var type = relationType;
             if (type == RelationType.IN)
             {
-                _syntaxBuilder.Append($@" FIND_IN_SET({left}, @{right})>0 ");
+                Builder.Append($@" FIND_IN_SET({left}, @{right})>0 ");
             }
             else if (type == RelationType.LIKE)
             {
-                _syntaxBuilder.Append($@" {left} LIKE CONCAT('%',@{right},'%') ");
+                Builder.Append($@" {left} LIKE CONCAT('%',@{right},'%') ");
             }
             else if (type == RelationType.START_LIKE)
             {
-                _syntaxBuilder.Append($@" {left} {RelationType.LIKE} CONCAT('',@{right},'%') ");
+                Builder.Append($@" {left} {RelationType.LIKE} CONCAT('',@{right},'%') ");
             }
             else if (type == RelationType.END_LIKE)
             {
-                _syntaxBuilder.Append($@" {left} {RelationType.LIKE} CONCAT('%',@{right},'') ");
+                Builder.Append($@" {left} {RelationType.LIKE} CONCAT('%',@{right},'') ");
             }
-            else if (type == RelationType.EQ)
-            {
-                _syntaxBuilder.Append($@" {left} = @{right} ");
-            }
-            else if (type == RelationType.NQ)
-            {
-                _syntaxBuilder.Append($@" {left} <> @{right} ");
-            }
-            else if (type == RelationType.GT)
-            {
-                _syntaxBuilder.Append($@" {left} > @{right} ");
-            }
-            else if (type == RelationType.LT)
-            {
-                _syntaxBuilder.Append($@" {left} < @{right} ");
-            }
-            else if (type == RelationType.GE)
-            {
-                _syntaxBuilder.Append($@" {left} >= @{right} ");
-            }
-            else if (type == RelationType.LE)
-            {
-                _syntaxBuilder.Append($@" {left} <= @{right} ");
-            }
-            return _syntaxBuilder.ToString();
+
+            SyntaxBuilderBase(type, left, right);
+
+            return Builder.ToString();
         }
 
-        internal override void Clear()
+        protected override void Clear()
         {
-            _syntaxBuilder.Clear();
-        } 
+            Builder.Clear();
+        }
+    }
+
+    internal class MsSqlSyntaxBuilder : DatabaseSyntaxBuilder
+    {
+        internal override String SyntaxBuilder(RelationType relationType, String left, String right)
+        {
+            Clear();
+
+            var type = relationType;
+            if (type == RelationType.IN)
+            {
+                Builder.Append($@" FIND_IN_SET({left}, @{right})>0 ");
+            }
+            else if (type == RelationType.LIKE)
+            {
+                Builder.Append($@" {left} {RelationType.LIKE} '%@{right}%'");
+            }
+            else if (type == RelationType.START_LIKE)
+            {
+                Builder.Append($@" {left} {RelationType.LIKE} '@{right}%' ");
+            }
+            else if (type == RelationType.END_LIKE)
+            {
+                Builder.Append($@" {left} {RelationType.LIKE} '@%{right}'  ");
+            }
+
+            SyntaxBuilderBase(type, left, right);
+
+            return Builder.ToString();
+        }
+
+        protected override void Clear()
+        {
+            Builder.Clear();
+        }
     }
 
 
     internal abstract class DatabaseSyntaxBuilder
     {
+        protected StringBuilder Builder = new StringBuilder();
+
         internal abstract String SyntaxBuilder(RelationType relationType, String left, String right);
 
-        internal virtual void Clear() { throw new NotImplementedException(); }
+        protected void SyntaxBuilderBase(RelationType relationType, String left, String right)
+        {
+            if (relationType == RelationType.EQ)
+            {
+                Builder.Append($@" {left} = @{right} ");
+            }
+            else if (relationType == RelationType.NQ)
+            {
+                Builder.Append($@" {left} <> @{right} ");
+            }
+            else if (relationType == RelationType.GT)
+            {
+                Builder.Append($@" {left} > @{right} ");
+            }
+            else if (relationType == RelationType.LT)
+            {
+                Builder.Append($@" {left} < @{right} ");
+            }
+            else if (relationType == RelationType.GE)
+            {
+                Builder.Append($@" {left} >= @{right} ");
+            }
+            else if (relationType == RelationType.LE)
+            {
+                Builder.Append($@" {left} <= @{right} ");
+            }
+        }
+
+        protected virtual void Clear() { throw new NotImplementedException(); }
     }
+
+
 }

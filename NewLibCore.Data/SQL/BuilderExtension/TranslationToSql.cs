@@ -52,8 +52,6 @@ namespace NewLibCore.Data.SQL.BuildExtension
             _joinType = JoinType.NONE;
             TemporaryStore.Append($@" WHERE {masterAliasName}.");
             InternalBuildWhere(statementStore.Expression);
-
-            Console.WriteLine(TemporaryStore.SqlStore.ToString());
             return TemporaryStore;
         }
 
