@@ -13,7 +13,9 @@ namespace NewLibCore.Run
             SwitchDatabase.SwitchTo(Database.MYSQL);
             using (var context = new SqlContext())
             {
-                context.LeftJoin<VisitorRecord, User>((a, b) => a.UserId == b.Id).Find<VisitorRecord>(e => e.UserName != "");
+                context.LeftJoin<VisitorRecord, User>((a, b) => a.UserId == b.Id)
+                    .LeftJoin<User, Member>((a, b) => a.Id == b.UserId)
+                    .Find<VisitorRecord>(e => e.UserName != "");
             }
         }
     }

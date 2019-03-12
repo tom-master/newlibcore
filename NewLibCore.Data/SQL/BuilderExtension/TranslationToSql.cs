@@ -1,9 +1,7 @@
 ﻿using NewLibCore.Data.SQL.InternalDataStore;
-using NewLibCore.Data.SQL.PropertyExtension;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Text;
 
 namespace NewLibCore.Data.SQL.BuildExtension
 {
@@ -19,14 +17,14 @@ namespace NewLibCore.Data.SQL.BuildExtension
 
         private JoinType _joinType;
 
-        private readonly IDictionary<String, String> _expressionParameterNameToTableAliasNameMappers;
+        private readonly IDictionary<String, String> _parameterToTableAliasMappers;
 
         public TranslationToSql()
         {
             TemporaryStore = new SqlTemporaryStore();
             _operationalCharacterStack = new Stack<RelationType>();
             _parameterNameStack = new Stack<String>();
-            _expressionParameterNameToTableAliasNameMappers = new Dictionary<String, String>();
+            _parameterToTableAliasMappers = new Dictionary<String, String>();
         }
 
         public SqlTemporaryStore Translate(StatementStore statementStore)
@@ -47,7 +45,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
                 }
                 _joinType = item.JoinType;
                 InternalBuildWhere(item.Expression);
-                _expressionParameterNameToTableAliasNameMappers.Clear();
+                _parameterToTableAliasMappers.Clear();
             }
             _joinType = JoinType.NONE;
             TemporaryStore.Append($@" WHERE {masterAliasName}.");
@@ -59,7 +57,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
         {
             foreach (var item in keyValuePairs)
             {
-                _expressionParameterNameToTableAliasNameMappers.Add(item.Key, item.Value);
+                _parameterToTableAliasMappers.Add(item.Key, item.Value);
             }
         }
 
@@ -279,7 +277,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
         private void GetJoin(BinaryExpression binaryExp, RelationType relationType)
         {
             var leftMemberExp = (MemberExpression)binaryExp.Left;
-            var leftAliasName = _expressionParameterNameToTableAliasNameMappers[((ParameterExpression)leftMemberExp.Expression).Name];
+            var leftAliasName = _parameterToTableAliasMappers[((ParameterExpression)leftMemberExp.Expression).Name];
 
             if (binaryExp.Right.GetType() == typeof(ConstantExpression))
             {
@@ -297,94 +295,10 @@ namespace NewLibCore.Data.SQL.BuildExtension
             else
             {
                 var rightMemberExp = (MemberExpression)binaryExp.Right;
-                var rightAliasName = _expressionParameterNameToTableAliasNameMappers[((ParameterExpression)rightMemberExp.Expression).Name];
+                var rightAliasName = _parameterToTableAliasMappers[((ParameterExpression)rightMemberExp.Expression).Name];
 
                 TemporaryStore.Append($@" {rightAliasName}.{rightMemberExp.Member.Name} {relationType.GetDescription()} {leftAliasName}.{leftMemberExp.Member.Name}");
             }
-        }
-    }
-
-    internal class StatementStore
-    {
-        public Expression Expression { get; private set; }
-
-        public String AliasName { get; set; }
-
-        public JoinType JoinType { get { return JoinType.NONE; } }
-
-        public IList<JoinStatementStore> JoinStores { get; private set; }
-
-        public StatementStore()
-        {
-            JoinStores = new List<JoinStatementStore>();
-        }
-
-        public void AddWhere<TModel>(Expression<Func<TModel, Boolean>> expression)
-        {
-            Expression = expression;
-        }
-
-        public void AddJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> expression, JoinType joinType) where TLeft : PropertyMonitor, new()
-            where TRight : PropertyMonitor, new()
-        {
-            var joinStore = new JoinStatementStore
-            {
-                Expression = expression,
-                JoinType = joinType
-            };
-            foreach (var item in expression.Parameters)
-            {
-                if (typeof(TLeft) == item.Type)
-                {
-                    continue;
-                }
-                joinStore.AliasNameMappers.Add(new KeyValuePair<String, String>(item.Name, item.Type.Name));
-            }
-
-            JoinStores.Add(joinStore);
-        }
-    }
-
-    internal class JoinStatementStore
-    {
-        public JoinType JoinType { get; set; }
-
-        public IList<KeyValuePair<String, String>> AliasNameMappers { get; set; } = new List<KeyValuePair<String, String>>();
-
-        public Expression Expression { get; set; }
-
-        public String AliasName { get { return Guid.NewGuid().ToString().Replace("-", ""); } }
-    }
-
-    internal class SqlTemporaryStore
-    {
-        internal StringBuilder SqlStore { get; private set; }
-
-        internal IList<SqlParameterMapper> ParameterStore { get; private set; }
-
-        internal SqlTemporaryStore()
-        {
-            SqlStore = new StringBuilder();
-            ParameterStore = new List<SqlParameterMapper>();
-        }
-
-        internal void Append(String sql)
-        {
-            SqlStore.Append(sql);
-        }
-
-        internal void AppendParameter(params SqlParameterMapper[] mapper)
-        {
-            foreach (var item in mapper)
-            {
-                ParameterStore.Add(item);
-            }
-        }
-
-        internal void Clear()
-        {
-            SqlStore.Clear();
-            ParameterStore.Clear();
         }
     }
 }
