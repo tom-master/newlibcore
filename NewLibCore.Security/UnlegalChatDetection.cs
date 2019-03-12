@@ -3,9 +3,9 @@ using System.Text.RegularExpressions;
 
 namespace NewLibCore.Security
 {
-    internal class UnlegalChatDetection
+    public class UnlegalChatDetection
     {
-        internal static String FilterBadChat(String value)
+        public static String FilterBadChat(String value)
         {
             if (value == null)
             {

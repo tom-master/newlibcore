@@ -7,12 +7,12 @@ using System.Reflection;
 
 namespace NewLibCore.Data.SQL.DataExtension
 {
-    public static class DataTableExtension
+    internal static class DataTableExtension
     {
         /// <summary>
         /// 获取列表
         /// </summary>
-        public static IList<T> AsList<T>(this DataTable dataTable) where T : class, new()
+        internal static IList<T> AsList<T>(this DataTable dataTable) where T : class, new()
         {
             if (dataTable == null || dataTable.Rows.Count == 0)
             {
@@ -25,7 +25,7 @@ namespace NewLibCore.Data.SQL.DataExtension
         /// <summary>
         /// 获取单值
         /// </summary>
-        public static T AsSignal<T>(this DataTable dataTable) where T : class, new()
+        internal static T AsSignal<T>(this DataTable dataTable) where T : class, new()
         {
             return AsList<T>(dataTable).FirstOrDefault();
         }
@@ -56,9 +56,9 @@ namespace NewLibCore.Data.SQL.DataExtension
         }
     }
 
-    public static class ConvertExtension
+    internal static class ConvertExtension
     {
-        public static Object ChangeType(Object value, Type type)
+        internal static Object ChangeType(Object value, Type type)
         {
             if (typeof(Enum).IsAssignableFrom(type))
             {
@@ -68,13 +68,13 @@ namespace NewLibCore.Data.SQL.DataExtension
         }
     }
 
-    public class FastProperty
+    internal class FastProperty
     {
         public PropertyInfo Property { get; set; }
 
-        public Func<object, object> GetDelegate;
+        public Func<Object, Object> GetDelegate;
 
-        public Action<object, object> SetDelegate;
+        public Action<Object, Object> SetDelegate;
 
         public FastProperty(PropertyInfo property)
         {
@@ -85,27 +85,27 @@ namespace NewLibCore.Data.SQL.DataExtension
 
         private void InitializeSet()
         {
-            var instance = Expression.Parameter(typeof(object), "instance");
-            var value = Expression.Parameter(typeof(object), "value");
+            var instance = Expression.Parameter(typeof(Object), "instance");
+            var value = Expression.Parameter(typeof(Object), "value");
 
             var instanceCast = (!this.Property.DeclaringType.IsValueType) ? Expression.TypeAs(instance, this.Property.DeclaringType) : Expression.Convert(instance, this.Property.DeclaringType);
             var valueCast = (!this.Property.PropertyType.IsValueType) ? Expression.TypeAs(value, this.Property.PropertyType) : Expression.Convert(value, this.Property.PropertyType);
-            this.SetDelegate = Expression.Lambda<Action<object, object>>(Expression.Call(instanceCast, this.Property.SetMethod, valueCast), new ParameterExpression[] { instance, value }).Compile();
+            this.SetDelegate = Expression.Lambda<Action<Object, Object>>(Expression.Call(instanceCast, this.Property.SetMethod, valueCast), new ParameterExpression[] { instance, value }).Compile();
         }
 
         private void InitializeGet()
         {
-            var instance = Expression.Parameter(typeof(object), "instance");
+            var instance = Expression.Parameter(typeof(Object), "instance");
             var instanceCast = (!this.Property.DeclaringType.IsValueType) ? Expression.TypeAs(instance, this.Property.DeclaringType) : Expression.Convert(instance, this.Property.DeclaringType);
-            this.GetDelegate = Expression.Lambda<Func<object, object>>(Expression.TypeAs(Expression.Call(instanceCast, this.Property.GetGetMethod()), typeof(object)), instance).Compile();
+            this.GetDelegate = Expression.Lambda<Func<Object, Object>>(Expression.TypeAs(Expression.Call(instanceCast, this.Property.GetGetMethod()), typeof(Object)), instance).Compile();
         }
 
-        public object Get(object instance)
+        internal Object Get(Object instance)
         {
             return this.GetDelegate(instance);
         }
 
-        public void Set(object instance, object value)
+        internal void Set(Object instance, Object value)
         {
             this.SetDelegate(instance, value);
         }
