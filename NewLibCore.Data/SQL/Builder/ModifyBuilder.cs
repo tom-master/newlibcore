@@ -35,7 +35,7 @@ namespace NewLibCore.Data.SQL.Builder
             {
                 translation.Translate(statementStore);
             }
-            translation.TemporaryStore.Append(" ; SELECT CAST(ROW_COUNT() AS SIGNED) AS c");
+            translation.TemporaryStore.Append($@"{SwitchDatabase.RowCountSuffix}");
             return translation.TemporaryStore;
         }
     }

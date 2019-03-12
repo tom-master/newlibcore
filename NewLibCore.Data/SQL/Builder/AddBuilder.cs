@@ -1,9 +1,7 @@
-﻿using NewLibCore.Data.SQL.BuildExtension;
-using NewLibCore.Data.SQL.InternalDataStore;
+﻿using NewLibCore.Data.SQL.InternalDataStore;
 using NewLibCore.Data.SQL.MapperExtension;
 using NewLibCore.Data.SQL.PropertyExtension;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
@@ -13,7 +11,6 @@ namespace NewLibCore.Data.SQL.Builder
     {
         private readonly Boolean _isVerifyModel;
 
-
         internal AddBuilder(TModel model, Boolean isVerifyModel = false) : base(model)
         {
             _isVerifyModel = isVerifyModel;
@@ -21,7 +18,7 @@ namespace NewLibCore.Data.SQL.Builder
 
         protected internal override SqlTemporaryStore Build(StatementStore statementStore = null)
         {
-            var sqlTemporary = new SqlTemporaryStore();
+            var temporaryStore = new SqlTemporaryStore();
             var propertyInfos = ModelType.GetProperties().Where(w => w.GetCustomAttributes<PropertyValidate>().Any());
 
             if (!propertyInfos.Any())
@@ -31,14 +28,14 @@ namespace NewLibCore.Data.SQL.Builder
 
             if (_isVerifyModel)
             {
-                ValidateModel(propertyInfos.ToList());
+                ValidateModel(propertyInfos);
             }
 
-            sqlTemporary.Append($@" INSERT {ModelType.Name} ({String.Join(",", propertyInfos.Select(c => c.Name))} ) VALUES ({String.Join(",", propertyInfos.Select(key => $@"@{key.Name}"))}) ; SELECT CAST(@@IDENTITY AS SIGNED) AS c ");
+            temporaryStore.Append($@" INSERT {ModelType.Name} ({String.Join(",", propertyInfos.Select(c => c.Name))} ) VALUES ({String.Join(",", propertyInfos.Select(key => $@"@{key.Name}"))}) {SwitchDatabase.IdentitySuffix}");
 
-            sqlTemporary.AppendParameter(propertyInfos.ToList().Select(c => new SqlParameterMapper($@"@{c.Name}", c.GetValue(ModelInstance))).ToArray());
+            temporaryStore.AppendParameter(propertyInfos.ToList().Select(c => new SqlParameterMapper($@"@{c.Name}", c.GetValue(ModelInstance))).ToArray());
 
-            return sqlTemporary;
+            return temporaryStore;
         }
     }
 }

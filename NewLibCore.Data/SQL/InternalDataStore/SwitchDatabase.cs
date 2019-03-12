@@ -10,7 +10,11 @@ namespace NewLibCore.Data.SQL.InternalDataStore
     {
         private static Database _database;
 
-        public static DatabaseSyntaxBuilder DatabaseSyntax { get; private set; }
+        internal static DatabaseSyntaxBuilder DatabaseSyntax { get; private set; }
+
+        internal static String IdentitySuffix { get; private set; }
+
+        internal static String RowCountSuffix { get; private set; }
 
         public static void SwitchTo(Database database)
         {
@@ -26,11 +30,15 @@ namespace NewLibCore.Data.SQL.InternalDataStore
             {
                 case Database.MSSQL:
                 {
+                    IdentitySuffix = " SELECT @@IDENTITY";
+                    RowCountSuffix = " SELECT @@ROWCOUNT";
                     DatabaseSyntax = new MsSqlSyntaxBuilder();
                     return new SqlConnection(connection);
                 }
                 case Database.MYSQL:
                 {
+                    IdentitySuffix = " ; SELECT CAST(@@IDENTITY AS SIGNED) AS c ";
+                    RowCountSuffix = " ; SELECT CAST(ROW_COUNT() AS SIGNED) AS c";
                     DatabaseSyntax = new MysqlSyntaxBuilder();
                     return new MySqlConnection(connection);
                 }

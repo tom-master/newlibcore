@@ -31,7 +31,7 @@ namespace NewLibCore.Data.SQL.Builder
 
         protected internal abstract SqlTemporaryStore Build(StatementStore statementStore = null);
 
-        protected void ValidateModel(IList<PropertyInfo> propertyInfos)
+        protected void ValidateModel(IEnumerable<PropertyInfo> propertyInfos)
         {
             var propertys = propertyInfos;
             foreach (var propertyItem in propertys)

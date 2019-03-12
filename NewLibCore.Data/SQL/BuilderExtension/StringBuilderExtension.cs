@@ -77,6 +77,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
     public abstract class DatabaseSyntaxBuilder
     {
         protected StringBuilder Builder = new StringBuilder();
+        
 
         internal abstract String SyntaxBuilder(RelationType relationType, String left, String right);
 
@@ -109,7 +110,5 @@ namespace NewLibCore.Data.SQL.BuildExtension
         }
 
         protected virtual void Clear() { throw new NotImplementedException(); }
-    }
-
-
+    } 
 }
