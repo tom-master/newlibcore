@@ -48,7 +48,14 @@ namespace NewLibCore.Data.SQL.Builder
                 var propertys = modelType.GetProperties().Where(w => w.GetCustomAttributes<PropertyValidate>().Any());
                 return (String.Join(",", propertys.Select(s => $@"{modelAliasName}.{s.Name}")), modelAliasName);
             }
+
             modelAliasName = fields.Parameters[0].Type.Name.ToLower();
+            if (fields.Body.NodeType == ExpressionType.Constant)
+            {
+                var constant = (ConstantExpression)fields.Body;
+                return (constant.Value + "", modelAliasName);
+            }
+
             var dynamicFields = (fields.Body as NewExpression).Members.Select(s => $@"{modelAliasName}.{s.Name}");
             return (String.Join(",", dynamicFields), modelAliasName);
         }

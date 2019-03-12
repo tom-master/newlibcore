@@ -8,7 +8,7 @@ namespace NewLibCore.Data.SQL.InternalDataStore
 {
     internal class JoinStatementStore
     {
-        public JoinType JoinType { get; set; }
+        internal JoinType JoinType { get; set; }
 
         public IList<KeyValuePair<String, String>> AliasNameMappers { get; set; } = new List<KeyValuePair<String, String>>();
 

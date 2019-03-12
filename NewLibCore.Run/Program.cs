@@ -13,8 +13,7 @@ namespace NewLibCore.Run
             SwitchDatabase.SwitchTo(Database.MYSQL);
             using (var context = new SqlContext())
             {
-                var member = new Member().ModifyAppUrl("https://www.google.com");
-                context.Modify(member, d => d.Id == 10);
+                context.InnerJoin<Member, User>((a, b) => a.UserId == b.Id).Count<Member>();
             }
         }
     }

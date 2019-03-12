@@ -63,42 +63,52 @@ namespace NewLibCore.Data.SQL.InternalDataStore
 
         internal TemporaryMarshalValue Execute(ExecuteType executeType, String sql, IEnumerable<SqlParameterMapper> parameters = null, CommandType commandType = CommandType.Text)
         {
-            Open();
-            using (var cmd = _connection.CreateCommand())
+            try
             {
-                if (_useTransaction)
+                Open();
+                using (var cmd = _connection.CreateCommand())
                 {
-                    cmd.Transaction = BeginTransaction();
-                }
-                cmd.CommandType = commandType;
-                cmd.CommandText = sql;
-                if (parameters != null && parameters.Any())
-                {
-                    cmd.Parameters.AddRange(parameters.Select(s => (DbParameter)s).ToArray());
-                }
-                var temporaryMarshalValue = new TemporaryMarshalValue();
-
-                if (executeType == ExecuteType.SELECT)
-                {
-                    using (var dr = cmd.ExecuteReader())
+                    if (_useTransaction)
                     {
-                        var dataTable = new DataTable("tmpDt");
-                        dataTable.Load(dr, LoadOption.Upsert);
-                        temporaryMarshalValue.MarshalValue = dataTable;
+                        cmd.Transaction = BeginTransaction();
                     }
+                    cmd.CommandType = commandType;
+                    cmd.CommandText = sql;
+                    if (parameters != null && parameters.Any())
+                    {
+                        cmd.Parameters.AddRange(parameters.Select(s => (DbParameter)s).ToArray());
+                    }
+                    var temporaryMarshalValue = new TemporaryMarshalValue();
+
+                    if (executeType == ExecuteType.SELECT)
+                    {
+                        using (var dr = cmd.ExecuteReader())
+                        {
+                            var dataTable = new DataTable("tmpDt");
+                            dataTable.Load(dr, LoadOption.Upsert);
+                            temporaryMarshalValue.MarshalValue = dataTable;
+                        }
+                    }
+
+                    if (executeType == ExecuteType.UPDATE)
+                    {
+                        var count = Int32.Parse(cmd.ExecuteNonQuery().ToString());
+                        temporaryMarshalValue.MarshalValue = count;
+                    }
+
+                    if (executeType == ExecuteType.INSERT || executeType == ExecuteType.SELECTSINGLE)
+                    {
+                        var count = Int32.Parse(cmd.ExecuteScalar().ToString());
+                        temporaryMarshalValue.MarshalValue = count;
+                    }
+                    cmd.Parameters.Clear();
+                    return temporaryMarshalValue;
                 }
-                else if (executeType == ExecuteType.UPDATE)
-                {
-                    var count = Int32.Parse(cmd.ExecuteNonQuery().ToString());
-                    temporaryMarshalValue.MarshalValue = count;
-                }
-                else if (executeType == ExecuteType.INSERT)
-                {
-                    var count = Int32.Parse(cmd.ExecuteScalar().ToString());
-                    temporaryMarshalValue.MarshalValue = count;
-                }
-                cmd.Parameters.Clear();
-                return temporaryMarshalValue;
+            }
+            catch (Exception)
+            {
+                _logger.Write("ERROR", sql);
+                throw;
             }
         }
 
@@ -163,6 +173,7 @@ namespace NewLibCore.Data.SQL.InternalDataStore
     {
         SELECT = 1,
         UPDATE = 2,
-        INSERT = 3
+        INSERT = 3,
+        SELECTSINGLE = 4
     }
 }
