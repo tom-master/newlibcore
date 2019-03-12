@@ -1,4 +1,5 @@
 ﻿using NewLibCore.Data.SQL.BuildExtension;
+using NewLibCore.Data.SQL.InternalDataStore;
 using NewLibCore.Data.SQL.MapperExtension;
 using NewLibCore.Data.SQL.PropertyExtension;
 using System;
