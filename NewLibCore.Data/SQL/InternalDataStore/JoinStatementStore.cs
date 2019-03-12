@@ -10,10 +10,10 @@ namespace NewLibCore.Data.SQL.InternalDataStore
     {
         internal JoinType JoinType { get; set; }
 
-        public IList<KeyValuePair<String, String>> AliasNameMappers { get; set; } = new List<KeyValuePair<String, String>>();
+        internal IList<KeyValuePair<String, String>> AliasNameMappers { get; set; } = new List<KeyValuePair<String, String>>();
 
-        public Expression Expression { get; set; }
+        internal Expression Expression { get; set; }
 
-        public String AliasName { get { return Guid.NewGuid().ToString().Replace("-", ""); } }
+        internal String AliasName { get { return Guid.NewGuid().ToString().Replace("-", ""); } }
     }
 }
