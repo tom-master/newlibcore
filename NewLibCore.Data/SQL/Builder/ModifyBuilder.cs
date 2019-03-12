@@ -28,15 +28,15 @@ namespace NewLibCore.Data.SQL.Builder
                 ValidateModel(properties);
             }
 
-            var buildEntry = new TranslationToSql();
-            buildEntry.TemporaryStore.Append($@"UPDATE {ModelType.Name} SET {String.Join(",", properties.Select(s => $@"{s.Name}=@{s.Name}"))}");
-            buildEntry.TemporaryStore.AppendParameter(properties.ToList().Select(c => new SqlParameterMapper($@"@{c.Name}", c.GetValue(ModelInstance))).ToArray());
+            var translation = new TranslationToSql();
+            translation.TemporaryStore.Append($@"UPDATE {ModelType.Name} SET {String.Join(",", properties.Select(s => $@"{s.Name}=@{s.Name}"))}");
+            translation.TemporaryStore.AppendParameter(properties.ToList().Select(c => new SqlParameterMapper($@"@{c.Name}", c.GetValue(ModelInstance))).ToArray());
             if (statementStore != null && statementStore.Expression != null)
             {
-                buildEntry.Translate(statementStore);
+                translation.Translate(statementStore);
             }
-            buildEntry.TemporaryStore.Append(" ; SELECT CAST(ROW_COUNT() AS SIGNED) AS c");
-            return buildEntry.TemporaryStore;
+            translation.TemporaryStore.Append(" ; SELECT CAST(ROW_COUNT() AS SIGNED) AS c");
+            return translation.TemporaryStore;
         }
     }
 }

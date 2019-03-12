@@ -29,7 +29,6 @@ namespace NewLibCore.Data.SQL.BuildExtension
 
         public SqlTemporaryStore Translate(StatementStore statementStore)
         {
-            var masterAliasName = statementStore.AliasName;
             var lamdbaExp = (LambdaExpression)statementStore.Expression;
 
             foreach (var item in statementStore.JoinStores)
@@ -47,9 +46,13 @@ namespace NewLibCore.Data.SQL.BuildExtension
                 InternalBuildWhere(item.Expression);
                 _parameterToTableAliasMappers.Clear();
             }
-            _joinType = JoinType.NONE;
-            TemporaryStore.Append($@" WHERE {masterAliasName}.");
-            InternalBuildWhere(statementStore.Expression);
+
+            if (statementStore.Expression != null)
+            {
+                _joinType = JoinType.NONE;
+                TemporaryStore.Append($@" WHERE {(statementStore.AliasName == null ? "" : $@"{statementStore.AliasName}.")}");
+                InternalBuildWhere(statementStore.Expression);
+            }
             return TemporaryStore;
         }
 

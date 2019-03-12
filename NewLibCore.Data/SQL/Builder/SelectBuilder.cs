@@ -41,9 +41,9 @@ namespace NewLibCore.Data.SQL.Builder
         private (String fields, String tableAliasName) ExtractFieldsAndTableName(Expression<Func<TModel, dynamic>> fields)
         {
             var modelAliasName = "";
-            var modelType = typeof(TModel);
             if (fields == null)
             {
+                var modelType = typeof(TModel);
                 modelAliasName = modelType.Name.ToLower();
                 var propertys = modelType.GetProperties().Where(w => w.GetCustomAttributes<PropertyValidate>().Any());
                 return (String.Join(",", propertys.Select(s => $@"{modelAliasName}.{s.Name}")), modelAliasName);
