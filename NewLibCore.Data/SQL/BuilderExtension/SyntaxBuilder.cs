@@ -31,11 +31,6 @@ namespace NewLibCore.Data.SQL.BuildExtension
 
             return Builder.ToString();
         }
-
-        protected override void Clear()
-        {
-            Builder.Clear();
-        }
     }
 
     internal class MsSqlSyntaxBuilder : DatabaseSyntaxBuilder
@@ -66,10 +61,6 @@ namespace NewLibCore.Data.SQL.BuildExtension
             return Builder.ToString();
         }
 
-        protected override void Clear()
-        {
-            Builder.Clear();
-        }
     }
 
     public abstract class DatabaseSyntaxBuilder
@@ -83,6 +74,6 @@ namespace NewLibCore.Data.SQL.BuildExtension
             Builder.Append($@" {left} {relationType.GetDescription()} @{right} ");
         }
 
-        protected virtual void Clear() { throw new NotImplementedException(); }
+        protected virtual void Clear() { Builder.Clear(); }
     }
 }
