@@ -16,12 +16,12 @@ namespace NewLibCore.Data.SQL.InternalDataStore
 
         internal static String RowCountSuffix { get; private set; }
 
+        internal static String ConnectionString { get { return Host.GetHostVar("database"); } }
+
         public static void SwitchTo(Database database)
         {
             _database = database;
         }
-
-        internal static String ConnectionString { get { return Host.GetHostVar("database"); } }
 
         internal static DbConnection GetConnectionInstance()
         {

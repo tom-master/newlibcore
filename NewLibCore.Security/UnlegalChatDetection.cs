@@ -1,16 +1,17 @@
+using System;
 using System.Text.RegularExpressions;
 
 namespace NewLibCore.Security
 {
-    public class UnlegalChatDetection
+    internal class UnlegalChatDetection
     {
-        public static string FilterBadChat(string value)
+        internal static String FilterBadChat(String value)
         {
             if (value == null)
             {
                 return "";
             }
-            else 
+            else
             {
                 //删除脚本
                 value = Regex.Replace(value, @"<script[^>]*?>.*?</script>", "", RegexOptions.IgnoreCase);
