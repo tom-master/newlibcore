@@ -44,25 +44,24 @@ namespace NewLibCore.Data.SQL.BuildExtension
         {
             Clear();
 
-            var type = relationType;
-            if (type == RelationType.IN)
+            if (relationType == RelationType.IN)
             {
-                Builder.Append($@" FIND_IN_SET({left}, @{right})>0 ");
+                Builder.Append($@" {left} IN(@{right}) ");
             }
-            else if (type == RelationType.LIKE)
+            else if (relationType == RelationType.LIKE)
             {
                 Builder.Append($@" {left} {RelationType.LIKE} '%@{right}%'");
             }
-            else if (type == RelationType.START_LIKE)
+            else if (relationType == RelationType.START_LIKE)
             {
                 Builder.Append($@" {left} {RelationType.LIKE} '@{right}%' ");
             }
-            else if (type == RelationType.END_LIKE)
+            else if (relationType == RelationType.END_LIKE)
             {
                 Builder.Append($@" {left} {RelationType.LIKE} '@%{right}'  ");
             }
 
-            SyntaxBuilderBase(type, left, right);
+            SyntaxBuilderBase(relationType, left, right);
 
             return Builder.ToString();
         }
@@ -81,30 +80,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
 
         internal void SyntaxBuilderBase(RelationType relationType, String left, String right)
         {
-            if (relationType == RelationType.EQ)
-            {
-                Builder.Append($@" {left} = @{right} ");
-            }
-            else if (relationType == RelationType.NQ)
-            {
-                Builder.Append($@" {left} <> @{right} ");
-            }
-            else if (relationType == RelationType.GT)
-            {
-                Builder.Append($@" {left} > @{right} ");
-            }
-            else if (relationType == RelationType.LT)
-            {
-                Builder.Append($@" {left} < @{right} ");
-            }
-            else if (relationType == RelationType.GE)
-            {
-                Builder.Append($@" {left} >= @{right} ");
-            }
-            else if (relationType == RelationType.LE)
-            {
-                Builder.Append($@" {left} <= @{right} ");
-            }
+            Builder.Append($@" {left} {relationType.GetDescription()} @{right} ");
         }
 
         protected virtual void Clear() { throw new NotImplementedException(); }
