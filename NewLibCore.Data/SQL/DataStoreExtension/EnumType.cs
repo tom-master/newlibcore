@@ -2,6 +2,17 @@
 
 namespace NewLibCore.Data.SQL.BuildExtension
 {
+    public enum ExecuteType
+    {
+        SELECT = 1,
+
+        UPDATE = 2,
+
+        INSERT = 3,
+
+        SELECTSINGLE = 4
+    }
+
     public enum DatabaseType
     {
         MSSQL = 1,

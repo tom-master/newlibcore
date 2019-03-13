@@ -68,6 +68,7 @@ namespace NewLibCore.Data.SQL.DataStore
             _statementStore.AddWhere(where);
             var store = builder.Build(_statementStore);
             var executeResult = Context.Execute(ExecuteType.SELECT, store.SqlStore.ToString(), store.ParameterStore, CommandType.Text);
+            _statementStore.Clear();
             var dataTable = executeResult.Value as DataTable;
             return dataTable.AsList<TModel>();
         }

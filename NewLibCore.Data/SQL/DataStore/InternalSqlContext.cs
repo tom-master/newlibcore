@@ -1,4 +1,5 @@
-﻿using NewLibCore.Data.SQL.PropertyExtension;
+﻿using NewLibCore.Data.SQL.BuildExtension;
+using NewLibCore.Data.SQL.PropertyExtension;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -164,12 +165,4 @@ namespace NewLibCore.Data.SQL.DataStore
         #endregion
     }
 
-
-    public enum ExecuteType
-    {
-        SELECT = 1,
-        UPDATE = 2,
-        INSERT = 3,
-        SELECTSINGLE = 4
-    }
 }

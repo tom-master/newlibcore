@@ -55,5 +55,14 @@ namespace NewLibCore.Data.SQL.DataStore
 
             JoinStores.Add(joinStore);
         }
+
+        internal void Clear()
+        {
+            Expression = null;
+            OrderByType = null;
+            AliasName = "";
+            OrderByType = null;
+            JoinStores.Clear();
+        }
     }
 }
