@@ -25,8 +25,8 @@ namespace NewLibCore.Data.SQL.DataStore
         {
             BuilderBase<TModel> builder = new AddBuilder<TModel>(model, true);
             var store = builder.Build();
-            var returnValue = Context.Execute(ExecuteType.INSERT, store.SqlStore.ToString(), store.ParameterStore, CommandType.Text);
-            model.Id = (Int32)returnValue.MarshalValue;
+            var executeResult = Context.Execute(ExecuteType.INSERT, store.SqlStore.ToString(), store.ParameterStore, CommandType.Text);
+            model.Id = (Int32)executeResult.Value;
             return model;
         }
 
@@ -35,8 +35,8 @@ namespace NewLibCore.Data.SQL.DataStore
             BuilderBase<TModel> builder = new ModifyBuilder<TModel>(model, true);
             _statementStore.AddWhere(where);
             var store = builder.Build(_statementStore);
-            var returnValue = Context.Execute(ExecuteType.UPDATE, store.SqlStore.ToString(), store.ParameterStore, CommandType.Text);
-            return (Int32)returnValue.MarshalValue > 0;
+            var executeResult = Context.Execute(ExecuteType.UPDATE, store.SqlStore.ToString(), store.ParameterStore, CommandType.Text);
+            return (Int32)executeResult.Value > 0;
         }
 
         public IList<TModel> Find<TModel>(Expression<Func<TModel, Boolean>> where) where TModel : PropertyMonitor, new()
@@ -67,8 +67,8 @@ namespace NewLibCore.Data.SQL.DataStore
             BuilderBase<TModel> builder = new SelectBuilder<TModel>(fields, pageIndex, pageSize);
             _statementStore.AddWhere(where);
             var store = builder.Build(_statementStore);
-            var returnValue = Context.Execute(ExecuteType.SELECT, store.SqlStore.ToString(), store.ParameterStore, CommandType.Text);
-            var dataTable = returnValue.MarshalValue as DataTable;
+            var executeResult = Context.Execute(ExecuteType.SELECT, store.SqlStore.ToString(), store.ParameterStore, CommandType.Text);
+            var dataTable = executeResult.Value as DataTable;
             return dataTable.AsList<TModel>();
         }
 
@@ -89,8 +89,8 @@ namespace NewLibCore.Data.SQL.DataStore
             BuilderBase<TModel> builder = new SelectBuilder<TModel>(d => "COUNT(*)");
             _statementStore.AddWhere(where);
             var store = builder.Build(_statementStore);
-            var returnValue = Context.Execute(ExecuteType.SELECTSINGLE, store.SqlStore.ToString(), store.ParameterStore, CommandType.Text);
-            return (Int32)returnValue.MarshalValue;
+            var executeResult = Context.Execute(ExecuteType.SELECTSINGLE, store.SqlStore.ToString(), store.ParameterStore, CommandType.Text);
+            return (Int32)executeResult.Value;
         }
 
         public Repository LeftJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> expression) where TLeft : PropertyMonitor, new()

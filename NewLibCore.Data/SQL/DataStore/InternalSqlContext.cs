@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace NewLibCore.Data.SQL.DataStore
 {
-    public class InternalSqlContext : IDisposable
+    public sealed class InternalSqlContext : IDisposable
     {
         private readonly ILogger _logger;
 
@@ -61,7 +61,7 @@ namespace NewLibCore.Data.SQL.DataStore
             throw new Exception("没有启动事务，无法执行事务回滚");
         }
 
-        internal TemporaryMarshalValue Execute(ExecuteType executeType, String sql, IEnumerable<SqlParameterMapper> parameters = null, CommandType commandType = CommandType.Text)
+        internal ExecuteResult Execute(ExecuteType executeType, String sql, IEnumerable<SqlParameterMapper> parameters = null, CommandType commandType = CommandType.Text)
         {
             try
             {
@@ -78,31 +78,27 @@ namespace NewLibCore.Data.SQL.DataStore
                     {
                         cmd.Parameters.AddRange(parameters.Select(s => (DbParameter)s).ToArray());
                     }
-                    var temporaryMarshalValue = new TemporaryMarshalValue();
 
+                    var executeResult = new ExecuteResult();
                     if (executeType == ExecuteType.SELECT)
                     {
                         using (var dr = cmd.ExecuteReader())
                         {
                             var dataTable = new DataTable("tmpDt");
                             dataTable.Load(dr, LoadOption.Upsert);
-                            temporaryMarshalValue.MarshalValue = dataTable;
+                            executeResult.Value = dataTable;
                         }
                     }
-
-                    if (executeType == ExecuteType.UPDATE)
+                    else if (executeType == ExecuteType.UPDATE)
                     {
-                        var count = Int32.Parse(cmd.ExecuteNonQuery().ToString());
-                        temporaryMarshalValue.MarshalValue = count;
+                        executeResult.Value = cmd.ExecuteNonQuery();
                     }
-
-                    if (executeType == ExecuteType.INSERT || executeType == ExecuteType.SELECTSINGLE)
+                    else if (executeType == ExecuteType.INSERT || executeType == ExecuteType.SELECTSINGLE)
                     {
-                        var count = Int32.Parse(cmd.ExecuteScalar().ToString());
-                        temporaryMarshalValue.MarshalValue = count;
+                        executeResult.Value = cmd.ExecuteScalar();
                     }
                     cmd.Parameters.Clear();
-                    return temporaryMarshalValue;
+                    return executeResult;
                 }
             }
             catch (Exception)

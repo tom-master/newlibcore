@@ -12,7 +12,7 @@ namespace NewLibCore.Data.SQL.DataExtension
         /// <summary>
         /// 获取列表
         /// </summary>
-        internal static IList<T> AsList<T>(this DataTable dataTable) where T : class, new()
+        internal static IList<T> AsList<T>(this DataTable dataTable) where T : new()
         {
             if (dataTable == null || dataTable.Rows.Count == 0)
             {
@@ -25,12 +25,12 @@ namespace NewLibCore.Data.SQL.DataExtension
         /// <summary>
         /// 获取单值
         /// </summary>
-        internal static T AsSignal<T>(this DataTable dataTable) where T : class, new()
+        internal static T AsSignal<T>(this DataTable dataTable) where T : new()
         {
             return AsList<T>(dataTable).FirstOrDefault();
         }
 
-        private static List<T> ConvertToList<T>(DataTable dt) where T : class, new()
+        private static List<T> ConvertToList<T>(DataTable dt) where T : new()
         {
             var list = new List<T>();
             foreach (DataRow dr in dt.Rows)
