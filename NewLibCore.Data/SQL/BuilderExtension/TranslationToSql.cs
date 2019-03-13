@@ -30,7 +30,6 @@ namespace NewLibCore.Data.SQL.BuildExtension
         public SqlTemporaryStore Translate(StatementStore statementStore)
         {
             var lamdbaExp = (LambdaExpression)statementStore.Expression;
-
             foreach (var item in statementStore.JoinStores)
             {
                 foreach (var parameter in ((LambdaExpression)item.Expression).Parameters)
