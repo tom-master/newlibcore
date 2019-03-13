@@ -2,6 +2,12 @@
 
 namespace NewLibCore.Data.SQL.BuildExtension
 {
+    public enum DatabaseType
+    {
+        MSSQL = 1,
+
+        MYSQL = 2
+    }
 
     public enum OrderByType
     {

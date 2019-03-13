@@ -4,6 +4,6 @@ namespace NewLibCore.Data.SQL.BuildExtension
 {
     internal interface ITranslate
     {
-        SqlTemporaryStore Translate(StatementStore statementStore);
+        FinalResultStore Translate(StatementStore statementStore);
     }
 }

@@ -15,7 +15,7 @@ namespace NewLibCore.Data.SQL.Builder
             _isValidate = isValidate;
         }
 
-        protected internal override SqlTemporaryStore Build(StatementStore statementStore = null)
+        protected internal override FinalResultStore Build(StatementStore statementStore = null)
         {
             var properties = ModelInstance.PropertyInfos;
             if (!properties.Any())
@@ -29,14 +29,14 @@ namespace NewLibCore.Data.SQL.Builder
             }
 
             var translation = new TranslationToSql();
-            translation.TemporaryStore.Append($@"UPDATE {ModelType.Name} SET {String.Join(",", properties.Select(s => $@"{s.Name}=@{s.Name}"))}");
-            translation.TemporaryStore.AppendParameter(properties.ToList().Select(c => new SqlParameterMapper($@"@{c.Name}", c.GetValue(ModelInstance))).ToArray());
+            translation.FinalResultStore.Append($@"UPDATE {ModelType.Name} SET {String.Join(",", properties.Select(s => $@"{s.Name}=@{s.Name}"))}");
+            translation.FinalResultStore.AppendParameter(properties.ToList().Select(c => new SqlParameterMapper($@"@{c.Name}", c.GetValue(ModelInstance))).ToArray());
             if (statementStore != null && statementStore.Expression != null)
             {
                 translation.Translate(statementStore);
             }
-            translation.TemporaryStore.Append($@"{SwitchDatabase.DatabaseSyntax.RowCountSuffix}");
-            return translation.TemporaryStore;
+            translation.FinalResultStore.Append($@"{SwitchDatabase.DatabaseSyntax.RowCountSuffix}");
+            return translation.FinalResultStore;
         }
     }
 }

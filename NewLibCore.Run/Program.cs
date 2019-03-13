@@ -1,4 +1,5 @@
-﻿using NewLibCore.Data.SQL.InternalDataStore;
+﻿using NewLibCore.Data.SQL.BuildExtension;
+using NewLibCore.Data.SQL.InternalDataStore;
 using NewLibCore.Data.SQL.MapperExtension;
 using NewLibCore.Data.SQL.PropertyExtension;
 using System;
@@ -10,8 +11,9 @@ namespace NewLibCore.Run
     {
         private static void Main(String[] args)
         {
-            SwitchDatabase.SwitchTo(Database.MYSQL);
-            using (var context = new SqlContext())
+            SwitchDatabase.SwitchTo(DatabaseType.MYSQL);
+
+            using (var context = new Repository())
             {
                 var r = context.InnerJoin<Member, User>((a, b) => a.UserId == b.Id).OrderByDesc<Member, Int32>(d => d.Id).Find<Member>(a => new { a.Id, a.Name, a.AppUrl, a.IconUrl }, 1, 5);
             }

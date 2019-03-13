@@ -14,6 +14,7 @@ namespace NewLibCore.Data.SQL.Builder
         private readonly Expression<Func<TModel, dynamic>> _fields;
         private readonly Int32? _pageIndex;
         private readonly Int32? _pageSize;
+
         internal SelectBuilder(Expression<Func<TModel, dynamic>> fields = null, Int32? pageIndex = null, Int32? pageSize = null) : base(null)
         {
             _fields = fields;
@@ -22,35 +23,35 @@ namespace NewLibCore.Data.SQL.Builder
             _pageSize = pageSize;
         }
 
-        protected internal override SqlTemporaryStore Build(StatementStore statementStore = null)
+        protected internal override FinalResultStore Build(StatementStore statementStore = null)
         {
             var translation = new TranslationToSql();
 
             var fields = ExtractFieldsAndTableName(_fields);
-            translation.TemporaryStore.Append($@"SELECT {fields.fields} FROM {typeof(TModel).Name} AS {fields.tableAliasName} ");
+            translation.FinalResultStore.Append($@"SELECT {fields.fields} FROM {typeof(TModel).Name} AS {fields.tableAliasName} ");
             statementStore.AliasName = fields.tableAliasName;
             translation.Translate(statementStore);
             if (statementStore != null && statementStore.Expression != null)
             {
-                translation.TemporaryStore.Append($@" AND {fields.tableAliasName}.IsDeleted = 0");
+                translation.FinalResultStore.Append($@" AND {fields.tableAliasName}.IsDeleted = 0");
             }
             else
             {
-                translation.TemporaryStore.Append($@" WHERE {fields.tableAliasName}.IsDeleted = 0");
+                translation.FinalResultStore.Append($@" WHERE {fields.tableAliasName}.IsDeleted = 0");
             }
 
             if (statementStore.OrderByType != null)
             {
                 var order = ExtractFieldsAndTableName(statementStore.OrderExpression);
-                translation.TemporaryStore.Append($@" {String.Format(statementStore.OrderByType.GetDescription(), $@"{order.tableAliasName}.{order.fields}")}");
+                translation.FinalResultStore.Append($@" {String.Format(statementStore.OrderByType.GetDescription(), $@"{order.tableAliasName}.{order.fields}")}");
             }
             if (_pageIndex != null && _pageSize != null)
             {
-                translation.TemporaryStore.Append(SwitchDatabase.DatabaseSyntax.Page.Replace("{value}", (_pageSize * (_pageIndex - 1)).ToString()).Replace("{pageSize}", _pageSize.ToString()));
+                translation.FinalResultStore.Append(SwitchDatabase.DatabaseSyntax.Page.Replace("{value}", (_pageSize * (_pageIndex - 1)).ToString()).Replace("{pageSize}", _pageSize.ToString()));
             }
 
-            Console.WriteLine(translation.TemporaryStore.SqlStore.ToString());
-            return translation.TemporaryStore;
+            Console.WriteLine(translation.FinalResultStore.SqlStore.ToString());
+            return translation.FinalResultStore;
         }
 
         private (String fields, String tableAliasName) ExtractFieldsAndTableName(Expression expression)

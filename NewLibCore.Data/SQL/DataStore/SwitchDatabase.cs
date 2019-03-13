@@ -8,11 +8,7 @@ namespace NewLibCore.Data.SQL.InternalDataStore
 {
     public class SwitchDatabase
     {
-        private static Database _database;
-
-        private static DbConnection _dbConnection;
-
-        private static readonly Object _sync = new Object();
+        private static DatabaseType _databaseType;
 
         internal static DatabaseSyntaxBuilder DatabaseSyntax { get; private set; }
 
@@ -20,11 +16,11 @@ namespace NewLibCore.Data.SQL.InternalDataStore
 
         private SwitchDatabase() { }
 
-        public static void SwitchTo(Database database)
+        public static void SwitchTo(DatabaseType database)
         {
             switch (database)
             {
-                case Database.MSSQL:
+                case DatabaseType.MSSQL:
                 {
                     DatabaseSyntax = new MsSqlSyntaxBuilder
                     {
@@ -34,7 +30,7 @@ namespace NewLibCore.Data.SQL.InternalDataStore
                     };
                     break;
                 }
-                case Database.MYSQL:
+                case DatabaseType.MYSQL:
                 {
                     DatabaseSyntax = new MySqlSyntaxBuilder
                     {
@@ -48,44 +44,29 @@ namespace NewLibCore.Data.SQL.InternalDataStore
                     break;
             }
 
-            _database = database;
+            _databaseType = database;
         }
 
         internal static DbConnection GetConnectionInstance()
         {
             var connection = Host.GetHostVar("database");
 
-            if (_dbConnection == null)
+            switch (_databaseType)
             {
-                lock (_sync)
+                case DatabaseType.MSSQL:
                 {
-                    if (_dbConnection == null)
-                    {
-                        switch (_database)
-                        {
-                            case Database.MSSQL:
-                            {
-                                _dbConnection = new SqlConnection(connection);
-                                return _dbConnection;
-                            }
-                            case Database.MYSQL:
-                            {
-                                _dbConnection = new MySqlConnection(connection);
-                                return _dbConnection;
-                            }
-                            default:
-                                throw new ArgumentException();
-                        }
-                    }
+                    return new SqlConnection(connection);
+                }
+                case DatabaseType.MYSQL:
+                {
+                    return new MySqlConnection(connection);
+                }
+                default:
+                {
+                    throw new ArgumentException($@"暂不支持的数据库类型:{_databaseType.ToString()}");
                 }
             }
-            return _dbConnection;
         }
     }
 
-    public enum Database
-    {
-        MSSQL = 1,
-        MYSQL = 2
-    }
 }

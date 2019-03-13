@@ -16,9 +16,9 @@ namespace NewLibCore.Data.SQL.Builder
             _isVerifyModel = isVerifyModel;
         }
 
-        protected internal override SqlTemporaryStore Build(StatementStore statementStore = null)
+        protected internal override FinalResultStore Build(StatementStore statementStore = null)
         {
-            var temporaryStore = new SqlTemporaryStore();
+            var finalResultStore = new FinalResultStore();
             var propertyInfos = ModelType.GetProperties().Where(w => w.GetCustomAttributes<PropertyValidate>().Any());
 
             if (!propertyInfos.Any())
@@ -31,11 +31,12 @@ namespace NewLibCore.Data.SQL.Builder
                 ValidateModel(propertyInfos);
             }
 
-            temporaryStore.Append($@" INSERT {ModelType.Name} ({String.Join(",", propertyInfos.Select(c => c.Name))} ) VALUES ({String.Join(",", propertyInfos.Select(key => $@"@{key.Name}"))}) {SwitchDatabase.DatabaseSyntax.IdentitySuffix}");
+            finalResultStore.Append($@" INSERT {ModelType.Name} ({String.Join(",", propertyInfos.Select(c => c.Name))} ) VALUES ({String.Join(",", propertyInfos.Select(key => $@"@{key.Name}"))}) {SwitchDatabase.DatabaseSyntax.IdentitySuffix}");
 
-            temporaryStore.AppendParameter(propertyInfos.ToList().Select(c => new SqlParameterMapper($@"@{c.Name}", c.GetValue(ModelInstance))).ToArray());
+            finalResultStore
+                .AppendParameter(propertyInfos.ToList().Select(c => new SqlParameterMapper($@"@{c.Name}", c.GetValue(ModelInstance))).ToArray());
 
-            return temporaryStore;
+            return finalResultStore;
         }
     }
 }

@@ -7,7 +7,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
 {
     internal class TranslationToSql : ITranslate
     {
-        internal SqlTemporaryStore TemporaryStore { get; private set; }
+        internal FinalResultStore FinalResultStore { get; private set; }
 
         private DatabaseSyntaxBuilder _syntaxBuilder = SwitchDatabase.DatabaseSyntax;
 
@@ -21,13 +21,13 @@ namespace NewLibCore.Data.SQL.BuildExtension
 
         public TranslationToSql()
         {
-            TemporaryStore = new SqlTemporaryStore();
+            FinalResultStore = new FinalResultStore();
             _operationalCharacterStack = new Stack<RelationType>();
             _parameterNameStack = new Stack<String>();
             _parameterToTableAliasMappers = new Dictionary<String, String>();
         }
 
-        public SqlTemporaryStore Translate(StatementStore statementStore)
+        public FinalResultStore Translate(StatementStore statementStore)
         {
             var lamdbaExp = (LambdaExpression)statementStore.Expression;
             foreach (var item in statementStore.JoinStores)
@@ -39,7 +39,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
 
                 foreach (var parameter in item.AliasNameMappers)
                 {
-                    TemporaryStore.Append($@" {item.JoinType.GetDescription()} {parameter.Value} AS {parameter.Value.ToLower()} ON ");
+                    FinalResultStore.Append($@" {item.JoinType.GetDescription()} {parameter.Value} AS {parameter.Value.ToLower()} ON ");
                 }
                 _joinType = item.JoinType;
                 InternalBuildWhere(item.Expression);
@@ -49,10 +49,10 @@ namespace NewLibCore.Data.SQL.BuildExtension
             if (statementStore.Expression != null)
             {
                 _joinType = JoinType.NONE;
-                TemporaryStore.Append($@" WHERE {(statementStore.AliasName == null ? "" : $@"{statementStore.AliasName}.")}");
+                FinalResultStore.Append($@" WHERE {(statementStore.AliasName == null ? "" : $@"{statementStore.AliasName}.")}");
                 InternalBuildWhere(statementStore.Expression);
             }
-            return TemporaryStore;
+            return FinalResultStore;
         }
 
         private void InitExpressionParameterMapper(params KeyValuePair<String, String>[] keyValuePairs)
@@ -71,7 +71,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
                 {
                     var binaryExp = (BinaryExpression)expression;
                     InternalBuildWhere(binaryExp.Left);
-                    TemporaryStore.Append(RelationType.AND.ToString());
+                    FinalResultStore.Append(RelationType.AND.ToString());
                     InternalBuildWhere(binaryExp.Right);
                     break;
                 }
@@ -79,7 +79,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
                 {
                     var binaryExp = (BinaryExpression)expression;
                     InternalBuildWhere(binaryExp.Left);
-                    TemporaryStore.Append(RelationType.OR.ToString());
+                    FinalResultStore.Append(RelationType.OR.ToString());
                     InternalBuildWhere(binaryExp.Right);
                     break;
                 }
@@ -91,7 +91,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
                 case ExpressionType.Constant:
                 {
                     var binaryExp = (ConstantExpression)expression;
-                    TemporaryStore.AppendParameter(new SqlParameterMapper($@"@{_parameterNameStack.Pop()}", binaryExp.Value));
+                    FinalResultStore.AppendParameter(new SqlParameterMapper($@"@{_parameterNameStack.Pop()}", binaryExp.Value));
                     break;
                 }
                 case ExpressionType.Equal:
@@ -172,7 +172,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
                         else
                         {
                             var syntax = _syntaxBuilder.SyntaxBuilder(_operationalCharacterStack.Pop(), memberName, newParameterName);
-                            TemporaryStore.Append(syntax);
+                            FinalResultStore.Append(syntax);
                             _parameterNameStack.Push(newParameterName);
                         }
                     }
@@ -180,7 +180,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
                     {
                         var getter = Expression.Lambda(memberExp).Compile();
                         Object result = result = getter.DynamicInvoke();
-                        TemporaryStore.AppendParameter(new SqlParameterMapper($@"@{_parameterNameStack.Pop()}", result));
+                        FinalResultStore.AppendParameter(new SqlParameterMapper($@"@{_parameterNameStack.Pop()}", result));
                         break;
                     }
                     break;
@@ -287,11 +287,11 @@ namespace NewLibCore.Data.SQL.BuildExtension
                 Boolean result;
                 if (Boolean.TryParse(constant.Value.ToString(), out result))
                 {
-                    TemporaryStore.Append($@" {leftAliasName}.{leftMemberExp.Member.Name} {relationType.GetDescription()} {(result ? 1 : 0)} ");
+                    FinalResultStore.Append($@" {leftAliasName}.{leftMemberExp.Member.Name} {relationType.GetDescription()} {(result ? 1 : 0)} ");
                 }
                 else
                 {
-                    TemporaryStore.Append($@" {leftAliasName}.{leftMemberExp.Member.Name} {relationType.GetDescription()} {constant.Value} ");
+                    FinalResultStore.Append($@" {leftAliasName}.{leftMemberExp.Member.Name} {relationType.GetDescription()} {constant.Value} ");
                 }
             }
             else
@@ -299,7 +299,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
                 var rightMemberExp = (MemberExpression)binaryExp.Right;
                 var rightAliasName = _parameterToTableAliasMappers[((ParameterExpression)rightMemberExp.Expression).Name];
 
-                TemporaryStore.Append($@" {rightAliasName}.{rightMemberExp.Member.Name} {relationType.GetDescription()} {leftAliasName}.{leftMemberExp.Member.Name}");
+                FinalResultStore.Append($@" {rightAliasName}.{rightMemberExp.Member.Name} {relationType.GetDescription()} {leftAliasName}.{leftMemberExp.Member.Name}");
             }
         }
     }
