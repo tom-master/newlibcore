@@ -3,7 +3,7 @@ using System.Text;
 
 namespace NewLibCore.Data.SQL.BuildExtension
 {
-    internal class MysqlSyntaxBuilder : DatabaseSyntaxBuilder
+    internal class MySqlSyntaxBuilder : DatabaseSyntaxBuilder
     {
         internal override String SyntaxBuilder(RelationType relationType, String left, String right)
         {

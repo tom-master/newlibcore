@@ -39,9 +39,32 @@ namespace NewLibCore.Data.SQL.InternalDataStore
             return (Int32)returnValue.MarshalValue > 0;
         }
 
-        public IList<TModel> Find<TModel>(Expression<Func<TModel, Boolean>> where = null, Expression<Func<TModel, dynamic>> fields = null) where TModel : PropertyMonitor, new()
+        public IList<TModel> Find<TModel>(Expression<Func<TModel, Boolean>> where) where TModel : PropertyMonitor, new()
         {
-            BuilderBase<TModel> builder = new SelectBuilder<TModel>(fields);
+            return Find(where, null, null, null);
+        }
+
+        public IList<TModel> Find<TModel>(Expression<Func<TModel, Boolean>> where, Expression<Func<TModel, dynamic>> fields) where TModel : PropertyMonitor, new()
+        {
+            return Find(where, fields, null, null);
+        }
+
+        public IList<TModel> Find<TModel>(Expression<Func<TModel, dynamic>> fields) where TModel : PropertyMonitor, new()
+        {
+            return Find(null, fields, null, null);
+        }
+
+        public IList<TModel> Find<TModel>(Expression<Func<TModel, dynamic>> fields, Int32 pageIndex, Int32 pageSize) where TModel : PropertyMonitor, new()
+        {
+            return Find(null, fields, pageIndex, pageSize);
+        }
+
+        public IList<TModel> Find<TModel>(Expression<Func<TModel, Boolean>> where = null,
+            Expression<Func<TModel, dynamic>> fields = null,
+            Int32? pageIndex = null,
+            Int32? pageSize = null) where TModel : PropertyMonitor, new()
+        {
+            BuilderBase<TModel> builder = new SelectBuilder<TModel>(fields, pageIndex, pageSize);
             _statementStore.AddWhere(where);
             var store = builder.Build(_statementStore);
             var returnValue = Context.Execute(ExecuteType.SELECT, store.SqlStore.ToString(), store.ParameterStore, CommandType.Text);
@@ -57,6 +80,7 @@ namespace NewLibCore.Data.SQL.InternalDataStore
             var returnValue = Context.Execute(ExecuteType.SELECTSINGLE, store.SqlStore.ToString(), store.ParameterStore, CommandType.Text);
             return (Int32)returnValue.MarshalValue;
         }
+
 
         public SqlContext LeftJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> expression) where TLeft : PropertyMonitor, new()
             where TRight : PropertyMonitor, new()

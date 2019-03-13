@@ -12,10 +12,14 @@ namespace NewLibCore.Data.SQL.Builder
     internal class SelectBuilder<TModel> : BuilderBase<TModel> where TModel : PropertyMonitor, new()
     {
         private readonly Expression<Func<TModel, dynamic>> _fields;
-
-        internal SelectBuilder(Expression<Func<TModel, dynamic>> fields = null) : base(null)
+        private readonly Int32? _pageIndex;
+        private readonly Int32? _pageSize;
+        internal SelectBuilder(Expression<Func<TModel, dynamic>> fields = null, Int32? pageIndex = null, Int32? pageSize = null) : base(null)
         {
             _fields = fields;
+
+            _pageIndex = pageIndex;
+            _pageSize = pageSize;
         }
 
         protected internal override SqlTemporaryStore Build(StatementStore statementStore = null)
@@ -34,6 +38,12 @@ namespace NewLibCore.Data.SQL.Builder
             {
                 translation.TemporaryStore.Append($@" WHERE {fields.tableAliasName}.IsDeleted = 0");
             }
+
+            if (_pageIndex != null && _pageSize != null)
+            {
+                translation.TemporaryStore.Append($@" {String.Format(SwitchDatabase.Page, _pageSize * (_pageIndex - 1), _pageSize)}");
+            }
+
             Console.WriteLine(translation.TemporaryStore.SqlStore.ToString());
             return translation.TemporaryStore;
         }

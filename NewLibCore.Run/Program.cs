@@ -13,7 +13,7 @@ namespace NewLibCore.Run
             SwitchDatabase.SwitchTo(Database.MYSQL);
             using (var context = new SqlContext())
             {
-                var r = context.InnerJoin<Member, User>((a, b) => a.UserId == b.Id).Count<Member>();
+                var r = context.InnerJoin<Member, User>((a, b) => a.UserId == b.Id).Find<Member>(a => new { a.Id, a.Name, a.AppUrl, a.IconUrl }, 1, 5);
             }
         }
     }
