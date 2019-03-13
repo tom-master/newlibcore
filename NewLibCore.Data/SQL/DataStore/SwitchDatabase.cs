@@ -4,7 +4,7 @@ using System;
 using System.Data.Common;
 using System.Data.SqlClient;
 
-namespace NewLibCore.Data.SQL.InternalDataStore
+namespace NewLibCore.Data.SQL.DataStore
 {
     public class SwitchDatabase
     {

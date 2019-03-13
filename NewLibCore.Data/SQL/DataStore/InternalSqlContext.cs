@@ -5,7 +5,7 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 
-namespace NewLibCore.Data.SQL.InternalDataStore
+namespace NewLibCore.Data.SQL.DataStore
 {
     public class InternalSqlContext : IDisposable
     {

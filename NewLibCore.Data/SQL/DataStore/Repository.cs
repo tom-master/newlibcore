@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq.Expressions;
 
-namespace NewLibCore.Data.SQL.InternalDataStore
+namespace NewLibCore.Data.SQL.DataStore
 {
     public class Repository : IDisposable
     {

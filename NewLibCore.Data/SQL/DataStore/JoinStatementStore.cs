@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
 
-namespace NewLibCore.Data.SQL.InternalDataStore
+namespace NewLibCore.Data.SQL.DataStore
 {
     internal class JoinStatementStore
     {

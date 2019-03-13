@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace NewLibCore.Data.SQL.InternalDataStore
+namespace NewLibCore.Data.SQL.DataStore
 {
     internal class FinalResultStore
     {

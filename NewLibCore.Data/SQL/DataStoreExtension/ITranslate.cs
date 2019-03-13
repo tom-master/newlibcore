@@ -1,4 +1,4 @@
-﻿using NewLibCore.Data.SQL.InternalDataStore;
+﻿using NewLibCore.Data.SQL.DataStore;
 
 namespace NewLibCore.Data.SQL.BuildExtension
 {
