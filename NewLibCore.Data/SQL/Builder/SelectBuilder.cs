@@ -44,10 +44,9 @@ namespace NewLibCore.Data.SQL.Builder
                 var order = ExtractFieldsAndTableName(statementStore.OrderExpression);
                 translation.TemporaryStore.Append($@" {String.Format(statementStore.OrderByType.GetDescription(), $@"{order.tableAliasName}.{order.fields}")}");
             }
-
             if (_pageIndex != null && _pageSize != null)
             {
-                translation.TemporaryStore.Append(SwitchDatabase.Page.Replace("{pageIndex}", _pageIndex.ToString()).Replace("{pageSize}", _pageSize.ToString()));
+                translation.TemporaryStore.Append(SwitchDatabase.DatabaseSyntax.Page.Replace("{value}", (_pageSize * (_pageIndex - 1)).ToString()).Replace("{pageSize}", _pageSize.ToString()));
             }
 
             Console.WriteLine(translation.TemporaryStore.SqlStore.ToString());

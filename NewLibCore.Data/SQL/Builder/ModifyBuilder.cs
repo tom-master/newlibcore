@@ -35,7 +35,7 @@ namespace NewLibCore.Data.SQL.Builder
             {
                 translation.Translate(statementStore);
             }
-            translation.TemporaryStore.Append($@"{SwitchDatabase.RowCountSuffix}");
+            translation.TemporaryStore.Append($@"{SwitchDatabase.DatabaseSyntax.RowCountSuffix}");
             return translation.TemporaryStore;
         }
     }

@@ -67,6 +67,12 @@ namespace NewLibCore.Data.SQL.BuildExtension
     {
         protected StringBuilder Builder = new StringBuilder();
 
+        internal String IdentitySuffix { get; set; }
+
+        internal String RowCountSuffix { get; set; }
+
+        internal String Page { get; set; }
+
         internal abstract String SyntaxBuilder(RelationType relationType, String left, String right);
 
         internal void SyntaxBuilderBase(RelationType relationType, String left, String right)
