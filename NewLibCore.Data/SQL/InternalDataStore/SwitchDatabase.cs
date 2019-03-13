@@ -34,14 +34,7 @@ namespace NewLibCore.Data.SQL.InternalDataStore
                 {
                     IdentitySuffix = " SELECT @@IDENTITY";
                     RowCountSuffix = " SELECT @@ROWCOUNT";
-                    Page = @"SELECT TOP ( @pageSize * @pageIndex ) *
-                             FROM    ( SELECT 
-                                                ROW_NUMBER() OVER ( ORDER BY dbo.Products.UnitPrice DESC ) AS rownum ,
-                                                *
-                                      FROM      dbo.Products
-                                    ) AS temp
-                             WHERE   temp.rownum > ( @pageSize * ( @pageIndex - 1 ) )
-                             ORDER BY temp.UnitPrice";
+                    Page = " {ORDER BY} OFFSET ( {pageSize} * ( {pageIndex} - 1 )) ROWS FETCH NEXT {pageSize} ROWS ONLY";
 
                     DatabaseSyntax = new MsSqlSyntaxBuilder();
                     return new SqlConnection(connection);
@@ -50,7 +43,7 @@ namespace NewLibCore.Data.SQL.InternalDataStore
                 {
                     IdentitySuffix = " ; SELECT CAST(@@IDENTITY AS SIGNED) AS c ";
                     RowCountSuffix = " ; SELECT CAST(ROW_COUNT() AS SIGNED) AS c";
-                    Page = "LIMIT {0},{1}";
+                    Page = " {ORDER BY} LIMIT {pageSize} * ({pageIndex} - 1),{pageSize}";
 
                     DatabaseSyntax = new MySqlSyntaxBuilder();
                     return new MySqlConnection(connection);

@@ -2,6 +2,16 @@
 
 namespace NewLibCore.Data.SQL.BuildExtension
 {
+
+    public enum OrderByType
+    {
+        [Description(" ORDER BY {0} ASC ")]
+        ASC = 1,
+
+        [Description(" ORDER BY {0} DESC ")]
+        DESC = 2
+    }
+
     public enum JoinType
     {
         NONE = 0,

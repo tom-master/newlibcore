@@ -72,6 +72,18 @@ namespace NewLibCore.Data.SQL.InternalDataStore
             return dataTable.AsList<TModel>();
         }
 
+        public SqlContext OrderBy<TModel, TKey>(Expression<Func<TModel, TKey>> order) where TModel : PropertyMonitor, new()
+        {
+            _statementStore.AddOrderBy(order, OrderByType.ASC);
+            return this;
+        }
+
+        public SqlContext OrderByDesc<TModel, TKey>(Expression<Func<TModel, TKey>> order) where TModel : PropertyMonitor, new()
+        {
+            _statementStore.AddOrderBy(order, OrderByType.DESC);
+            return this;
+        }
+
         public Int32 Count<TModel>(Expression<Func<TModel, Boolean>> where = null) where TModel : PropertyMonitor, new()
         {
             BuilderBase<TModel> builder = new SelectBuilder<TModel>(d => "COUNT(*)");

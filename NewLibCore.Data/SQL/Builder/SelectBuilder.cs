@@ -41,7 +41,7 @@ namespace NewLibCore.Data.SQL.Builder
 
             if (_pageIndex != null && _pageSize != null)
             {
-                translation.TemporaryStore.Append($@" {String.Format(SwitchDatabase.Page, _pageSize * (_pageIndex - 1), _pageSize)}");
+                translation.TemporaryStore.Append(SwitchDatabase.Page.Replace("{ORDER BY}", "").Replace("{pageIndex}", _pageIndex.ToString()).Replace("{pageSize}", _pageSize.ToString()));
             }
 
             Console.WriteLine(translation.TemporaryStore.SqlStore.ToString());

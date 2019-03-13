@@ -10,15 +10,25 @@ namespace NewLibCore.Data.SQL.InternalDataStore
     {
         internal Expression Expression { get; private set; }
 
+        internal Expression OrderExpression { get; private set; }
+
         internal String AliasName { get; set; }
 
         internal JoinType JoinType { get { return JoinType.NONE; } }
+
+        internal OrderByType OrderByType { get; private set; }
 
         internal IList<JoinStatementStore> JoinStores { get; private set; }
 
         internal StatementStore()
         {
             JoinStores = new List<JoinStatementStore>();
+        }
+
+        internal void AddOrderBy<TModel, TKey>(Expression<Func<TModel, TKey>> order, OrderByType orderByType)
+        {
+            OrderByType = orderByType;
+            OrderExpression = order;
         }
 
         internal void AddWhere<TModel>(Expression<Func<TModel, Boolean>> expression)
