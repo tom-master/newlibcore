@@ -34,7 +34,7 @@ namespace NewLibCore.Data.SQL.InternalDataStore
                 {
                     IdentitySuffix = " SELECT @@IDENTITY";
                     RowCountSuffix = " SELECT @@ROWCOUNT";
-                    Page = " {ORDER BY} OFFSET ( {pageSize} * ( {pageIndex} - 1 )) ROWS FETCH NEXT {pageSize} ROWS ONLY";
+                    Page = " OFFSET ( {pageSize} * ( {pageIndex} - 1 )) ROWS FETCH NEXT {pageSize} ROWS ONLY";
 
                     DatabaseSyntax = new MsSqlSyntaxBuilder();
                     return new SqlConnection(connection);
@@ -43,7 +43,7 @@ namespace NewLibCore.Data.SQL.InternalDataStore
                 {
                     IdentitySuffix = " ; SELECT CAST(@@IDENTITY AS SIGNED) AS c ";
                     RowCountSuffix = " ; SELECT CAST(ROW_COUNT() AS SIGNED) AS c";
-                    Page = " {ORDER BY} LIMIT {pageSize} * ({pageIndex} - 1),{pageSize}";
+                    Page = " LIMIT {pageSize} * ({pageIndex} - 1),{pageSize}";
 
                     DatabaseSyntax = new MySqlSyntaxBuilder();
                     return new MySqlConnection(connection);

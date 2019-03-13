@@ -39,17 +39,24 @@ namespace NewLibCore.Data.SQL.Builder
                 translation.TemporaryStore.Append($@" WHERE {fields.tableAliasName}.IsDeleted = 0");
             }
 
+            if (statementStore.OrderByType != null)
+            {
+                var order = ExtractFieldsAndTableName(statementStore.OrderExpression);
+                translation.TemporaryStore.Append($@" {String.Format(statementStore.OrderByType.GetDescription(), $@"{order.tableAliasName}.{order.fields}")}");
+            }
+
             if (_pageIndex != null && _pageSize != null)
             {
-                translation.TemporaryStore.Append(SwitchDatabase.Page.Replace("{ORDER BY}", "").Replace("{pageIndex}", _pageIndex.ToString()).Replace("{pageSize}", _pageSize.ToString()));
+                translation.TemporaryStore.Append(SwitchDatabase.Page.Replace("{pageIndex}", _pageIndex.ToString()).Replace("{pageSize}", _pageSize.ToString()));
             }
 
             Console.WriteLine(translation.TemporaryStore.SqlStore.ToString());
             return translation.TemporaryStore;
         }
 
-        private (String fields, String tableAliasName) ExtractFieldsAndTableName(Expression<Func<TModel, dynamic>> fields)
+        private (String fields, String tableAliasName) ExtractFieldsAndTableName(Expression expression)
         {
+            var fields = (LambdaExpression)expression;
             var modelAliasName = "";
             if (fields == null)
             {
@@ -64,6 +71,11 @@ namespace NewLibCore.Data.SQL.Builder
             {
                 var constant = (ConstantExpression)fields.Body;
                 return (constant.Value + "", modelAliasName);
+            }
+            if (fields.Body.NodeType == ExpressionType.MemberAccess)
+            {
+                var members = (fields.Body as MemberExpression);
+                return (members.Member.Name, modelAliasName);
             }
 
             var dynamicFields = (fields.Body as NewExpression).Members.Select(s => $@"{modelAliasName}.{s.Name}");

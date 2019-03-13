@@ -16,7 +16,7 @@ namespace NewLibCore.Data.SQL.InternalDataStore
 
         internal JoinType JoinType { get { return JoinType.NONE; } }
 
-        internal OrderByType OrderByType { get; private set; }
+        internal OrderByType? OrderByType { get; private set; }
 
         internal IList<JoinStatementStore> JoinStores { get; private set; }
 

@@ -2,9 +2,7 @@
 using NewLibCore.Data.SQL.MapperExtension;
 using NewLibCore.Data.SQL.PropertyExtension;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 
 namespace NewLibCore.Run
 {
@@ -14,8 +12,8 @@ namespace NewLibCore.Run
         {
             SwitchDatabase.SwitchTo(Database.MYSQL);
             using (var context = new SqlContext())
-            { 
-                var r = context.InnerJoin<Member, User>((a, b) => a.UserId == b.Id).Find<Member>(a => new { a.Id, a.Name, a.AppUrl, a.IconUrl }, 1, 5);
+            {
+                var r = context.InnerJoin<Member, User>((a, b) => a.UserId == b.Id).OrderByDesc<Member, Int32>(d => d.Id).Find<Member>(a => new { a.Id, a.Name, a.AppUrl, a.IconUrl }, 1, 5);
             }
         }
     }

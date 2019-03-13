@@ -93,7 +93,6 @@ namespace NewLibCore.Data.SQL.InternalDataStore
             return (Int32)returnValue.MarshalValue;
         }
 
-
         public SqlContext LeftJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> expression) where TLeft : PropertyMonitor, new()
             where TRight : PropertyMonitor, new()
         {
