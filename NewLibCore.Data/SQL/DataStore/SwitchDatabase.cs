@@ -8,7 +8,7 @@ namespace NewLibCore.Data.SQL.DataStore
 {
     public class SwitchDatabase
     {
-        private static DatabaseType _databaseType;
+        public static DatabaseType DatabaseType;
 
         internal static DatabaseSyntaxBuilder DatabaseSyntax { get; private set; }
 
@@ -44,14 +44,14 @@ namespace NewLibCore.Data.SQL.DataStore
                     break;
             }
 
-            _databaseType = database;
+            DatabaseType = database;
         }
 
         internal static DbConnection GetConnectionInstance()
         {
             var connection = Host.GetHostVar("database");
 
-            switch (_databaseType)
+            switch (DatabaseType)
             {
                 case DatabaseType.MSSQL:
                 {
@@ -63,7 +63,7 @@ namespace NewLibCore.Data.SQL.DataStore
                 }
                 default:
                 {
-                    throw new ArgumentException($@"暂不支持的数据库类型:{_databaseType.ToString()}");
+                    throw new ArgumentException($@"暂不支持的数据库类型:{DatabaseType}");
                 }
             }
         }

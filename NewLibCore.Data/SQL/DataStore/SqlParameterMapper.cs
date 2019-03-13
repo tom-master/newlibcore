@@ -1,9 +1,11 @@
 ﻿using MySql.Data.MySqlClient;
+using NewLibCore.Data.SQL.BuildExtension;
 using NewLibCore.Security;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data.Common;
+using System.Data.SqlClient;
 
 namespace NewLibCore.Data.SQL.DataStore
 {
@@ -21,7 +23,15 @@ namespace NewLibCore.Data.SQL.DataStore
 
         public static implicit operator DbParameter(SqlParameterMapper value)
         {
-            return new MySqlParameter(value.Key, value.Value);
+            switch (SwitchDatabase.DatabaseType)
+            {
+                case DatabaseType.MSSQL:
+                    return new SqlParameter(value.Key, value.Value);
+                case DatabaseType.MYSQL:
+                    return new MySqlParameter(value.Key, value.Value);
+                default:
+                    throw new ArgumentException($@"暂不支持的数据库类型:{SwitchDatabase.DatabaseType}");
+            }
         }
 
         private Object ParseValueType(Object obj)
