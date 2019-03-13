@@ -77,7 +77,7 @@ namespace NewLibCore.Data.SQL.DataStore
                     cmd.CommandText = sql;
                     if (parameters != null && parameters.Any())
                     {
-                        cmd.Parameters.AddRange(parameters.ToArray());
+                        cmd.Parameters.AddRange(parameters.Select(s => (DbParameter)s).ToArray());
                     }
 
                     var executeResult = new ExecuteResult();
@@ -102,7 +102,7 @@ namespace NewLibCore.Data.SQL.DataStore
                     return executeResult;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 _logger.Write("ERROR", sql);
                 throw;
