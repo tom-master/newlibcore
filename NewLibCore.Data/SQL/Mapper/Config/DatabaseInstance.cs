@@ -151,7 +151,7 @@ namespace NewLibCore.Data.SQL.Mapper.Config
 					RowCount = " ; SELECT CAST(ROW_COUNT() AS SIGNED) AS c",
 					Page = " LIMIT {value},{pageSize}"
 				};
-			}
+			} 
 		}
 	}
 
