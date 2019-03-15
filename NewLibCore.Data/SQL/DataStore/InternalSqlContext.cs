@@ -102,9 +102,9 @@ namespace NewLibCore.Data.SQL.DataStore
                     return executeResult;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                _logger.Write("ERROR", sql);
+                _logger.Write("ERROR", $@"{ex}:{sql}:parameters{(parameters == null ? "" : String.Join(",", parameters.Select(s => $@"{s.Key}--{s.Value}")))}");
                 throw;
             }
         }
