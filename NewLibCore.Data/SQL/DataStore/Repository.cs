@@ -115,6 +115,13 @@ namespace NewLibCore.Data.SQL.DataStore
             return this;
         }
 
+        public IList<TModel> ComplexSqlExecute<TModel>(String sql, IEnumerable<SqlParameterMapper> sqlParameters = null) where TModel : PropertyMonitor, new()
+        {
+            var executeResult = Context.Execute(ExecuteType.SELECT, sql, sqlParameters, CommandType.Text);
+            var dataTable = executeResult.Value as DataTable;
+            return dataTable.AsList<TModel>();
+        }
+
         public void Dispose()
         {
             Context.Dispose();
