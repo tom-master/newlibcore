@@ -27,6 +27,11 @@ namespace NewLibCore.Data.SQL.DataStore
 
         internal void AddOrderBy<TModel, TKey>(Expression<Func<TModel, TKey>> order, OrderByType orderByType)
         {
+            if (order == null)
+            {
+                throw new ArgumentNullException($@"{order} 不能为null");
+            }
+
             OrderByType = orderByType;
             OrderExpression = order;
         }
@@ -39,6 +44,11 @@ namespace NewLibCore.Data.SQL.DataStore
         internal void AddJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> expression, JoinType joinType) where TLeft : PropertyMonitor, new()
             where TRight : PropertyMonitor, new()
         {
+            if (expression == null)
+            {
+                throw new ArgumentNullException($@"{joinType} 不能为null");
+            }
+
             var joinStore = new JoinStatementStore
             {
                 Expression = expression,
