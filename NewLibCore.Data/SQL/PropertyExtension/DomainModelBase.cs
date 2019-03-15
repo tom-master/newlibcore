@@ -10,10 +10,10 @@ namespace NewLibCore.Data.SQL.PropertyExtension
             IsDeleted = false;
         }
 
-        [PropertyKey]
+        [PrimaryKey]
         public Int32 Id { get; internal set; }
 
-        [PropertyDefaultValue(typeof(Boolean))]
+        [DefaultValue(typeof(Boolean))]
         public Boolean IsDeleted { get; private set; }
 
         [DateTimeDefaultValue]

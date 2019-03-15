@@ -5,6 +5,7 @@ using NewLibCore.Data.SQL.PropertyExtension;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using DefaultValueAttribute = NewLibCore.Data.SQL.MapperExtension.DefaultValueAttribute;
 
 namespace NewLibCore.Run
 {
@@ -29,25 +30,25 @@ namespace NewLibCore.Run
         /// <summary>
         /// 用户名
         /// </summary>
-        [PropertyRequired, PropertyInputRange(4, 10)]
+        [Required, InputRange(4, 10)]
         public String Name { get; private set; }
 
         /// <summary>
         /// 登陆密码
         /// </summary>
-        [PropertyRequired]
+        [Required]
         public String LoginPassword { get; private set; }
 
         /// <summary>
         /// 锁屏密码
         /// </summary>
-        [PropertyRequired]
+        [Required]
         public String LockScreenPassword { get; private set; }
 
         /// <summary>
         /// 是否禁用
         /// </summary>
-        [PropertyDefaultValue(typeof(Boolean))]
+        [DefaultValue(typeof(Boolean))]
         public Boolean IsDisable { get; private set; }
 
         /// <summary>
@@ -59,19 +60,19 @@ namespace NewLibCore.Run
         /// <summary>
         /// 是否在线
         /// </summary>
-        [PropertyDefaultValue(typeof(Boolean))]
+        [DefaultValue(typeof(Boolean))]
         public Boolean IsOnline { get; private set; }
 
         /// <summary>
         /// 是否为管理员
         /// </summary>
-        [PropertyDefaultValue(typeof(Boolean))]
+        [DefaultValue(typeof(Boolean))]
         public Boolean IsAdmin { get; private set; }
 
         /// <summary>
         /// 配置Id
         /// </summary>
-        [PropertyRequired]
+        [Required]
         public Int32 ConfigId { get; private set; }
 
         /// <summary>
@@ -219,100 +220,98 @@ namespace NewLibCore.Run
         }
     }
 
-    /// <summary>
-    /// 桌面应用
-    /// </summary>
+
     [Serializable, Description("桌面应用")]
     public partial class Member : DomainModelBase
     {
         /// <summary>
         /// 应用Id
         /// </summary>
-        [PropertyRequired]
+        [Required]
         public Int32 AppId { get; private set; }
 
         /// <summary>
         /// 桌面应用的宽
         /// </summary>
-        [PropertyRequired]
+        [Required]
         public Int32 Width { get; private set; }
 
         /// <summary>
         /// 桌面应用的高
         /// </summary>
-        [PropertyRequired]
+        [Required]
         public Int32 Height { get; private set; }
 
         /// <summary>
         /// 文件夹Id
         /// </summary>
-        [PropertyDefaultValue(typeof(Int32))]
+        [DefaultValue(typeof(Int32))]
         public Int32 FolderId { get; private set; }
 
         /// <summary>
         /// 名称
         /// </summary>
-        [PropertyRequired, PropertyInputRange(10)]
+        [Required, InputRange(10)]
         public String Name { get; private set; }
 
         /// <summary>
         /// 图标地址
         /// </summary>
-        [PropertyRequired, PropertyInputRange(150)]
+        [Required, InputRange(150)]
         public String IconUrl { get; private set; }
 
         /// <summary>
         /// app地址
         /// </summary>
-        [PropertyInputRange(150), PropertyDefaultValue(typeof(String))]
+        [InputRange(150), DefaultValue(typeof(String))]
         public String AppUrl { get; private set; }
 
         /// <summary>
         /// 桌面应用是否在应用码头上
         /// </summary>
-        [PropertyDefaultValue(typeof(Boolean))]
+        [DefaultValue(typeof(Boolean))]
         public Boolean IsOnDock { get; private set; }
 
         /// <summary>
         /// 是否显示app底部的按钮
         /// </summary>
-        [PropertyDefaultValue(typeof(Boolean))]
+        [DefaultValue(typeof(Boolean))]
         public Boolean IsSetbar { get; private set; }
 
         /// <summary>
         /// 是否打开最大化
         /// </summary>
-        [PropertyDefaultValue(typeof(Boolean))]
+        [DefaultValue(typeof(Boolean))]
         public Boolean IsOpenMax { get; private set; }
 
         /// <summary>
         /// 是否为福莱希
         /// </summary>
-        [PropertyDefaultValue(typeof(Boolean))]
+        [DefaultValue(typeof(Boolean))]
         public Boolean IsFlash { get; private set; }
 
         /// <summary>
         /// 是否可以拉伸
         /// </summary>
-        [PropertyDefaultValue(typeof(Boolean))]
+        [DefaultValue(typeof(Boolean))]
         public Boolean IsResize { get; private set; }
 
         /// <summary>
         /// 桌面索引
         /// </summary>
-        [PropertyDefaultValue(typeof(Int32), 1)]
+        [DefaultValue(typeof(Int32), 1)]
         public Int32 DeskIndex { get; private set; }
 
         /// <summary>
         /// 账户Id
         /// </summary>
-        [PropertyRequired]
+        [Required]
         public Int32 UserId { get; private set; }
 
         /// <summary>
         /// 图标是否来自上传
         /// </summary>
-        [PropertyDefaultValue(typeof(Boolean))]
+        [DefaultValue(typeof(Boolean))]
         public Boolean IsIconByUpload { get; private set; }
 
         public Double StarCount { get; set; }
@@ -579,52 +578,37 @@ namespace NewLibCore.Run
         }
     }
 
-    public partial class VisitorRecord : DomainModelBase
-    {
-        public Int32 UserId { get; private set; }
-
-        [PropertyRequired, PropertyInputRange(10), PropertyDefaultValue(typeof(String), "11111")]
-        public String UserName { get; private set; }
-
-        public VisitorRecord(Int32 userId, String userName)
-        {
-            UserId = userId;
-            UserName = userName;
-        }
-
-        public VisitorRecord() { }
-    }
-
     [Description("角色"), Serializable]
     public partial class Role : DomainModelBase
     {
         /// <summary>
         /// 名称
         /// </summary>
-        [PropertyRequired, PropertyInputRange(2, 10)]
+        [Required, InputRange(2, 10)]
         public String Name { get; private set; }
 
         /// <summary>
         /// 角色标识
         /// </summary>
-        [PropertyRequired, PropertyInputRange(2, 20)]
+        [Required, InputRange(2, 20)]
         public String RoleIdentity { get; private set; }
 
         /// <summary>
         /// 备注
         /// </summary>
-        [PropertyInputRange(50), PropertyDefaultValue(typeof(String))]
+        [InputRange(50), DefaultValue(typeof(String))]
         public String Remark { get; private set; }
 
         /// <summary>
         /// 是否允许禁用
         /// </summary>
-        [PropertyDefaultValue(typeof(Boolean))]
+        [DefaultValue(typeof(Boolean))]
         public Boolean IsAllowDisable { get; private set; }
 
         /// <summary>
         /// 权限
         /// </summary>
+        [Required, SubModel]
         public IList<RolePower> Powers { get; private set; }
 
         /// <summary>
@@ -647,9 +631,6 @@ namespace NewLibCore.Run
         }
     }
 
-    /// <summary>
-    /// RoleExtension
-    /// </summary>
     public partial class Role
     {
         /// <summary>
@@ -672,14 +653,24 @@ namespace NewLibCore.Run
             return this;
         }
 
+        public Role ModifyPower(params Int32[] appIds)
+        {
+            Powers.Clear();
+            foreach (var item in appIds)
+            {
+                Powers.Add(new RolePower(Id, item));
+            }
+            return this;
+        }
+
     }
 
     public class RolePower : DomainModelBase
     {
-        [PropertyRequired]
+        [Required]
         public Int32 RoleId { get; private set; }
 
-        [PropertyRequired]
+        [Required]
         public Int32 AppId { get; private set; }
 
         public RolePower(Int32 roleId, Int32 appId)

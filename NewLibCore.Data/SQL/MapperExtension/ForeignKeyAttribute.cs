@@ -1,6 +1,6 @@
 ﻿namespace NewLibCore.Data.SQL.MapperExtension
 {
-    public class PropertyKeyAttribute : PropertyValidate
+    public class ForeignKeyAttribute : PropertyValidate
     {
         public override System.Int32 Order
         {

@@ -50,12 +50,12 @@ namespace NewLibCore.Data.SQL.PropertyExtension
                 var propertyValue = propertyItem.GetValue(this);
                 for (var i = 0; i < validateBases.Count; i++)
                 {
-                    if (validateBases[i] is PropertyKeyAttribute || validateBases[i] is PropertyForeignKeyAttribute)
+                    if (validateBases[i] is PrimaryKeyAttribute || validateBases[i] is ForeignKeyAttribute || validateBases[i] is SubModelAttribute)
                     {
                         continue;
                     }
 
-                    if (validateBases[i] is PropertyRequiredAttribute)
+                    if (validateBases[i] is RequiredAttribute)
                     {
                         if (!validateBases[i].IsValidate(propertyValue))
                         {
@@ -64,24 +64,24 @@ namespace NewLibCore.Data.SQL.PropertyExtension
                                 ThrowValidateException(validateBases[i + 1], propertyItem);
                             }
 
-                            if (validateBases[i + 1] is PropertyDefaultValueAttribute)
+                            if (validateBases[i + 1] is DefaultValueAttribute)
                             {
-                                SetPropertyDefaultValue((PropertyDefaultValueAttribute)validateBases[i + 1], propertyItem, propertyValue);
+                                SetPropertyDefaultValue((DefaultValueAttribute)validateBases[i + 1], propertyItem, propertyValue);
                                 i = i + 1;
                                 continue;
                             }
                             ThrowValidateException(validateBases[i], propertyItem);
                         }
                     }
-                    else if (validateBases[i] is PropertyDefaultValueAttribute)
+                    else if (validateBases[i] is DefaultValueAttribute)
                     {
                         if (!validateBases[i].IsValidate(propertyValue))
                         {
                             ThrowValidateException(validateBases[i], propertyItem);
                         }
-                        SetPropertyDefaultValue((PropertyDefaultValueAttribute)validateBases[i], propertyItem, propertyValue);
+                        SetPropertyDefaultValue((DefaultValueAttribute)validateBases[i], propertyItem, propertyValue);
                     }
-                    else if (validateBases[i] is PropertyInputRangeAttribute)
+                    else if (validateBases[i] is InputRangeAttribute)
                     {
                         if (!validateBases[i].IsValidate(propertyValue))
                         {
@@ -92,7 +92,7 @@ namespace NewLibCore.Data.SQL.PropertyExtension
             }
         }
 
-        private void SetPropertyDefaultValue(PropertyDefaultValueAttribute defaultValueAttribute, PropertyInfo propertyItem, Object rawPropertyValue)
+        private void SetPropertyDefaultValue(DefaultValueAttribute defaultValueAttribute, PropertyInfo propertyItem, Object rawPropertyValue)
         {
             var propertyInstanceValue = rawPropertyValue;
             if (String.IsNullOrEmpty(propertyInstanceValue + "") || (propertyInstanceValue.GetType() == typeof(DateTime) && (DateTime)propertyInstanceValue == default(DateTime)))

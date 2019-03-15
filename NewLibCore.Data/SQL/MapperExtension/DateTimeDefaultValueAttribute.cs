@@ -2,7 +2,7 @@
 
 namespace NewLibCore.Data.SQL.MapperExtension
 {
-	public class DateTimeDefaultValueAttribute: PropertyDefaultValueAttribute
+	public class DateTimeDefaultValueAttribute: DefaultValueAttribute
 	{
 		public DateTimeDefaultValueAttribute() : base(typeof(DateTime), DateTime.Now)
 		{

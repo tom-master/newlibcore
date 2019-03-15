@@ -2,14 +2,14 @@
 
 namespace NewLibCore.Data.SQL.MapperExtension
 {
-    public class PropertyDefaultValueAttribute : PropertyValidate
+    public class DefaultValueAttribute : PropertyValidate
     {
-        public PropertyDefaultValueAttribute(Object value) : this(value.GetType(), value)
+        public DefaultValueAttribute(Object value) : this(value.GetType(), value)
         {
 
         }
 
-        public PropertyDefaultValueAttribute(Type type, Object value)
+        public DefaultValueAttribute(Type type, Object value)
         {
 
             if (type == null)
@@ -66,7 +66,7 @@ namespace NewLibCore.Data.SQL.MapperExtension
             Type = type;
         }
 
-        public PropertyDefaultValueAttribute(Type type) : this(type, default(Object))
+        public DefaultValueAttribute(Type type) : this(type, default(Object))
         {
 
         }

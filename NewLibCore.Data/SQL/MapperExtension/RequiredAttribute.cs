@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace NewLibCore.Data.SQL.MapperExtension
 {
-    public class PropertyRequiredAttribute : PropertyValidate
+    public class RequiredAttribute : PropertyValidate
     {
         public override Int32 Order => 3;
 

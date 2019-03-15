@@ -3,23 +3,23 @@
 namespace NewLibCore.Data.SQL.MapperExtension
 {
 
-    public class PropertyInputRangeAttribute : PropertyValidate
+    public class InputRangeAttribute : PropertyValidate
     {
-        private Int32 _min;
+        private readonly Int32 _min;
 
-        private Int32 _max;
+        private readonly Int32 _max;
 
 
         public override Int32 Order => 1;
-      
 
-        public PropertyInputRangeAttribute(Int32 min, Int32 max)
+
+        public InputRangeAttribute(Int32 min, Int32 max)
         {
             _min = min;
             _max = max;
         }
 
-        public PropertyInputRangeAttribute(Int32 max, Boolean canbeEmpty = false) : this(0, max)
+        public InputRangeAttribute(Int32 max, Boolean canbeEmpty = false) : this(0, max)
         {
         }
 
