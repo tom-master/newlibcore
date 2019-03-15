@@ -5,6 +5,7 @@ using NewLibCore.Data.SQL.PropertyExtension;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 
 namespace NewLibCore.Run
 {
@@ -14,19 +15,13 @@ namespace NewLibCore.Run
         {
             SwitchDatabase.SwitchTo(DatabaseType.MYSQL);
 
-            using (var context = new Repository())
+            using (var context = new SqlContext())
             {
                 //var r1 = context.InnerJoin<Member, User>((a, b) => a.UserId == b.Id).OrderByDesc<Member, Int32>(d => d.Id).Find<Member>(d => d.Name != "", a => new { a.Id, a.Name, a.AppUrl, a.IconUrl }, 1, 5);
                 //var r2 = context.Add(new User());
                 //var r3 = context.Find<Member>();
-                var list = new List<String>
-                {
-                    "a",
-                    "b",
-                    "c"
-                };
-
-                var r4 = context.Find<User>(a => list.Contains(a.Name));
+                var r4 = new Role();
+                r4.ModifyRolePower(1, 2, 3, 4);
             }
         }
     }
@@ -601,5 +596,128 @@ namespace NewLibCore.Run
         }
 
         public VisitorRecord() { }
+    }
+
+    [Description("角色"), Serializable]
+    public partial class Role : DomainModelBase
+    {
+        /// <summary>
+        /// 名称
+        /// </summary>
+        [PropertyRequired, PropertyInputRange(2, 10)]
+        public String Name { get; private set; }
+
+        /// <summary>
+        /// 角色标识
+        /// </summary>
+        [PropertyRequired, PropertyInputRange(2, 20)]
+        public String RoleIdentity { get; private set; }
+
+        /// <summary>
+        /// 备注
+        /// </summary>
+        [PropertyInputRange(50), PropertyDefaultValue(typeof(String))]
+        public String Remark { get; private set; }
+
+        /// <summary>
+        /// 是否允许禁用
+        /// </summary>
+        [PropertyDefaultValue(typeof(Boolean))]
+        public Boolean IsAllowDisable { get; private set; }
+
+        /// <summary>
+        /// 权限
+        /// </summary>
+        public IEnumerable<RolePower> Powers { get; private set; }
+
+        /// <summary>
+        /// 实例化一个角色对象
+        /// </summary>
+        public Role(String name, String roleIdentity, String remark = default(String), Boolean isAllowDisable = default(Boolean)) : this()
+        {
+            Name = name;
+            Remark = remark;
+            RoleIdentity = roleIdentity;
+            IsAllowDisable = isAllowDisable;
+        }
+
+        /// <summary>
+        /// 实例化一个角色对象
+        /// </summary>
+        public Role()
+        {
+            Powers = new List<RolePower>();
+        }
+    }
+
+    /// <summary>
+    /// RoleExtension
+    /// </summary>
+    public partial class Role
+    {
+        /// <summary>
+        /// 修改角色名称
+        /// </summary>
+        public Role ModifyRoleName(String roleName)
+        {
+            if (String.IsNullOrEmpty(roleName))
+            {
+                throw new ArgumentException($@"{nameof(roleName)} 不能为空");
+            }
+
+            if (roleName == Name)
+            {
+                return this;
+            }
+
+            Name = roleName;
+            OnPropertyChanged(nameof(Name));
+            return this;
+        }
+
+        /// <summary>
+        /// 修改角色权限
+        /// </summary>
+        public Role ModifyRolePower(params Int32[] appIds)
+        {
+            if (appIds.Length == 0)
+            {
+                return this;
+            }
+
+            Powers.ToList().Clear();
+            Powers = appIds.Select(appId => new RolePower(Id, appId));
+            OnPropertyChanged(nameof(Powers));
+            return this;
+        }
+
+        public override void Remove()
+        {
+            foreach (var item in Powers)
+            {
+                item.Remove();
+            }
+            Remove();
+        }
+    }
+
+    public class RolePower : DomainModelBase
+    {
+        [PropertyRequired]
+        public Int32 RoleId { get; private set; }
+
+        [PropertyRequired]
+        public Int32 AppId { get; private set; }
+
+        public RolePower(Int32 roleId, Int32 appId)
+        {
+            RoleId = roleId;
+            AppId = appId;
+        }
+
+        public RolePower()
+        {
+
+        }
     }
 }

@@ -31,6 +31,8 @@ namespace NewLibCore.Data.SQL.PropertyExtension
 
         protected internal virtual void SetUpdateTime() { }
 
+        protected internal virtual void SetAddTime() { }
+
         protected internal void Validate(IEnumerable<PropertyInfo> propertyInfos)
         {
             var propertys = propertyInfos;

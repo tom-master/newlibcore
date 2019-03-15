@@ -14,18 +14,24 @@ namespace NewLibCore.Data.SQL.PropertyExtension
         public Int32 Id { get; internal set; }
 
         [PropertyDefaultValue(typeof(Boolean))]
-        public Boolean IsDeleted { get; protected set; }
+        public Boolean IsDeleted { get; private set; }
 
         [DateTimeDefaultValue]
-        public DateTime AddTime { get; protected set; }
+        internal DateTime AddTime { get; private set; }
 
         [DateTimeDefaultValue]
-        public DateTime LastModifyTime { get; protected set; }
+        internal DateTime LastModifyTime { get; private set; }
 
-        public void Remove()
+        public virtual void Remove()
         {
             IsDeleted = true;
             OnPropertyChanged(nameof(IsDeleted));
+        }
+
+        protected internal override void SetAddTime()
+        {
+            AddTime = DateTime.Now;
+            OnPropertyChanged(nameof(AddTime));
         }
 
         protected internal override void SetUpdateTime()
