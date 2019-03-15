@@ -21,12 +21,15 @@ namespace NewLibCore.Data.SQL.PropertyExtension
             {
                 throw new ArgumentNullException("需要指定更新的字段名称");
             }
-            var propertyInfo = GetType().GetProperty(propertyName);
-            if (propertyInfo == null)
+
+            var propertyInfo = GetType().GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
+
+            if (propertyInfo != null)
             {
-                throw new ArgumentException($@"属性：{propertyName},不属于类：{GetType().Name}");
+                PropertyInfos.Add(propertyInfo);
+                return;
             }
-            PropertyInfos.Add(propertyInfo);
+            throw new ArgumentException($@"属性：{propertyName},不属于类：{GetType().Name}或它的父类");
         }
 
         protected internal virtual void SetUpdateTime() { }
@@ -47,7 +50,7 @@ namespace NewLibCore.Data.SQL.PropertyExtension
                 var propertyValue = propertyItem.GetValue(this);
                 for (var i = 0; i < validateBases.Count; i++)
                 {
-                    if (validateBases[i] is PropertyKeyAttribute)
+                    if (validateBases[i] is PropertyKeyAttribute || validateBases[i] is PropertyForeignKeyAttribute)
                     {
                         continue;
                     }

@@ -5,7 +5,6 @@ using NewLibCore.Data.SQL.PropertyExtension;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 
 namespace NewLibCore.Run
 {
@@ -20,8 +19,6 @@ namespace NewLibCore.Run
                 //var r1 = context.InnerJoin<Member, User>((a, b) => a.UserId == b.Id).OrderByDesc<Member, Int32>(d => d.Id).Find<Member>(d => d.Name != "", a => new { a.Id, a.Name, a.AppUrl, a.IconUrl }, 1, 5);
                 //var r2 = context.Add(new User());
                 //var r3 = context.Find<Member>();
-                var r4 = new Role();
-                r4.ModifyRolePower(1, 2, 3, 4);
             }
         }
     }
@@ -628,7 +625,8 @@ namespace NewLibCore.Run
         /// <summary>
         /// 权限
         /// </summary>
-        public IEnumerable<RolePower> Powers { get; private set; }
+        [PropertyRequired]
+        public IList<RolePower> Powers { get; private set; }
 
         /// <summary>
         /// 实例化一个角色对象
@@ -675,30 +673,6 @@ namespace NewLibCore.Run
             return this;
         }
 
-        /// <summary>
-        /// 修改角色权限
-        /// </summary>
-        public Role ModifyRolePower(params Int32[] appIds)
-        {
-            if (appIds.Length == 0)
-            {
-                return this;
-            }
-
-            Powers.ToList().Clear();
-            Powers = appIds.Select(appId => new RolePower(Id, appId));
-            OnPropertyChanged(nameof(Powers));
-            return this;
-        }
-
-        public override void Remove()
-        {
-            foreach (var item in Powers)
-            {
-                item.Remove();
-            }
-            Remove();
-        }
     }
 
     public class RolePower : DomainModelBase

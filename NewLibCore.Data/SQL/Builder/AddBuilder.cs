@@ -25,7 +25,7 @@ namespace NewLibCore.Data.SQL.Builder
             {
                 throw new Exception($@"{ModelType.Name}:没有要插入的列");
             }
-
+            ModelInstance.SetAddTime();
             if (_isVerifyModel)
             {
                 ModelInstance.Validate(propertyInfos);
