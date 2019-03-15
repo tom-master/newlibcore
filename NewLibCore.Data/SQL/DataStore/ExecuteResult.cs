@@ -4,13 +4,13 @@ using System.Text;
 
 namespace NewLibCore.Data.SQL.DataStore
 {
-    internal class FinalResultStore
+    internal class TranslationResult
     {
         internal StringBuilder SqlStore { get; private set; }
 
         internal IList<SqlParameterMapper> ParameterStore { get; private set; }
 
-        internal FinalResultStore()
+        internal TranslationResult()
         {
             SqlStore = new StringBuilder();
             ParameterStore = new List<SqlParameterMapper>();

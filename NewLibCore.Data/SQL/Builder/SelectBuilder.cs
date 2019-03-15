@@ -23,35 +23,35 @@ namespace NewLibCore.Data.SQL.Builder
             _pageSize = pageSize;
         }
 
-        protected internal override FinalResultStore Build(StatementStore statementStore = null)
+        protected internal override TranslationResult Build(StatementStore statementStore = null)
         {
             var translation = new TranslationToSql();
 
             var fields = ExtractFieldsAndTableName(_fields);
-            translation.FinalResultStore.Append($@"SELECT {fields.fields} FROM {typeof(TModel).Name} AS {fields.tableAliasName} ");
+            translation.TranslationResult.Append($@"SELECT {fields.fields} FROM {typeof(TModel).Name} AS {fields.tableAliasName} ");
             statementStore.AliasName = fields.tableAliasName;
             translation.Translate(statementStore);
             if (statementStore != null && statementStore.Expression != null)
             {
-                translation.FinalResultStore.Append($@" AND {fields.tableAliasName}.IsDeleted = 0");
+                translation.TranslationResult.Append($@" AND {fields.tableAliasName}.IsDeleted = 0");
             }
             else
             {
-                translation.FinalResultStore.Append($@" WHERE {fields.tableAliasName}.IsDeleted = 0");
+                translation.TranslationResult.Append($@" WHERE {fields.tableAliasName}.IsDeleted = 0");
             }
 
             if (statementStore.OrderByType != null)
             {
                 var order = ExtractFieldsAndTableName(statementStore.OrderExpression);
-                translation.FinalResultStore.Append($@" {String.Format(statementStore.OrderByType.GetDescription(), $@"{order.tableAliasName}.{order.fields}")}");
+                translation.TranslationResult.Append($@" {String.Format(statementStore.OrderByType.GetDescription(), $@"{order.tableAliasName}.{order.fields}")}");
             }
             if (_pageIndex != null && _pageSize != null)
             {
-                translation.FinalResultStore.Append(SwitchDatabase.DatabaseSyntax.Page.Replace("{value}", (_pageSize * (_pageIndex - 1)).ToString()).Replace("{pageSize}", _pageSize.ToString()));
+                translation.TranslationResult.Append(SwitchDatabase.DatabaseSyntax.Page.Replace("{value}", (_pageSize * (_pageIndex - 1)).ToString()).Replace("{pageSize}", _pageSize.ToString()));
             }
 
-            Console.WriteLine(translation.FinalResultStore.SqlStore.ToString());
-            return translation.FinalResultStore;
+            Console.WriteLine(translation.TranslationResult.SqlStore.ToString());
+            return translation.TranslationResult;
         }
 
         private (String fields, String tableAliasName) ExtractFieldsAndTableName(Expression expression)

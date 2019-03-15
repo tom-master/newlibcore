@@ -24,8 +24,8 @@ namespace NewLibCore.Data.SQL.DataStore
         public TModel Add<TModel>(TModel model) where TModel : DomainModelBase, new()
         {
             BuilderBase<TModel> builder = new AddBuilder<TModel>(model, true);
-            var store = builder.Build();
-            var executeResult = Context.Execute(ExecuteType.INSERT, store.SqlStore.ToString(), store.ParameterStore, CommandType.Text);
+            var translationResult = builder.Build();
+            var executeResult = Context.Execute(ExecuteType.INSERT, translationResult.SqlStore.ToString(), translationResult.ParameterStore, CommandType.Text);
             model.Id = (Int32)executeResult.Value;
             return model;
         }
@@ -34,8 +34,8 @@ namespace NewLibCore.Data.SQL.DataStore
         {
             BuilderBase<TModel> builder = new ModifyBuilder<TModel>(model, true);
             _statementStore.AddWhere(where);
-            var store = builder.Build(_statementStore);
-            var executeResult = Context.Execute(ExecuteType.UPDATE, store.SqlStore.ToString(), store.ParameterStore, CommandType.Text);
+            var translationResult = builder.Build(_statementStore);
+            var executeResult = Context.Execute(ExecuteType.UPDATE, translationResult.SqlStore.ToString(), translationResult.ParameterStore, CommandType.Text);
             return (Int32)executeResult.Value > 0;
         }
 
@@ -66,8 +66,8 @@ namespace NewLibCore.Data.SQL.DataStore
         {
             BuilderBase<TModel> builder = new SelectBuilder<TModel>(fields, pageIndex, pageSize);
             _statementStore.AddWhere(where);
-            var store = builder.Build(_statementStore);
-            var executeResult = Context.Execute(ExecuteType.SELECT, store.SqlStore.ToString(), store.ParameterStore, CommandType.Text);
+            var translationResult = builder.Build(_statementStore);
+            var executeResult = Context.Execute(ExecuteType.SELECT, translationResult.SqlStore.ToString(), translationResult.ParameterStore, CommandType.Text);
             _statementStore.Clear();
             var dataTable = executeResult.Value as DataTable;
             return dataTable.AsList<TModel>();
@@ -89,8 +89,8 @@ namespace NewLibCore.Data.SQL.DataStore
         {
             BuilderBase<TModel> builder = new SelectBuilder<TModel>(d => "COUNT(*)");
             _statementStore.AddWhere(where);
-            var store = builder.Build(_statementStore);
-            var executeResult = Context.Execute(ExecuteType.SELECTSINGLE, store.SqlStore.ToString(), store.ParameterStore, CommandType.Text);
+            var translationResult = builder.Build(_statementStore);
+            var executeResult = Context.Execute(ExecuteType.SELECTSINGLE, translationResult.SqlStore.ToString(), translationResult.ParameterStore, CommandType.Text);
             return (Int32)executeResult.Value;
         }
 

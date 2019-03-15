@@ -28,7 +28,7 @@ namespace NewLibCore.Data.SQL.Builder
             }
         }
 
-        protected internal abstract FinalResultStore Build(StatementStore statementStore = null);
+        protected internal abstract TranslationResult Build(StatementStore statementStore = null);
 
         protected void ValidateModel(IEnumerable<PropertyInfo> propertyInfos)
         {
