@@ -3,6 +3,7 @@ using NewLibCore.Data.SQL.DataStore;
 using NewLibCore.Data.SQL.MapperExtension;
 using NewLibCore.Data.SQL.PropertyExtension;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace NewLibCore.Run
@@ -16,8 +17,16 @@ namespace NewLibCore.Run
             using (var context = new Repository())
             {
                 //var r1 = context.InnerJoin<Member, User>((a, b) => a.UserId == b.Id).OrderByDesc<Member, Int32>(d => d.Id).Find<Member>(d => d.Name != "", a => new { a.Id, a.Name, a.AppUrl, a.IconUrl }, 1, 5);
-                var r2 = context.Add(new User());
+                //var r2 = context.Add(new User());
                 //var r3 = context.Find<Member>();
+                var list = new List<String>
+                {
+                    "a",
+                    "b",
+                    "c"
+                };
+
+                var r4 = context.Find<User>(a => list.Contains(a.Name));
             }
         }
     }

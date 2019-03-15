@@ -1,7 +1,10 @@
 ﻿using NewLibCore.Data.SQL.DataStore;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace NewLibCore.Data.SQL.BuildExtension
 {
@@ -247,7 +250,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
                 InternalBuildWhere(obj);
                 InternalBuildWhere(argument);
             }
-            else if (argumentType == typeof(Int32[]) || (argumentType.Name == "List`1" || argumentType.Name == "IList`1"))
+            else if ((((TypeInfo)argumentType).ImplementedInterfaces as IList<Type>).Any(face => face == typeof(IList) || face == typeof(ICollection) || face == typeof(IEnumerable)))
             {
                 InternalBuildWhere(argument);
                 InternalBuildWhere(obj);
