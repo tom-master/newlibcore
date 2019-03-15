@@ -56,14 +56,6 @@ namespace NewLibCore.Data.SQL.BuildExtension
             return TranslationResult;
         }
 
-        private void InitExpressionParameterMapper(params KeyValuePair<String, String>[] keyValuePairs)
-        {
-            foreach (var item in keyValuePairs)
-            {
-                _parameterToTableAliasMappers.Add(item.Key, item.Value);
-            }
-        }
-
         private void InternalBuildWhere(Expression expression)
         {
             switch (expression.NodeType)
@@ -197,7 +189,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
                     break;
                 }
                 default:
-                    break;
+                    throw new NotSupportedException($@"暂不支持的表达式操作:{expression.NodeType}");
             }
         }
 
@@ -285,8 +277,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
             if (binaryExp.Right.GetType() == typeof(ConstantExpression))
             {
                 var constant = (ConstantExpression)binaryExp.Right;
-                Boolean result;
-                if (Boolean.TryParse(constant.Value.ToString(), out result))
+                if (Boolean.TryParse(constant.Value.ToString(), out var result))
                 {
                     TranslationResult.Append($@" {leftAliasName}.{leftMemberExp.Member.Name} {relationType.GetDescription()} {(result ? 1 : 0)} ");
                 }
@@ -303,5 +294,14 @@ namespace NewLibCore.Data.SQL.BuildExtension
                 TranslationResult.Append($@" {rightAliasName}.{rightMemberExp.Member.Name} {relationType.GetDescription()} {leftAliasName}.{leftMemberExp.Member.Name}");
             }
         }
+
+        private void InitExpressionParameterMapper(params KeyValuePair<String, String>[] keyValuePairs)
+        {
+            foreach (var item in keyValuePairs)
+            {
+                _parameterToTableAliasMappers.Add(item.Key, item.Value);
+            }
+        }
+
     }
 }
