@@ -625,7 +625,6 @@ namespace NewLibCore.Run
         /// <summary>
         /// 权限
         /// </summary>
-        [PropertyRequired]
         public IList<RolePower> Powers { get; private set; }
 
         /// <summary>
