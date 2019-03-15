@@ -25,7 +25,7 @@ namespace NewLibCore.Data.SQL.Builder
             ModelInstance.SetUpdateTime();
             if (_isValidate)
             {
-                ModelInstance.ValidateModel(properties);
+                ModelInstance.Validate(properties);
             }
 
             var translation = new TranslationToSql();

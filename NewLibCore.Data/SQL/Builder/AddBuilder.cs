@@ -28,7 +28,7 @@ namespace NewLibCore.Data.SQL.Builder
 
             if (_isVerifyModel)
             {
-                ModelInstance.ValidateModel(propertyInfos);
+                ModelInstance.Validate(propertyInfos);
             }
 
             translationResult.Append($@" INSERT {ModelType.Name} ({String.Join(",", propertyInfos.Select(c => c.Name))} ) VALUES ({String.Join(",", propertyInfos.Select(key => $@"@{key.Name}"))}) {SwitchDatabase.DatabaseSyntax.IdentitySuffix}");

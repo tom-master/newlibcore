@@ -8,7 +8,7 @@ namespace NewLibCore.Data.SQL.PropertyExtension
 {
     public abstract class PropertyMonitor
     {
-        public IList<PropertyInfo> PropertyInfos { get; }
+        protected internal IList<PropertyInfo> PropertyInfos { get; }
 
         protected PropertyMonitor()
         {
@@ -31,7 +31,7 @@ namespace NewLibCore.Data.SQL.PropertyExtension
 
         public virtual void SetUpdateTime() { }
 
-        protected internal void ValidateModel(IEnumerable<PropertyInfo> propertyInfos)
+        protected internal void Validate(IEnumerable<PropertyInfo> propertyInfos)
         {
             var propertys = propertyInfos;
             foreach (var propertyItem in propertys)
