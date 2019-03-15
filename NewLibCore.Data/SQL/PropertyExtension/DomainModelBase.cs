@@ -28,7 +28,7 @@ namespace NewLibCore.Data.SQL.PropertyExtension
             OnPropertyChanged(nameof(IsDeleted));
         }
 
-        public override void SetUpdateTime()
+        protected internal override void SetUpdateTime()
         {
             LastModifyTime = DateTime.Now;
             OnPropertyChanged(nameof(LastModifyTime));

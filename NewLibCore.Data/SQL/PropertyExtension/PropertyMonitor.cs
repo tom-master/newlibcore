@@ -29,7 +29,7 @@ namespace NewLibCore.Data.SQL.PropertyExtension
             PropertyInfos.Add(propertyInfo);
         }
 
-        public virtual void SetUpdateTime() { }
+        protected internal virtual void SetUpdateTime() { }
 
         protected internal void Validate(IEnumerable<PropertyInfo> propertyInfos)
         {
