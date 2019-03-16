@@ -154,7 +154,7 @@ namespace NewLibCore.Data.SQL.Mapper.Config
 			} 
 		}
 	}
-
+ 
 	internal class InstanceExtension
 	{
 		public String Identity { get; internal set; }
