@@ -148,7 +148,7 @@ namespace NewLibCore.Data.SQL.Mapper.Config
 				return new InstanceExtension
 				{
 					Identity = " ; SELECT CAST(@@IDENTITY AS SIGNED) AS c ",
-					RowCount = " ; SELECT CAST(ROW_COUNT() AS SIGNED) AS c",
+					RowCount = " ; SELECT CAST(ROW_COUNT() AS SIGNED) AS c ",
 					Page = " LIMIT {value},{pageSize}"
 				};
 			} 
