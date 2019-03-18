@@ -2,13 +2,13 @@
 
 namespace NewLibCore.Data.SQL.MapperExtension
 {
-	[AttributeUsage(AttributeTargets.Property, AllowMultiple = true, Inherited = true)]
-	public abstract class PropertyValidate: Attribute
-	{
-		public abstract Boolean IsValidate(Object value);
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple = true, Inherited = true)]
+    public abstract class PropertyValidate : Attribute
+    {
+        public virtual Boolean IsValidate(Object value) { return false; }
 
-		public abstract Int32 Order { get; }
+        public virtual Int32 Order { get { return -1; } }
 
-		public abstract String FailReason(String fieldName);
-	}
+        public virtual String FailReason(String fieldName) { return fieldName; }
+    }
 }

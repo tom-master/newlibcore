@@ -17,9 +17,9 @@ namespace NewLibCore.Run
 
             using (var context = new SqlContext())
             {
-                //var r1 = context.InnerJoin<Member, User>((a, b) => a.UserId == b.Id).OrderByDesc<Member, Int32>(d => d.Id).Find<Member>(d => d.Name != "", a => new { a.Id, a.Name, a.AppUrl, a.IconUrl }, 1, 5);
-                //var r2 = context.Add(new User());
-                //var r3 = context.Find<Member>();
+                var r1 = new Role("admin", "ADMIN");
+                r1.ModifyPower(1, 2, 3, 4);
+                context.Add(r1);
             }
         }
     }

@@ -9,7 +9,10 @@ namespace NewLibCore.Data.SQL.MapperExtension
 {
     public class RequiredAttribute : PropertyValidate
     {
-        public override Int32 Order => 3;
+        public override Int32 Order
+        {
+            get { return 3; }
+        }
 
 
         public override String FailReason(String fieldName)
@@ -19,6 +22,11 @@ namespace NewLibCore.Data.SQL.MapperExtension
 
         public override Boolean IsValidate(Object value)
         {
+            if (String.IsNullOrEmpty(value + ""))
+            {
+                return false;
+            }
+
             var isComplexType = TypeDescriptor.GetConverter(value.GetType()).CanConvertFrom(typeof(String));
             if (!isComplexType)
             {
@@ -28,8 +36,7 @@ namespace NewLibCore.Data.SQL.MapperExtension
                     return !(((IList)value).Count == 0);
                 }
             }
-
-            return !String.IsNullOrEmpty(value + "");
+            return true;
         }
     }
 }

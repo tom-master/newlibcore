@@ -109,8 +109,7 @@ namespace NewLibCore.Data.SQL.PropertyExtension
         private IList<PropertyValidate> GetValidateAttributes(PropertyInfo propertyInfo)
         {
             var validateAttributes = propertyInfo.GetCustomAttributes<PropertyValidate>(true);
-
-            if (validateAttributes.GroupBy(g => g.Order).Where(w => w.Count() > 1).Any())
+            if (validateAttributes.Where(w => w.Order > -1).GroupBy(g => g.Order).Where(w => w.Count() > 1).Any())
             {
                 throw new Exception($@"{propertyInfo.Name} 中使用了多个优先级相同的特性");
             }
