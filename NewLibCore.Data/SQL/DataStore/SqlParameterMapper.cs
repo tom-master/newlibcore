@@ -23,14 +23,14 @@ namespace NewLibCore.Data.SQL.DataStore
 
         public static implicit operator DbParameter(SqlParameterMapper value)
         {
-            switch (SwitchDatabase.DatabaseType)
+            switch (SwitchDatabase.Type)
             {
                 case DatabaseType.MSSQL:
                     return new SqlParameter(value.Key, value.Value);
                 case DatabaseType.MYSQL:
                     return new MySqlParameter(value.Key, value.Value);
                 default:
-                    throw new ArgumentException($@"暂不支持的数据库类型:{SwitchDatabase.DatabaseType}");
+                    throw new ArgumentException($@"暂不支持的数据库类型:{SwitchDatabase.Type}");
             }
         }
 

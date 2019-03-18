@@ -8,13 +8,16 @@ namespace NewLibCore.Data.SQL.DataStore
 {
     public static class SwitchDatabase
     {
-        public static DatabaseType DatabaseType;
+        public static DatabaseType Type { get; private set; }
 
         internal static DatabaseSyntaxBuilder DatabaseSyntax { get; private set; }
 
         internal static String ConnectionString { get { return Host.GetHostVar("database"); } }
 
-        static SwitchDatabase() { }
+        static SwitchDatabase()
+        {
+            Type = DatabaseType.NONE;
+        }
 
         public static void SwitchToMySql()
         {
@@ -55,14 +58,14 @@ namespace NewLibCore.Data.SQL.DataStore
                     break;
             }
 
-            DatabaseType = database;
+            Type = database;
         }
 
         internal static DbConnection GetConnectionInstance()
         {
             var connection = Host.GetHostVar("database");
 
-            switch (DatabaseType)
+            switch (Type)
             {
                 case DatabaseType.MSSQL:
                 {
@@ -74,7 +77,7 @@ namespace NewLibCore.Data.SQL.DataStore
                 }
                 default:
                 {
-                    throw new ArgumentException($@"暂不支持的数据库类型:{DatabaseType}");
+                    throw new ArgumentException($@"暂不支持的数据库类型:{Type}");
                 }
             }
         }

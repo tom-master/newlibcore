@@ -15,6 +15,8 @@ namespace NewLibCore.Data.SQL.BuildExtension
 
     public enum DatabaseType
     {
+        NONE = 0,
+
         MSSQL = 1,
 
         MYSQL = 2

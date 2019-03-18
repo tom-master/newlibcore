@@ -13,7 +13,7 @@ namespace NewLibCore.Run
     {
         private static void Main(String[] args)
         {
-            SwitchDatabase.SwitchTo(DatabaseType.MYSQL);
+            SwitchDatabase.SwitchToMySql();
 
             using (var context = new SqlContext())
             {
