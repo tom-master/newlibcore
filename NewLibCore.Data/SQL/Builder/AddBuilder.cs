@@ -34,9 +34,10 @@ namespace NewLibCore.Data.SQL.Builder
             translationResult.Append($@" INSERT {ModelType.Name} ({String.Join(",", propertyInfos.Select(c => c.Name))} ) VALUES ({String.Join(",", propertyInfos.Select(key => $@"@{key.Name}"))}) {SwitchDatabase.DatabaseSyntax.IdentitySuffix}");
 
             translationResult
-                .AppendParameter(propertyInfos.ToList().Select(c => new SqlParameterMapper($@"@{c.Name}", c.GetValue(ModelInstance))).ToArray());
+            .AppendParameter(propertyInfos.ToList().Select(c => new SqlParameterMapper($@"@{c.Name}", c.GetValue(ModelInstance))).ToArray());
 
             return translationResult;
         }
+
     }
 }
