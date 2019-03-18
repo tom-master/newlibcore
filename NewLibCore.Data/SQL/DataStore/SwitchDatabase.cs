@@ -6,7 +6,7 @@ using System.Data.SqlClient;
 
 namespace NewLibCore.Data.SQL.DataStore
 {
-    public class SwitchDatabase
+    public static class SwitchDatabase
     {
         public static DatabaseType DatabaseType;
 
@@ -14,9 +14,20 @@ namespace NewLibCore.Data.SQL.DataStore
 
         internal static String ConnectionString { get { return Host.GetHostVar("database"); } }
 
-        private SwitchDatabase() { }
+        static SwitchDatabase() { }
 
-        public static void SwitchTo(DatabaseType database)
+        public static void SwitchToMySql()
+        {
+            SwitchTo(DatabaseType.MYSQL);
+        }
+
+        public static void SwitchToMsSql()
+        {
+            SwitchTo(DatabaseType.MSSQL);
+        }
+
+
+        private static void SwitchTo(DatabaseType database)
         {
             switch (database)
             {
