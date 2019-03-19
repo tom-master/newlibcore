@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace NewLibCore.Data.SQL.DataStore
 {
-    public sealed class InternalSqlContext : IDisposable
+    public sealed class AdoNetContext : IDisposable
     {
         private readonly ILogger _logger;
 
@@ -20,7 +20,7 @@ namespace NewLibCore.Data.SQL.DataStore
 
         private Boolean _useTransaction = false;
 
-        internal InternalSqlContext()
+        internal AdoNetContext()
         {
             _connection = SwitchDatabase.GetConnectionInstance();
 

@@ -15,7 +15,7 @@ namespace NewLibCore.Run
         {
             SwitchDatabase.SwitchToMySql();
 
-            using (var context = new SqlContext())
+            using (var context = new EntityMapper())
             {
                 var r1 = context.InnerJoin<Member, User>((a, b) => a.UserId == b.Id).Find<Member>();
             }

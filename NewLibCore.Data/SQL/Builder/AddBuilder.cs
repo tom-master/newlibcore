@@ -33,11 +33,11 @@ namespace NewLibCore.Data.SQL.Builder
             {
                 ModelInstance.Validate(propertyInfos);
             }
-            var parameters = propertyInfos.ToList().Select(c => new SqlParameterMapper($@"@{c.Name}", c.GetValue(ModelInstance))).ToArray();
             var fields = String.Join(",", propertyInfos.Select(c => c.Name));
             var parameterPrefix = String.Join(",", propertyInfos.Select(key => $@"@{key.Name}"));
-
             translationResult.Append($@" INSERT {ModelType.Name} ({fields} ) VALUES ({parameterPrefix}) {SwitchDatabase.DatabaseSyntax.IdentitySuffix}");
+
+            var parameters = propertyInfos.ToList().Select(c => new SqlParameterMapper($@"@{c.Name}", c.GetValue(ModelInstance))).ToArray();
             translationResult.AppendParameter(parameters);
 
             return translationResult;

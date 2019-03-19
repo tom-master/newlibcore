@@ -9,17 +9,17 @@ using System.Linq.Expressions;
 
 namespace NewLibCore.Data.SQL.DataStore
 {
-    public sealed class SqlContext : IDisposable
+    public sealed class EntityMapper : IDisposable
     {
         private readonly StatementStore _statementStore;
 
-        public SqlContext()
+        public EntityMapper()
         {
-            Context = new InternalSqlContext();
+            Context = new AdoNetContext();
             _statementStore = new StatementStore();
         }
 
-        public InternalSqlContext Context { get; private set; }
+        public AdoNetContext Context { get; private set; }
 
         public TModel Add<TModel>(TModel model) where TModel : DomainModelBase, new()
         {
@@ -75,13 +75,13 @@ namespace NewLibCore.Data.SQL.DataStore
             return dataTable.AsList<TModel>();
         }
 
-        public SqlContext OrderBy<TModel, TKey>(Expression<Func<TModel, TKey>> order) where TModel : PropertyMonitor, new()
+        public EntityMapper OrderBy<TModel, TKey>(Expression<Func<TModel, TKey>> order) where TModel : PropertyMonitor, new()
         {
             _statementStore.AddOrderBy(order, OrderByType.ASC);
             return this;
         }
 
-        public SqlContext OrderByDesc<TModel, TKey>(Expression<Func<TModel, TKey>> order) where TModel : PropertyMonitor, new()
+        public EntityMapper OrderByDesc<TModel, TKey>(Expression<Func<TModel, TKey>> order) where TModel : PropertyMonitor, new()
         {
             _statementStore.AddOrderBy(order, OrderByType.DESC);
             return this;
@@ -97,21 +97,21 @@ namespace NewLibCore.Data.SQL.DataStore
             return (Int32)executeResult.Value;
         }
 
-        public SqlContext LeftJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> expression) where TLeft : PropertyMonitor, new()
+        public EntityMapper LeftJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> expression) where TLeft : PropertyMonitor, new()
             where TRight : PropertyMonitor, new()
         {
             _statementStore.AddJoin(expression, JoinType.LEFT);
             return this;
         }
 
-        public SqlContext RightJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> expression) where TLeft : PropertyMonitor, new()
+        public EntityMapper RightJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> expression) where TLeft : PropertyMonitor, new()
             where TRight : PropertyMonitor, new()
         {
             _statementStore.AddJoin(expression, JoinType.RIGHT);
             return this;
         }
 
-        public SqlContext InnerJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> expression) where TLeft : PropertyMonitor, new()
+        public EntityMapper InnerJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> expression) where TLeft : PropertyMonitor, new()
             where TRight : PropertyMonitor, new()
         {
             _statementStore.AddJoin(expression, JoinType.INNER);
