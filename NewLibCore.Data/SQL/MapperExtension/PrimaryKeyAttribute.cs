@@ -1,6 +1,10 @@
-﻿namespace NewLibCore.Data.SQL.MapperExtension
+﻿using System;
+
+namespace NewLibCore.Data.SQL.MapperExtension
 {
-    public class PrimaryKeyAttribute : PropertyValidate
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
+
+    public class PrimaryKeyAttribute : Attribute
     {
     }
 }

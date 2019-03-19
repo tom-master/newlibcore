@@ -50,11 +50,6 @@ namespace NewLibCore.Data.SQL.PropertyExtension
                 var propertyValue = propertyItem.GetValue(this);
                 for (var i = 0; i < validateBases.Count; i++)
                 {
-                    if (validateBases[i] is PrimaryKeyAttribute || validateBases[i] is ForeignKeyAttribute || validateBases[i] is SubModelAttribute)
-                    {
-                        continue;
-                    }
-
                     if (validateBases[i] is RequiredAttribute)
                     {
                         if (!validateBases[i].IsValidate(propertyValue))

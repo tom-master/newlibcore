@@ -1,6 +1,9 @@
-﻿namespace NewLibCore.Data.SQL.MapperExtension
+﻿using System;
+
+namespace NewLibCore.Data.SQL.MapperExtension
 {
-    public class SubModelAttribute : PropertyValidate
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple = true, Inherited = true)]
+    public class SubModelAttribute : Attribute
     {
     }
 }

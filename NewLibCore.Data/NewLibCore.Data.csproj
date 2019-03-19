@@ -18,4 +18,8 @@
     <ProjectReference Include="..\NewLibCore.Security\NewLibCore.Security.csproj" />
     <ProjectReference Include="..\NewLibCore\NewLibCore.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="SQL\MapperExtension\NewFolder\" />
+  </ItemGroup>
 </Project>
