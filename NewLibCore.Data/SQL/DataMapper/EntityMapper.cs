@@ -12,20 +12,34 @@ namespace NewLibCore.Data.SQL.DataMapper
     public sealed class EntityMapper : IDisposable
     {
         private readonly StatementStore _statementStore;
+        private readonly ExecuteContext _executeContext;
 
         public EntityMapper()
         {
-            Context = new ExecuteContext();
+            _executeContext = new ExecuteContext();
             _statementStore = new StatementStore();
         }
 
-        public ExecuteContext Context { get; private set; }
+        public void OpenTransaction()
+        {
+            _executeContext.OpenTransaction();
+        }
+
+        public void Commit()
+        {
+            _executeContext.Commit();
+        }
+
+        public void Rollback()
+        {
+            _executeContext.Rollback();
+        }
 
         public TModel Add<TModel>(TModel model) where TModel : DomainModelBase, new()
         {
             BuilderBase<TModel> builder = new AddBuilder<TModel>(model, true);
             var translationResult = builder.Build();
-            var executeResult = Context.Execute(ExecuteType.INSERT, translationResult.SqlStore.ToString(), translationResult.ParameterStore, CommandType.Text);
+            var executeResult = _executeContext.Execute(ExecuteType.INSERT, translationResult.SqlStore.ToString(), translationResult.ParameterStore, CommandType.Text);
             model.Id = (Int32)executeResult.Value;
             return model;
         }
@@ -36,7 +50,7 @@ namespace NewLibCore.Data.SQL.DataMapper
 
             BuilderBase<TModel> builder = new ModifyBuilder<TModel>(model, _statementStore, true);
             var translationResult = builder.Build();
-            var executeResult = Context.Execute(ExecuteType.UPDATE, translationResult.SqlStore.ToString(), translationResult.ParameterStore, CommandType.Text);
+            var executeResult = _executeContext.Execute(ExecuteType.UPDATE, translationResult.SqlStore.ToString(), translationResult.ParameterStore, CommandType.Text);
             return (Int32)executeResult.Value > 0;
         }
 
@@ -69,7 +83,7 @@ namespace NewLibCore.Data.SQL.DataMapper
 
             BuilderBase<TModel> builder = new SelectBuilder<TModel>(_statementStore, fields, pageIndex, pageSize);
             var translationResult = builder.Build();
-            var executeResult = Context.Execute(ExecuteType.SELECT, translationResult.SqlStore.ToString(), translationResult.ParameterStore, CommandType.Text);
+            var executeResult = _executeContext.Execute(ExecuteType.SELECT, translationResult.SqlStore.ToString(), translationResult.ParameterStore, CommandType.Text);
             _statementStore.Clear();
             var dataTable = executeResult.Value as DataTable;
             return dataTable.AsList<TModel>();
@@ -93,7 +107,7 @@ namespace NewLibCore.Data.SQL.DataMapper
 
             BuilderBase<TModel> builder = new SelectBuilder<TModel>(_statementStore, d => "COUNT(*)");
             var translationResult = builder.Build();
-            var executeResult = Context.Execute(ExecuteType.SELECTSINGLE, translationResult.SqlStore.ToString(), translationResult.ParameterStore, CommandType.Text);
+            var executeResult = _executeContext.Execute(ExecuteType.SELECTSINGLE, translationResult.SqlStore.ToString(), translationResult.ParameterStore, CommandType.Text);
             return (Int32)executeResult.Value;
         }
 
@@ -120,14 +134,14 @@ namespace NewLibCore.Data.SQL.DataMapper
 
         public IList<TModel> ComplexSqlExecute<TModel>(String sql, IEnumerable<ParameterMapper> sqlParameters = null) where TModel : PropertyMonitor, new()
         {
-            var executeResult = Context.Execute(ExecuteType.SELECT, sql, sqlParameters, CommandType.Text);
+            var executeResult = _executeContext.Execute(ExecuteType.SELECT, sql, sqlParameters, CommandType.Text);
             var dataTable = executeResult.Value as DataTable;
             return dataTable.AsList<TModel>();
         }
 
         public void Dispose()
         {
-            Context.Dispose();
+            _executeContext.Dispose();
         }
     }
 }

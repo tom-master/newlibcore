@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace NewLibCore.Data.SQL.InternalExecute
 {
-    public sealed class ExecuteContext : IDisposable
+    internal sealed class ExecuteContext : IDisposable
     {
         private readonly ILogger _logger;
 
@@ -29,13 +29,13 @@ namespace NewLibCore.Data.SQL.InternalExecute
             _logger.Write("INFO", $@"datastore init connectionstring:{SwitchDatabase.ConnectionString}");
         }
 
-        public void OpenTransaction()
+        internal void OpenTransaction()
         {
             _logger.Write("INFO", "open transaction");
             _useTransaction = true;
         }
 
-        public void Commit()
+        internal void Commit()
         {
             if (_useTransaction)
             {
@@ -49,7 +49,7 @@ namespace NewLibCore.Data.SQL.InternalExecute
             throw new Exception("没有启动事务，无法执行事务提交");
         }
 
-        public void Rollback()
+        internal void Rollback()
         {
             if (_useTransaction)
             {
