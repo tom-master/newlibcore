@@ -15,13 +15,13 @@ namespace NewLibCore.Data.SQL.MapperExtension
         public Int32 Id { get; internal set; }
 
         [DefaultValue(typeof(Boolean))]
-        public Boolean IsDeleted { get; private set; }
+        public Boolean IsDeleted { get; internal set; }
 
         [DateTimeDefaultValue]
-        internal DateTime AddTime { get; private set; }
+        public DateTime AddTime { get; internal set; }
 
         [DateTimeDefaultValue]
-        internal DateTime LastModifyTime { get; private set; }
+        public DateTime LastModifyTime { get; internal set; }
 
         public virtual void Remove()
         {

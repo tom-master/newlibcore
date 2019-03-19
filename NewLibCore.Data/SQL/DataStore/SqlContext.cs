@@ -32,9 +32,10 @@ namespace NewLibCore.Data.SQL.DataStore
 
         public Boolean Modify<TModel>(TModel model, Expression<Func<TModel, Boolean>> where = null) where TModel : PropertyMonitor, new()
         {
-            BuilderBase<TModel> builder = new ModifyBuilder<TModel>(model, true);
             _statementStore.AddWhere(where);
-            var translationResult = builder.Build(_statementStore);
+
+            BuilderBase<TModel> builder = new ModifyBuilder<TModel>(model, _statementStore, true);
+            var translationResult = builder.Build();
             var executeResult = Context.Execute(ExecuteType.UPDATE, translationResult.SqlStore.ToString(), translationResult.ParameterStore, CommandType.Text);
             return (Int32)executeResult.Value > 0;
         }
@@ -64,9 +65,10 @@ namespace NewLibCore.Data.SQL.DataStore
             Int32? pageIndex = null,
             Int32? pageSize = null) where TModel : PropertyMonitor, new()
         {
-            BuilderBase<TModel> builder = new SelectBuilder<TModel>(fields, pageIndex, pageSize);
             _statementStore.AddWhere(where);
-            var translationResult = builder.Build(_statementStore);
+
+            BuilderBase<TModel> builder = new SelectBuilder<TModel>(_statementStore, fields, pageIndex, pageSize);
+            var translationResult = builder.Build();
             var executeResult = Context.Execute(ExecuteType.SELECT, translationResult.SqlStore.ToString(), translationResult.ParameterStore, CommandType.Text);
             _statementStore.Clear();
             var dataTable = executeResult.Value as DataTable;
@@ -87,9 +89,10 @@ namespace NewLibCore.Data.SQL.DataStore
 
         public Int32 Count<TModel>(Expression<Func<TModel, Boolean>> where = null) where TModel : PropertyMonitor, new()
         {
-            BuilderBase<TModel> builder = new SelectBuilder<TModel>(d => "COUNT(*)");
             _statementStore.AddWhere(where);
-            var translationResult = builder.Build(_statementStore);
+
+            BuilderBase<TModel> builder = new SelectBuilder<TModel>(_statementStore, d => "COUNT(*)");
+            var translationResult = builder.Build();
             var executeResult = Context.Execute(ExecuteType.SELECTSINGLE, translationResult.SqlStore.ToString(), translationResult.ParameterStore, CommandType.Text);
             return (Int32)executeResult.Value;
         }

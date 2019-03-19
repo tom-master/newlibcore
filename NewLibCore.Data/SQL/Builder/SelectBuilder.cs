@@ -15,23 +15,27 @@ namespace NewLibCore.Data.SQL.Builder
         private readonly Int32? _pageIndex;
         private readonly Int32? _pageSize;
 
-        internal SelectBuilder(Expression<Func<TModel, dynamic>> fields = null, Int32? pageIndex = null, Int32? pageSize = null) : base(null)
+        private readonly StatementStore _statementStore;
+
+        internal SelectBuilder(StatementStore statementStore, Expression<Func<TModel, dynamic>> fields = null, Int32? pageIndex = null, Int32? pageSize = null) : base(null)
         {
             _fields = fields;
+            _statementStore = statementStore;
 
             _pageIndex = pageIndex;
             _pageSize = pageSize;
         }
 
-        protected internal override TranslationResult Build(StatementStore statementStore = null)
+        protected internal override TranslationResult Build()
         {
             var translation = new TranslationToSql();
-
             var fields = ExtractFieldsAndTableName(_fields);
+
             translation.TranslationResult.Append($@"SELECT {fields.fields} FROM {typeof(TModel).Name} AS {fields.tableAliasName} ");
-            statementStore.AliasName = fields.tableAliasName;
-            translation.Translate(statementStore);
-            if (statementStore != null && statementStore.Expression != null)
+            _statementStore.AliasName = fields.tableAliasName;
+            translation.Translate(_statementStore);
+
+            if (_statementStore != null && _statementStore.Expression != null)
             {
                 translation.TranslationResult.Append($@" AND {fields.tableAliasName}.IsDeleted = 0");
             }
@@ -40,10 +44,10 @@ namespace NewLibCore.Data.SQL.Builder
                 translation.TranslationResult.Append($@" WHERE {fields.tableAliasName}.IsDeleted = 0");
             }
 
-            if (statementStore.OrderByType != null)
+            if (_statementStore.OrderByType != null)
             {
-                var order = ExtractFieldsAndTableName(statementStore.OrderExpression);
-                translation.TranslationResult.Append($@" {String.Format(statementStore.OrderByType.GetDescription(), $@"{order.tableAliasName}.{order.fields}")}");
+                var order = ExtractFieldsAndTableName(_statementStore.OrderExpression);
+                translation.TranslationResult.Append($@" {String.Format(_statementStore.OrderByType.GetDescription(), $@"{order.tableAliasName}.{order.fields}")}");
             }
             if (_pageIndex != null && _pageSize != null)
             {

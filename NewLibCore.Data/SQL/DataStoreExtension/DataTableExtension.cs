@@ -45,8 +45,15 @@ namespace NewLibCore.Data.SQL.DataExtension
                         var value = dr[tempName];
                         if (value != DBNull.Value)
                         {
-                            var fast = new FastProperty(propertyInfo);
-                            fast.Set(t, ConvertExtension.ChangeType(value, propertyInfo.PropertyType));
+                            try
+                            {
+                                var fast = new FastProperty(propertyInfo);
+                                fast.Set(t, ConvertExtension.ChangeType(value, propertyInfo.PropertyType));
+                            }
+                            catch (Exception)
+                            {
+                                throw;
+                            }
                         }
                     }
                 }
@@ -78,7 +85,7 @@ namespace NewLibCore.Data.SQL.DataExtension
 
         public FastProperty(PropertyInfo property)
         {
-            this.Property = property;
+            Property = property;
             InitializeGet();
             InitializeSet();
         }
@@ -88,26 +95,26 @@ namespace NewLibCore.Data.SQL.DataExtension
             var instance = Expression.Parameter(typeof(Object), "instance");
             var value = Expression.Parameter(typeof(Object), "value");
 
-            var instanceCast = (!this.Property.DeclaringType.IsValueType) ? Expression.TypeAs(instance, this.Property.DeclaringType) : Expression.Convert(instance, this.Property.DeclaringType);
-            var valueCast = (!this.Property.PropertyType.IsValueType) ? Expression.TypeAs(value, this.Property.PropertyType) : Expression.Convert(value, this.Property.PropertyType);
-            this.SetDelegate = Expression.Lambda<Action<Object, Object>>(Expression.Call(instanceCast, this.Property.SetMethod, valueCast), new ParameterExpression[] { instance, value }).Compile();
+            var instanceCast = (!Property.DeclaringType.IsValueType) ? Expression.TypeAs(instance, Property.DeclaringType) : Expression.Convert(instance, Property.DeclaringType);
+            var valueCast = (!Property.PropertyType.IsValueType) ? Expression.TypeAs(value, Property.PropertyType) : Expression.Convert(value, Property.PropertyType);
+            SetDelegate = Expression.Lambda<Action<Object, Object>>(Expression.Call(instanceCast, Property.SetMethod, valueCast), new ParameterExpression[] { instance, value }).Compile();
         }
 
         private void InitializeGet()
         {
             var instance = Expression.Parameter(typeof(Object), "instance");
-            var instanceCast = (!this.Property.DeclaringType.IsValueType) ? Expression.TypeAs(instance, this.Property.DeclaringType) : Expression.Convert(instance, this.Property.DeclaringType);
-            this.GetDelegate = Expression.Lambda<Func<Object, Object>>(Expression.TypeAs(Expression.Call(instanceCast, this.Property.GetGetMethod()), typeof(Object)), instance).Compile();
+            var instanceCast = (!Property.DeclaringType.IsValueType) ? Expression.TypeAs(instance, Property.DeclaringType) : Expression.Convert(instance, Property.DeclaringType);
+            GetDelegate = Expression.Lambda<Func<Object, Object>>(Expression.TypeAs(Expression.Call(instanceCast, Property.GetGetMethod()), typeof(Object)), instance).Compile();
         }
 
         internal Object Get(Object instance)
         {
-            return this.GetDelegate(instance);
+            return GetDelegate(instance);
         }
 
         internal void Set(Object instance, Object value)
         {
-            this.SetDelegate(instance, value);
+            SetDelegate(instance, value);
         }
     }
 }
