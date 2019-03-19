@@ -9,7 +9,7 @@ using System.Linq.Expressions;
 
 namespace NewLibCore.Data.SQL.DataStore
 {
-    public class SqlContext : IDisposable
+    public sealed class SqlContext : IDisposable
     {
         private readonly StatementStore _statementStore;
 

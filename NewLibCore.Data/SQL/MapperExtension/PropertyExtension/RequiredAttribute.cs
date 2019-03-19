@@ -2,8 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Reflection;
 
 namespace NewLibCore.Data.SQL.MapperExtension.PropertyExtension
 {
@@ -31,7 +29,7 @@ namespace NewLibCore.Data.SQL.MapperExtension.PropertyExtension
             if (!isComplexType)
             {
                 var objType = value.GetType();
-                if (objType.IsArray || (((TypeInfo)objType).ImplementedInterfaces as IList<Type>).Any(a => a == typeof(IList) || a == typeof(ICollection) || a == typeof(IEnumerable)))
+                if (objType.IsArray || objType.GetGenericTypeDefinition() == typeof(IList<>))
                 {
                     return !(((IList)value).Count == 0);
                 }
