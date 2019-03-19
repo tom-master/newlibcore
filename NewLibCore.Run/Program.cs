@@ -667,7 +667,7 @@ namespace NewLibCore.Run
 
     public class RolePower : DomainModelBase
     {
-        [Required, ForeignKey]
+        [Required, ForeignKey("Role.Id")]
         public Int32 RoleId { get; private set; }
 
         [Required]
