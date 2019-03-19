@@ -2,6 +2,7 @@
 using NewLibCore.Data.SQL.MapperExtension;
 using NewLibCore.Data.SQL.PropertyExtension;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
@@ -20,24 +21,26 @@ namespace NewLibCore.Data.SQL.Builder
         {
             var translationResult = new TranslationResult();
             var propertyInfos = ModelType.GetProperties().Where(w => w.GetCustomAttributes<PropertyValidate>().Any());
-
             if (!propertyInfos.Any())
             {
                 throw new Exception($@"{ModelType.Name}:没有要插入的列");
             }
+
             ModelInstance.SetAddTime();
             if (_isVerifyModel)
             {
                 ModelInstance.Validate(propertyInfos);
             }
-
-            translationResult.Append($@" INSERT {ModelType.Name} ({String.Join(",", propertyInfos.Select(c => c.Name))} ) VALUES ({String.Join(",", propertyInfos.Select(key => $@"@{key.Name}"))}) {SwitchDatabase.DatabaseSyntax.IdentitySuffix}");
-
-            translationResult
-            .AppendParameter(propertyInfos.ToList().Select(c => new SqlParameterMapper($@"@{c.Name}", c.GetValue(ModelInstance))).ToArray());
+            var parameters = propertyInfos.ToList().Select(c => new SqlParameterMapper($@"@{c.Name}", c.GetValue(ModelInstance))).ToArray();
+            NewMethod(translationResult, propertyInfos, parameters);
 
             return translationResult;
         }
 
+        private void NewMethod(TranslationResult translationResult, IEnumerable<PropertyInfo> propertyInfos, SqlParameterMapper[] parameters)
+        {
+            translationResult.Append($@" INSERT {ModelType.Name} ({String.Join(",", propertyInfos.Select(c => c.Name))} ) VALUES ({String.Join(",", propertyInfos.Select(key => $@"@{key.Name}"))}) {SwitchDatabase.DatabaseSyntax.IdentitySuffix}");
+            translationResult.AppendParameter(parameters);
+        }
     }
 }

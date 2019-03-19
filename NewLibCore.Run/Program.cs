@@ -1,5 +1,4 @@
-﻿using NewLibCore.Data.SQL.BuildExtension;
-using NewLibCore.Data.SQL.DataStore;
+﻿using NewLibCore.Data.SQL.DataStore;
 using NewLibCore.Data.SQL.MapperExtension;
 using NewLibCore.Data.SQL.PropertyExtension;
 using System;
@@ -608,7 +607,7 @@ namespace NewLibCore.Run
         /// <summary>
         /// 权限
         /// </summary>
-        [Required, SubModel]
+        [SubModel]
         public IList<RolePower> Powers { get; private set; }
 
         /// <summary>
