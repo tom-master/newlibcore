@@ -10,9 +10,9 @@ using System.Data.SqlClient;
 
 namespace NewLibCore.Data.SQL.InternalTranslation
 {
-    public class ParameterMapper
+    public class EntityParameter
     {
-        public ParameterMapper(String key, Object value)
+        public EntityParameter(String key, Object value)
         {
             Key = key;
             Value = ParseValueType(value);
@@ -22,7 +22,7 @@ namespace NewLibCore.Data.SQL.InternalTranslation
 
         public Object Value { get; private set; }
 
-        public static implicit operator DbParameter(ParameterMapper value)
+        public static implicit operator DbParameter(EntityParameter value)
         {
             switch (SwitchDatabase.Type)
             {

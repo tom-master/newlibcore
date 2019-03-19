@@ -132,7 +132,7 @@ namespace NewLibCore.Data.SQL.DataMapper
             return this;
         }
 
-        public IList<TModel> ComplexSqlExecute<TModel>(String sql, IEnumerable<ParameterMapper> sqlParameters = null) where TModel : PropertyMonitor, new()
+        public IList<TModel> ComplexSqlExecute<TModel>(String sql, IEnumerable<EntityParameter> sqlParameters = null) where TModel : PropertyMonitor, new()
         {
             var executeResult = _executeContext.Execute(ExecuteType.SELECT, sql, sqlParameters, CommandType.Text);
             var dataTable = executeResult.Value as DataTable;

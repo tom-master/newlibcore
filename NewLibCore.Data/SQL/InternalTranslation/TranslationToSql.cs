@@ -89,7 +89,7 @@ namespace NewLibCore.Data.SQL.InternalTranslation
                 case ExpressionType.Constant:
                 {
                     var binaryExp = (ConstantExpression)expression;
-                    TranslationResult.AppendParameter(new ParameterMapper($@"@{_parameterNameStack.Pop()}", binaryExp.Value));
+                    TranslationResult.AppendParameter(new EntityParameter($@"@{_parameterNameStack.Pop()}", binaryExp.Value));
                     break;
                 }
                 case ExpressionType.Equal:
@@ -177,8 +177,7 @@ namespace NewLibCore.Data.SQL.InternalTranslation
                     else
                     {
                         var getter = Expression.Lambda(memberExp).Compile();
-                        Object result = result = getter.DynamicInvoke();
-                        TranslationResult.AppendParameter(new ParameterMapper($@"@{_parameterNameStack.Pop()}", result));
+                        TranslationResult.AppendParameter(new EntityParameter($@"@{_parameterNameStack.Pop()}", getter.DynamicInvoke()));
                         break;
                     }
                     break;

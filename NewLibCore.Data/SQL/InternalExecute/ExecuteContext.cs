@@ -63,7 +63,7 @@ namespace NewLibCore.Data.SQL.InternalExecute
             throw new Exception("没有启动事务，无法执行事务回滚");
         }
 
-        internal ExecuteResult Execute(ExecuteType executeType, String sql, IEnumerable<ParameterMapper> parameters = null, CommandType commandType = CommandType.Text)
+        internal ExecuteResult Execute(ExecuteType executeType, String sql, IEnumerable<EntityParameter> parameters = null, CommandType commandType = CommandType.Text)
         {
             try
             {

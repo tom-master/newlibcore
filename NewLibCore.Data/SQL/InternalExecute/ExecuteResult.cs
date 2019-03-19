@@ -9,12 +9,12 @@ namespace NewLibCore.Data.SQL.InternalExecute
     {
         internal StringBuilder SqlStore { get; private set; }
 
-        internal IList<ParameterMapper> ParameterStore { get; private set; }
+        internal IList<EntityParameter> ParameterStore { get; private set; }
 
         internal TranslationResult()
         {
             SqlStore = new StringBuilder();
-            ParameterStore = new List<ParameterMapper>();
+            ParameterStore = new List<EntityParameter>();
         }
 
         internal void Append(String sql)
@@ -22,7 +22,7 @@ namespace NewLibCore.Data.SQL.InternalExecute
             SqlStore.Append(sql);
         }
 
-        internal void AppendParameter(params ParameterMapper[] mapper)
+        internal void AppendParameter(params EntityParameter[] mapper)
         {
             foreach (var item in mapper)
             {
