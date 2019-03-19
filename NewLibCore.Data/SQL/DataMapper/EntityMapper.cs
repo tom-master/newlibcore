@@ -1,13 +1,13 @@
 ﻿using NewLibCore.Data.SQL.Builder;
-using NewLibCore.Data.SQL.BuildExtension;
-using NewLibCore.Data.SQL.DataExtension;
+using NewLibCore.Data.SQL.InternalExecute;
+using NewLibCore.Data.SQL.InternalTranslation;
 using NewLibCore.Data.SQL.MapperExtension;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq.Expressions;
 
-namespace NewLibCore.Data.SQL.DataStore
+namespace NewLibCore.Data.SQL.DataMapper
 {
     public sealed class EntityMapper : IDisposable
     {
@@ -15,11 +15,11 @@ namespace NewLibCore.Data.SQL.DataStore
 
         public EntityMapper()
         {
-            Context = new AdoNetContext();
+            Context = new ExecuteContext();
             _statementStore = new StatementStore();
         }
 
-        public AdoNetContext Context { get; private set; }
+        public ExecuteContext Context { get; private set; }
 
         public TModel Add<TModel>(TModel model) where TModel : DomainModelBase, new()
         {
@@ -118,7 +118,7 @@ namespace NewLibCore.Data.SQL.DataStore
             return this;
         }
 
-        public IList<TModel> ComplexSqlExecute<TModel>(String sql, IEnumerable<SqlParameterMapper> sqlParameters = null) where TModel : PropertyMonitor, new()
+        public IList<TModel> ComplexSqlExecute<TModel>(String sql, IEnumerable<ParameterMapper> sqlParameters = null) where TModel : PropertyMonitor, new()
         {
             var executeResult = Context.Execute(ExecuteType.SELECT, sql, sqlParameters, CommandType.Text);
             var dataTable = executeResult.Value as DataTable;

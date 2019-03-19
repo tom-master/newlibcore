@@ -1,4 +1,5 @@
-﻿using NewLibCore.Data.SQL.BuildExtension;
+﻿using NewLibCore.Data.SQL.InternalTranslation;
+using NewLibCore.Data.SQL.MapperConfig;
 using NewLibCore.Data.SQL.MapperExtension;
 using System;
 using System.Collections.Generic;
@@ -6,9 +7,9 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 
-namespace NewLibCore.Data.SQL.DataStore
+namespace NewLibCore.Data.SQL.InternalExecute
 {
-    public sealed class AdoNetContext : IDisposable
+    public sealed class ExecuteContext : IDisposable
     {
         private readonly ILogger _logger;
 
@@ -20,7 +21,7 @@ namespace NewLibCore.Data.SQL.DataStore
 
         private Boolean _useTransaction = false;
 
-        internal AdoNetContext()
+        internal ExecuteContext()
         {
             _connection = SwitchDatabase.GetConnectionInstance();
 
@@ -62,7 +63,7 @@ namespace NewLibCore.Data.SQL.DataStore
             throw new Exception("没有启动事务，无法执行事务回滚");
         }
 
-        internal ExecuteResult Execute(ExecuteType executeType, String sql, IEnumerable<SqlParameterMapper> parameters = null, CommandType commandType = CommandType.Text)
+        internal ExecuteResult Execute(ExecuteType executeType, String sql, IEnumerable<ParameterMapper> parameters = null, CommandType commandType = CommandType.Text)
         {
             try
             {

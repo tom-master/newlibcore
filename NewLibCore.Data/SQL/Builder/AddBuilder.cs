@@ -1,4 +1,6 @@
-﻿using NewLibCore.Data.SQL.DataStore;
+﻿using NewLibCore.Data.SQL.InternalExecute;
+using NewLibCore.Data.SQL.InternalTranslation;
+using NewLibCore.Data.SQL.MapperConfig;
 using NewLibCore.Data.SQL.MapperExtension;
 using NewLibCore.Data.SQL.MapperExtension.PropertyExtension;
 using System;
@@ -37,13 +39,13 @@ namespace NewLibCore.Data.SQL.Builder
             var parameterPrefix = String.Join(",", propertyInfos.Select(key => $@"@{key.Name}"));
             translationResult.Append($@" INSERT {ModelType.Name} ({fields} ) VALUES ({parameterPrefix}) {SwitchDatabase.DatabaseSyntax.IdentitySuffix}");
 
-            var parameters = propertyInfos.ToList().Select(c => new SqlParameterMapper($@"@{c.Name}", c.GetValue(ModelInstance))).ToArray();
+            var parameters = propertyInfos.ToList().Select(c => new ParameterMapper($@"@{c.Name}", c.GetValue(ModelInstance))).ToArray();
             translationResult.AppendParameter(parameters);
 
             return translationResult;
         }
 
-        private void Builder(String tableName, TranslationResult translationResult, IEnumerable<PropertyInfo> propertyInfos, SqlParameterMapper[] parameters)
+        private void Builder(String tableName, TranslationResult translationResult, IEnumerable<PropertyInfo> propertyInfos, ParameterMapper[] parameters)
         {
             //translationResult.Append($@" INSERT {ModelType.Name} ({String.Join(",", propertyInfos.Select(c => c.Name))} ) VALUES ({String.Join(",", propertyInfos.Select(key => $@"@{key.Name}"))}) {SwitchDatabase.DatabaseSyntax.IdentitySuffix}");
             //translationResult.AppendParameter(parameters);

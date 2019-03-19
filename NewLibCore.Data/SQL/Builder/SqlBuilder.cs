@@ -1,4 +1,4 @@
-﻿using NewLibCore.Data.SQL.DataStore;
+﻿using NewLibCore.Data.SQL.InternalExecute;
 using NewLibCore.Data.SQL.MapperExtension;
 using System;
 

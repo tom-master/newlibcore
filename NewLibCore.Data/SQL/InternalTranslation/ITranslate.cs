@@ -1,6 +1,6 @@
-﻿using NewLibCore.Data.SQL.DataStore;
+﻿using NewLibCore.Data.SQL.InternalExecute;
 
-namespace NewLibCore.Data.SQL.BuildExtension
+namespace NewLibCore.Data.SQL.InternalTranslation
 {
     internal interface ITranslate
     {

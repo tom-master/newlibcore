@@ -1,10 +1,9 @@
-﻿using NewLibCore.Data.SQL.BuildExtension;
-using NewLibCore.Data.SQL.MapperExtension;
+﻿using NewLibCore.Data.SQL.MapperExtension;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace NewLibCore.Data.SQL.DataStore
+namespace NewLibCore.Data.SQL.InternalTranslation
 {
     internal class StatementStore
     {

@@ -1,5 +1,6 @@
-﻿using NewLibCore.Data.SQL.BuildExtension;
-using NewLibCore.Data.SQL.DataStore;
+﻿using NewLibCore.Data.SQL.InternalExecute;
+using NewLibCore.Data.SQL.InternalTranslation;
+using NewLibCore.Data.SQL.MapperConfig;
 using NewLibCore.Data.SQL.MapperExtension;
 using System;
 using System.Linq;
@@ -32,7 +33,7 @@ namespace NewLibCore.Data.SQL.Builder
 
             var translation = new TranslationToSql();
             translation.TranslationResult.Append($@"UPDATE {ModelType.Name} SET {String.Join(",", properties.Select(s => $@"{s.Name}=@{s.Name}"))}");
-            translation.TranslationResult.AppendParameter(properties.ToList().Select(c => new SqlParameterMapper($@"@{c.Name}", c.GetValue(ModelInstance))).ToArray());
+            translation.TranslationResult.AppendParameter(properties.ToList().Select(c => new ParameterMapper($@"@{c.Name}", c.GetValue(ModelInstance))).ToArray());
             if (_statementStore != null && _statementStore.Expression != null)
             {
                 translation.Translate(_statementStore);

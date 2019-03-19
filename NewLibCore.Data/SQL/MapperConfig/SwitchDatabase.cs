@@ -1,18 +1,18 @@
 ﻿using MySql.Data.MySqlClient;
-using NewLibCore.Data.SQL.BuildExtension;
+using NewLibCore.Data.SQL.MapperExtension;
 using System;
 using System.Data.Common;
 using System.Data.SqlClient;
 
-namespace NewLibCore.Data.SQL.DataStore
+namespace NewLibCore.Data.SQL.MapperConfig
 {
     public static class SwitchDatabase
     {
+        internal static String ConnectionString { get { return Host.GetHostVar("database"); } }
+
         public static DatabaseType Type { get; private set; }
 
         internal static DatabaseSyntaxBuilder DatabaseSyntax { get; private set; }
-
-        internal static String ConnectionString { get { return Host.GetHostVar("database"); } }
 
         static SwitchDatabase()
         {

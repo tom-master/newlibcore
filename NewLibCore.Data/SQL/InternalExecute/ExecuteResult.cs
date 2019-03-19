@@ -1,19 +1,20 @@
-﻿using System;
+﻿using NewLibCore.Data.SQL.InternalTranslation;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace NewLibCore.Data.SQL.DataStore
+namespace NewLibCore.Data.SQL.InternalExecute
 {
     internal class TranslationResult
     {
         internal StringBuilder SqlStore { get; private set; }
 
-        internal IList<SqlParameterMapper> ParameterStore { get; private set; }
+        internal IList<ParameterMapper> ParameterStore { get; private set; }
 
         internal TranslationResult()
         {
             SqlStore = new StringBuilder();
-            ParameterStore = new List<SqlParameterMapper>();
+            ParameterStore = new List<ParameterMapper>();
         }
 
         internal void Append(String sql)
@@ -21,7 +22,7 @@ namespace NewLibCore.Data.SQL.DataStore
             SqlStore.Append(sql);
         }
 
-        internal void AppendParameter(params SqlParameterMapper[] mapper)
+        internal void AppendParameter(params ParameterMapper[] mapper)
         {
             foreach (var item in mapper)
             {

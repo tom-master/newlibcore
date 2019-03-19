@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace NewLibCore.Data.SQL.BuildExtension
+namespace NewLibCore.Data.SQL.MapperExtension
 {
     internal class MySqlSyntaxBuilder : DatabaseSyntaxBuilder
     {

@@ -1,5 +1,6 @@
 ﻿using MySql.Data.MySqlClient;
-using NewLibCore.Data.SQL.BuildExtension;
+using NewLibCore.Data.SQL.MapperConfig;
+using NewLibCore.Data.SQL.MapperExtension;
 using NewLibCore.Security;
 using System;
 using System.Collections.Generic;
@@ -7,11 +8,11 @@ using System.ComponentModel;
 using System.Data.Common;
 using System.Data.SqlClient;
 
-namespace NewLibCore.Data.SQL.DataStore
+namespace NewLibCore.Data.SQL.InternalTranslation
 {
-    public class SqlParameterMapper
+    public class ParameterMapper
     {
-        public SqlParameterMapper(String key, Object value)
+        public ParameterMapper(String key, Object value)
         {
             Key = key;
             Value = ParseValueType(value);
@@ -21,7 +22,7 @@ namespace NewLibCore.Data.SQL.DataStore
 
         public Object Value { get; private set; }
 
-        public static implicit operator DbParameter(SqlParameterMapper value)
+        public static implicit operator DbParameter(ParameterMapper value)
         {
             switch (SwitchDatabase.Type)
             {

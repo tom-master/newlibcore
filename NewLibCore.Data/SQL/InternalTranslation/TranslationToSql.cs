@@ -1,4 +1,6 @@
-﻿using NewLibCore.Data.SQL.DataStore;
+﻿using NewLibCore.Data.SQL.InternalExecute;
+using NewLibCore.Data.SQL.MapperConfig;
+using NewLibCore.Data.SQL.MapperExtension;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,7 +8,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace NewLibCore.Data.SQL.BuildExtension
+namespace NewLibCore.Data.SQL.InternalTranslation
 {
     internal class TranslationToSql : ITranslate
     {
@@ -87,7 +89,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
                 case ExpressionType.Constant:
                 {
                     var binaryExp = (ConstantExpression)expression;
-                    TranslationResult.AppendParameter(new SqlParameterMapper($@"@{_parameterNameStack.Pop()}", binaryExp.Value));
+                    TranslationResult.AppendParameter(new ParameterMapper($@"@{_parameterNameStack.Pop()}", binaryExp.Value));
                     break;
                 }
                 case ExpressionType.Equal:
@@ -176,7 +178,7 @@ namespace NewLibCore.Data.SQL.BuildExtension
                     {
                         var getter = Expression.Lambda(memberExp).Compile();
                         Object result = result = getter.DynamicInvoke();
-                        TranslationResult.AppendParameter(new SqlParameterMapper($@"@{_parameterNameStack.Pop()}", result));
+                        TranslationResult.AppendParameter(new ParameterMapper($@"@{_parameterNameStack.Pop()}", result));
                         break;
                     }
                     break;
