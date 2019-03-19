@@ -1,9 +1,9 @@
 ﻿using System;
 
-namespace NewLibCore.Data.SQL.MapperExtension
+namespace NewLibCore.Data.SQL.MapperExtension.AssociationMapperExtension
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = true, Inherited = true)]
-    public class ForeignKeyAttribute : Attribute
+    public class SubModelAttribute : Attribute
     {
     }
 }

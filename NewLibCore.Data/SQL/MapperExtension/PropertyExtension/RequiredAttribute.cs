@@ -5,7 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 
-namespace NewLibCore.Data.SQL.MapperExtension
+namespace NewLibCore.Data.SQL.MapperExtension.PropertyExtension
 {
     public class RequiredAttribute : PropertyValidate
     {

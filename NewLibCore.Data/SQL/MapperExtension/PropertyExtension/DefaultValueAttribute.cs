@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NewLibCore.Data.SQL.MapperExtension
+namespace NewLibCore.Data.SQL.MapperExtension.PropertyExtension
 {
     public class DefaultValueAttribute : PropertyValidate
     {

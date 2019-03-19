@@ -1,10 +1,12 @@
 ﻿using NewLibCore.Data.SQL.DataStore;
 using NewLibCore.Data.SQL.MapperExtension;
+using NewLibCore.Data.SQL.MapperExtension.AssociationMapperExtension;
+using NewLibCore.Data.SQL.MapperExtension.PropertyExtension;
 using NewLibCore.Data.SQL.PropertyExtension;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using DefaultValueAttribute = NewLibCore.Data.SQL.MapperExtension.DefaultValueAttribute;
+using DefaultValueAttribute = NewLibCore.Data.SQL.MapperExtension.PropertyExtension.DefaultValueAttribute;
 
 namespace NewLibCore.Run
 {
