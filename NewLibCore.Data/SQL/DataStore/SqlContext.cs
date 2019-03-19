@@ -1,7 +1,7 @@
 ﻿using NewLibCore.Data.SQL.Builder;
 using NewLibCore.Data.SQL.BuildExtension;
 using NewLibCore.Data.SQL.DataExtension;
-using NewLibCore.Data.SQL.PropertyExtension;
+using NewLibCore.Data.SQL.MapperExtension;
 using System;
 using System.Collections.Generic;
 using System.Data;

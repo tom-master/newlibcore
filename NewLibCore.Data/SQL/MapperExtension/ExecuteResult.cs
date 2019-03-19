@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NewLibCore.Data.SQL.PropertyExtension
+namespace NewLibCore.Data.SQL.MapperExtension
 {
     internal class ExecuteResult
     {

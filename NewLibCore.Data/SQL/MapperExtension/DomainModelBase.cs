@@ -1,7 +1,8 @@
-﻿using NewLibCore.Data.SQL.MapperExtension;
+﻿using NewLibCore.Data.SQL.MapperExtension.AssociationMapperExtension;
+using NewLibCore.Data.SQL.MapperExtension.PropertyExtension;
 using System;
 
-namespace NewLibCore.Data.SQL.PropertyExtension
+namespace NewLibCore.Data.SQL.MapperExtension
 {
     public abstract class DomainModelBase : PropertyMonitor
     {

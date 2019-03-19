@@ -1,11 +1,10 @@
-﻿using NewLibCore.Data.SQL.MapperExtension;
-using NewLibCore.Data.SQL.MapperExtension.PropertyExtension;
+﻿using NewLibCore.Data.SQL.MapperExtension.PropertyExtension;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace NewLibCore.Data.SQL.PropertyExtension
+namespace NewLibCore.Data.SQL.MapperExtension
 {
     public abstract class PropertyMonitor
     {

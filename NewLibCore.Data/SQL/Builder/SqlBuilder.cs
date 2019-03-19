@@ -1,10 +1,6 @@
 ﻿using NewLibCore.Data.SQL.DataStore;
 using NewLibCore.Data.SQL.MapperExtension;
-using NewLibCore.Data.SQL.PropertyExtension;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 
 namespace NewLibCore.Data.SQL.Builder
 {
@@ -28,6 +24,6 @@ namespace NewLibCore.Data.SQL.Builder
             }
         }
 
-        protected internal abstract TranslationResult Build(StatementStore statementStore = null); 
+        protected internal abstract TranslationResult Build(StatementStore statementStore = null);
     }
 }

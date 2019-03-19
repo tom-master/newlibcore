@@ -1,6 +1,6 @@
 ﻿using NewLibCore.Data.SQL.DataStore;
+using NewLibCore.Data.SQL.MapperExtension;
 using NewLibCore.Data.SQL.MapperExtension.PropertyExtension;
-using NewLibCore.Data.SQL.PropertyExtension;
 using System;
 using System.Collections.Generic;
 using System.Linq;

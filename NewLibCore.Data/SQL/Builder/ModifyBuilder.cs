@@ -1,6 +1,6 @@
 ﻿using NewLibCore.Data.SQL.BuildExtension;
 using NewLibCore.Data.SQL.DataStore;
-using NewLibCore.Data.SQL.PropertyExtension;
+using NewLibCore.Data.SQL.MapperExtension;
 using System;
 using System.Linq;
 
