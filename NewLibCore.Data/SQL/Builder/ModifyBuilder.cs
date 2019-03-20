@@ -28,6 +28,7 @@ namespace NewLibCore.Data.SQL.Builder
         {
             Parameter.Validate(_instance.PropertyInfos);
             _instance.SetUpdateTime();
+
             if (_isValidate)
             {
                 _instance.Validate();
