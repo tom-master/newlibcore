@@ -34,6 +34,7 @@ namespace NewLibCore.Data.SQL.Builder
 
             translation.TranslationResult.Append($@"SELECT {fields.fields} FROM {typeof(TModel).Name} AS {fields.tableAliasName} ");
             _statementStore.AliasName = fields.tableAliasName;
+
             translation.Translate(_statementStore);
 
             if (_statementStore != null && _statementStore.Expression != null)
