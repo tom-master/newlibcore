@@ -24,10 +24,10 @@ namespace NewLibCore.Data.SQL.MapperExtension
 
     public enum OrderByType
     {
-        [StatementTemplate(" ORDER BY {0} ASC ")]
+        [Description(" ORDER BY {0} ASC ")]
         ASC = 1,
 
-        [StatementTemplate(" ORDER BY {0} DESC ")]
+        [Description(" ORDER BY {0} DESC ")]
         DESC = 2
     }
 
@@ -35,52 +35,52 @@ namespace NewLibCore.Data.SQL.MapperExtension
     {
         NONE = 0,
 
-        [StatementTemplate("{left} INNER JOIN {right}")]
+        [Description(" INNER JOIN {0} AS {1} ON ")]
         INNER = 1,
 
-        [StatementTemplate("{left} LEFT JOIN {right}")]
+        [Description(" LEFT JOIN {0} AS {1} ON ")]
         LEFT = 2,
 
-        [StatementTemplate("{left} RIGHT JOIN {right}")]
+        [Description("{0} RIGHT JOIN {1}")]
         RIGHT = 3
     }
 
     internal enum RelationType
     {
-        [StatementTemplate("{left} AND {right}")]
+        [Description("{0} AND {1}")]
         AND = 1,
 
-        [StatementTemplate("{left} OR {right}")]
+        [Description("{0} OR {1}")]
         OR = 2,
 
-        [StatementTemplate("{left} LIKE (%{right}%)")]
+        [Description("{0} LIKE '%@{1}%'")]
         FULL_LIKE = 3,
 
-        [StatementTemplate("{left} LIKE ({right}%)")]
+        [Description("{0} LIKE '@{1}%'")]
         START_LIKE = 4,
 
-        [StatementTemplate("{left} LIKE (%{right})")]
+        [Description("{0} LIKE '%@{1}'")]
         END_LIKE = 5,
 
-        [StatementTemplate("{left} IN {right}")]
+        [Description("{0} IN (@{1})")]
         IN = 6,
 
-        [StatementTemplate("{left} = {right}")]
+        [Description("{0} = {1}")]
         EQ = 7,
 
-        [StatementTemplate("{left} <> {right}")]
+        [Description("{0} <> {1}")]
         NQ = 8,
 
-        [StatementTemplate("{left} < {right}")]
+        [Description("{0} < {1}")]
         GT = 9,
 
-        [StatementTemplate("{left} > {right}")]
+        [Description("{0} > {1}")]
         LT = 10,
 
-        [StatementTemplate("{left} <= {right}")]
+        [Description("{0} <= {1}")]
         GE = 11,
 
-        [StatementTemplate("{left} >= {right}")]
+        [Description("{0} >= {1}")]
         LE = 12
     }
 }

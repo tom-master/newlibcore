@@ -42,7 +42,7 @@ namespace NewLibCore.Data.SQL.InternalTranslation
 
                 foreach (var parameter in item.AliasNameMappers)
                 {
-                    TranslationResult.Append($@" {item.JoinType.GetDescription()} {parameter.Value} AS {parameter.Value.ToLower()} ON ");
+                    TranslationResult.Append(String.Format(item.JoinType.GetDescription(), parameter.Value, parameter.Value.ToLower()));
                 }
                 _joinType = item.JoinType;
                 InternalBuildWhere(item.Expression);
@@ -167,7 +167,7 @@ namespace NewLibCore.Data.SQL.InternalTranslation
                         }
                         else
                         {
-                            var syntax = _syntaxBuilder.SyntaxBuilder(_operationalCharacterStack.Pop(), memberName, newParameterName);
+                            var syntax = _syntaxBuilder.SyntaxBuilder(_operationalCharacterStack.Pop(), memberName, $"@{newParameterName}");
                             TranslationResult.Append(syntax);
                             _parameterNameStack.Push(newParameterName);
                         }
@@ -281,11 +281,11 @@ namespace NewLibCore.Data.SQL.InternalTranslation
                 var constant = (ConstantExpression)binaryExp.Right;
                 if (Boolean.TryParse(constant.Value.ToString(), out var result))
                 {
-                    TranslationResult.Append($@" {leftAliasName}.{leftMemberExp.Member.Name} {relationType.GetDescription()} {(result ? 1 : 0)} ");
+                    TranslationResult.Append(String.Format(relationType.GetDescription(), $"{leftAliasName}.{leftMemberExp.Member.Name}", (result ? 1 : 0)));
                 }
                 else
                 {
-                    TranslationResult.Append($@" {leftAliasName}.{leftMemberExp.Member.Name} {relationType.GetDescription()} {constant.Value} ");
+                    TranslationResult.Append(String.Format(relationType.GetDescription(), $"{leftAliasName}.{leftMemberExp.Member.Name}", constant.Value));
                 }
             }
             else
@@ -293,9 +293,10 @@ namespace NewLibCore.Data.SQL.InternalTranslation
                 var rightMemberExp = (MemberExpression)binaryExp.Right;
                 var rightAliasName = _parameterToTableAliasMappers[((ParameterExpression)rightMemberExp.Expression).Name];
 
-                TranslationResult.Append($@" {rightAliasName}.{rightMemberExp.Member.Name} {relationType.GetDescription()} {leftAliasName}.{leftMemberExp.Member.Name}");
+                TranslationResult
+                    .Append(String.Format(relationType.GetDescription(), $"{rightAliasName}.{rightMemberExp.Member.Name}", $"{leftAliasName}.{leftMemberExp.Member.Name}"));
             }
         }
-         
+
     }
 }

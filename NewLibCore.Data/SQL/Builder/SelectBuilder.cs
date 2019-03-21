@@ -49,7 +49,7 @@ namespace NewLibCore.Data.SQL.Builder
             if (_statementStore.OrderByType != null)
             {
                 var order = ExtractFieldsAndTableName(_statementStore.OrderExpression);
-                translation.TranslationResult.Append($@" {String.Format(_statementStore.OrderByType.GetDescription(), $@"{order.tableAliasName}.{order.fields}")}");
+                translation.TranslationResult.Append(String.Format(_statementStore.OrderByType.GetDescription(), $@"{order.tableAliasName}.{order.fields}"));
             }
 
             if (_pageIndex != null && _pageSize != null)

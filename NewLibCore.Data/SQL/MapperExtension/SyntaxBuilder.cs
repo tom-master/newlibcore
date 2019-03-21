@@ -10,26 +10,26 @@ namespace NewLibCore.Data.SQL.MapperExtension
             Clear();
 
             var type = relationType;
-            if (type == RelationType.IN)
-            {
-                Builder.Append($@"{left} IN (@{right}) ");
-            }
-            else if (type == RelationType.FULL_LIKE)
-            {
-                Builder.Append($@"{left} {RelationType.FULL_LIKE} CONCAT('%',@{right},'%') ");
-            }
-            else if (type == RelationType.START_LIKE)
-            {
-                Builder.Append($@"{left} {RelationType.FULL_LIKE} CONCAT('',@{right},'%') ");
-            }
-            else if (type == RelationType.END_LIKE)
-            {
-                Builder.Append($@"{left} {RelationType.FULL_LIKE} CONCAT('%',@{right},'') ");
-            }
-            else
-            {
-                SyntaxBuilderBase(type, left, right);
-            }
+            //if (type == RelationType.IN)
+            //{
+            //    Builder.Append($@" {String.Format(RelationType.IN.GetDescription1(), left, right)} ");
+            //}
+            //else if (type == RelationType.FULL_LIKE)
+            //{
+            //    Builder.Append($@"{left} {RelationType.FULL_LIKE} CONCAT('%',@{right},'%') ");
+            //}
+            //else if (type == RelationType.START_LIKE)
+            //{
+            //    Builder.Append($@"{left} {RelationType.FULL_LIKE} CONCAT('',@{right},'%') ");
+            //}
+            //else if (type == RelationType.END_LIKE)
+            //{
+            //    Builder.Append($@"{left} {RelationType.FULL_LIKE} CONCAT('%',@{right},'') ");
+            //}
+            //else
+            //{
+            SyntaxBuilderBase(type, left, right);
+            //}
 
             return Builder.ToString();
         }
@@ -81,7 +81,7 @@ namespace NewLibCore.Data.SQL.MapperExtension
 
         internal void SyntaxBuilderBase(RelationType relationType, String left, String right)
         {
-            Builder.Append($@" {left} {relationType.GetDescription()} @{right} ");
+            Builder.Append(String.Format(relationType.GetDescription(), left, right));
         }
 
         protected virtual void Clear() { Builder.Clear(); }
