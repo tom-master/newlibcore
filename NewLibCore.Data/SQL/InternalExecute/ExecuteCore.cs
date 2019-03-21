@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace NewLibCore.Data.SQL.InternalExecute
 {
-    internal sealed class ExecuteContext : IDisposable
+    internal sealed class ExecuteCore : IDisposable
     {
 
         private DbConnection _connection;
@@ -20,7 +20,7 @@ namespace NewLibCore.Data.SQL.InternalExecute
 
         private Boolean _useTransaction = false;
 
-        internal ExecuteContext()
+        internal ExecuteCore()
         {
             _connection = DatabaseConfig.GetConnectionInstance();
         }

@@ -12,11 +12,11 @@ namespace NewLibCore.Data.SQL.DataMapper
     public sealed class EntityMapper : IDisposable
     {
         private readonly StatementStore _statementStore;
-        private readonly ExecuteContext _executeContext;
+        private readonly ExecuteCore _executeContext;
 
         public EntityMapper()
         {
-            _executeContext = new ExecuteContext();
+            _executeContext = new ExecuteCore();
             _statementStore = new StatementStore();
         }
 
