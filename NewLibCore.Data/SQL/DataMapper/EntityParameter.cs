@@ -40,8 +40,12 @@ namespace NewLibCore.Data.SQL.DataMapper
                 return UnlegalChatDetection.FilterBadChat(obj.ToString());
             }
 
-            var isComplexType = TypeDescriptor.GetConverter(obj.GetType()).CanConvertFrom(typeof(String));
-            if (!isComplexType)
+            if (obj.GetType() == typeof(Boolean))
+            {
+                return (Boolean)obj ? 1 : 0;
+            }
+
+            if (!TypeDescriptor.GetConverter(obj.GetType()).CanConvertFrom(typeof(String)))
             {
                 var objType = obj.GetType();
                 if (objType.IsArray || objType.GetGenericTypeDefinition() == typeof(List<>))
@@ -52,14 +56,6 @@ namespace NewLibCore.Data.SQL.DataMapper
                     }
                     return String.Join(",", (IList<Int32>)obj);
                 }
-            }
-            if (obj.GetType() == typeof(Boolean))
-            {
-                if ((Boolean)obj)
-                {
-                    return 1;
-                }
-                return 0;
             }
 
             return obj;
