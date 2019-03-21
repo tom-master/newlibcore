@@ -19,7 +19,9 @@ namespace NewLibCore.Run
 
             using (var context = new EntityMapper())
             {
-                var r1 = context.InnerJoin<Member, User>((a, b) => a.UserId == b.Id).Find<Member>(m => m.Id != 0);
+                var member = new Member();
+                member.ModifyAppUrl("123");
+                context.Modify(member, a => a.Id == 0);
             }
         }
     }

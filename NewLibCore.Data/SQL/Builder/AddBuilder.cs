@@ -1,5 +1,4 @@
-﻿using NewLibCore.Data.SQL.InternalExecute;
-using NewLibCore.Data.SQL.InternalTranslation;
+﻿using NewLibCore.Data.SQL.InternalTranslation;
 using NewLibCore.Data.SQL.MapperConfig;
 using NewLibCore.Data.SQL.MapperExtension;
 using NewLibCore.Data.SQL.MapperExtension.PropertyExtension;
@@ -21,9 +20,8 @@ namespace NewLibCore.Data.SQL.Builder
             _propertyInfos = ModelType.GetProperties();
         }
 
-        protected internal override TranslationResult Build()
+        protected internal override IList<PropertyInfo> ValidateModel()
         {
-            var translationResult = new TranslationResult();
             var propertyInfos = _propertyInfos.Where(w => w.GetCustomAttributes<PropertyValidate>().Any());
             if (!propertyInfos.Any())
             {
@@ -35,35 +33,17 @@ namespace NewLibCore.Data.SQL.Builder
             {
                 ModelInstance.Validate(propertyInfos);
             }
-            var fields = String.Join(",", propertyInfos.Select(c => c.Name));
-            var parameterPrefix = String.Join(",", propertyInfos.Select(key => $@"@{key.Name}"));
-            translationResult.Append($@" INSERT {ModelType.Name} ({fields} ) VALUES ({parameterPrefix}) {DatabaseConfig.DatabaseSyntax.IdentitySuffix}");
-
-            var parameters = propertyInfos.ToList().Select(c => new EntityParameter($@"@{c.Name}", c.GetValue(ModelInstance))).ToArray();
-            translationResult.AppendParameter(parameters);
-
-            return translationResult;
+            return propertyInfos.ToList();
         }
 
-        private void Builder(String tableName, TranslationResult translationResult, IEnumerable<PropertyInfo> propertyInfos, EntityParameter[] parameters)
+        protected internal override void InternalBuildHead(IList<PropertyInfo> properties, TranslationToSql translation)
         {
-            //translationResult.Append($@" INSERT {ModelType.Name} ({String.Join(",", propertyInfos.Select(c => c.Name))} ) VALUES ({String.Join(",", propertyInfos.Select(key => $@"@{key.Name}"))}) {SwitchDatabase.DatabaseSyntax.IdentitySuffix}");
-            //translationResult.AppendParameter(parameters);
+            var fields = String.Join(",", properties.Select(c => c.Name));
+            var parameterPrefix = String.Join(",", properties.Select(key => $@"@{key.Name}"));
+            translation.TranslationResult.Append($@" INSERT {ModelType.Name} ({fields} ) VALUES ({parameterPrefix}) {DatabaseConfig.DatabaseSyntax.IdentitySuffix}");
 
-            //var subModels = _propertyInfos.Where(w => w.GetCustomAttributes<SubModelAttribute>().Any());
-            //if (subModels.Any())
-            //{
-            //    foreach (var subModel in subModels)
-            //    {
-            //        if ((((TypeInfo)subModel.PropertyType).ImplementedInterfaces as IList<Type>).Any(a => a == typeof(IList) || a == typeof(ICollection) || a == typeof(IEnumerable)))
-            //        {
-            //            foreach (var item in subModel.PropertyType.GenericTypeArguments)
-            //            {
-            //                Builder(item.Name, translationResult, item.GetProperties(), parameters);
-            //            }
-            //        }
-            //    }
-            //}
+            var parameters = properties.ToList().Select(c => new EntityParameter($@"@{c.Name}", c.GetValue(ModelInstance))).ToArray();
+            translation.TranslationResult.AppendParameter(parameters);
         }
     }
 }
