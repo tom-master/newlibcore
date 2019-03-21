@@ -24,10 +24,10 @@ namespace NewLibCore.Data.SQL.MapperExtension
 
     public enum OrderByType
     {
-        [Description(" ORDER BY {0} ASC ")]
+        [StatementTemplate(" ORDER BY {0} ASC ")]
         ASC = 1,
 
-        [Description(" ORDER BY {0} DESC ")]
+        [StatementTemplate(" ORDER BY {0} DESC ")]
         DESC = 2
     }
 
@@ -35,50 +35,52 @@ namespace NewLibCore.Data.SQL.MapperExtension
     {
         NONE = 0,
 
-        [Description("INNER JOIN")]
+        [StatementTemplate("{left} INNER JOIN {right}")]
         INNER = 1,
 
-        [Description("LEFT JOIN")]
+        [StatementTemplate("{left} LEFT JOIN {right}")]
         LEFT = 2,
 
-        [Description("RIGHT JOIN")]
+        [StatementTemplate("{left} RIGHT JOIN {right}")]
         RIGHT = 3
     }
 
     internal enum RelationType
     {
-        [Description(" AND ")]
+        [StatementTemplate("{left} AND {right}")]
         AND = 1,
 
-        [Description(" OR ")]
+        [StatementTemplate("{left} OR {right}")]
         OR = 2,
 
-        [Description(" LIKE ")]
-        LIKE = 3,
+        [StatementTemplate("{left} LIKE (%{right}%)")]
+        FULL_LIKE = 3,
 
+        [StatementTemplate("{left} LIKE ({right}%)")]
         START_LIKE = 4,
 
+        [StatementTemplate("{left} LIKE (%{right})")]
         END_LIKE = 5,
 
-        [Description(" IN ")]
+        [StatementTemplate("{left} IN {right}")]
         IN = 6,
 
-        [Description(" = ")]
+        [StatementTemplate("{left} = {right}")]
         EQ = 7,
 
-        [Description(" <> ")]
+        [StatementTemplate("{left} <> {right}")]
         NQ = 8,
 
-        [Description(" < ")]
+        [StatementTemplate("{left} < {right}")]
         GT = 9,
 
-        [Description(" > ")]
+        [StatementTemplate("{left} > {right}")]
         LT = 10,
 
-        [Description(" <= ")]
+        [StatementTemplate("{left} <= {right}")]
         GE = 11,
 
-        [Description(" >= ")]
+        [StatementTemplate("{left} >= {right}")]
         LE = 12
     }
 }

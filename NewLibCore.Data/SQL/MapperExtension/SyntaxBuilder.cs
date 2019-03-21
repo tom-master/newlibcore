@@ -14,17 +14,17 @@ namespace NewLibCore.Data.SQL.MapperExtension
             {
                 Builder.Append($@"{left} IN (@{right}) ");
             }
-            else if (type == RelationType.LIKE)
+            else if (type == RelationType.FULL_LIKE)
             {
-                Builder.Append($@"{left} {RelationType.LIKE} CONCAT('%',@{right},'%') ");
+                Builder.Append($@"{left} {RelationType.FULL_LIKE} CONCAT('%',@{right},'%') ");
             }
             else if (type == RelationType.START_LIKE)
             {
-                Builder.Append($@"{left} {RelationType.LIKE} CONCAT('',@{right},'%') ");
+                Builder.Append($@"{left} {RelationType.FULL_LIKE} CONCAT('',@{right},'%') ");
             }
             else if (type == RelationType.END_LIKE)
             {
-                Builder.Append($@"{left} {RelationType.LIKE} CONCAT('%',@{right},'') ");
+                Builder.Append($@"{left} {RelationType.FULL_LIKE} CONCAT('%',@{right},'') ");
             }
             else
             {
@@ -45,17 +45,17 @@ namespace NewLibCore.Data.SQL.MapperExtension
             {
                 Builder.Append($@"{left} IN (@{right}) ");
             }
-            else if (relationType == RelationType.LIKE)
+            else if (relationType == RelationType.FULL_LIKE)
             {
-                Builder.Append($@"{left} {RelationType.LIKE} '%@{right}%'");
+                Builder.Append($@"{left} {RelationType.FULL_LIKE} '%@{right}%'");
             }
-            else if (relationType == RelationType.START_LIKE)
+            else if (relationType == RelationType.FULL_LIKE)
             {
-                Builder.Append($@"{left} {RelationType.LIKE} '@{right}%' ");
+                Builder.Append($@"{left} {RelationType.FULL_LIKE} '@{right}%' ");
             }
-            else if (relationType == RelationType.END_LIKE)
+            else if (relationType == RelationType.FULL_LIKE)
             {
-                Builder.Append($@"{left} {RelationType.LIKE} '@%{right}'  ");
+                Builder.Append($@"{left} {RelationType.FULL_LIKE} '@%{right}'  ");
             }
             else
             {

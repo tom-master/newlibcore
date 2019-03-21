@@ -230,7 +230,7 @@ namespace NewLibCore.Data.SQL.InternalTranslation
             {
                 if (argumentType == typeof(String))
                 {
-                    relationType = RelationType.LIKE;
+                    relationType = RelationType.FULL_LIKE;
                 }
                 else if (argumentType.GetGenericTypeDefinition() == typeof(List<>))
                 {

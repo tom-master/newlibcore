@@ -28,7 +28,5 @@ namespace NewLibCore.Data.SQL.Builder
         }
 
         protected internal abstract TranslationResult Build();
-       
-
     }
 }
