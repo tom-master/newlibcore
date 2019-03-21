@@ -1,4 +1,5 @@
-﻿using NewLibCore.Data.SQL.InternalExecute;
+﻿using NewLibCore.Data.SQL.DataMapper;
+using NewLibCore.Data.SQL.InternalExecute;
 using NewLibCore.Data.SQL.MapperConfig;
 using NewLibCore.Data.SQL.MapperExtension;
 using System;
@@ -89,7 +90,7 @@ namespace NewLibCore.Data.SQL.InternalTranslation
                 case ExpressionType.Constant:
                 {
                     var binaryExp = (ConstantExpression)expression;
-                    TranslationResult.AppendParameter(new EntityParameter($@"@{_parameterNameStack.Pop()}", binaryExp.Value));
+                    TranslationResult.Append(new EntityParameter($@"@{_parameterNameStack.Pop()}", binaryExp.Value));
                     break;
                 }
                 case ExpressionType.Equal:
@@ -177,7 +178,7 @@ namespace NewLibCore.Data.SQL.InternalTranslation
                     else
                     {
                         var getter = Expression.Lambda(memberExp).Compile();
-                        TranslationResult.AppendParameter(new EntityParameter($@"@{_parameterNameStack.Pop()}", getter.DynamicInvoke()));
+                        TranslationResult.Append(new EntityParameter($@"@{_parameterNameStack.Pop()}", getter.DynamicInvoke()));
                         break;
                     }
                     break;

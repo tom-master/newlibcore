@@ -1,4 +1,4 @@
-﻿using NewLibCore.Data.SQL.InternalTranslation;
+﻿using NewLibCore.Data.SQL.DataMapper;
 using NewLibCore.Data.SQL.MapperConfig;
 using NewLibCore.Data.SQL.MapperExtension;
 using System;

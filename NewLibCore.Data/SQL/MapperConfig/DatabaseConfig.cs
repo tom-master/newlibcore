@@ -36,6 +36,40 @@ namespace NewLibCore.Data.SQL.MapperConfig
             SwitchTo(DatabaseType.MSSQL);
         }
 
+        internal static DbConnection GetConnectionInstance()
+        {
+            var connection = Host.GetHostVar("database");
+
+            switch (Type)
+            {
+                case DatabaseType.MSSQL:
+                {
+                    return new SqlConnection(connection);
+                }
+                case DatabaseType.MYSQL:
+                {
+                    return new MySqlConnection(connection);
+                }
+                default:
+                {
+                    throw new ArgumentException($@"暂不支持的数据库类型:{Type}");
+                }
+            }
+        }
+
+        internal static DbParameter GetDbParameterInstance()
+        {
+            switch (Type)
+            {
+                case DatabaseType.MSSQL:
+                    return new SqlParameter();
+                case DatabaseType.MYSQL:
+                    return new MySqlParameter();
+                default:
+                    throw new ArgumentException($@"暂不支持的数据库类型:{DatabaseConfig.Type}");
+            }
+        }
+
         private static void SwitchTo(DatabaseType database)
         {
             switch (database)
@@ -65,27 +99,6 @@ namespace NewLibCore.Data.SQL.MapperConfig
             }
 
             Type = database;
-        }
-
-        internal static DbConnection GetConnectionInstance()
-        {
-            var connection = Host.GetHostVar("database");
-
-            switch (Type)
-            {
-                case DatabaseType.MSSQL:
-                {
-                    return new SqlConnection(connection);
-                }
-                case DatabaseType.MYSQL:
-                {
-                    return new MySqlConnection(connection);
-                }
-                default:
-                {
-                    throw new ArgumentException($@"暂不支持的数据库类型:{Type}");
-                }
-            }
         }
     }
 

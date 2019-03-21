@@ -1,14 +1,11 @@
-﻿using MySql.Data.MySqlClient;
-using NewLibCore.Data.SQL.MapperConfig;
-using NewLibCore.Data.SQL.MapperExtension;
+﻿using NewLibCore.Data.SQL.MapperConfig;
 using NewLibCore.Security;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data.Common;
-using System.Data.SqlClient;
 
-namespace NewLibCore.Data.SQL.InternalTranslation
+namespace NewLibCore.Data.SQL.DataMapper
 {
     public class EntityParameter
     {
@@ -22,17 +19,12 @@ namespace NewLibCore.Data.SQL.InternalTranslation
 
         public Object Value { get; private set; }
 
-        public static implicit operator DbParameter(EntityParameter value)
+        public static implicit operator DbParameter(EntityParameter entityParameter)
         {
-            switch (DatabaseConfig.Type)
-            {
-                case DatabaseType.MSSQL:
-                    return new SqlParameter(value.Key, value.Value);
-                case DatabaseType.MYSQL:
-                    return new MySqlParameter(value.Key, value.Value);
-                default:
-                    throw new ArgumentException($@"暂不支持的数据库类型:{DatabaseConfig.Type}");
-            }
+            var parameter = DatabaseConfig.GetDbParameterInstance();
+            parameter.ParameterName = entityParameter.Key;
+            parameter.Value = entityParameter.Value;
+            return parameter;
         }
 
         private Object ParseValueType(Object obj)

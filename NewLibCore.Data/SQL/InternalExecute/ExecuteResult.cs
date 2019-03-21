@@ -1,4 +1,4 @@
-﻿using NewLibCore.Data.SQL.InternalTranslation;
+﻿using NewLibCore.Data.SQL.DataMapper;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -17,16 +17,32 @@ namespace NewLibCore.Data.SQL.InternalExecute
             ParameterStore = new List<EntityParameter>();
         }
 
-        internal void Append(String sql)
+        internal void Append(String sql, IEnumerable<EntityParameter> entityParameters = null)
         {
             SqlStore.Append(sql);
+
+            if (entityParameters != null)
+            {
+                foreach (var item in entityParameters)
+                {
+                    ParameterStore.Add(item);
+                }
+            }
         }
 
-        internal void AppendParameter(params EntityParameter[] mapper)
+        internal void Append(params EntityParameter[] entityParameters)
         {
-            foreach (var item in mapper)
+            Append(entityParameters);
+        }
+
+        internal void Append(IEnumerable<EntityParameter> entityParameters)
+        {
+            if (entityParameters != null)
             {
-                ParameterStore.Add(item);
+                foreach (var item in entityParameters)
+                {
+                    ParameterStore.Add(item);
+                }
             }
         }
 

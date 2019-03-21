@@ -1,4 +1,5 @@
-﻿using NewLibCore.Data.SQL.InternalExecute;
+﻿using NewLibCore.Data.SQL.DataMapper;
+using NewLibCore.Data.SQL.InternalExecute;
 using NewLibCore.Data.SQL.InternalTranslation;
 using NewLibCore.Data.SQL.MapperConfig;
 using NewLibCore.Data.SQL.MapperExtension;
@@ -32,8 +33,8 @@ namespace NewLibCore.Data.SQL.Builder
             }
 
             var translation = new TranslationToSql();
-            translation.TranslationResult.Append($@"UPDATE {ModelType.Name} SET {String.Join(",", properties.Select(s => $@"{s.Name}=@{s.Name}"))}");
-            translation.TranslationResult.AppendParameter(properties.ToList().Select(c => new EntityParameter($@"@{c.Name}", c.GetValue(ModelInstance))).ToArray());
+            translation.TranslationResult.Append($@"UPDATE {ModelType.Name} SET {String.Join(",", properties.Select(s => $@"{s.Name}=@{s.Name}"))}", properties.Select(c => new EntityParameter($@"@{c.Name}", c.GetValue(ModelInstance))));
+
             if (_statementStore != null && _statementStore.Expression != null)
             {
                 translation.Translate(_statementStore);

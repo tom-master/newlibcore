@@ -1,5 +1,5 @@
-﻿using NewLibCore.Data.SQL.InternalExecute;
-using NewLibCore.Data.SQL.InternalTranslation;
+﻿using NewLibCore.Data.SQL.DataMapper;
+using NewLibCore.Data.SQL.InternalExecute;
 using NewLibCore.Data.SQL.MapperConfig;
 using NewLibCore.Data.SQL.MapperExtension;
 using NewLibCore.Data.SQL.MapperExtension.PropertyExtension;
@@ -38,10 +38,8 @@ namespace NewLibCore.Data.SQL.Builder
             var parameterPrefix = String.Join(",", propertyInfos.Select(key => $@"@{key.Name}"));
 
             var translationResult = new TranslationResult();
-            translationResult.Append($@" INSERT {ModelType.Name} ({fields} ) VALUES ({parameterPrefix}) {DatabaseConfig.DatabaseSyntax.IdentitySuffix}");
-
-            var parameters = propertyInfos.ToList().Select(c => new EntityParameter($@"@{c.Name}", c.GetValue(ModelInstance))).ToArray();
-            translationResult.AppendParameter(parameters);
+            translationResult.Append($@" INSERT {ModelType.Name} ({fields} ) VALUES ({parameterPrefix}) {DatabaseConfig.DatabaseSyntax.IdentitySuffix}"
+                , propertyInfos.Select(c => new EntityParameter($@"@{c.Name}", c.GetValue(ModelInstance))));
 
             return translationResult;
         }
