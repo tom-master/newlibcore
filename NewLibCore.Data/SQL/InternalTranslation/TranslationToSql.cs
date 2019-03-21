@@ -3,11 +3,8 @@ using NewLibCore.Data.SQL.InternalExecute;
 using NewLibCore.Data.SQL.MapperConfig;
 using NewLibCore.Data.SQL.MapperExtension;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 
 namespace NewLibCore.Data.SQL.InternalTranslation
 {
@@ -40,7 +37,7 @@ namespace NewLibCore.Data.SQL.InternalTranslation
             {
                 foreach (var parameter in ((LambdaExpression)item.Expression).Parameters)
                 {
-                    InitExpressionParameterMapper(new KeyValuePair<String, String>(parameter.Name, parameter.Type.Name.ToLower()));
+                    _parameterToTableAliasMappers.Add(parameter.Name, parameter.Type.Name.ToLower());
                 }
 
                 foreach (var parameter in item.AliasNameMappers)
@@ -235,7 +232,7 @@ namespace NewLibCore.Data.SQL.InternalTranslation
                 {
                     relationType = RelationType.LIKE;
                 }
-                else if (argumentType == typeof(Int32[]) || (argumentType.Name == "List`1" || argumentType.Name == "IList`1"))
+                else if (argumentType.GetGenericTypeDefinition() == typeof(List<>))
                 {
                     relationType = RelationType.IN;
                 }
@@ -252,7 +249,7 @@ namespace NewLibCore.Data.SQL.InternalTranslation
                 InternalBuildWhere(obj);
                 InternalBuildWhere(argument);
             }
-            else if ((((TypeInfo)argumentType).ImplementedInterfaces as IList<Type>).Any(face => face == typeof(IList) || face == typeof(ICollection) || face == typeof(IEnumerable)))
+            else if (argumentType.GetGenericTypeDefinition() == typeof(List<>))
             {
                 InternalBuildWhere(argument);
                 InternalBuildWhere(obj);
@@ -299,14 +296,6 @@ namespace NewLibCore.Data.SQL.InternalTranslation
                 TranslationResult.Append($@" {rightAliasName}.{rightMemberExp.Member.Name} {relationType.GetDescription()} {leftAliasName}.{leftMemberExp.Member.Name}");
             }
         }
-
-        private void InitExpressionParameterMapper(params KeyValuePair<String, String>[] keyValuePairs)
-        {
-            foreach (var item in keyValuePairs)
-            {
-                _parameterToTableAliasMappers.Add(item.Key, item.Value);
-            }
-        }
-
+         
     }
 }

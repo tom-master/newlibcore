@@ -1,6 +1,7 @@
 ﻿using NewLibCore.Data.SQL.DataMapper;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace NewLibCore.Data.SQL.InternalExecute
@@ -32,7 +33,7 @@ namespace NewLibCore.Data.SQL.InternalExecute
 
         internal void Append(params EntityParameter[] entityParameters)
         {
-            Append(entityParameters);
+            Append(entityParameters.ToList());
         }
 
         internal void Append(IEnumerable<EntityParameter> entityParameters)

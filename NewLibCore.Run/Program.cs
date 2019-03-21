@@ -19,9 +19,13 @@ namespace NewLibCore.Run
 
             using (var context = new EntityMapper())
             {
-                var member = new Member();
-                member.ModifyAppUrl("123");
-                context.Modify(member, a => a.Id == 0);
+                var a = new List<String>
+                {
+                    "1",
+                    "2",
+                    "3"
+                };
+                var r1 = context.Find<Role>(d => a.Contains(d.Name));
             }
         }
     }
