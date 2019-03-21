@@ -25,7 +25,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
 
         private RedisConnectionHelp()
         {
-            _consoleLogger = new ConsoleLogger(this);
+            _consoleLogger = new ConsoleLogger();
         }
 
         /// <summary>

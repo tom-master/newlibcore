@@ -1,24 +1,21 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace NewLibCore
 {
     public class ConsoleLogger : ILogger
     {
-        public Object _type;
-
-        public ConsoleLogger(Object type)
-        {
-            _type = type;
-        }
-
         public ConsoleLogger()
         {
-
         }
 
         public void Write(String level, String message)
         {
-            Console.WriteLine($@"[{DateTime.Now:yyyy-MM-dd}][{level.ToUpper()}][{(_type != null ? _type.GetType().Name : "")}]:{message}");
+            var stackTrace = new StackTrace();
+            var stackFrame = stackTrace.GetFrame(1);
+            var type = stackFrame.GetMethod().DeclaringType;
+            Console.WriteLine($@"[{DateTime.Now:yyyy-MM-dd}][{level.ToUpper()}][{type.Name}]:{message}");
+            Console.WriteLine($@"{Environment.NewLine}");
         }
     }
 }

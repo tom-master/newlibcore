@@ -6,7 +6,7 @@ using System.Data.SqlClient;
 
 namespace NewLibCore.Data.SQL.MapperConfig
 {
-    public static class SqlMapperConfig
+    public class DatabaseConfig
     {
         internal static String ConnectionString { get { return Host.GetHostVar("database"); } }
 
@@ -14,9 +14,16 @@ namespace NewLibCore.Data.SQL.MapperConfig
 
         internal static DatabaseSyntaxBuilder DatabaseSyntax { get; private set; }
 
-        static SqlMapperConfig()
+        internal static ILogger Logger { get; private set; }
+
+        static DatabaseConfig()
         {
             Type = DatabaseType.NONE;
+        }
+
+        public static void InitLogger(ILogger logger = null)
+        {
+            Logger = logger ?? new ConsoleLogger();
         }
 
         public static void SwitchToMySql()

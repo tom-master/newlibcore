@@ -37,7 +37,7 @@ namespace NewLibCore.Data.SQL.Builder
             }
             var fields = String.Join(",", propertyInfos.Select(c => c.Name));
             var parameterPrefix = String.Join(",", propertyInfos.Select(key => $@"@{key.Name}"));
-            translationResult.Append($@" INSERT {ModelType.Name} ({fields} ) VALUES ({parameterPrefix}) {SqlMapperConfig.DatabaseSyntax.IdentitySuffix}");
+            translationResult.Append($@" INSERT {ModelType.Name} ({fields} ) VALUES ({parameterPrefix}) {DatabaseConfig.DatabaseSyntax.IdentitySuffix}");
 
             var parameters = propertyInfos.ToList().Select(c => new EntityParameter($@"@{c.Name}", c.GetValue(ModelInstance))).ToArray();
             translationResult.AppendParameter(parameters);

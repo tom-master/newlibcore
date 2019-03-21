@@ -14,11 +14,12 @@ namespace NewLibCore.Run
     {
         private static void Main(String[] args)
         {
-            SqlMapperConfig.SwitchToMySql();
+            DatabaseConfig.SwitchToMySql();
+            DatabaseConfig.InitLogger();
 
             using (var context = new EntityMapper())
             {
-                var r1 = context.InnerJoin<Member, User>((a, b) => a.UserId == b.Id).Find<Member>();
+                var r1 = context.InnerJoin<Member, User>((a, b) => a.UserId == b.Id).Find<Member>(m => m.Id != 0);
             }
         }
     }
