@@ -1,4 +1,5 @@
-﻿using NewLibCore.Data.SQL.InternalTranslation;
+﻿using NewLibCore.Data.SQL.InternalExecute;
+using NewLibCore.Data.SQL.InternalTranslation;
 using NewLibCore.Data.SQL.MapperConfig;
 using NewLibCore.Data.SQL.MapperExtension;
 using NewLibCore.Data.SQL.MapperExtension.PropertyExtension;
@@ -20,7 +21,7 @@ namespace NewLibCore.Data.SQL.Builder
             _propertyInfos = ModelType.GetProperties();
         }
 
-        protected internal override IList<PropertyInfo> ValidateModel()
+        protected internal override TranslationResult Build()
         {
             var propertyInfos = _propertyInfos.Where(w => w.GetCustomAttributes<PropertyValidate>().Any());
             if (!propertyInfos.Any())
@@ -33,17 +34,16 @@ namespace NewLibCore.Data.SQL.Builder
             {
                 ModelInstance.Validate(propertyInfos);
             }
-            return propertyInfos.ToList();
-        }
+            var fields = String.Join(",", propertyInfos.Select(c => c.Name));
+            var parameterPrefix = String.Join(",", propertyInfos.Select(key => $@"@{key.Name}"));
 
-        protected internal override void InternalBuildHead(IList<PropertyInfo> properties, TranslationToSql translation)
-        {
-            var fields = String.Join(",", properties.Select(c => c.Name));
-            var parameterPrefix = String.Join(",", properties.Select(key => $@"@{key.Name}"));
-            translation.TranslationResult.Append($@" INSERT {ModelType.Name} ({fields} ) VALUES ({parameterPrefix}) {DatabaseConfig.DatabaseSyntax.IdentitySuffix}");
+            var translationResult = new TranslationResult();
+            translationResult.Append($@" INSERT {ModelType.Name} ({fields} ) VALUES ({parameterPrefix}) {DatabaseConfig.DatabaseSyntax.IdentitySuffix}");
 
-            var parameters = properties.ToList().Select(c => new EntityParameter($@"@{c.Name}", c.GetValue(ModelInstance))).ToArray();
-            translation.TranslationResult.AppendParameter(parameters);
+            var parameters = propertyInfos.ToList().Select(c => new EntityParameter($@"@{c.Name}", c.GetValue(ModelInstance))).ToArray();
+            translationResult.AppendParameter(parameters);
+
+            return translationResult;
         }
     }
 }
