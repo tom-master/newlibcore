@@ -51,9 +51,11 @@ namespace NewLibCore.Data.SQL.Builder
                 var order = ExtractFieldsAndTableName(_statementStore.OrderExpression);
                 translation.TranslationResult.Append($@" {String.Format(_statementStore.OrderByType.GetDescription(), $@"{order.tableAliasName}.{order.fields}")}");
             }
+
             if (_pageIndex != null && _pageSize != null)
             {
-                translation.TranslationResult.Append(DatabaseConfig.DatabaseSyntax.Page.Replace("{value}", (_pageSize * (_pageIndex - 1)).ToString()).Replace("{pageSize}", _pageSize.ToString()));
+                translation.TranslationResult
+                    .Append(DatabaseConfig.DatabaseSyntax.Page.Replace("{value}", (_pageSize * (_pageIndex - 1)).ToString()).Replace("{pageSize}", _pageSize.ToString()));
             }
 
             return translation.TranslationResult;
