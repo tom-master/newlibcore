@@ -52,7 +52,7 @@ namespace NewLibCore.Data.SQL.Builder
             }
             if (_pageIndex != null && _pageSize != null)
             {
-                translation.TranslationResult.Append(SwitchDatabase.DatabaseSyntax.Page.Replace("{value}", (_pageSize * (_pageIndex - 1)).ToString()).Replace("{pageSize}", _pageSize.ToString()));
+                translation.TranslationResult.Append(SqlMapperConfig.DatabaseSyntax.Page.Replace("{value}", (_pageSize * (_pageIndex - 1)).ToString()).Replace("{pageSize}", _pageSize.ToString()));
             }
 
             Console.WriteLine(translation.TranslationResult.SqlStore.ToString());

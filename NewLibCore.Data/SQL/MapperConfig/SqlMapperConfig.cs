@@ -6,7 +6,7 @@ using System.Data.SqlClient;
 
 namespace NewLibCore.Data.SQL.MapperConfig
 {
-    public static class SwitchDatabase
+    public static class SqlMapperConfig
     {
         internal static String ConnectionString { get { return Host.GetHostVar("database"); } }
 
@@ -14,7 +14,7 @@ namespace NewLibCore.Data.SQL.MapperConfig
 
         internal static DatabaseSyntaxBuilder DatabaseSyntax { get; private set; }
 
-        static SwitchDatabase()
+        static SqlMapperConfig()
         {
             Type = DatabaseType.NONE;
         }
@@ -28,7 +28,6 @@ namespace NewLibCore.Data.SQL.MapperConfig
         {
             SwitchTo(DatabaseType.MSSQL);
         }
-
 
         private static void SwitchTo(DatabaseType database)
         {

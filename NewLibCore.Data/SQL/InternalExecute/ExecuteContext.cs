@@ -23,10 +23,10 @@ namespace NewLibCore.Data.SQL.InternalExecute
 
         internal ExecuteContext()
         {
-            _connection = SwitchDatabase.GetConnectionInstance();
+            _connection = SqlMapperConfig.GetConnectionInstance();
 
             _logger = new ConsoleLogger(this);
-            _logger.Write("INFO", $@"datastore init connectionstring:{SwitchDatabase.ConnectionString}");
+            _logger.Write("INFO", $@"datastore init connectionstring:{SqlMapperConfig.ConnectionString}");
         }
 
         internal void OpenTransaction()

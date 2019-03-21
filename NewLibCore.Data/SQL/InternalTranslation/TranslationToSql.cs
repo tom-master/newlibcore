@@ -14,7 +14,7 @@ namespace NewLibCore.Data.SQL.InternalTranslation
     {
         internal TranslationResult TranslationResult { get; private set; }
 
-        private DatabaseSyntaxBuilder _syntaxBuilder = SwitchDatabase.DatabaseSyntax;
+        private DatabaseSyntaxBuilder _syntaxBuilder = SqlMapperConfig.DatabaseSyntax;
 
         private Stack<String> _parameterNameStack;
 

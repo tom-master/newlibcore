@@ -24,14 +24,14 @@ namespace NewLibCore.Data.SQL.InternalTranslation
 
         public static implicit operator DbParameter(EntityParameter value)
         {
-            switch (SwitchDatabase.Type)
+            switch (SqlMapperConfig.Type)
             {
                 case DatabaseType.MSSQL:
                     return new SqlParameter(value.Key, value.Value);
                 case DatabaseType.MYSQL:
                     return new MySqlParameter(value.Key, value.Value);
                 default:
-                    throw new ArgumentException($@"暂不支持的数据库类型:{SwitchDatabase.Type}");
+                    throw new ArgumentException($@"暂不支持的数据库类型:{SqlMapperConfig.Type}");
             }
         }
 
