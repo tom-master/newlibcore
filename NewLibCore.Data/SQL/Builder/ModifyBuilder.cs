@@ -20,7 +20,7 @@ namespace NewLibCore.Data.SQL.Builder
             Parameter.Validate(statementStore);
 
             _isValidate = isValidate;
-            _statementStore = statementStore;
+            _statementStore = statementStore; 
             _instance = model;
         }
 
