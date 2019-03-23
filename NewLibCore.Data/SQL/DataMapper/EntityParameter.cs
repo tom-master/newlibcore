@@ -11,7 +11,7 @@ namespace NewLibCore.Data.SQL.DataMapper
     public class EntityParameter
     {
         public EntityParameter(String key, Object value)
-        {
+        { 
             Key = key;
             Value = ParseValueType(value);
         }

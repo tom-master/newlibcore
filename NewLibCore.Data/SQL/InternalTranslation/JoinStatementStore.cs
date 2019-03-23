@@ -16,3 +16,4 @@ namespace NewLibCore.Data.SQL.InternalTranslation
         internal String AliasName { get { return Guid.NewGuid().ToString().Replace("-", ""); } }
     }
 }
+ 

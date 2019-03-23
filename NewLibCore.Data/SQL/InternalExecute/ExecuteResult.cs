@@ -16,7 +16,7 @@ namespace NewLibCore.Data.SQL.InternalExecute
         {
             SqlStore = new StringBuilder();
             ParameterStore = new List<EntityParameter>();
-        }
+        } 
 
         internal void Append(String sql, IEnumerable<EntityParameter> entityParameters = null)
         {

@@ -19,7 +19,7 @@ namespace NewLibCore.Data.SQL.InternalTranslation
         private Stack<RelationType> _operationalCharacterStack;
 
         private JoinType _joinType;
-
+ 
         private readonly IDictionary<String, String> _parameterToTableAliasMappers;
 
         public TranslationToSql()

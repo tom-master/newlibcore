@@ -7,3 +7,4 @@ namespace NewLibCore.Data.SQL.InternalTranslation
         TranslationResult Translate(StatementStore statementStore);
     }
 }
+ 

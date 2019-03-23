@@ -11,7 +11,7 @@ namespace NewLibCore.Data.SQL.InternalExecute
 {
     internal sealed class ExecuteCore : IDisposable
     {
-
+ 
         private DbConnection _connection;
 
         private DbTransaction _dataTransaction;

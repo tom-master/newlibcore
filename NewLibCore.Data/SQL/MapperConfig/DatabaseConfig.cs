@@ -11,7 +11,7 @@ namespace NewLibCore.Data.SQL.MapperConfig
         internal static String ConnectionString { get { return Host.GetHostVar("database"); } }
 
         public static DatabaseType Type { get; private set; }
-
+ 
         internal static DatabaseSyntaxBuilder DatabaseSyntax { get; private set; }
 
         internal static ILogger Logger { get; private set; }

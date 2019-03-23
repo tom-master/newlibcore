@@ -19,7 +19,7 @@ namespace NewLibCore.Data.SQL.InternalTranslation
 
         internal IList<JoinStatementStore> JoinStores { get; private set; }
 
-        internal StatementStore()
+        internal StatementStore() 
         {
             JoinStores = new List<JoinStatementStore>();
         }

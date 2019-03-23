@@ -13,7 +13,7 @@ namespace NewLibCore.Data.SQL.DataMapper
     {
         private readonly StatementStore _statementStore;
         private readonly ExecuteCore _executeContext;
-
+ 
         public EntityMapper()
         {
             _executeContext = new ExecuteCore();
