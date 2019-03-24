@@ -91,7 +91,7 @@ namespace NewLibCore.Data.SQL.InternalExecute
                     {
                         executeResult.Value = cmd.ExecuteNonQuery();
                     }
-                    else if (executeType == ExecuteType.INSERT || executeType == ExecuteType.SELECTSINGLE)
+                    else if (executeType == ExecuteType.INSERT || executeType == ExecuteType.SELECT_SINGLE)
                     {
                         executeResult.Value = cmd.ExecuteScalar();
                     }

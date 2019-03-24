@@ -10,7 +10,7 @@ namespace NewLibCore.Data.SQL.MapperExtension
 
         INSERT = 3,
 
-        SELECTSINGLE = 4
+        SELECT_SINGLE = 4
     }
 
     public enum DatabaseType

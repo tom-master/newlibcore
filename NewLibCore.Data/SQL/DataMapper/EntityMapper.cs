@@ -109,7 +109,7 @@ namespace NewLibCore.Data.SQL.DataMapper
 
             BuilderBase<TModel> builder = new SelectBuilder<TModel>(_statementStore, d => "COUNT(*)");
             var translationResult = builder.Build();
-            var executeResult = _executeContext.Execute(ExecuteType.SELECTSINGLE, translationResult.SqlStore.ToString(), translationResult.ParameterStore, CommandType.Text);
+            var executeResult = _executeContext.Execute(ExecuteType.SELECT_SINGLE, translationResult.SqlStore.ToString(), translationResult.ParameterStore, CommandType.Text);
             return (Int32)executeResult.Value;
         }
 
@@ -136,12 +136,13 @@ namespace NewLibCore.Data.SQL.DataMapper
 
         public TModel ComplexSqlExecute<TModel>(String sql, IEnumerable<EntityParameter> sqlParameters = null) where TModel : new()
         {
-            var executeResult = _executeContext.Execute(ExecuteType.SELECT, sql, sqlParameters, CommandType.Text);
+            var executeResult = new ExecuteResult();
             if (typeof(TModel).IsNumeric())
             {
+                executeResult = _executeContext.Execute(ExecuteType.SELECT_SINGLE, sql, sqlParameters, CommandType.Text);
                 return (TModel)executeResult.Value;
             }
-
+            executeResult = _executeContext.Execute(ExecuteType.SELECT, sql, sqlParameters, CommandType.Text);
             var dataTable = (DataTable)executeResult.Value;
             return (TModel)dataTable.AsList<TModel>();
         }
