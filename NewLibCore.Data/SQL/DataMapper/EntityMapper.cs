@@ -2,8 +2,10 @@
 using NewLibCore.Data.SQL.InternalExecute;
 using NewLibCore.Data.SQL.InternalTranslation;
 using NewLibCore.Data.SQL.MapperExtension;
+using NewLibCore.InternalExtension;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Linq.Expressions;
 
@@ -13,7 +15,7 @@ namespace NewLibCore.Data.SQL.DataMapper
     {
         private readonly StatementStore _statementStore;
         private readonly ExecuteCore _executeContext;
- 
+
         public EntityMapper()
         {
             _executeContext = new ExecuteCore();
@@ -132,12 +134,18 @@ namespace NewLibCore.Data.SQL.DataMapper
             return this;
         }
 
-        public IList<TModel> ComplexSqlExecute<TModel>(String sql, IEnumerable<EntityParameter> sqlParameters = null) where TModel : PropertyMonitor, new()
+        public TModel ComplexSqlExecute<TModel>(String sql, IEnumerable<EntityParameter> sqlParameters = null) where TModel : new()
         {
             var executeResult = _executeContext.Execute(ExecuteType.SELECT, sql, sqlParameters, CommandType.Text);
-            var dataTable = executeResult.Value as DataTable;
-            return dataTable.AsList<TModel>();
+            if (typeof(TModel).IsNumeric())
+            {
+                return (TModel)executeResult.Value;
+            }
+
+            var dataTable = (DataTable)executeResult.Value;
+            return (TModel)dataTable.AsList<TModel>();
         }
+
 
         public void Dispose()
         {

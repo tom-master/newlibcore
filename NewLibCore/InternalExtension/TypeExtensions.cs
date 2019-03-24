@@ -8,7 +8,7 @@ namespace NewLibCore.InternalExtension
     /// <summary>
     ///     类型扩展方法类
     /// </summary>
-    internal static class TypeExtensions
+    public static class TypeExtensions
     {
         public static Boolean IsNumeric(this Type type)
         {
@@ -67,6 +67,16 @@ namespace NewLibCore.InternalExtension
                 return false;
             }
             return IsAssignableToGenericType(baseType, genericType);
+        }
+
+        public static Boolean IsComplexType(this Object obj)
+        {
+            return IsComplexType(obj.GetType());
+        }
+
+        public static Boolean IsComplexType(this Type type)
+        {
+            return !TypeDescriptor.GetConverter(type).CanConvertFrom(typeof(String));
         }
     }
 

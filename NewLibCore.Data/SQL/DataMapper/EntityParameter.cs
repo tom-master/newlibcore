@@ -1,5 +1,6 @@
 ﻿using NewLibCore.Data.SQL.MapperConfig;
 using NewLibCore.Security;
+using NewLibCore.InternalExtension;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -45,7 +46,7 @@ namespace NewLibCore.Data.SQL.DataMapper
                 return (Boolean)obj ? 1 : 0;
             }
 
-            if (!TypeDescriptor.GetConverter(obj.GetType()).CanConvertFrom(typeof(String)))
+            if (obj.IsComplexType())
             {
                 var objType = obj.GetType();
                 if (objType.IsArray || objType.GetGenericTypeDefinition() == typeof(List<>))
