@@ -22,7 +22,7 @@ namespace NewLibCore.Data.SQL.Builder
             _isValidate = isValidate;
             _statementStore = statementStore; 
             _instance = model;
-        }
+        }  
 
         public TranslationCoreResult Build()
         {
