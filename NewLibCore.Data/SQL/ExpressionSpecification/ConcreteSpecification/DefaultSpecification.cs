@@ -2,7 +2,7 @@
 using System.Linq.Expressions;
 using NewLibCore.Data.SQL.MapperExtension;
 
-namespace NewLibCore.Data.ExpressionSpecification.ConcreteSpecification
+namespace NewLibCore.Data.SQL.ExpressionSpecification.ConcreteSpecification
 {
     /// <summary>
     /// 默认规约 

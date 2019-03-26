@@ -2,7 +2,7 @@
 using System.Linq.Expressions;
 using NewLibCore.Data.SQL.MapperExtension;
 
-namespace NewLibCore.Data.ExpressionSpecification.Factory
+namespace NewLibCore.Data.SQL.ExpressionSpecification.Factory
 {
     /// <summary>
     /// 抽象规约工厂

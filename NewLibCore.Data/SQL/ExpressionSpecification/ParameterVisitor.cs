@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace NewLibCore.Data.ExpressionSpecification
+namespace NewLibCore.Data.SQL.ExpressionSpecification
 {
 
     internal sealed class ParameterVisitor : ExpressionVisitor

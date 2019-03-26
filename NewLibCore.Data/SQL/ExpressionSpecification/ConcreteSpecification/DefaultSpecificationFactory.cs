@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq.Expressions;
-using NewLibCore.Data.ExpressionSpecification.Factory;
+using NewLibCore.Data.SQL.ExpressionSpecification.Factory;
 
-namespace NewLibCore.Data.ExpressionSpecification.ConcreteSpecification
+namespace NewLibCore.Data.SQL.ExpressionSpecification.ConcreteSpecification
 {
 	/// <summary>
 	/// 默认规约工厂
