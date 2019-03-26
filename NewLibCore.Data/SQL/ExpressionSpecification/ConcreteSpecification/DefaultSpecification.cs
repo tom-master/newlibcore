@@ -4,7 +4,6 @@ using NewLibCore.Data.SQL.MapperExtension;
 
 namespace NewLibCore.Data.ExpressionSpecification.ConcreteSpecification
 {
-
     /// <summary>
     /// 默认规约 
     /// </summary>
