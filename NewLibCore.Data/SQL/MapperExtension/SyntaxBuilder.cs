@@ -41,26 +41,27 @@ namespace NewLibCore.Data.SQL.MapperExtension
         {
             Clear();
 
-            if (relationType == RelationType.IN)
-            {
-                Builder.Append($@"{left} IN (@{right}) ");
-            }
-            else if (relationType == RelationType.FULL_LIKE)
-            {
-                Builder.Append($@"{left} {RelationType.FULL_LIKE} '%@{right}%'");
-            }
-            else if (relationType == RelationType.FULL_LIKE)
-            {
-                Builder.Append($@"{left} {RelationType.FULL_LIKE} '@{right}%' ");
-            }
-            else if (relationType == RelationType.FULL_LIKE)
-            {
-                Builder.Append($@"{left} {RelationType.FULL_LIKE} '@%{right}'  ");
-            }
-            else
-            {
-                SyntaxBuilderBase(relationType, left, right);
-            }
+            // if (relationType == RelationType.IN)
+            // {
+            //     Builder.Append($@"{left} IN (@{right}) ");
+            // }
+            // else if (relationType == RelationType.FULL_LIKE)
+            // {
+            //     Builder.Append($@"{left} {RelationType.FULL_LIKE} '%@{right}%'");
+            // }
+            // else if (relationType == RelationType.FULL_LIKE)
+            // {
+            //     Builder.Append($@"{left} {RelationType.FULL_LIKE} '@{right}%' ");
+            // }
+            // else if (relationType == RelationType.FULL_LIKE)
+            // {
+            //     Builder.Append($@"{left} {RelationType.FULL_LIKE} '@%{right}'  ");
+            // }
+            // else
+            // {
+            //     SyntaxBuilderBase(relationType, left, right);
+            // }
+              SyntaxBuilderBase(relationType, left, right);
 
             return Builder.ToString();
         }
