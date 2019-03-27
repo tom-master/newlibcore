@@ -19,7 +19,10 @@ namespace NewLibCore.Run
 
             using (var context = new EntityMapper())
             {
-                var r1 = context.InnerJoin<Member, User>((a, b) => a.UserId == b.Id).OrderBy<Member, Int32>(d => d.Id).Find<Member>(w => w.Name != "", a => new { a.Id, a.Name, a.AppUrl });
+                //var r1 = context.InnerJoin<Member, User>((a, b) => a.UserId == b.Id).OrderBy<Member, Int32>(d => d.Id).Find<Member>(w => w.Name != "", a => new { a.Id, a.Name, a.AppUrl });
+
+                var name = "admin";
+                var user = context.Find<User>(f => f.Name.Contains(name));
             }
         }
     }

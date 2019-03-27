@@ -53,16 +53,16 @@ namespace NewLibCore.Data.SQL.MapperExtension
         [Description("{0} OR {1}")]
         OR = 2,
 
-        [Description("{0} LIKE '%@{1}%'")]
+        [Description("{0} LIKE '%{1}%'")]
         FULL_LIKE = 3,
 
-        [Description("{0} LIKE '@{1}%'")]
+        [Description("{0} LIKE '{1}%'")]
         START_LIKE = 4,
 
-        [Description("{0} LIKE '%@{1}'")]
+        [Description("{0} LIKE '%{1}'")]
         END_LIKE = 5,
 
-        [Description("{0} IN (@{1})")]
+        [Description("{0} IN ({1})")]
         IN = 6,
 
         [Description("{0} = {1}")]
