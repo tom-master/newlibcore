@@ -29,7 +29,7 @@ namespace NewLibCore.Data.SQL.Builder
 
         protected internal override TranslationResult Build()
         {
-            var translation = new TranslationToSql();
+            var translation = new TranslationCore();
             var fields = ExtractFieldsAndTableName(_fields);
 
             translation.TranslationResult.Append($@"SELECT {fields.fields} FROM {typeof(TModel).Name} AS {fields.tableAliasName} ");

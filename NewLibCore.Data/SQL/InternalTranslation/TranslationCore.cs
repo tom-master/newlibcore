@@ -8,7 +8,7 @@ using System.Linq.Expressions;
 
 namespace NewLibCore.Data.SQL.InternalTranslation
 {
-    internal class TranslationToSql : ITranslate
+    internal class TranslationCore : ITranslate
     {
         internal TranslationResult TranslationResult { get; private set; }
 
@@ -19,10 +19,10 @@ namespace NewLibCore.Data.SQL.InternalTranslation
         private Stack<RelationType> _operationalCharacterStack;
 
         private JoinType _joinType;
- 
+
         private readonly IDictionary<String, String> _parameterToTableAliasMappers;
 
-        public TranslationToSql()
+        public TranslationCore()
         {
             TranslationResult = new TranslationResult();
             _operationalCharacterStack = new Stack<RelationType>();

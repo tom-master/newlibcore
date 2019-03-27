@@ -32,7 +32,7 @@ namespace NewLibCore.Data.SQL.Builder
                 ModelInstance.Validate(properties);
             }
 
-            var translation = new TranslationToSql();
+            var translation = new TranslationCore();
             translation.TranslationResult.Append($@"UPDATE {ModelType.Name} SET {String.Join(",", properties.Select(s => $@"{s.Name}=@{s.Name}"))}", properties.Select(c => new EntityParameter($@"@{c.Name}", c.GetValue(ModelInstance))));
 
             if (_statementStore != null && _statementStore.Expression != null)

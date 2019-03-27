@@ -10,26 +10,22 @@ namespace NewLibCore.Data.SQL.MapperExtension
             Clear();
 
             var type = relationType;
-            //if (type == RelationType.IN)
-            //{
-            //    Builder.Append($@" {String.Format(RelationType.IN.GetDescription1(), left, right)} ");
-            //}
-            //else if (type == RelationType.FULL_LIKE)
-            //{
-            //    Builder.Append($@"{left} {RelationType.FULL_LIKE} CONCAT('%',@{right},'%') ");
-            //}
-            //else if (type == RelationType.START_LIKE)
-            //{
-            //    Builder.Append($@"{left} {RelationType.FULL_LIKE} CONCAT('',@{right},'%') ");
-            //}
-            //else if (type == RelationType.END_LIKE)
-            //{
-            //    Builder.Append($@"{left} {RelationType.FULL_LIKE} CONCAT('%',@{right},'') ");
-            //}
-            //else
-            //{
-            SyntaxBuilderBase(type, left, right);
-            //}
+            if (type == RelationType.FULL_LIKE)
+            {
+                Builder.Append($@"{left} LIKE CONCAT('%',{right},'%') ");
+            }
+            else if (type == RelationType.START_LIKE)
+            {
+                Builder.Append($@"{left} LIKE CONCAT('',{right},'%') ");
+            }
+            else if (type == RelationType.END_LIKE)
+            {
+                Builder.Append($@"{left} LIKE CONCAT('%',{right},'') ");
+            }
+            else
+            {
+                SyntaxBuilderBase(type, left, right);
+            }
 
             return Builder.ToString();
         }
@@ -40,29 +36,7 @@ namespace NewLibCore.Data.SQL.MapperExtension
         internal override String SyntaxBuilder(RelationType relationType, String left, String right)
         {
             Clear();
-
-            // if (relationType == RelationType.IN)
-            // {
-            //     Builder.Append($@"{left} IN (@{right}) ");
-            // }
-            // else if (relationType == RelationType.FULL_LIKE)
-            // {
-            //     Builder.Append($@"{left} {RelationType.FULL_LIKE} '%@{right}%'");
-            // }
-            // else if (relationType == RelationType.FULL_LIKE)
-            // {
-            //     Builder.Append($@"{left} {RelationType.FULL_LIKE} '@{right}%' ");
-            // }
-            // else if (relationType == RelationType.FULL_LIKE)
-            // {
-            //     Builder.Append($@"{left} {RelationType.FULL_LIKE} '@%{right}'  ");
-            // }
-            // else
-            // {
-            //     SyntaxBuilderBase(relationType, left, right);
-            // }
-              SyntaxBuilderBase(relationType, left, right);
-
+            SyntaxBuilderBase(relationType, left, right);
             return Builder.ToString();
         }
 
