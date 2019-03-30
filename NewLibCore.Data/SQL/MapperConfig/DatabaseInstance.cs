@@ -27,7 +27,7 @@ namespace NewLibCore.Data.SQL.MapperConfig
 
         protected virtual void AppendRelationType() { }
 
-        internal virtual StatementExtension GetStatementExtension() { return null; }
+        internal virtual InstanceExtension Extension { get; }
 
         internal abstract DbConnection GetConnectionInstance();
 
@@ -95,14 +95,17 @@ namespace NewLibCore.Data.SQL.MapperConfig
             return String.Format(RelationMapper[relationType], left, right);
         }
 
-        internal override StatementExtension GetStatementExtension()
+        internal override InstanceExtension Extension
         {
-            return new StatementExtension
+            get
             {
-                Identity = " SELECT @@IDENTITY",
-                RowCount = " SELECT @@ROWCOUNT",
-                Page = " OFFSET ({value}) ROWS FETCH NEXT {pageSize} ROWS ONLY"
-            };
+                return new InstanceExtension
+                {
+                    Identity = " SELECT @@IDENTITY",
+                    RowCount = " SELECT @@ROWCOUNT",
+                    Page = " OFFSET ({value}) ROWS FETCH NEXT {pageSize} ROWS ONLY"
+                };
+            }
         }
     }
 
@@ -128,18 +131,21 @@ namespace NewLibCore.Data.SQL.MapperConfig
             return String.Format(RelationMapper[relationType], left, right);
         }
 
-        internal override StatementExtension GetStatementExtension()
+        internal override InstanceExtension Extension
         {
-            return new StatementExtension
+            get
             {
-                Identity = " ; SELECT CAST(@@IDENTITY AS SIGNED) AS c ",
-                RowCount = " ; SELECT CAST(ROW_COUNT() AS SIGNED) AS c",
-                Page = " LIMIT {value},{pageSize}"
-            };
+                return new InstanceExtension
+                {
+                    Identity = " ; SELECT CAST(@@IDENTITY AS SIGNED) AS c ",
+                    RowCount = " ; SELECT CAST(ROW_COUNT() AS SIGNED) AS c",
+                    Page = " LIMIT {value},{pageSize}"
+                };
+            }
         }
     }
 
-    internal class StatementExtension
+    internal class InstanceExtension
     {
         public String Identity { get; internal set; }
 

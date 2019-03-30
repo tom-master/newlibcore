@@ -57,7 +57,7 @@ namespace NewLibCore.Data.SQL.Builder
             if (_pageIndex != null && _pageSize != null)
             {
                 translation.TranslationResult
-                    .Append(MapperFactory.Instance.GetStatementExtension().Page.Replace("{value}", (_pageSize * (_pageIndex - 1)).ToString()).Replace("{pageSize}", _pageSize.ToString()));
+                    .Append(MapperFactory.Instance.Extension.Page.Replace("{value}", (_pageSize * (_pageIndex - 1)).ToString()).Replace("{pageSize}", _pageSize.ToString()));
             }
 
             return translation.TranslationResult;
