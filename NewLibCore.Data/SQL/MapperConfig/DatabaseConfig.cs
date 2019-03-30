@@ -34,7 +34,7 @@ namespace NewLibCore.Data.SQL.MapperConfig
                 }
                 case DatabaseType.MYSQL:
                 {
-                    Instance = new MsSqlInstance();
+                    Instance = new MySqlInstance();
                     break;
                 }
                 default:

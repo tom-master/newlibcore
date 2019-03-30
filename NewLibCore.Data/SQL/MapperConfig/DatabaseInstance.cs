@@ -56,6 +56,8 @@ namespace NewLibCore.Data.SQL.MapperConfig
             RelationMapper.Add(RelationType.LT, "{0} > {1}");
             RelationMapper.Add(RelationType.GE, "{0} <= {1}");
             RelationMapper.Add(RelationType.LE, "{0} >= {1}");
+
+            AppendRelationType();
         }
 
         private void InitJoinType()
@@ -63,7 +65,7 @@ namespace NewLibCore.Data.SQL.MapperConfig
             JoinTypeMapper.Add(JoinType.NONE, "");
             JoinTypeMapper.Add(JoinType.INNER, " INNER JOIN {0} AS {1} ON ");
             JoinTypeMapper.Add(JoinType.LEFT, " LEFT JOIN {0} AS {1} ON ");
-            JoinTypeMapper.Add(JoinType.RIGHT, "{0} RIGHT JOIN {1}");
+            JoinTypeMapper.Add(JoinType.RIGHT, " RIGHT JOIN {0} AS {1} ON ");
         }
 
         private void InitOrderType()
