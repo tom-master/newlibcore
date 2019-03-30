@@ -8,7 +8,7 @@ using System.Text;
 
 namespace NewLibCore.Data.SQL.MapperConfig
 {
-    internal abstract class DatabaseInstance
+    internal abstract class MapperInstance
     {
         protected static IDictionary<RelationType, String> RelationMapper = new Dictionary<RelationType, String>();
 
@@ -18,7 +18,7 @@ namespace NewLibCore.Data.SQL.MapperConfig
 
         protected String ConnectionString { get { return Host.GetHostVar("database"); } }
 
-        protected DatabaseInstance()
+        protected MapperInstance()
         {
             InitRelationType();
             InitJoinType();
@@ -33,16 +33,16 @@ namespace NewLibCore.Data.SQL.MapperConfig
 
         internal abstract DbParameter GetParameterInstance();
 
-        internal abstract String RelationBuilder(RelationType relationType, String left, String right);
+        internal abstract String RelationBuilder(RelationType relationType, String left, Object right);
 
         internal String JoinBuilder(JoinType joinType, String left, String right)
         {
             return String.Format(JoinTypeMapper[joinType], left, right);
         }
 
-        internal String OrderByBuilder(OrderByType orderByType, String left, String right)
+        internal String OrderByBuilder(OrderByType orderByType, String left)
         {
-            return String.Format(OrderTypeMapper[orderByType], left, right);
+            return String.Format(OrderTypeMapper[orderByType], left);
         }
 
         private void InitRelationType()
@@ -73,7 +73,7 @@ namespace NewLibCore.Data.SQL.MapperConfig
         }
     }
 
-    internal class MsSqlInstance : DatabaseInstance
+    internal class MsSqlInstance : MapperInstance
     {
         protected override void AppendRelationType()
         {
@@ -90,7 +90,7 @@ namespace NewLibCore.Data.SQL.MapperConfig
         {
             return new SqlParameter();
         }
-        internal override String RelationBuilder(RelationType relationType, String left, String right)
+        internal override String RelationBuilder(RelationType relationType, String left, Object right)
         {
             return String.Format(RelationMapper[relationType], left, right);
         }
@@ -106,7 +106,7 @@ namespace NewLibCore.Data.SQL.MapperConfig
         }
     }
 
-    internal class MySqlInstance : DatabaseInstance
+    internal class MySqlInstance : MapperInstance
     {
         protected override void AppendRelationType()
         {
@@ -123,7 +123,7 @@ namespace NewLibCore.Data.SQL.MapperConfig
         {
             return new MySqlParameter();
         }
-        internal override String RelationBuilder(RelationType relationType, String left, String right)
+        internal override String RelationBuilder(RelationType relationType, String left, Object right)
         {
             return String.Format(RelationMapper[relationType], left, right);
         }

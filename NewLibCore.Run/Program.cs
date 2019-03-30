@@ -14,8 +14,8 @@ namespace NewLibCore.Run
     {
         private static void Main(String[] args)
         {
-            DatabaseConfig.SwitchToMySql();
-            DatabaseConfig.InitLogger();
+            MapperFactory.SwitchToMySql();
+            MapperFactory.InitLogger();
 
             using (var context = new EntityMapper())
             {

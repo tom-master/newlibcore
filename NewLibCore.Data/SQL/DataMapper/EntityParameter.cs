@@ -23,7 +23,7 @@ namespace NewLibCore.Data.SQL.DataMapper
 
         public static implicit operator DbParameter(EntityParameter entityParameter)
         {
-            var parameter = DatabaseConfig.GetDbParameterInstance();
+            var parameter = MapperFactory.Instance.GetParameterInstance();
             parameter.ParameterName = entityParameter.Key;
             parameter.Value = entityParameter.Value;
             return parameter;

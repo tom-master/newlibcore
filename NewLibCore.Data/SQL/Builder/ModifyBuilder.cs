@@ -39,7 +39,7 @@ namespace NewLibCore.Data.SQL.Builder
             {
                 translation.Translate(_statementStore);
             }
-            translation.TranslationResult.Append($@"{DatabaseConfig.DatabaseSyntax.RowCountSuffix}");
+            translation.TranslationResult.Append($@"{MapperFactory.Instance.GetStatementExtension().RowCount}");
             return translation.TranslationResult;
         }
     }

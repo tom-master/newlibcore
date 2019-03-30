@@ -12,8 +12,6 @@ namespace NewLibCore.Data.SQL.InternalTranslation
     {
         internal TranslationResult TranslationResult { get; private set; }
 
-        private DatabaseSyntaxBuilder _syntaxBuilder = DatabaseConfig.DatabaseSyntax;
-
         private Stack<String> _parameterNameStack;
 
         private Stack<RelationType> _operationalCharacterStack;
@@ -32,7 +30,6 @@ namespace NewLibCore.Data.SQL.InternalTranslation
 
         public TranslationResult Translate(StatementStore statementStore)
         {
-            var lamdbaExp = (LambdaExpression)statementStore.Expression;
             foreach (var item in statementStore.JoinStores)
             {
                 foreach (var parameter in ((LambdaExpression)item.Expression).Parameters)
@@ -42,7 +39,8 @@ namespace NewLibCore.Data.SQL.InternalTranslation
 
                 foreach (var parameter in item.AliasNameMappers)
                 {
-                    TranslationResult.Append(String.Format(item.JoinType.GetDescription(), parameter.Value, parameter.Value.ToLower()));
+                    var joinTemplate = MapperFactory.Instance.JoinBuilder(item.JoinType, parameter.Value, parameter.Value.ToLower());
+                    TranslationResult.Append(joinTemplate);
                 }
                 _joinType = item.JoinType;
                 InternalBuildWhere(item.Expression);
@@ -167,7 +165,7 @@ namespace NewLibCore.Data.SQL.InternalTranslation
                         }
                         else
                         {
-                            var syntax = _syntaxBuilder.SyntaxBuilder(_operationalCharacterStack.Pop(), memberName, $"@{newParameterName}");
+                            var syntax = MapperFactory.Instance.RelationBuilder(_operationalCharacterStack.Pop(), memberName, $"@{newParameterName}");
                             TranslationResult.Append(syntax);
                             _parameterNameStack.Push(newParameterName);
                         }
@@ -273,28 +271,30 @@ namespace NewLibCore.Data.SQL.InternalTranslation
 
         private void GetJoin(BinaryExpression binaryExp, RelationType relationType)
         {
-            var leftMemberExp = (MemberExpression)binaryExp.Left;
-            var leftAliasName = _parameterToTableAliasMappers[((ParameterExpression)leftMemberExp.Expression).Name];
+            var leftMember = (MemberExpression)binaryExp.Left;
+            var leftAliasName = _parameterToTableAliasMappers[((ParameterExpression)leftMember.Expression).Name];
 
             if (binaryExp.Right.GetType() == typeof(ConstantExpression))
             {
                 var constant = (ConstantExpression)binaryExp.Right;
                 if (Boolean.TryParse(constant.Value.ToString(), out var result))
                 {
-                    TranslationResult.Append(String.Format(relationType.GetDescription(), $"{leftAliasName}.{leftMemberExp.Member.Name}", (result ? 1 : 0)));
+                    var relationTemplate = MapperFactory.Instance.RelationBuilder(relationType, $"{leftAliasName}.{leftMember.Member.Name}", (result ? 1 : 0).ToString());
+                    TranslationResult.Append(relationTemplate);
                 }
                 else
                 {
-                    TranslationResult.Append(String.Format(relationType.GetDescription(), $"{leftAliasName}.{leftMemberExp.Member.Name}", constant.Value));
+                    var relationTemplate = MapperFactory.Instance.RelationBuilder(relationType, $"{leftAliasName}.{leftMember.Member.Name}", constant.Value);
+                    TranslationResult.Append(relationTemplate);
                 }
             }
             else
             {
-                var rightMemberExp = (MemberExpression)binaryExp.Right;
-                var rightAliasName = _parameterToTableAliasMappers[((ParameterExpression)rightMemberExp.Expression).Name];
+                var rightMember = (MemberExpression)binaryExp.Right;
+                var rightAliasName = _parameterToTableAliasMappers[((ParameterExpression)rightMember.Expression).Name];
+                var relationTemplate = MapperFactory.Instance.RelationBuilder(relationType, $"{rightAliasName}.{rightMember.Member.Name}", $"{leftAliasName}.{leftMember.Member.Name}");
 
-                TranslationResult
-                    .Append(String.Format(relationType.GetDescription(), $"{rightAliasName}.{rightMemberExp.Member.Name}", $"{leftAliasName}.{leftMemberExp.Member.Name}"));
+                TranslationResult.Append(relationTemplate);
             }
         }
 

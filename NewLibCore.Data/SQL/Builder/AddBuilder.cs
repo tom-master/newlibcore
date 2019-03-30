@@ -38,7 +38,7 @@ namespace NewLibCore.Data.SQL.Builder
             var parameterPrefix = String.Join(",", propertyInfos.Select(key => $@"@{key.Name}"));
 
             var translationResult = new TranslationResult();
-            translationResult.Append($@" INSERT {ModelType.Name} ({fields} ) VALUES ({parameterPrefix}) {DatabaseConfig.DatabaseSyntax.IdentitySuffix}"
+            translationResult.Append($@" INSERT {ModelType.Name} ({fields} ) VALUES ({parameterPrefix}) {MapperFactory.Instance.GetStatementExtension().Identity}"
                 , propertyInfos.Select(c => new EntityParameter($@"@{c.Name}", c.GetValue(ModelInstance))));
 
             return translationResult;

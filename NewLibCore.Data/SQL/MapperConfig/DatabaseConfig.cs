@@ -1,14 +1,10 @@
-﻿using MySql.Data.MySqlClient;
-using NewLibCore.Data.SQL.MapperExtension;
-using System;
-using System.Data.Common;
-using System.Data.SqlClient;
+﻿using NewLibCore.Data.SQL.MapperExtension;
 
 namespace NewLibCore.Data.SQL.MapperConfig
 {
-    public class DatabaseConfig
+    public class MapperFactory
     {
-        internal static DatabaseInstance Instance { get; private set; }
+        internal static MapperInstance Instance { get; private set; }
 
         internal static ILogger Logger { get; private set; }
 

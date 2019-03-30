@@ -49,13 +49,15 @@ namespace NewLibCore.Data.SQL.Builder
             if (_statementStore.OrderByType != null)
             {
                 var order = ExtractFieldsAndTableName(_statementStore.OrderExpression);
-                translation.TranslationResult.Append(String.Format(_statementStore.OrderByType.GetDescription(), $@"{order.tableAliasName}.{order.fields}"));
+                var orderTemplate = MapperFactory
+                    .Instance.OrderByBuilder(_statementStore.OrderByType.Value, $@"{order.tableAliasName}.{order.fields}");
+                translation.TranslationResult.Append(orderTemplate);
             }
 
             if (_pageIndex != null && _pageSize != null)
             {
                 translation.TranslationResult
-                    .Append(DatabaseConfig.DatabaseSyntax.Page.Replace("{value}", (_pageSize * (_pageIndex - 1)).ToString()).Replace("{pageSize}", _pageSize.ToString()));
+                    .Append(MapperFactory.Instance.GetStatementExtension().Page.Replace("{value}", (_pageSize * (_pageIndex - 1)).ToString()).Replace("{pageSize}", _pageSize.ToString()));
             }
 
             return translation.TranslationResult;

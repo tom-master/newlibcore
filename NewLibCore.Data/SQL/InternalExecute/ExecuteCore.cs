@@ -11,7 +11,6 @@ namespace NewLibCore.Data.SQL.InternalExecute
 {
     internal sealed class ExecuteCore : IDisposable
     {
- 
         private DbConnection _connection;
 
         private DbTransaction _dataTransaction;
@@ -22,12 +21,12 @@ namespace NewLibCore.Data.SQL.InternalExecute
 
         internal ExecuteCore()
         {
-            _connection = DatabaseConfig.GetConnectionInstance();
+            _connection = MapperFactory.Instance.GetConnectionInstance();
         }
 
         internal void OpenTransaction()
         {
-            DatabaseConfig.Logger.Write("INFO", "open transaction");
+            MapperFactory.Logger.Write("INFO", "open transaction");
             _useTransaction = true;
         }
 
@@ -38,7 +37,7 @@ namespace NewLibCore.Data.SQL.InternalExecute
                 if (_dataTransaction != null)
                 {
                     _dataTransaction.Commit();
-                    DatabaseConfig.Logger.Write("INFO", "commit transaction");
+                    MapperFactory.Logger.Write("INFO", "commit transaction");
                 }
                 return;
             }
@@ -52,7 +51,7 @@ namespace NewLibCore.Data.SQL.InternalExecute
                 if (_dataTransaction != null)
                 {
                     _dataTransaction.Rollback();
-                    DatabaseConfig.Logger.Write("INFO", "rollback transaction ");
+                    MapperFactory.Logger.Write("INFO", "rollback transaction ");
                 }
                 return;
             }
@@ -76,7 +75,7 @@ namespace NewLibCore.Data.SQL.InternalExecute
                     {
                         cmd.Parameters.AddRange(parameters.Select(s => (DbParameter)s).ToArray());
                     }
-                    DatabaseConfig.Logger.Write("INFO", $@"SQL:{sql} PARAMETERS:{(parameters == null ? "" : String.Join(",", parameters.Select(s => $@"{s.Key}::{s.Value}")))}");
+                    MapperFactory.Logger.Write("INFO", $@"SQL:{sql} PARAMETERS:{(parameters == null ? "" : String.Join(",", parameters.Select(s => $@"{s.Key}::{s.Value}")))}");
                     var executeResult = new ExecuteResult();
                     if (executeType == ExecuteType.SELECT)
                     {
@@ -101,7 +100,7 @@ namespace NewLibCore.Data.SQL.InternalExecute
             }
             catch (Exception ex)
             {
-                DatabaseConfig.Logger.Write("ERROR", $@"{ex}");
+                MapperFactory.Logger.Write("ERROR", $@"{ex}");
                 throw;
             }
         }
@@ -110,7 +109,7 @@ namespace NewLibCore.Data.SQL.InternalExecute
         {
             if (_connection.State == ConnectionState.Closed)
             {
-                DatabaseConfig.Logger.Write("INFO", "open connection");
+                MapperFactory.Logger.Write("INFO", "open connection");
                 _connection.Open();
             }
         }
@@ -123,7 +122,7 @@ namespace NewLibCore.Data.SQL.InternalExecute
                 {
                     _useTransaction = true;
                     _dataTransaction = _connection.BeginTransaction();
-                    DatabaseConfig.Logger.Write("INFO", "begin transaction");
+                    MapperFactory.Logger.Write("INFO", "begin transaction");
                 }
                 return _dataTransaction;
             }
@@ -155,7 +154,7 @@ namespace NewLibCore.Data.SQL.InternalExecute
                     }
                     _connection.Dispose();
                     _connection = null;
-                    DatabaseConfig.Logger.Write("INFO", "close connection");
+                    MapperFactory.Logger.Write("INFO", "close connection");
                 }
                 _disposed = true;
             }
