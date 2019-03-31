@@ -34,13 +34,12 @@ namespace NewLibCore.Data.SQL.Builder
             {
                 ModelInstance.Validate(propertyInfos);
             }
-            var fields = String.Join(",", propertyInfos.Select(c => c.Name));
-            var parameterPrefix = String.Join(",", propertyInfos.Select(key => $@"@{key.Name}"));
-
             var translationResult = new TranslationCoreResult();
-            translationResult.Append($@" INSERT {ModelType.Name} ({fields} ) VALUES ({parameterPrefix}) {MapperFactory.Instance.Extension.Identity}"
-                , propertyInfos.Select(c => new EntityParameter($@"@{c.Name}", c.GetValue(ModelInstance))));
+            var fields = String.Join(",", propertyInfos.Select(c => c.Name));
+            var placeHolder = String.Join(",", propertyInfos.Select(key => $@"@{key.Name}"));
+            var entityParameters = propertyInfos.Select(c => new EntityParameter($@"@{c.Name}", c.GetValue(ModelInstance)));
 
+            translationResult.Append($@" INSERT {ModelType.Name} ({fields}) VALUES ({placeHolder}) {MapperFactory.Instance.Extension.Identity}", entityParameters);
             return translationResult;
         }
     }
