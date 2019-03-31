@@ -1,6 +1,6 @@
 ﻿using NewLibCore.Data.SQL.MapperExtension;
 
-namespace NewLibCore.Data.SQL.MapperConfig
+namespace NewLibCore.Data.SQL.Mapper.Config
 {
     public class MapperFactory
     {

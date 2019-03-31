@@ -1,12 +1,11 @@
-﻿using NewLibCore.Data.SQL.ExpressionSpecification.ConcreteSpecification;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using NewLibCore.Data.SQL.Mapper;
 using NewLibCore.Data.SQL.MapperConfig;
 using NewLibCore.Data.SQL.MapperExtension;
 using NewLibCore.Data.SQL.MapperExtension.AssociationMapperExtension;
 using NewLibCore.Data.SQL.MapperExtension.PropertyExtension;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using DefaultValueAttribute = NewLibCore.Data.SQL.MapperExtension.PropertyExtension.DefaultValueAttribute;
 
 namespace NewLibCore.Run

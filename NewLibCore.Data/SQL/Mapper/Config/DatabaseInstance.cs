@@ -1,12 +1,11 @@
-﻿using MySql.Data.MySqlClient;
-using NewLibCore.Data.SQL.MapperExtension;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Data.SqlClient;
-using System.Text;
+using MySql.Data.MySqlClient;
+using NewLibCore.Data.SQL.MapperExtension;
 
-namespace NewLibCore.Data.SQL.MapperConfig
+namespace NewLibCore.Data.SQL.Mapper.Config
 {
     internal abstract class MapperInstance
     {
