@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using NewLibCore.Data.SQL.Mapper;
-using NewLibCore.Data.SQL.MapperConfig;
-using NewLibCore.Data.SQL.MapperExtension;
-using NewLibCore.Data.SQL.MapperExtension.AssociationMapperExtension;
-using NewLibCore.Data.SQL.MapperExtension.PropertyExtension;
-using DefaultValueAttribute = NewLibCore.Data.SQL.MapperExtension.PropertyExtension.DefaultValueAttribute;
+using NewLibCore.Data.SQL.Mapper.Config;
+using NewLibCore.Data.SQL.Mapper.Extension;
+using NewLibCore.Data.SQL.Mapper.Extension.AssociationMapperExtension;
+using NewLibCore.Data.SQL.Mapper.Extension.PropertyExtension;
+using DefaultValueAttribute = NewLibCore.Data.SQL.Mapper.Extension.PropertyExtension.DefaultValueAttribute;
 
 namespace NewLibCore.Run
 {
@@ -27,7 +26,6 @@ namespace NewLibCore.Run
         }
     }
 
-    [Description("用户"), Serializable]
     public partial class User : DomainModelBase
     {
         /// <summary>
@@ -82,7 +80,6 @@ namespace NewLibCore.Run
         /// 账户头像
         /// </summary>
         public String UserFace { get; private set; }
-
 
         public Boolean IsModifyUserFace { get; private set; }
 
@@ -224,7 +221,6 @@ namespace NewLibCore.Run
     }
 
 
-    [Serializable, Description("桌面应用")]
     public partial class Member : DomainModelBase
     {
         /// <summary>
@@ -581,7 +577,6 @@ namespace NewLibCore.Run
         }
     }
 
-    [Description("角色"), Serializable]
     public partial class Role : DomainModelBase
     {
         /// <summary>

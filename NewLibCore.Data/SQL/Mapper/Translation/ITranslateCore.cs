@@ -1,4 +1,4 @@
-﻿namespace NewLibCore.Data.SQL.Translation
+﻿namespace NewLibCore.Data.SQL.Mapper.Translation
 {
     internal interface ITranslateCore
     {

@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using NewLibCore.Data.SQL.Mapper;
-using NewLibCore.Data.SQL.MapperConfig;
-using NewLibCore.Data.SQL.MapperExtension;
+using NewLibCore.Data.SQL.Mapper.Config;
+using NewLibCore.Data.SQL.Mapper.Extension;
 
-namespace NewLibCore.Data.SQL.Translation
+namespace NewLibCore.Data.SQL.Mapper.Translation
 {
     internal class TranslationCore : ITranslateCore
     {

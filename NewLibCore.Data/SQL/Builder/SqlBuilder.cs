@@ -1,6 +1,6 @@
-﻿using NewLibCore.Data.SQL.MapperExtension;
-using NewLibCore.Data.SQL.Translation;
-using System;
+﻿using System;
+using NewLibCore.Data.SQL.Mapper.Extension;
+using NewLibCore.Data.SQL.Mapper.Translation;
 
 namespace NewLibCore.Data.SQL.Builder
 {

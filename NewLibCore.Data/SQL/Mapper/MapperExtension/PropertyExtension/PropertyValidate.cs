@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NewLibCore.Data.SQL.MapperExtension.PropertyExtension
+namespace NewLibCore.Data.SQL.Mapper.Extension.PropertyExtension
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = true, Inherited = true)]
     public abstract class PropertyValidate : Attribute

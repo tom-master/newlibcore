@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace NewLibCore.Data.SQL.MapperExtension
+namespace NewLibCore.Data.SQL.Mapper.Extension
 {
     public enum ExecuteType
     {

@@ -1,12 +1,12 @@
-﻿using NewLibCore.Data.SQL.Mapper;
-using NewLibCore.Data.SQL.MapperConfig;
-using NewLibCore.Data.SQL.MapperExtension;
-using NewLibCore.Data.SQL.MapperExtension.PropertyExtension;
-using NewLibCore.Data.SQL.Translation;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using NewLibCore.Data.SQL.Mapper;
+using NewLibCore.Data.SQL.Mapper.Config;
+using NewLibCore.Data.SQL.Mapper.Extension;
+using NewLibCore.Data.SQL.Mapper.Extension.PropertyExtension;
+using NewLibCore.Data.SQL.Mapper.Translation;
 
 namespace NewLibCore.Data.SQL.Builder
 {

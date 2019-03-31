@@ -1,4 +1,4 @@
-﻿using NewLibCore.Data.SQL.MapperExtension;
+﻿using NewLibCore.Data.SQL.Mapper.Extension;
 
 namespace NewLibCore.Data.SQL.Mapper.Config
 {

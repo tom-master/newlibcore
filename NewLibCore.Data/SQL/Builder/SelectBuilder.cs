@@ -1,11 +1,11 @@
-﻿using NewLibCore.Data.SQL.MapperConfig;
-using NewLibCore.Data.SQL.MapperExtension;
-using NewLibCore.Data.SQL.MapperExtension.PropertyExtension;
-using NewLibCore.Data.SQL.Translation;
-using System;
+﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using NewLibCore.Data.SQL.Mapper.Config;
+using NewLibCore.Data.SQL.Mapper.Extension;
+using NewLibCore.Data.SQL.Mapper.Extension.PropertyExtension;
+using NewLibCore.Data.SQL.Mapper.Translation;
 
 namespace NewLibCore.Data.SQL.Builder
 {
@@ -48,8 +48,7 @@ namespace NewLibCore.Data.SQL.Builder
             if (_statementStore.OrderByType != null)
             {
                 var order = ExtractFieldsAndTableName(_statementStore.OrderExpression);
-                var orderTemplate = MapperFactory
-                    .Instance.OrderByBuilder(_statementStore.OrderByType.Value, $@"{order.tableAliasName}.{order.fields}");
+                var orderTemplate = MapperFactory.Instance.OrderByBuilder(_statementStore.OrderByType.Value, $@"{order.tableAliasName}.{order.fields}");
                 translation.TranslationResult.Append(orderTemplate);
             }
 

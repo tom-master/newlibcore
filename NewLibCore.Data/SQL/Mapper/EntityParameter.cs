@@ -1,17 +1,17 @@
-﻿using NewLibCore.Data.SQL.MapperConfig;
-using NewLibCore.Security;
-using NewLibCore.InternalExtension;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
+using NewLibCore.Data.SQL.Mapper.Config;
+using NewLibCore.InternalExtension;
+using NewLibCore.Security;
 
 namespace NewLibCore.Data.SQL.Mapper
 {
     public class EntityParameter
     {
         public EntityParameter(String key, Object value)
-        { 
+        {
             Key = key;
             Value = ParseValueType(value);
         }

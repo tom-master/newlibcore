@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq.Expressions;
-using NewLibCore.Data.SQL.MapperExtension;
+using NewLibCore.Data.SQL.Mapper.Extension;
 
 namespace NewLibCore.Data.SQL.ExpressionSpecification.ConcreteSpecification
 {
@@ -9,7 +9,7 @@ namespace NewLibCore.Data.SQL.ExpressionSpecification.ConcreteSpecification
     /// </summary>
     public sealed class DefaultSpecificationFactory
     {
-        public static Specification<T> Create<T>(Expression<Func<T, Boolean>> expression = null) where T:DomainModelBase
+        public static Specification<T> Create<T>(Expression<Func<T, Boolean>> expression = null) where T : DomainModelBase
         {
             return expression == null ? new DefaultSpecification<T>() : new DefaultSpecification<T>(expression);
         }

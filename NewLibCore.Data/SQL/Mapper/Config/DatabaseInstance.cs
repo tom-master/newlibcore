@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Data.SqlClient;
 using MySql.Data.MySqlClient;
-using NewLibCore.Data.SQL.MapperExtension;
+using NewLibCore.Data.SQL.Mapper.Extension;
 
 namespace NewLibCore.Data.SQL.Mapper.Config
 {

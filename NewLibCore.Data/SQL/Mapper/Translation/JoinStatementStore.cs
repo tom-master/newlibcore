@@ -1,9 +1,9 @@
-﻿using NewLibCore.Data.SQL.MapperExtension;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using NewLibCore.Data.SQL.Mapper.Extension;
 
-namespace NewLibCore.Data.SQL.Translation
+namespace NewLibCore.Data.SQL.Mapper.Translation
 {
     internal class JoinStatementStore
     {

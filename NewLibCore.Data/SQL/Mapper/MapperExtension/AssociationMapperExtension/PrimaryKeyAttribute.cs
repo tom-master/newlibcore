@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NewLibCore.Data.SQL.MapperExtension.AssociationMapperExtension
+namespace NewLibCore.Data.SQL.Mapper.Extension.AssociationMapperExtension
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
 
