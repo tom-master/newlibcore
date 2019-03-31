@@ -2,13 +2,13 @@
 using System.Linq.Expressions;
 using NewLibCore.Data.SQL.Mapper.Extension;
 
-namespace NewLibCore.Data.SQL.ExpressionSpecification
+namespace NewLibCore.Data.SQL.CombineCondition
 {
     /// <summary>
     /// 规约抽象类
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class Specification<T> where T : DomainModelBase
+    public abstract class Combine<T> where T : DomainModelBase
     {
         /// <summary>
         /// 查询表达式

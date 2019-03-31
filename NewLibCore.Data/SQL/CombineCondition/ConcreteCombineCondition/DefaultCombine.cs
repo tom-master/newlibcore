@@ -2,29 +2,28 @@
 using System.Linq.Expressions;
 using NewLibCore.Data.SQL.Mapper.Extension;
 
-namespace NewLibCore.Data.SQL.ExpressionSpecification.ConcreteSpecification
+namespace NewLibCore.Data.SQL.CombineCondition.ConcreteCombineCondition
 {
     /// <summary>
     /// 默认规约 
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    internal class DefaultSpecification<T> : Specification<T> where T : DomainModelBase
+    internal class DefaultCombine<T> : Combine<T> where T : DomainModelBase
     {
-        public  override Expression<Func<T, Boolean>> Expression { get; internal set; }
+        public override Expression<Func<T, Boolean>> Expression { get; internal set; }
 
         public sealed override Expression<Func<T, Object>> OrderBy
         {
             get; protected set;
         }
 
-        public DefaultSpecification(Expression<Func<T, Boolean>> expression)
+        public DefaultCombine(Expression<Func<T, Boolean>> expression)
         {
             Expression = expression;
-
             OrderBy = t => t.Id;
         }
 
-        public DefaultSpecification() : this(T => true){}
+        public DefaultCombine() : this(T => true) { }
 
         public override void AddOrderByExpression(Expression<Func<T, Object>> expression)
         {
@@ -33,6 +32,6 @@ namespace NewLibCore.Data.SQL.ExpressionSpecification.ConcreteSpecification
 
         public override void ResetOrderByExpressions() => OrderBy = null;
 
-   
+
     }
 }

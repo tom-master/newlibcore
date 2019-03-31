@@ -2,13 +2,13 @@
 using System.Linq.Expressions;
 using NewLibCore.Data.SQL.Mapper.Extension;
 
-namespace NewLibCore.Data.SQL.ExpressionSpecification
+namespace NewLibCore.Data.SQL.CombineCondition
 {
 
     /// <summary>
     /// 规约模式扩展
     /// </summary>
-    public static class SpecificationExtensions
+    public static class CombineExtensions
     {
         /// <summary>
         /// 逻辑和
@@ -17,7 +17,7 @@ namespace NewLibCore.Data.SQL.ExpressionSpecification
         /// <param name="left"></param>
         /// <param name="right"></param>
         /// <returns></returns>
-        public static void And<T>(this Specification<T> left, Expression<Func<T, Boolean>> right) where T : DomainModelBase
+        public static void And<T>(this Combine<T> left, Expression<Func<T, Boolean>> right) where T : DomainModelBase
         {
 
             var internalParameter = Expression.Parameter(typeof(T), "entity");
@@ -36,7 +36,7 @@ namespace NewLibCore.Data.SQL.ExpressionSpecification
         /// <param name="left"></param>
         /// <param name="right"></param>
         /// <returns></returns>
-        public static void Or<T>(this Specification<T> left, Expression<Func<T, Boolean>> right) where T : DomainModelBase
+        public static void Or<T>(this Combine<T> left, Expression<Func<T, Boolean>> right) where T : DomainModelBase
         {
             var internalParameter = Expression.Parameter(typeof(T), "entity");
             var parameterVister = new ParameterVisitor(internalParameter);
@@ -52,7 +52,7 @@ namespace NewLibCore.Data.SQL.ExpressionSpecification
         /// <typeparam name="T"></typeparam>
         /// <param name="left"></param>
         /// <returns></returns>
-        public static void Not<T>(this Specification<T> left) where T : DomainModelBase
+        public static void Not<T>(this Combine<T> left) where T : DomainModelBase
         {
             var internalParameter = left.Expression.Parameters[0];
             var newExpression = Expression.Not(left.Expression.Body);
@@ -66,7 +66,7 @@ namespace NewLibCore.Data.SQL.ExpressionSpecification
         /// <param name="left"></param>
         /// <param name="right"></param>
         /// <returns></returns>
-        public static Specification<T> OrderByDescending<T>(this Specification<T> left, Expression<Func<T, Object>> right) where T : DomainModelBase
+        public static Combine<T> OrderByDescending<T>(this Combine<T> left, Expression<Func<T, Object>> right) where T : DomainModelBase
         {
             left.AddOrderByExpression(right);
             return left;
