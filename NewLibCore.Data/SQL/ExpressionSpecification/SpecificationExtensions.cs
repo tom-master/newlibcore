@@ -21,15 +21,10 @@ namespace NewLibCore.Data.SQL.ExpressionSpecification
         {
 
             var internalParameter = Expression.Parameter(typeof(T), "entity");
-
             var parameterVister = new ParameterVisitor(internalParameter);
-
             var leftBody = parameterVister.Replace(left.Expression.Body);
-
             var rightBody = parameterVister.Replace(right.Body);
-
             var newExpression = Expression.And(leftBody, rightBody);
-
             left.Expression = Expression.Lambda<Func<T, Boolean>>(newExpression, internalParameter);
 
         }
@@ -44,15 +39,10 @@ namespace NewLibCore.Data.SQL.ExpressionSpecification
         public static void Or<T>(this Specification<T> left, Expression<Func<T, Boolean>> right) where T : DomainModelBase
         {
             var internalParameter = Expression.Parameter(typeof(T), "entity");
-
             var parameterVister = new ParameterVisitor(internalParameter);
-
             var leftBody = parameterVister.Replace(left.Expression.Body);
-
             var rightBody = parameterVister.Replace(right.Body);
-
             var orExpression = Expression.Or(leftBody, rightBody);
-
             left.Expression = Expression.Lambda<Func<T, Boolean>>(orExpression, internalParameter);
         }
 
@@ -65,9 +55,7 @@ namespace NewLibCore.Data.SQL.ExpressionSpecification
         public static void Not<T>(this Specification<T> left) where T : DomainModelBase
         {
             var internalParameter = left.Expression.Parameters[0];
-
             var newExpression = Expression.Not(left.Expression.Body);
-
             left.Expression = Expression.Lambda<Func<T, Boolean>>(newExpression, internalParameter);
         }
 
@@ -81,7 +69,6 @@ namespace NewLibCore.Data.SQL.ExpressionSpecification
         public static Specification<T> OrderByDescending<T>(this Specification<T> left, Expression<Func<T, Object>> right) where T : DomainModelBase
         {
             left.AddOrderByExpression(right);
-
             return left;
         }
     }
