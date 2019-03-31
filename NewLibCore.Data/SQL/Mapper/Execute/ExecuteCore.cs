@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
-using NewLibCore.Data.SQL.Mapper;
 using NewLibCore.Data.SQL.Mapper.Config;
 using NewLibCore.Data.SQL.Mapper.Extension;
 
-namespace NewLibCore.Data.SQL.Execute
+namespace NewLibCore.Data.SQL.Mapper.Execute
 {
     internal sealed class ExecuteCore : IDisposable
     {

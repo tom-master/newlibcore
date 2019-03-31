@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq.Expressions;
 using NewLibCore.Data.SQL.Builder;
-using NewLibCore.Data.SQL.Execute;
+using NewLibCore.Data.SQL.Mapper.Execute;
 using NewLibCore.Data.SQL.Mapper.Extension;
 using NewLibCore.Data.SQL.Mapper.Translation;
 using NewLibCore.InternalExtension;

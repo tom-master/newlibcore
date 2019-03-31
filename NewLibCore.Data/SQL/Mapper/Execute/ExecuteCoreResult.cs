@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NewLibCore.Data.SQL.Execute
+namespace NewLibCore.Data.SQL.Mapper.Execute
 {
     internal class ExecuteCoreResult
     {
