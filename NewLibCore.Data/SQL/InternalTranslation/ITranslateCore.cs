@@ -2,9 +2,8 @@
 
 namespace NewLibCore.Data.SQL.InternalTranslation
 {
-    internal interface ITranslate
+    internal interface ITranslateCore
     {
-        TranslationResult Translate(StatementStore statementStore);
+        TranslationCoreResult Translate(StatementStore statementStore);
     }
 }
- 

@@ -3,11 +3,10 @@ using NewLibCore.Security;
 using NewLibCore.InternalExtension;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data.Common;
 using System.Linq;
 
-namespace NewLibCore.Data.SQL.DataMapper
+namespace NewLibCore.Data.SQL.Mapper
 {
     public class EntityParameter
     {

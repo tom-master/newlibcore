@@ -27,7 +27,7 @@ namespace NewLibCore.Data.SQL.Builder
             _pageSize = pageSize;
         }
 
-        protected internal override TranslationResult Build()
+        protected internal override TranslationCoreResult Build()
         {
             var translation = new TranslationCore();
             var fields = ExtractFieldsAndTableName(_fields);

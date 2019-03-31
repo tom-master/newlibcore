@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using NewLibCore.Data.SQL.DataMapper;
-using NewLibCore.Data.SQL.InternalExecute;
+﻿using NewLibCore.Data.SQL.InternalTranslation;
+using NewLibCore.Data.SQL.Mapper;
 using NewLibCore.Data.SQL.MapperConfig;
 using NewLibCore.Data.SQL.MapperExtension;
 using NewLibCore.Data.SQL.MapperExtension.PropertyExtension;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
 namespace NewLibCore.Data.SQL.Builder
 {
@@ -21,7 +21,7 @@ namespace NewLibCore.Data.SQL.Builder
             _propertyInfos = ModelType.GetProperties();
         }
 
-        protected internal override TranslationResult Build()
+        protected internal override TranslationCoreResult Build()
         {
             var propertyInfos = _propertyInfos.Where(w => w.GetCustomAttributes<PropertyValidate>().Any());
             if (!propertyInfos.Any())
@@ -37,7 +37,7 @@ namespace NewLibCore.Data.SQL.Builder
             var fields = String.Join(",", propertyInfos.Select(c => c.Name));
             var parameterPrefix = String.Join(",", propertyInfos.Select(key => $@"@{key.Name}"));
 
-            var translationResult = new TranslationResult();
+            var translationResult = new TranslationCoreResult();
             translationResult.Append($@" INSERT {ModelType.Name} ({fields} ) VALUES ({parameterPrefix}) {MapperFactory.Instance.Extension.Identity}"
                 , propertyInfos.Select(c => new EntityParameter($@"@{c.Name}", c.GetValue(ModelInstance))));
 

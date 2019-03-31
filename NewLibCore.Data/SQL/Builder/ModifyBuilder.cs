@@ -1,6 +1,6 @@
-﻿using NewLibCore.Data.SQL.DataMapper;
-using NewLibCore.Data.SQL.InternalExecute;
+﻿using NewLibCore.Data.SQL.InternalExecute;
 using NewLibCore.Data.SQL.InternalTranslation;
+using NewLibCore.Data.SQL.Mapper;
 using NewLibCore.Data.SQL.MapperConfig;
 using NewLibCore.Data.SQL.MapperExtension;
 using System;
@@ -19,7 +19,7 @@ namespace NewLibCore.Data.SQL.Builder
             _statementStore = statementStore;
         }
 
-        protected internal override TranslationResult Build()
+        protected internal override TranslationCoreResult Build()
         {
             var properties = ModelInstance.PropertyInfos;
             if (!properties.Any())

@@ -1,22 +1,22 @@
-﻿using NewLibCore.Data.SQL.DataMapper;
+﻿using NewLibCore.Data.SQL.Mapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace NewLibCore.Data.SQL.InternalExecute
+namespace NewLibCore.Data.SQL.InternalTranslation
 {
-    internal class TranslationResult
+    internal class TranslationCoreResult
     {
         internal StringBuilder SqlStore { get; private set; }
 
         internal IList<EntityParameter> ParameterStore { get; private set; }
 
-        internal TranslationResult()
+        internal TranslationCoreResult()
         {
             SqlStore = new StringBuilder();
             ParameterStore = new List<EntityParameter>();
-        } 
+        }
 
         internal void Append(String sql, IEnumerable<EntityParameter> entityParameters = null)
         {

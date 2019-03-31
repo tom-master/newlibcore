@@ -1,4 +1,4 @@
-﻿using NewLibCore.Data.SQL.DataMapper;
+﻿using NewLibCore.Data.SQL.Mapper;
 using NewLibCore.Data.SQL.MapperConfig;
 using NewLibCore.Data.SQL.MapperExtension;
 using System;
@@ -58,7 +58,7 @@ namespace NewLibCore.Data.SQL.InternalExecute
             throw new Exception("没有启动事务，无法执行事务回滚");
         }
 
-        internal ExecuteResult Execute(ExecuteType executeType, String sql, IEnumerable<EntityParameter> parameters = null, CommandType commandType = CommandType.Text)
+        internal ExecuteCoreResult Execute(ExecuteType executeType, String sql, IEnumerable<EntityParameter> parameters = null, CommandType commandType = CommandType.Text)
         {
             try
             {
@@ -76,7 +76,7 @@ namespace NewLibCore.Data.SQL.InternalExecute
                         cmd.Parameters.AddRange(parameters.Select(s => (DbParameter)s).ToArray());
                     }
                     MapperFactory.Logger.Write("INFO", $@"SQL:{sql} PARAMETERS:{(parameters == null ? "" : String.Join(",", parameters.Select(s => $@"{s.Key}::{s.Value}")))}");
-                    var executeResult = new ExecuteResult();
+                    var executeResult = new ExecuteCoreResult();
                     if (executeType == ExecuteType.SELECT)
                     {
                         using (var dr = cmd.ExecuteReader())

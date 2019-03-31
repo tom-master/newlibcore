@@ -2,8 +2,6 @@
 using NewLibCore.Data.SQL.InternalTranslation;
 using NewLibCore.Data.SQL.MapperExtension;
 using System;
-using System.Collections.Generic;
-using System.Reflection;
 
 namespace NewLibCore.Data.SQL.Builder
 {
@@ -27,6 +25,6 @@ namespace NewLibCore.Data.SQL.Builder
             }
         }
 
-        protected internal abstract TranslationResult Build();
+        protected internal abstract TranslationCoreResult Build();
     }
 }

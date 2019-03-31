@@ -1,4 +1,4 @@
-﻿using NewLibCore.Data.SQL.DataMapper;
+﻿using NewLibCore.Data.SQL.Mapper;
 using NewLibCore.Data.SQL.MapperConfig;
 using NewLibCore.Data.SQL.MapperExtension;
 using NewLibCore.Data.SQL.MapperExtension.AssociationMapperExtension;
