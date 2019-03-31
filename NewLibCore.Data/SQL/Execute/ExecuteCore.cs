@@ -7,7 +7,7 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 
-namespace NewLibCore.Data.SQL.InternalExecute
+namespace NewLibCore.Data.SQL.Execute
 {
     internal sealed class ExecuteCore : IDisposable
     {

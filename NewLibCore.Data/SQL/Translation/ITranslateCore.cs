@@ -1,6 +1,4 @@
-﻿using NewLibCore.Data.SQL.InternalExecute;
-
-namespace NewLibCore.Data.SQL.InternalTranslation
+﻿namespace NewLibCore.Data.SQL.Translation
 {
     internal interface ITranslateCore
     {

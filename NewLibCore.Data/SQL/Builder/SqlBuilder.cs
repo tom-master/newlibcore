@@ -1,6 +1,5 @@
-﻿using NewLibCore.Data.SQL.InternalExecute;
-using NewLibCore.Data.SQL.InternalTranslation;
-using NewLibCore.Data.SQL.MapperExtension;
+﻿using NewLibCore.Data.SQL.MapperExtension;
+using NewLibCore.Data.SQL.Translation;
 using System;
 
 namespace NewLibCore.Data.SQL.Builder

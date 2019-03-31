@@ -1,8 +1,8 @@
-﻿using NewLibCore.Data.SQL.InternalTranslation;
-using NewLibCore.Data.SQL.Mapper;
+﻿using NewLibCore.Data.SQL.Mapper;
 using NewLibCore.Data.SQL.MapperConfig;
 using NewLibCore.Data.SQL.MapperExtension;
 using NewLibCore.Data.SQL.MapperExtension.PropertyExtension;
+using NewLibCore.Data.SQL.Translation;
 using System;
 using System.Collections.Generic;
 using System.Linq;

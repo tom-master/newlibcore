@@ -1,10 +1,10 @@
-﻿using NewLibCore.Data.SQL.Mapper;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using NewLibCore.Data.SQL.Mapper;
 
-namespace NewLibCore.Data.SQL.InternalTranslation
+namespace NewLibCore.Data.SQL.Translation
 {
     internal class TranslationCoreResult
     {
@@ -21,7 +21,6 @@ namespace NewLibCore.Data.SQL.InternalTranslation
         internal void Append(String sql, IEnumerable<EntityParameter> entityParameters = null)
         {
             SqlStore.Append(sql);
-
             if (entityParameters != null)
             {
                 foreach (var item in entityParameters)

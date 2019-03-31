@@ -1,7 +1,7 @@
 ﻿using NewLibCore.Data.SQL.Builder;
-using NewLibCore.Data.SQL.InternalExecute;
-using NewLibCore.Data.SQL.InternalTranslation;
+using NewLibCore.Data.SQL.Execute;
 using NewLibCore.Data.SQL.MapperExtension;
+using NewLibCore.Data.SQL.Translation;
 using NewLibCore.InternalExtension;
 using System;
 using System.Collections.Generic;

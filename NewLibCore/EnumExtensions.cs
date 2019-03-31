@@ -32,7 +32,7 @@ namespace NewLibCore
             return (Int32)Enum.Parse(e.GetType(), e.ToString());
         }
 
-        public static String GetDescription1(this Enum e)
+        public static String GetDescription(this Enum e)
         {
             var attrs = e.GetType().GetField(e.ToString()).GetCustomAttributes(typeof(DescriptionAttribute), false);
             if (attrs.Length == 0)

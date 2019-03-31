@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace NewLibCore.Data.SQL.InternalTranslation
+namespace NewLibCore.Data.SQL.Translation
 {
     internal class StatementStore
     {
@@ -19,7 +19,7 @@ namespace NewLibCore.Data.SQL.InternalTranslation
 
         internal IList<JoinStatementStore> JoinStores { get; private set; }
 
-        internal StatementStore() 
+        internal StatementStore()
         {
             JoinStores = new List<JoinStatementStore>();
         }
@@ -45,7 +45,12 @@ namespace NewLibCore.Data.SQL.InternalTranslation
         {
             if (expression == null)
             {
-                throw new ArgumentNullException($@"{joinType} 不能为null");
+                throw new ArgumentNullException($@"{expression} 不能为null");
+            }
+
+            if (joinType == JoinType.NONE)
+            {
+                throw new ArgumentNullException($@"在决定调用AddJoin时,参数:{nameof(joinType)} 不能为none");
             }
 
             var joinStore = new JoinStatementStore

@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace NewLibCore.Data.SQL.InternalTranslation
+namespace NewLibCore.Data.SQL.Translation
 {
     internal class JoinStatementStore
     {
