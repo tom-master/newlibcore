@@ -26,7 +26,7 @@ namespace NewLibCore.Run
         }
     }
 
-    public partial class User : DomainModelBase
+    public partial class User : EntityBase
     {
         /// <summary>
         /// 用户名
@@ -221,7 +221,7 @@ namespace NewLibCore.Run
     }
 
 
-    public partial class Member : DomainModelBase
+    public partial class Member : EntityBase
     {
         /// <summary>
         /// 应用Id
@@ -577,7 +577,7 @@ namespace NewLibCore.Run
         }
     }
 
-    public partial class Role : DomainModelBase
+    public partial class Role : EntityBase
     {
         /// <summary>
         /// 名称
@@ -663,7 +663,7 @@ namespace NewLibCore.Run
 
     }
 
-    public class RolePower : DomainModelBase
+    public class RolePower : EntityBase
     {
         [Required, ForeignKey("Role.Id")]
         public Int32 RoleId { get; private set; }

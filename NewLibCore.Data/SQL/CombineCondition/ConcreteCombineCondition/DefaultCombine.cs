@@ -8,7 +8,7 @@ namespace NewLibCore.Data.SQL.CombineCondition.ConcreteCombineCondition
     /// 默认规约 
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    internal class DefaultCombine<T> : Combine<T> where T : DomainModelBase
+    internal class DefaultCombine<T> : Combine<T> where T : EntityBase
     {
         public override Expression<Func<T, Boolean>> Expression { get; internal set; }
 

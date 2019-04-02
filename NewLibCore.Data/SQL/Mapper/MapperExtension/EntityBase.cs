@@ -4,9 +4,9 @@ using NewLibCore.Data.SQL.Mapper.Extension.PropertyExtension;
 
 namespace NewLibCore.Data.SQL.Mapper.Extension
 {
-    public abstract class DomainModelBase : PropertyMonitor
+    public abstract class EntityBase : PropertyMonitor
     {
-        protected DomainModelBase()
+        protected EntityBase()
         {
             IsDeleted = false;
         }

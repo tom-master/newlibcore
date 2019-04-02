@@ -36,7 +36,7 @@ namespace NewLibCore.Data.SQL.Mapper
             _executeCore.Rollback();
         }
 
-        public TModel Add<TModel>(TModel model) where TModel : DomainModelBase, new()
+        public TModel Add<TModel>(TModel model) where TModel : EntityBase, new()
         {
             BuilderBase<TModel> builder = new AddBuilder<TModel>(model, true);
             var translationResult = builder.Build();

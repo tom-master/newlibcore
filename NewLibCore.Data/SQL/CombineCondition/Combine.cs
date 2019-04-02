@@ -8,7 +8,7 @@ namespace NewLibCore.Data.SQL.CombineCondition
     /// 规约抽象类
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class Combine<T> where T : DomainModelBase
+    public abstract class Combine<T> where T : EntityBase
     {
         /// <summary>
         /// 查询表达式

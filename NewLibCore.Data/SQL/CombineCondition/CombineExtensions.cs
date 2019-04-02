@@ -17,7 +17,7 @@ namespace NewLibCore.Data.SQL.CombineCondition
         /// <param name="left"></param>
         /// <param name="right"></param>
         /// <returns></returns>
-        public static void And<T>(this Combine<T> left, Expression<Func<T, Boolean>> right) where T : DomainModelBase
+        public static void And<T>(this Combine<T> left, Expression<Func<T, Boolean>> right) where T : EntityBase
         {
 
             var internalParameter = Expression.Parameter(typeof(T), "entity");
@@ -36,7 +36,7 @@ namespace NewLibCore.Data.SQL.CombineCondition
         /// <param name="left"></param>
         /// <param name="right"></param>
         /// <returns></returns>
-        public static void Or<T>(this Combine<T> left, Expression<Func<T, Boolean>> right) where T : DomainModelBase
+        public static void Or<T>(this Combine<T> left, Expression<Func<T, Boolean>> right) where T : EntityBase
         {
             var internalParameter = Expression.Parameter(typeof(T), "entity");
             var parameterVister = new ParameterVisitor(internalParameter);
@@ -52,7 +52,7 @@ namespace NewLibCore.Data.SQL.CombineCondition
         /// <typeparam name="T"></typeparam>
         /// <param name="left"></param>
         /// <returns></returns>
-        public static void Not<T>(this Combine<T> left) where T : DomainModelBase
+        public static void Not<T>(this Combine<T> left) where T : EntityBase
         {
             var internalParameter = left.Expression.Parameters[0];
             var newExpression = Expression.Not(left.Expression.Body);
@@ -66,7 +66,7 @@ namespace NewLibCore.Data.SQL.CombineCondition
         /// <param name="left"></param>
         /// <param name="right"></param>
         /// <returns></returns>
-        public static Combine<T> OrderByDescending<T>(this Combine<T> left, Expression<Func<T, Object>> right) where T : DomainModelBase
+        public static Combine<T> OrderByDescending<T>(this Combine<T> left, Expression<Func<T, Object>> right) where T : EntityBase
         {
             left.AddOrderByExpression(right);
             return left;
