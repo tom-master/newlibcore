@@ -11,7 +11,7 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
             IsDeleted = false;
         }
 
-        [PrimaryKey] 
+        [PrimaryKey]
         public Int32 Id { get; internal set; }
 
         [DefaultValue(typeof(Boolean))]
