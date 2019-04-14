@@ -23,7 +23,7 @@ namespace NewLibCore.Run
     }
 
     public partial class Config : EntityBase
-    {
+    { 
         /// <summary>
         /// 皮肤
         /// </summary>
