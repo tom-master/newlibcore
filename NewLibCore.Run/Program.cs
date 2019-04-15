@@ -34,7 +34,7 @@ namespace NewLibCore.Run
         /// 用户头像
         /// </summary>
         [Required, InputRange(150)]
-        public String UserFace { get; private set; }
+        public String UserFace { get; private set; } 
 
         /// <summary>
         /// app尺寸
