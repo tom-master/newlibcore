@@ -24,9 +24,9 @@ namespace NewLibCore.Run
 
     public partial class Config : EntityBase
     { 
-        /// <summary>
+        /// <summary> 
         /// 皮肤
-        /// </summary>
+        /// </summary> 
         [Required, InputRange(10)]
         public String Skin { get; private set; }
 
