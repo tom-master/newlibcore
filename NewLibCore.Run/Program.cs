@@ -16,9 +16,7 @@ namespace NewLibCore.Run
         {
             MapperFactory.GetFactoryInstance().SwitchToMySql().InitLogger();
             while (true) 
-            {
-                
-            }
+            { }
         }
     }
 
