@@ -52,7 +52,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
         ISelectEntityMapper<TModel> OrderBy<TOrder, TKey>(Expression<Func<TOrder, TKey>> order, OrderByType orderBy = OrderByType.DESC) where TOrder : EntityBase, new();
     }
- 
+  
     public interface ISqlExecutor
     {
         List<TModel> ToList<TModel>(String sql, IEnumerable<EntityParameter> parameters = null) where TModel : new();
