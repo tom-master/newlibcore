@@ -59,8 +59,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
         TModel ToSingle<TModel>(String sql, IEnumerable<EntityParameter> parameters = null) where TModel : new();
 
-
-
+ 
     }
 
 }
