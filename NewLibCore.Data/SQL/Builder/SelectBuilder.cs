@@ -36,7 +36,7 @@ namespace NewLibCore.Data.SQL.Builder
 
             translation.Translate(_statementStore);
 
-            if (_statementStore != null && _statementStore.Expression != null)
+            if (_statementStore != null && _statementStore.WhereExpression != null)
             {
                 translation.TranslationResult.Append($@" AND {fields.tableAliasName}.IsDeleted = 0");
             }

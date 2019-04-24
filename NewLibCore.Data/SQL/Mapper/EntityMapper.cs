@@ -89,6 +89,21 @@ namespace NewLibCore.Data.SQL.Mapper
             var dataTable = executeResult.Value as DataTable;
             return dataTable.AsList<TModel>();
         }
+        
+        public EntityMapper From<TModel>() where TModel : PropertyMonitor, new()
+        {
+            return this;
+        }
+
+        public EntityMapper Select<TModel>(Expression<Func<TModel, dynamic>> fields = null) where TModel : PropertyMonitor
+        {
+            return this;
+        }
+
+        public EntityMapper Where<TModel>(Expression<Func<TModel, Boolean>> where = null) where TModel : PropertyMonitor, new()
+        {
+            return this;
+        }
 
         public EntityMapper OrderBy<TModel, TKey>(Expression<Func<TModel, TKey>> order) where TModel : PropertyMonitor, new()
         {

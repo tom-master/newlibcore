@@ -18,14 +18,29 @@ namespace NewLibCore.Run
 
             using (var context = new EntityMapper())
             {
-                var r1 = context.RightJoin<Member, User>((a, b) => a.UserId == b.Id).OrderBy<Member, Int32>(d => d.Id).Find<Member>(w => w.Name != "", a => new { a.Id, a.Name, a.AppUrl });
-
-                //var name = "admin";
-                //var user = context.Find<User>(f => f.Name.Contains(name));
+                context.Select<Role>().From<Role>()
+                .InnerJoin<Role, UserRole>((a, b) => a.Id == b.RoleId)
+                .Where<UserRole>(w => w.UserId == 4);
             }
         }
     }
 
+    public class UserRole : EntityBase
+    {
+        [Required]
+        public Int32 UserId { get; private set; }
+
+        [Required]
+        public Int32 RoleId { get; private set; }
+
+        public UserRole(Int32 userId, Int32 roleId)
+        {
+            UserId = userId;
+            RoleId = roleId;
+        }
+
+        public UserRole() { }
+    }
     public partial class User : EntityBase
     {
         /// <summary>

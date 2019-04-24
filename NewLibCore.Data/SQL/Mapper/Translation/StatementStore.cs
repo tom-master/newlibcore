@@ -7,7 +7,9 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
 {
     internal class StatementStore
     {
-        internal Expression Expression { get; private set; }
+        internal Expression SelectFields { get; private set; }
+
+        internal Expression WhereExpression { get; private set; }
 
         internal Expression OrderExpression { get; private set; }
 
@@ -18,6 +20,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
         internal OrderByType? OrderByType { get; private set; }
 
         internal IList<JoinStatementStore> JoinStores { get; private set; }
+
 
         internal StatementStore()
         {
@@ -35,9 +38,14 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
             OrderExpression = order;
         }
 
-        internal void AddWhere<TModel>(Expression<Func<TModel, Boolean>> expression)
+        internal void AddWhere<TModel>(Expression<Func<TModel, Boolean>> expression) where TModel : PropertyMonitor, new()
         {
-            Expression = expression;
+            WhereExpression = expression;
+        }
+
+        internal void AddSelectFields<TModl>(Expression<Func<TModl, dynamic>> expression) where TModl : PropertyMonitor, new()
+        {
+            SelectFields = expression;
         }
 
         internal void AddJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> expression, JoinType joinType) where TLeft : PropertyMonitor, new()
@@ -72,7 +80,8 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
 
         internal void Clear()
         {
-            Expression = null;
+            SelectFields = null;
+            WhereExpression = null;
             OrderByType = null;
             AliasName = "";
             OrderByType = null;

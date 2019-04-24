@@ -46,11 +46,11 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
                 _tableAliasMapper.Clear();
             }
 
-            if (statementStore.Expression != null)
+            if (statementStore.WhereExpression != null)
             {
                 _joinType = JoinType.NONE;
                 TranslationResult.Append($@" WHERE {(statementStore.AliasName == null ? "" : $@"{statementStore.AliasName}.")}");
-                InternalBuildWhere(statementStore.Expression);
+                InternalBuildWhere(statementStore.WhereExpression);
             }
 
             return TranslationResult;
