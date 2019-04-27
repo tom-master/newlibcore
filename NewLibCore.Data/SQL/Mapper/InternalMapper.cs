@@ -93,7 +93,7 @@ namespace NewLibCore.Data.SQL.Mapper
             MapperFactory.Logger.Write("INFO", $@"总共花费{Math.Round(sw.Elapsed.TotalSeconds, 2)}s"); 
 
             sw.Stop();
-            return models;
+            return models; 
         }
 
         public ISelectEntityMapper<TModel> Select<T>(Expression<Func<TModel, T, dynamic>> fields = null) where T : EntityBase, new()
