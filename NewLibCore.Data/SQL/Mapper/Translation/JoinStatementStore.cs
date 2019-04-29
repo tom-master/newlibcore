@@ -12,8 +12,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
         internal IList<KeyValuePair<String, String>> AliasNameMappers { get; set; } = new List<KeyValuePair<String, String>>();
 
         internal Expression Expression { get; set; }
-
-        internal String AliasName { get { return Guid.NewGuid().ToString().Replace("-", ""); } }
+        
     }
 }
  

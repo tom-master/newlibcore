@@ -9,22 +9,22 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
     {
         internal Expression SelectFields { get; private set; }
 
-        internal Expression WhereExpression { get; private set; }
+        internal Expression ConditionExpression { get; private set; }
 
         internal Expression OrderExpression { get; private set; }
 
-        internal String AliasName { get; set; }
+        internal IList<KeyValuePair<String, String>> AliasNameMappers { get; set; } = new List<KeyValuePair<String, String>>();
 
-        internal JoinType JoinType { get { return JoinType.NONE; } }
+        internal JoinType JoinType { get; private set; }
 
         internal OrderByType? OrderByType { get; private set; }
 
-        internal IList<JoinStatementStore> JoinStores { get; private set; }
+        internal IList<StatementStore> JoinStores { get; private set; }
 
 
         internal StatementStore()
         {
-            JoinStores = new List<JoinStatementStore>();
+            JoinStores = new List<StatementStore>();
         }
 
         internal void AddOrderBy<TModel, TKey>(Expression<Func<TModel, TKey>> order, OrderByType orderByType)
@@ -40,7 +40,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
 
         internal void AddWhere<TModel>(Expression<Func<TModel, Boolean>> expression) where TModel : PropertyMonitor, new()
         {
-            WhereExpression = expression;
+            ConditionExpression = expression;
         }
 
         internal void AddSelectFields<TModl>(Expression<Func<TModl, dynamic>> expression) where TModl : PropertyMonitor, new()
@@ -61,9 +61,9 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
                 throw new ArgumentNullException($@"在决定调用AddJoin时,参数:{nameof(joinType)} 不能为none");
             }
 
-            var joinStore = new JoinStatementStore
+            var joinStore = new StatementStore
             {
-                Expression = expression,
+                ConditionExpression = expression,
                 JoinType = joinType
             };
             foreach (var item in expression.Parameters)
