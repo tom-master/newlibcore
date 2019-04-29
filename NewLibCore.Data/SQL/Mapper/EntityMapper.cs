@@ -21,21 +21,6 @@ namespace NewLibCore.Data.SQL.Mapper
             _statementStore = new StatementStore();
         }
 
-        public void OpenTransaction()
-        {
-            _executeCore.OpenTransaction();
-        }
-
-        public void Commit()
-        {
-            _executeCore.Commit();
-        }
-
-        public void Rollback()
-        {
-            _executeCore.Rollback();
-        }
-
         public TModel Add<TModel>(TModel model) where TModel : EntityBase, new()
         {
             BuilderBase<TModel> builder = new AddBuilder<TModel>(model, true);
@@ -89,21 +74,7 @@ namespace NewLibCore.Data.SQL.Mapper
             var dataTable = executeResult.Value as DataTable;
             return dataTable.AsList<TModel>();
         }
-        
-        public EntityMapper From<TModel>() where TModel : PropertyMonitor, new()
-        {
-            return this;
-        }
 
-        public EntityMapper Select<TModel>(Expression<Func<TModel, dynamic>> fields = null) where TModel : PropertyMonitor
-        {
-            return this;
-        }
-
-        public EntityMapper Where<TModel>(Expression<Func<TModel, Boolean>> where = null) where TModel : PropertyMonitor, new()
-        {
-            return this;
-        }
 
         public EntityMapper OrderBy<TModel, TKey>(Expression<Func<TModel, TKey>> order) where TModel : PropertyMonitor, new()
         {

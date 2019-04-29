@@ -8,7 +8,7 @@ using NewLibCore.Data.SQL.Mapper.Extension;
 
 namespace NewLibCore.Data.SQL.Mapper.Execute
 {
-    internal sealed class ExecuteCore : IDisposable
+    public sealed class ExecuteCore : IDisposable
     {
         private DbConnection _connection;
 
