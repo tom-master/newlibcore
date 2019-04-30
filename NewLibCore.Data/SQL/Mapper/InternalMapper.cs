@@ -102,6 +102,7 @@ namespace NewLibCore.Data.SQL.Mapper
             {
                 _statementStore.Add(fields);
             }
+
             return this;
         }
 
