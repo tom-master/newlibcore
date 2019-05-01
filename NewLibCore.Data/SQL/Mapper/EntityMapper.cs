@@ -23,7 +23,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
         public TModel Add<TModel>(TModel model) where TModel : EntityBase, new()
         {
-            BuilderBase<TModel> builder = new AddBuilder<TModel>(model, true);
+            IBuilder<TModel> builder = new AddBuilder<TModel>(model, true);
             var translationResult = builder.Build();
             var executeResult = _executeCore.Execute(ExecuteType.INSERT, translationResult.SqlStore.ToString(), translationResult.ParameterStore, CommandType.Text);
             model.Id = (Int32)executeResult.Value;
@@ -34,30 +34,10 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             _statementStore.AddWhere(where);
 
-            BuilderBase<TModel> builder = new ModifyBuilder<TModel>(model, _statementStore, true);
+            IBuilder<TModel> builder = new ModifyBuilder<TModel>(model, _statementStore, true);
             var translationResult = builder.Build();
             var executeResult = _executeCore.Execute(ExecuteType.UPDATE, translationResult.SqlStore.ToString(), translationResult.ParameterStore, CommandType.Text);
             return (Int32)executeResult.Value > 0;
-        }
-
-        public IList<TModel> Find<TModel>(Expression<Func<TModel, Boolean>> where) where TModel : PropertyMonitor, new()
-        {
-            return Find(where, null, null, null);
-        }
-
-        public IList<TModel> Find<TModel>(Expression<Func<TModel, Boolean>> where, Expression<Func<TModel, dynamic>> fields) where TModel : PropertyMonitor, new()
-        {
-            return Find(where, fields, null, null);
-        }
-
-        public IList<TModel> Find<TModel>(Expression<Func<TModel, dynamic>> fields) where TModel : PropertyMonitor, new()
-        {
-            return Find(null, fields, null, null);
-        }
-
-        public IList<TModel> Find<TModel>(Expression<Func<TModel, dynamic>> fields, Int32 pageIndex, Int32 pageSize) where TModel : PropertyMonitor, new()
-        {
-            return Find(null, fields, pageIndex, pageSize);
         }
 
         public IList<TModel> Find<TModel>(Expression<Func<TModel, Boolean>> where = null,
@@ -67,7 +47,7 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             _statementStore.AddWhere(where);
 
-            BuilderBase<TModel> builder = new SelectBuilder<TModel>(_statementStore, fields, pageIndex, pageSize);
+            IBuilder<TModel> builder = new SelectBuilder<TModel>(_statementStore, fields, pageIndex, pageSize);
             var translationResult = builder.Build();
             var executeResult = _executeCore.Execute(ExecuteType.SELECT, translationResult.SqlStore.ToString(), translationResult.ParameterStore, CommandType.Text);
             _statementStore.Clear();
@@ -75,6 +55,31 @@ namespace NewLibCore.Data.SQL.Mapper
             return dataTable.AsList<TModel>();
         }
 
+        public EntityMapper Select<TModel>()
+        {
+            return this;
+        }
+
+        public void ToList()
+        {
+
+        }
+
+        public void ToOne()
+        {
+
+        }
+
+        public EntityMapper Where<TModel>(Expression<Func<TModel, Boolean>> expression)
+        {
+            return this;
+        }
+
+        public EntityMapper Page(Int32 pageIndex, Int32 pageSize, out Int32 totalCount)
+        {
+            totalCount = 0;
+            return this;
+        }
 
         public EntityMapper OrderBy<TModel, TKey>(Expression<Func<TModel, TKey>> order) where TModel : PropertyMonitor, new()
         {

@@ -18,9 +18,9 @@ namespace NewLibCore.Run
 
             using (var context = new EntityMapper())
             {
-                //context.Select<Role>().From<Role>()
-                //.InnerJoin<Role, UserRole>((a, b) => a.Id == b.RoleId)
-                //.Where<UserRole>(w => w.UserId == 4);
+                context.Select<Role>()
+                .InnerJoin<Role, UserRole>((a, b) => a.Id == b.RoleId)
+                .Where<UserRole>(w => w.UserId == 4).ToList();
             }
         }
     }

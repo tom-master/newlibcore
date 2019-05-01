@@ -7,32 +7,34 @@ using NewLibCore.Data.SQL.Mapper.Translation;
 
 namespace NewLibCore.Data.SQL.Builder
 {
-    internal class ModifyBuilder<TModel> : BuilderBase<TModel> where TModel : PropertyMonitor, new()
+    internal class ModifyBuilder<TModel> : IBuilder<TModel> where TModel : PropertyMonitor, new()
     {
         private readonly Boolean _isValidate;
         private readonly StatementStore _statementStore;
+        private readonly TModel _model;
 
         public ModifyBuilder(TModel model, StatementStore statementStore, Boolean isValidate = false) : base(model)
         {
             _isValidate = isValidate;
             _statementStore = statementStore;
+            _model = model;
         }
 
-        protected internal override TranslationCoreResult Build()
+        public TranslationCoreResult Build()
         {
-            var properties = ModelInstance.PropertyInfos;
+            var properties = _model.PropertyInfos;
             if (!properties.Any())
             {
                 throw new ArgumentNullException("没有找到需要更新的字段");
             }
-            ModelInstance.SetUpdateTime();
+            _model.SetUpdateTime();
             if (_isValidate)
             {
-                ModelInstance.Validate(properties);
+                _model.Validate(properties);
             }
 
             var translation = new TranslationCore();
-            translation.TranslationResult.Append($@"UPDATE {ModelType.Name} SET {String.Join(",", properties.Select(s => $@"{s.Name}=@{s.Name}"))}", properties.Select(c => new EntityParameter($@"@{c.Name}", c.GetValue(ModelInstance))));
+            translation.TranslationResult.Append($@"UPDATE {typeof(TModel).Name} SET {String.Join(",", properties.Select(s => $@"{s.Name}=@{s.Name}"))}", properties.Select(c => new EntityParameter($@"@{c.Name}", c.GetValue(_model))));
 
             if (_statementStore != null && _statementStore.ConditionExpression != null)
             {

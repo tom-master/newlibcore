@@ -10,36 +10,37 @@ using NewLibCore.Data.SQL.Mapper.Translation;
 
 namespace NewLibCore.Data.SQL.Builder
 {
-    internal class AddBuilder<TModel> : BuilderBase<TModel> where TModel : PropertyMonitor, new()
+    internal class AddBuilder<TModel> : IBuilder<TModel> where TModel : PropertyMonitor, new()
     {
         private readonly Boolean _isVerifyModel;
         private readonly IEnumerable<PropertyInfo> _propertyInfos;
-
-        internal AddBuilder(TModel model, Boolean isVerifyModel = false) : base(model)
+        private readonly TModel _instance;
+        internal AddBuilder(TModel model, Boolean isVerifyModel = false)
         {
             _isVerifyModel = isVerifyModel;
-            _propertyInfos = ModelType.GetProperties();
+            _propertyInfos = typeof(TModel).GetProperties();
+            _instance = model;
         }
 
-        protected internal override TranslationCoreResult Build()
+        public TranslationCoreResult Build()
         {
             var propertyInfos = _propertyInfos.Where(w => w.GetCustomAttributes<PropertyValidate>().Any());
             if (!propertyInfos.Any())
             {
-                throw new Exception($@"{ModelType.Name}:没有要插入的列");
+                throw new Exception($@"{typeof(TModel).Name}:没有要插入的列");
             }
 
-            ModelInstance.SetAddTime();
+            _instance.SetAddTime();
             if (_isVerifyModel)
             {
-                ModelInstance.Validate(propertyInfos);
+                _instance.Validate(propertyInfos);
             }
             var translationResult = new TranslationCoreResult();
             var fields = String.Join(",", propertyInfos.Select(c => c.Name));
             var placeHolder = String.Join(",", propertyInfos.Select(key => $@"@{key.Name}"));
-            var entityParameters = propertyInfos.Select(c => new EntityParameter($@"@{c.Name}", c.GetValue(ModelInstance)));
+            var entityParameters = propertyInfos.Select(c => new EntityParameter($@"@{c.Name}", c.GetValue(_instance)));
 
-            translationResult.Append($@" INSERT {ModelType.Name} ({fields}) VALUES ({placeHolder}) {MapperFactory.Instance.Extension.Identity}", entityParameters);
+            translationResult.Append($@" INSERT {typeof(TModel).Name} ({fields}) VALUES ({placeHolder}) {MapperFactory.Instance.Extension.Identity}", entityParameters);
             return translationResult;
         }
     }
