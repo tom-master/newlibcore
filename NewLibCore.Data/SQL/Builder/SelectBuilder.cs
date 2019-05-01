@@ -32,11 +32,11 @@ namespace NewLibCore.Data.SQL.Builder
             var fields = ExtractFieldsAndTableName(_fields);
 
             translation.TranslationResult.Append($@"SELECT {fields.fields} FROM {typeof(TModel).Name} AS {fields.tableAliasName} ");
-            _statementStore.AliasName = fields.tableAliasName;
+            //_statementStore.AliasName = fields.tableAliasName;
 
             translation.Translate(_statementStore);
 
-            if (_statementStore != null && _statementStore.WhereExpression != null)
+            if (_statementStore != null && _statementStore.ConditionExpression != null)
             {
                 translation.TranslationResult.Append($@" AND {fields.tableAliasName}.IsDeleted = 0");
             }

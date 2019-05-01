@@ -13,7 +13,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
 
         internal Expression OrderExpression { get; private set; }
 
-        internal IList<KeyValuePair<String, String>> AliasNameMappers { get; set; } = new List<KeyValuePair<String, String>>();
+        internal KeyValuePair<String, String>? AliasName { get; private set; }
 
         internal JoinType JoinType { get; private set; }
 
@@ -21,10 +21,10 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
 
         internal IList<StatementStore> JoinStores { get; private set; }
 
-
         internal StatementStore()
         {
             JoinStores = new List<StatementStore>();
+            AliasName = new KeyValuePair<String, String>();
         }
 
         internal void AddOrderBy<TModel, TKey>(Expression<Func<TModel, TKey>> order, OrderByType orderByType)
@@ -61,31 +61,31 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
                 throw new ArgumentNullException($@"在决定调用AddJoin时,参数:{nameof(joinType)} 不能为none");
             }
 
-            var joinStore = new StatementStore
-            {
-                ConditionExpression = expression,
-                JoinType = joinType
-            };
             foreach (var item in expression.Parameters)
             {
                 if (typeof(TLeft) == item.Type)
                 {
                     continue;
                 }
-                joinStore.AliasNameMappers.Add(new KeyValuePair<String, String>(item.Name, item.Type.Name));
+                var joinStore = new StatementStore
+                {
+                    ConditionExpression = expression,
+                    JoinType = joinType,
+                    AliasName = new KeyValuePair<string, string>(item.Name, item.Type.Name)
+                };
+                JoinStores.Add(joinStore);
             }
-
-            JoinStores.Add(joinStore);
         }
 
         internal void Clear()
         {
-            SelectFields = null;
-            WhereExpression = null;
-            OrderByType = null;
-            AliasName = "";
-            OrderByType = null;
+            SelectFields = default;
+            ConditionExpression = default;
+            OrderByType = default;
+            AliasName = default;
+            OrderByType = default;
             JoinStores.Clear();
         }
     }
+
 }

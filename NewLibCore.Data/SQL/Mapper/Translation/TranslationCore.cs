@@ -31,26 +31,28 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
         {
             foreach (var item in statementStore.JoinStores)
             {
-                foreach (var parameter in ((LambdaExpression)item.Expression).Parameters)
+                foreach (var parameter in ((LambdaExpression)item.ConditionExpression).Parameters)
                 {
                     _tableAliasMapper.Add(parameter.Name, parameter.Type.Name.ToLower());
                 }
-
-                foreach (var parameter in item.AliasNameMappers)
+                if (item.AliasName == null)
                 {
-                    var joinTemplate = MapperFactory.Instance.JoinBuilder(item.JoinType, parameter.Value, parameter.Value.ToLower());
-                    TranslationResult.Append(joinTemplate);
+                    continue;
                 }
+
+                var joinTemplate = MapperFactory.Instance.JoinBuilder(item.JoinType, item.AliasName.Value.Value, item.AliasName.Value.Value.ToLower());
+                TranslationResult.Append(joinTemplate);
+
                 _joinType = item.JoinType;
-                InternalBuildWhere(item.Expression);
+                InternalBuildWhere(item.ConditionExpression);
                 _tableAliasMapper.Clear();
             }
 
-            if (statementStore.WhereExpression != null)
+            if (statementStore.ConditionExpression != null)
             {
                 _joinType = JoinType.NONE;
                 TranslationResult.Append($@" WHERE {(statementStore.AliasName == null ? "" : $@"{statementStore.AliasName}.")}");
-                InternalBuildWhere(statementStore.WhereExpression);
+                InternalBuildWhere(statementStore.ConditionExpression);
             }
 
             return TranslationResult;
