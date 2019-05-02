@@ -32,7 +32,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
 		ISelectEntityMapper<TModel> Select(Expression<Func<TModel, dynamic>> fields = null);
 
-		ISelectEntityMapper<TModel> Where(Expression<Func<TModel, Boolean>> expression = null);
+		ISelectEntityMapper<TModel> Where<T>(Expression<Func<T, Boolean>> expression = null) where T : EntityBase, new();
 
 		ISelectEntityMapper<TModel> Page(Int32 pageIndex, Int32 pageSize);
 
@@ -116,7 +116,7 @@ namespace NewLibCore.Data.SQL.Mapper
 			return default;
 		}
 
-		public ISelectEntityMapper<TModel> Where(Expression<Func<TModel, Boolean>> expression = null)
+		public ISelectEntityMapper<TModel> Where<T>(Expression<Func<T, Boolean>> expression = null) where T : EntityBase, new()
 		{
 			if (expression != null)
 			{
