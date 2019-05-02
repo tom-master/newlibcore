@@ -7,6 +7,7 @@ using NewLibCore.Data.SQL.Builder;
 using NewLibCore.Data.SQL.Mapper.Execute;
 using NewLibCore.Data.SQL.Mapper.Extension;
 using NewLibCore.Data.SQL.Mapper.Translation;
+using NewLibCore.InternalExtension;
 using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper
@@ -33,7 +34,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
 		ISelectEntityMapper<TModel> Where(Expression<Func<TModel, Boolean>> expression = null);
 
-		ISelectEntityMapper<TModel> Page(Int32 pageIndex, Int32 pageSize, out Int32 totalCount);
+		ISelectEntityMapper<TModel> Page(Int32 pageIndex, Int32 pageSize);
 
 		ISelectEntityMapper<TModel> LeftJoin<TRight>(Expression<Func<TModel, TRight, Boolean>> expression) where TRight : EntityBase, new();
 
@@ -44,13 +45,43 @@ namespace NewLibCore.Data.SQL.Mapper
 		ISelectEntityMapper<TModel> OrderBy<TOrder, TKey>(Expression<Func<TOrder, TKey>> order, OrderByType orderBy = OrderByType.DESC) where TOrder : EntityBase, new();
 	}
 
+	public interface ISqlExecutor<TModel> where TModel : EntityBase, new()
+	{
+		TModel Execute(String sql, IEnumerable<EntityParameter> parameters = null);
+	}
+
+	public class SqlExecutor<TModel> : ISqlExecutor<TModel> where TModel : EntityBase, new()
+	{
+		private ExecuteCore _executeCore;
+
+		public SqlExecutor(ExecuteCore executeCore)
+		{
+			_executeCore = executeCore;
+		}
+
+		public TModel Execute(String sql, IEnumerable<EntityParameter> parameters = null)
+		{
+			ExecuteCoreResult executeResult;
+			if (typeof(TModel).IsNumeric())
+			{
+				executeResult = _executeCore.Execute(ExecuteType.SELECT_SINGLE, sql, parameters, CommandType.Text);
+				return (TModel)executeResult.Value;
+			}
+			executeResult = _executeCore.Execute(ExecuteType.SELECT, sql, parameters, CommandType.Text);
+			var dataTable = (DataTable)executeResult.Value;
+			return (TModel)dataTable.AsList<TModel>();
+		}
+	}
+
 	public class SelectEntityMapper<TModel> : ISelectEntityMapper<TModel> where TModel : EntityBase, new()
 	{
-		private readonly TModel _instance;
+		private ExecuteCore _execute;
+		private StatementStore _statementStore;
 
-		public SelectEntityMapper()
+		public SelectEntityMapper(ExecuteCore executeCore)
 		{
-			_instance = Activator.CreateInstance<TModel>();
+			_execute = executeCore;
+			_statementStore = new StatementStore();
 		}
 
 		public TModel ToOne()
@@ -60,9 +91,9 @@ namespace NewLibCore.Data.SQL.Mapper
 
 		public IList<TModel> ToList()
 		{
-			IBuilder<TModel> builder = new SelectBuilder<TModel>(_instance.StatementStore);
+			IBuilder<TModel> builder = new SelectBuilder<TModel>(_statementStore);
 			var translationResult = builder.Build();
-			var executeResult = _instance.ExecuteCore.Execute(ExecuteType.SELECT, translationResult.SqlStore.ToString(), translationResult.ParameterStore, CommandType.Text);
+			var executeResult = _execute.Execute(ExecuteType.SELECT, translationResult.SqlStore.ToString(), translationResult.ParameterStore, CommandType.Text);
 			var dataTable = executeResult.Value as DataTable;
 			return dataTable.AsList<TModel>();
 		}
@@ -71,7 +102,7 @@ namespace NewLibCore.Data.SQL.Mapper
 		{
 			if (where != null)
 			{
-				_instance.StatementStore.Add(where);
+				_statementStore.Add(where);
 			}
 			return default;
 		}
@@ -80,7 +111,7 @@ namespace NewLibCore.Data.SQL.Mapper
 		{
 			if (fields != null)
 			{
-				_instance.StatementStore.Add(fields);
+				_statementStore.Add(fields);
 			}
 			return default;
 		}
@@ -89,56 +120,67 @@ namespace NewLibCore.Data.SQL.Mapper
 		{
 			if (expression != null)
 			{
-				_instance.StatementStore.Add(expression);
+				_statementStore.Add(expression);
 			}
 			return this;
 		}
 
-		public ISelectEntityMapper<TModel> Page(Int32 pageIndex, Int32 pageSize, out Int32 totalCount)
+		public ISelectEntityMapper<TModel> Page(Int32 pageIndex, Int32 pageSize)
 		{
-			totalCount = 0;
+			_statementStore.AddPage(pageIndex, pageSize);
 			return this;
 		}
 
 		public ISelectEntityMapper<TModel> LeftJoin<TRight>(Expression<Func<TModel, TRight, Boolean>> expression) where TRight : EntityBase, new()
 		{
 			Parameter.Validate(expression);
-			_instance.StatementStore.Add(expression, JoinType.LEFT);
+			_statementStore.Add(expression, JoinType.LEFT);
 			return this;
 		}
 
 		public ISelectEntityMapper<TModel> RightJoin<TRight>(Expression<Func<TModel, TRight, Boolean>> expression) where TRight : EntityBase, new()
 		{
 			Parameter.Validate(expression);
-			_instance.StatementStore.Add(expression, JoinType.RIGHT);
+			_statementStore.Add(expression, JoinType.RIGHT);
 			return this;
 		}
 
 		public ISelectEntityMapper<TModel> InnerJoin<TRight>(Expression<Func<TModel, TRight, Boolean>> expression) where TRight : EntityBase, new()
 		{
 			Parameter.Validate(expression);
-			_instance.StatementStore.Add(expression, JoinType.INNER);
+			_statementStore.Add(expression, JoinType.INNER);
 			return this;
 		}
 
 		public ISelectEntityMapper<TModel> OrderBy<TOrder, TKey>(Expression<Func<TOrder, TKey>> order, OrderByType orderBy = OrderByType.DESC) where TOrder : EntityBase, new()
 		{
 			Parameter.Validate(order);
-			_instance.StatementStore.AddOrderBy(order, orderBy);
+			_statementStore.AddOrderBy(order, orderBy);
 			return this;
 		}
 	}
 
 	public class UpdateEntityMapper<TModel> : IUpdateEntityMapper<TModel> where TModel : EntityBase, new()
 	{
+		private ExecuteCore _execute;
+		private StatementStore _statementStore;
+
+		public UpdateEntityMapper(ExecuteCore executeCore)
+		{
+			_execute = executeCore;
+			_statementStore = new StatementStore();
+		}
+
 		public Boolean Update(TModel model, Expression<Func<TModel, Boolean>> expression)
 		{
-			model.StatementStore.Add(expression);
-
-			IBuilder<TModel> builder = new ModifyBuilder<TModel>(model, model.StatementStore, true);
-			var translationResult = builder.Build();
-			var executeResult = model.ExecuteCore.Execute(ExecuteType.UPDATE, translationResult.SqlStore.ToString(), translationResult.ParameterStore, CommandType.Text);
-			return (Int32)executeResult.Value > 0;
+			using (_execute)
+			{
+				_statementStore.Add(expression);
+				IBuilder<TModel> builder = new ModifyBuilder<TModel>(model, _statementStore, true);
+				var translationResult = builder.Build();
+				var executeResult = _execute.Execute(ExecuteType.UPDATE, translationResult.SqlStore.ToString(), translationResult.ParameterStore, CommandType.Text);
+				return (Int32)executeResult.Value > 0;
+			}
 		}
 	}
 
@@ -146,9 +188,9 @@ namespace NewLibCore.Data.SQL.Mapper
 	{
 		private readonly ExecuteCore _executeCore;
 
-		public AddEntityMapper()
+		public AddEntityMapper(ExecuteCore executeCore)
 		{
-			_executeCore = new ExecuteCore();
+			_executeCore = executeCore;
 		}
 
 		public TModel Add(TModel model)

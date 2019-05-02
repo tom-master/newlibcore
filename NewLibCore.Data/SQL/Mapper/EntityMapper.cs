@@ -7,6 +7,7 @@ using NewLibCore.Data.SQL.Mapper.Execute;
 using NewLibCore.Data.SQL.Mapper.Extension;
 using NewLibCore.Data.SQL.Mapper.Translation;
 using NewLibCore.InternalExtension;
+using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper
 {
@@ -19,27 +20,22 @@ namespace NewLibCore.Data.SQL.Mapper
 			_executeCore = new ExecuteCore();
 		}
 
-		public ISelectEntityMapper<TModel> CreateSelect<TModel>() where TModel : EntityBase, new()
+		public TModel Add<TModel>(TModel model) where TModel : EntityBase, new()
 		{
-			return new SelectEntityMapper<TModel>();
+			Parameter.Validate(model);
+			return new AddEntityMapper<TModel>(_executeCore).Add(model);
 		}
 
-		public IAddEntityMapper<TModel> CreateAdd<TModel>() where TModel : EntityBase, new()
+		public Boolean Modify<TModel>(TModel model, Expression<Func<TModel, Boolean>> expression) where TModel : EntityBase, new()
 		{
-			return new AddEntityMapper<TModel>();
+			Parameter.Validate(model);
+			Parameter.Validate(expression);
+			return new UpdateEntityMapper<TModel>(_executeCore).Update(model, expression);
 		}
 
-		public TModel ComplexSqlExecute<TModel>(String sql, IEnumerable<EntityParameter> sqlParameters = null) where TModel : new()
+		public ISelectEntityMapper<TModel> Select<TModel>(Expression<Func<TModel, dynamic>> fields = null) where TModel : EntityBase, new()
 		{
-			ExecuteCoreResult executeResult;
-			if (typeof(TModel).IsNumeric())
-			{
-				executeResult = _executeCore.Execute(ExecuteType.SELECT_SINGLE, sql, sqlParameters, CommandType.Text);
-				return (TModel)executeResult.Value;
-			}
-			executeResult = _executeCore.Execute(ExecuteType.SELECT, sql, sqlParameters, CommandType.Text);
-			var dataTable = (DataTable)executeResult.Value;
-			return (TModel)dataTable.AsList<TModel>();
+			return new SelectEntityMapper<TModel>(_executeCore).Select(fields);
 		}
 
 		public void Dispose()
