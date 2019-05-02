@@ -8,19 +8,22 @@ namespace NewLibCore.Data.SQL.Mapper.Config
 
         internal static ILogger Logger { get; private set; }
 
-        public static void InitLogger(ILogger logger = null)
+        public MapperFactory InitLogger(ILogger logger = null)
         {
             Logger = logger ?? new ConsoleLogger();
+            return this;
         }
 
-        public static void SwitchToMySql()
+        public MapperFactory SwitchToMySql()
         {
             SwitchTo(DatabaseType.MYSQL);
+            return this;
         }
 
-        public static void SwitchToMsSql()
+        public MapperFactory SwitchToMsSql()
         {
             SwitchTo(DatabaseType.MSSQL);
+            return this;
         }
 
         private static void SwitchTo(DatabaseType database)

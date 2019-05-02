@@ -13,9 +13,7 @@ namespace NewLibCore.Run
     {
         private static void Main(String[] args)
         {
-            MapperFactory.SwitchToMySql();
-            MapperFactory.InitLogger();
-
+            new MapperFactory().SwitchToMySql().InitLogger();
             using (var context = new EntityMapper())
             {
                 context.Select<Role>()

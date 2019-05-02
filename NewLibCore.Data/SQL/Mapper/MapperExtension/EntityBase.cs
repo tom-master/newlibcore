@@ -1,6 +1,8 @@
 ﻿using System;
+using NewLibCore.Data.SQL.Mapper.Execute;
 using NewLibCore.Data.SQL.Mapper.Extension.AssociationMapperExtension;
 using NewLibCore.Data.SQL.Mapper.Extension.PropertyExtension;
+using NewLibCore.Data.SQL.Mapper.Translation;
 
 namespace NewLibCore.Data.SQL.Mapper.Extension
 {
@@ -9,6 +11,9 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
         protected EntityBase()
         {
             IsDeleted = false;
+
+            StatementStore = new StatementStore();
+            ExecuteCore = new ExecuteCore();
         }
 
         [PrimaryKey]
@@ -40,5 +45,9 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
             LastModifyTime = DateTime.Now;
             OnPropertyChanged(nameof(LastModifyTime));
         }
+
+        internal StatementStore StatementStore { get; }
+
+        internal ExecuteCore ExecuteCore { get; }
     }
 }

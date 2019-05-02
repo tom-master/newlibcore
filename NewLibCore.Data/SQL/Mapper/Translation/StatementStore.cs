@@ -2,79 +2,83 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using NewLibCore.Data.SQL.Mapper.Extension;
+using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper.Translation
 {
+    internal abstract class Statement
+    {
+        protected internal Expression Expression { get; set; }
+
+        protected internal KeyValuePair<String, String> AliaNameMapper { get; set; }
+    }
+
+    internal class JoinStatement : Statement
+    {
+        protected internal JoinType JoinType { get; set; }
+    }
+
+    internal class OrderStatement : Statement
+    {
+        protected internal OrderByType OrderBy { get; set; }
+    }
+
+    internal class SimpleStatement : Statement
+    {
+
+    }
+
     internal class StatementStore
     {
-        internal Expression SelectFields { get; private set; }
-
-        internal Expression ConditionExpression { get; private set; }
-
-        internal Expression OrderExpression { get; private set; }
-
-        internal KeyValuePair<String, String>? AliasName { get; private set; }
-
-        internal JoinType JoinType { get; private set; }
-
-        internal OrderByType? OrderByType { get; private set; }
-
-        internal IList<StatementStore> JoinStores { get; private set; }
+        internal IList<Statement> Statements { get; private set; }
 
         internal StatementStore()
         {
-            JoinStores = new List<StatementStore>();
-            AliasName = new KeyValuePair<String, String>();
+            Statements = new List<Statement>();
         }
 
         internal void AddOrderBy<TModel, TKey>(Expression<Func<TModel, TKey>> order, OrderByType orderByType)
         {
-            if (order == null)
+            Parameter.Validate(order);
+            Statements.Add(new OrderStatement
             {
-                throw new ArgumentNullException($@"{order} 不能为null");
-            }
-
-            OrderByType = orderByType;
-            OrderExpression = order;
+                Expression = order,
+                OrderBy = orderByType
+            });
         }
 
-        internal void AddWhere<TModel>(Expression<Func<TModel, Boolean>> expression) where TModel : PropertyMonitor, new()
+        internal void Add<TModel, TJoin>(Expression<Func<TModel, TJoin, Boolean>> expression, JoinType joinType = JoinType.NONE) where TModel : PropertyMonitor, new() where TJoin : PropertyMonitor, new()
         {
-            ConditionExpression = expression;
+            Parameter.Validate(expression);
+
+            foreach (var item in expression.Parameters)
+            {
+                var joinStore = new JoinStatement
+                {
+                    Expression = expression,
+                    JoinType = joinType,
+                    AliaNameMapper = new KeyValuePair<string, string>(item.Name, item.Type.Name)
+                };
+                Statements.Add(joinStore);
+            }
+        }
+
+        internal void Add<TModel>(Expression<Func<TModel, Boolean>> expression) where TModel : PropertyMonitor, new()
+        {
+            Parameter.Validate(expression);
+            Statements.Add(new SimpleStatement
+            {
+                Expression = expression
+            });
         }
 
         internal void AddSelectFields<TModl>(Expression<Func<TModl, dynamic>> expression) where TModl : PropertyMonitor, new()
         {
-            SelectFields = expression;
-        }
-
-        internal void AddJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> expression, JoinType joinType) where TLeft : PropertyMonitor, new()
-            where TRight : PropertyMonitor, new()
-        {
-            if (expression == null)
+            Parameter.Validate(expression);
+            Statements.Add(new SimpleStatement
             {
-                throw new ArgumentNullException($@"{expression} 不能为null");
-            }
-
-            if (joinType == JoinType.NONE)
-            {
-                throw new ArgumentNullException($@"在决定调用AddJoin时,参数:{nameof(joinType)} 不能为none");
-            }
-
-            foreach (var item in expression.Parameters)
-            {
-                if (typeof(TLeft) == item.Type)
-                {
-                    continue;
-                }
-                var joinStore = new StatementStore
-                {
-                    ConditionExpression = expression,
-                    JoinType = joinType,
-                    AliasName = new KeyValuePair<string, string>(item.Name, item.Type.Name)
-                };
-                JoinStores.Add(joinStore);
-            }
+                Expression = expression
+            });
         }
 
         internal void Clear()
@@ -83,9 +87,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
             ConditionExpression = default;
             OrderByType = default;
             AliasName = default;
-            OrderByType = default;
             JoinStores.Clear();
         }
     }
-
 }

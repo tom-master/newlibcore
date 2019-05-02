@@ -9,27 +9,20 @@ using NewLibCore.Data.SQL.Mapper.Translation;
 
 namespace NewLibCore.Data.SQL.Builder
 {
-    internal class SelectBuilder<TModel> : BuilderBase<TModel> where TModel : PropertyMonitor, new()
+    internal class SelectBuilder<TModel> : IBuilder<TModel> where TModel : PropertyMonitor, new()
     {
-        private readonly Expression<Func<TModel, dynamic>> _fields;
-        private readonly Int32? _pageIndex;
-        private readonly Int32? _pageSize;
-
         private readonly StatementStore _statementStore;
 
-        internal SelectBuilder(StatementStore statementStore, Expression<Func<TModel, dynamic>> fields = null, Int32? pageIndex = null, Int32? pageSize = null) : base(null)
+        internal SelectBuilder(StatementStore statementStore)
         {
-            _fields = fields;
             _statementStore = statementStore;
-
-            _pageIndex = pageIndex;
-            _pageSize = pageSize;
         }
 
-        protected internal override TranslationCoreResult Build()
+        public TranslationCoreResult Build()
         {
             var translation = new TranslationCore();
-            var fields = ExtractFieldsAndTableName(_fields);
+            
+            var fields = ExtractFieldsAndTableName(_statementStore.SelectFields);
 
             translation.TranslationResult.Append($@"SELECT {fields.fields} FROM {typeof(TModel).Name} AS {fields.tableAliasName} ");
             //_statementStore.AliasName = fields.tableAliasName;
