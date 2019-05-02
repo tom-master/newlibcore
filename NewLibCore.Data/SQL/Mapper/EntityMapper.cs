@@ -10,136 +10,41 @@ using NewLibCore.InternalExtension;
 
 namespace NewLibCore.Data.SQL.Mapper
 {
-    public sealed class EntityMapper : IDisposable
-    {
-        private readonly StatementStore _statementStore;
-        private readonly ExecuteCore _executeCore;
+	public sealed class EntityMapper : IDisposable
+	{
+		private readonly ExecuteCore _executeCore;
 
-        public EntityMapper()
-        {
-            _executeCore = new ExecuteCore();
-            _statementStore = new StatementStore();
-        }
+		public EntityMapper()
+		{
+			_executeCore = new ExecuteCore();
+		}
 
-        public TModel Add<TModel>(TModel model) where TModel : EntityBase, new()
-        {
-            IBuilder<TModel> builder = new AddBuilder<TModel>(model, true);
-            var translationResult = builder.Build();
-            var executeResult = _executeCore.Execute(ExecuteType.INSERT, translationResult.SqlStore.ToString(), translationResult.ParameterStore, CommandType.Text);
-            model.Id = (Int32)executeResult.Value;
-            return model;
-        }
+		public ISelectEntityMapper<TModel> CreateSelect<TModel>() where TModel : EntityBase, new()
+		{
+			return new SelectEntityMapper<TModel>();
+		}
 
-        public Boolean Modify<TModel>(TModel model, Expression<Func<TModel, Boolean>> where = null) where TModel : PropertyMonitor, new()
-        {
-            _statementStore.AddWhere(where);
+		public IAddEntityMapper<TModel> CreateAdd<TModel>() where TModel : EntityBase, new()
+		{
+			return new AddEntityMapper<TModel>();
+		}
 
-            IBuilder<TModel> builder = new ModifyBuilder<TModel>(model, _statementStore, true);
-            var translationResult = builder.Build();
-            var executeResult = _executeCore.Execute(ExecuteType.UPDATE, translationResult.SqlStore.ToString(), translationResult.ParameterStore, CommandType.Text);
-            return (Int32)executeResult.Value > 0;
-        }
+		public TModel ComplexSqlExecute<TModel>(String sql, IEnumerable<EntityParameter> sqlParameters = null) where TModel : new()
+		{
+			ExecuteCoreResult executeResult;
+			if (typeof(TModel).IsNumeric())
+			{
+				executeResult = _executeCore.Execute(ExecuteType.SELECT_SINGLE, sql, sqlParameters, CommandType.Text);
+				return (TModel)executeResult.Value;
+			}
+			executeResult = _executeCore.Execute(ExecuteType.SELECT, sql, sqlParameters, CommandType.Text);
+			var dataTable = (DataTable)executeResult.Value;
+			return (TModel)dataTable.AsList<TModel>();
+		}
 
-        public IList<TModel> Find<TModel>(Expression<Func<TModel, Boolean>> where = null,
-            Expression<Func<TModel, dynamic>> fields = null,
-            Int32? pageIndex = null,
-            Int32? pageSize = null) where TModel : PropertyMonitor, new()
-        {
-            _statementStore.AddWhere(where);
-
-            IBuilder<TModel> builder = new SelectBuilder<TModel>(_statementStore, fields, pageIndex, pageSize);
-            var translationResult = builder.Build();
-            var executeResult = _executeCore.Execute(ExecuteType.SELECT, translationResult.SqlStore.ToString(), translationResult.ParameterStore, CommandType.Text);
-            _statementStore.Clear();
-            var dataTable = executeResult.Value as DataTable;
-            return dataTable.AsList<TModel>();
-        }
-
-        public EntityMapper Select<TModel>()
-        {
-            return this;
-        }
-
-        public void ToList()
-        {
-
-        }
-
-        public void ToOne()
-        {
-
-        }
-
-        public EntityMapper Where<TModel>(Expression<Func<TModel, Boolean>> expression)
-        {
-            return this;
-        }
-
-        public EntityMapper Page(Int32 pageIndex, Int32 pageSize, out Int32 totalCount)
-        {
-            totalCount = 0;
-            return this;
-        }
-
-        public EntityMapper OrderBy<TModel, TKey>(Expression<Func<TModel, TKey>> order) where TModel : PropertyMonitor, new()
-        {
-            _statementStore.AddOrderBy(order, OrderByType.ASC);
-            return this;
-        }
-
-        public EntityMapper OrderByDesc<TModel, TKey>(Expression<Func<TModel, TKey>> order) where TModel : PropertyMonitor, new()
-        {
-            _statementStore.AddOrderBy(order, OrderByType.DESC);
-            return this;
-        }
-
-        public Int32 Count<TModel>(Expression<Func<TModel, Boolean>> where = null) where TModel : PropertyMonitor, new()
-        {
-            _statementStore.AddWhere(where);
-
-            BuilderBase<TModel> builder = new SelectBuilder<TModel>(_statementStore, d => "COUNT(*)");
-            var translationResult = builder.Build();
-            var executeResult = _executeCore.Execute(ExecuteType.SELECT_SINGLE, translationResult.SqlStore.ToString(), translationResult.ParameterStore, CommandType.Text);
-            return (Int32)executeResult.Value;
-        }
-
-        public EntityMapper LeftJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> expression) where TLeft : PropertyMonitor, new()
-            where TRight : PropertyMonitor, new()
-        {
-            _statementStore.AddJoin(expression, JoinType.LEFT);
-            return this;
-        }
-
-        public EntityMapper RightJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> expression) where TLeft : PropertyMonitor, new()
-            where TRight : PropertyMonitor, new()
-        {
-            _statementStore.AddJoin(expression, JoinType.RIGHT);
-            return this;
-        }
-
-        public EntityMapper InnerJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> expression) where TLeft : PropertyMonitor, new()
-            where TRight : PropertyMonitor, new()
-        {
-            _statementStore.AddJoin(expression, JoinType.INNER);
-            return this;
-        }
-
-        public TModel ComplexSqlExecute<TModel>(String sql, IEnumerable<EntityParameter> sqlParameters = null) where TModel : new()
-        {
-            ExecuteCoreResult executeResult;
-            if (typeof(TModel).IsNumeric())
-            {
-                executeResult = _executeCore.Execute(ExecuteType.SELECT_SINGLE, sql, sqlParameters, CommandType.Text);
-                return (TModel)executeResult.Value;
-            }
-            executeResult = _executeCore.Execute(ExecuteType.SELECT, sql, sqlParameters, CommandType.Text);
-            var dataTable = (DataTable)executeResult.Value;
-            return (TModel)dataTable.AsList<TModel>();
-        }
-
-        public void Dispose()
-        {
-            _executeCore.Dispose();
-        }
-    }
+		public void Dispose()
+		{
+			_executeCore.Dispose();
+		}
+	}
 }

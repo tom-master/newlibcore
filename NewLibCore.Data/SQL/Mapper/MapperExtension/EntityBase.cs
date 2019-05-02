@@ -12,9 +12,10 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
         {
             IsDeleted = false;
 
-            StatementStore = new StatementStore();
-            ExecuteCore = new ExecuteCore();
-        }
+			StatementStore = new StatementStore();
+			ExecuteCore = new ExecuteCore();
+		}
+
 
         [PrimaryKey]
         public Int32 Id { get; internal set; }
@@ -46,8 +47,8 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
             OnPropertyChanged(nameof(LastModifyTime));
         }
 
-        internal StatementStore StatementStore { get; }
+		internal StatementStore StatementStore { get; }
 
-        internal ExecuteCore ExecuteCore { get; }
-    }
+		internal ExecuteCore ExecuteCore { get; }
+	}
 }
