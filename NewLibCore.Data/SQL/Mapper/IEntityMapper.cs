@@ -92,8 +92,7 @@ namespace NewLibCore.Data.SQL.Mapper
 		public IList<TModel> ToList()
 		{
 			IBuilder<TModel> builder = new SelectBuilder<TModel>(_statementStore);
-			var translationResult = builder.Build();
-			var executeResult = _execute.Execute(ExecuteType.SELECT, translationResult.SqlStore.ToString(), translationResult.ParameterStore, CommandType.Text);
+			var executeResult = _execute.Execute(ExecuteType.SELECT, builder.Build());
 			var dataTable = executeResult.Value as DataTable;
 			return dataTable.AsList<TModel>();
 		}
@@ -177,8 +176,7 @@ namespace NewLibCore.Data.SQL.Mapper
 			{
 				_statementStore.Add(expression);
 				IBuilder<TModel> builder = new ModifyBuilder<TModel>(model, _statementStore, true);
-				var translationResult = builder.Build();
-				var executeResult = _execute.Execute(ExecuteType.UPDATE, translationResult.SqlStore.ToString(), translationResult.ParameterStore, CommandType.Text);
+				var executeResult = _execute.Execute(ExecuteType.UPDATE, builder.Build());
 				return (Int32)executeResult.Value > 0;
 			}
 		}
@@ -196,8 +194,7 @@ namespace NewLibCore.Data.SQL.Mapper
 		public TModel Add(TModel model)
 		{
 			IBuilder<TModel> builder = new AddBuilder<TModel>(model, true);
-			var translationResult = builder.Build();
-			var executeResult = _executeCore.Execute(ExecuteType.INSERT, translationResult.SqlStore.ToString(), translationResult.ParameterStore, CommandType.Text);
+			var executeResult = _executeCore.Execute(ExecuteType.INSERT, builder.Build());
 			model.Id = (Int32)executeResult.Value;
 			return model;
 		}
