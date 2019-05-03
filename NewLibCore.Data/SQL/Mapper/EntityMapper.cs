@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using NewLibCore.Data.SQL.Mapper.Execute;
 using NewLibCore.Data.SQL.Mapper.Extension;
@@ -31,6 +32,27 @@ namespace NewLibCore.Data.SQL.Mapper
 		public ISelectEntityMapper<TModel> Select<TModel>(Expression<Func<TModel, dynamic>> fields = null) where TModel : EntityBase, new()
 		{
 			return new SelectEntityMapper<TModel>(_executeCore).Select(fields);
+		}
+
+		public TModel ExecuteSql<TModel>(String sql, IEnumerable<EntityParameter> parameters = null) where TModel : EntityBase, new()
+		{
+			Parameter.Validate(sql);
+			return new SqlExecutor<TModel>(_executeCore).Execute(sql, parameters);
+		}
+
+		public void OpenTransaction()
+		{
+			_executeCore.OpenTransaction();
+		}
+
+		public void Commit()
+		{
+			_executeCore.Commit();
+		}
+
+		public void Rollback()
+		{
+			_executeCore.Rollback();
 		}
 
 		public void Dispose()

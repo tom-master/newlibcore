@@ -16,6 +16,8 @@ namespace NewLibCore.Run
 			new MapperFactory().SwitchToMySql().InitLogger();
 			using (var context = new EntityMapper())
 			{
+				
+
 				context.Select<Role>()
 				.InnerJoin<UserRole>((a, b) => a.Id == b.RoleId)
 				.Where<UserRole>(w => w.UserId == 4).Page(1, 10).ToList();
