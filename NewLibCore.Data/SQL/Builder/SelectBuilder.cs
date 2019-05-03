@@ -54,7 +54,6 @@ namespace NewLibCore.Data.SQL.Builder
 
 		private (String fields, String tableAliasName) ExtractFieldsAndTableName(Statement statement)
 		{
-
 			var modelAliasName = "";
 			if (statement == null)
 			{

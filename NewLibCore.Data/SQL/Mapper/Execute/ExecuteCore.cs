@@ -6,6 +6,7 @@ using System.Linq;
 using NewLibCore.Data.SQL.Mapper.Config;
 using NewLibCore.Data.SQL.Mapper.Extension;
 using NewLibCore.Data.SQL.Mapper.Translation;
+using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper.Execute
 {
@@ -60,11 +61,13 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
 
 		internal ExecuteCoreResult Execute(ExecuteType executeType, TranslationCoreResult translationCore)
 		{
+			Parameter.Validate(translationCore);
 			return Execute(executeType, translationCore.GetSql(), translationCore.GetParameters(), CommandType.Text);
 		}
 
 		internal ExecuteCoreResult Execute(ExecuteType executeType, String sql, IEnumerable<EntityParameter> parameters = null, CommandType commandType = CommandType.Text)
 		{
+			Parameter.Validate(sql);
 			try
 			{
 				Open();

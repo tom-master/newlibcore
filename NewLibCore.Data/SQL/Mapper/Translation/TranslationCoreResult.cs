@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper.Translation
 {
@@ -29,6 +30,8 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
 
 		internal void Append(String sql, IEnumerable<EntityParameter> entityParameters = null)
 		{
+			Parameter.Validate(sql);
+
 			_originSql.Append(sql);
 			if (entityParameters != null)
 			{

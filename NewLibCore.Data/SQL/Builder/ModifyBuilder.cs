@@ -4,6 +4,7 @@ using NewLibCore.Data.SQL.Mapper;
 using NewLibCore.Data.SQL.Mapper.Config;
 using NewLibCore.Data.SQL.Mapper.Extension;
 using NewLibCore.Data.SQL.Mapper.Translation;
+using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Builder
 {
@@ -15,6 +16,9 @@ namespace NewLibCore.Data.SQL.Builder
 
 		public ModifyBuilder(TModel model, StatementStore statementStore, Boolean isValidate = false)
 		{
+			Parameter.Validate(model);
+			Parameter.Validate(statementStore);
+
 			_isValidate = isValidate;
 			_statementStore = statementStore;
 			_model = model;
@@ -36,7 +40,7 @@ namespace NewLibCore.Data.SQL.Builder
 			var translation = new TranslationCore(_statementStore);
 			translation.Result.Append($@"UPDATE {typeof(TModel).Name} SET {String.Join(",", properties.Select(s => $@"{s.Name}=@{s.Name}"))}", properties.Select(c => new EntityParameter($@"@{c.Name}", c.GetValue(_model))));
 
-			if (_statementStore != null && _statementStore.Where != null)
+			if (_statementStore.Where != null)
 			{
 				translation.Translate();
 			}

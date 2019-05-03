@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using NewLibCore.Data.SQL.Mapper.Config;
 using NewLibCore.Data.SQL.Mapper.Extension;
+using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper.Translation
 {
@@ -21,6 +22,8 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
 
 		public TranslationCore(StatementStore statementStore)
 		{
+			Parameter.Validate(statementStore);
+
 			_statementStore = statementStore;
 
 			_relationTypesStack = new Stack<RelationType>();
