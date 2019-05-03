@@ -113,7 +113,6 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
 		{
 			Parameter.Validate(pageIndex);
 			Parameter.Validate(pageSize);
-
 			Page = new PageStatement
 			{
 				Index = pageIndex,
