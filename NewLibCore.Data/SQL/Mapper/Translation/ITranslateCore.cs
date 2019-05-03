@@ -2,6 +2,6 @@
 {
     internal interface ITranslateCore
     {
-        TranslationCoreResult Translate(StatementStore statementStore);
+        TranslationCoreResult Translate();
     }
 }

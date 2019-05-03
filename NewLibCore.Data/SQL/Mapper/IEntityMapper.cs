@@ -103,7 +103,7 @@ namespace NewLibCore.Data.SQL.Mapper
 			{
 				_statementStore.Add(where);
 			}
-			return default;
+			return 0;
 		}
 
 		public ISelectEntityMapper<TModel> Select(Expression<Func<TModel, dynamic>> fields = null)
@@ -112,7 +112,7 @@ namespace NewLibCore.Data.SQL.Mapper
 			{
 				_statementStore.Add(fields);
 			}
-			return default;
+			return this;
 		}
 
 		public ISelectEntityMapper<TModel> Where<T>(Expression<Func<T, Boolean>> expression = null) where T : EntityBase, new()

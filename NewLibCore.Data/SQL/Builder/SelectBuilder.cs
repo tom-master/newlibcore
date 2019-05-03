@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -20,14 +21,11 @@ namespace NewLibCore.Data.SQL.Builder
 
 		public TranslationCoreResult Build()
 		{
-			var translation = new TranslationCore();
+			var translation = new TranslationCore(_statementStore);
 
 			var fields = ExtractFieldsAndTableName(_statementStore.Field);
-
 			translation.TranslationResult.Append($@"SELECT {fields.fields} FROM {typeof(TModel).Name} AS {fields.tableAliasName} ");
-			//_statementStore.Where. = fields.tableAliasName;
-
-			translation.Translate(_statementStore);
+			translation.Translate();
 
 			if (_statementStore != null && _statementStore.Where != null)
 			{
@@ -45,7 +43,7 @@ namespace NewLibCore.Data.SQL.Builder
 				translation.TranslationResult.Append(orderTemplate);
 			}
 
-			if (_statementStore.Page.Index != 0 && _statementStore.Page.Size != 0)
+			if (_statementStore.Page != null)
 			{
 				translation.TranslationResult
 					.Append(MapperFactory.Instance.Extension.Page.Replace("{value}", (_statementStore.Page.Size * (_statementStore.Page.Index - 1)).ToString()).Replace("{pageSize}", _statementStore.Page.Size.ToString()));
@@ -56,16 +54,16 @@ namespace NewLibCore.Data.SQL.Builder
 
 		private (String fields, String tableAliasName) ExtractFieldsAndTableName(Statement statement)
 		{
-			var fields = (LambdaExpression)statement.Expression;
+
 			var modelAliasName = "";
-			if (fields == null)
+			if (statement == null)
 			{
 				var modelType = typeof(TModel);
 				modelAliasName = modelType.Name.ToLower();
 				var propertys = modelType.GetProperties().Where(w => w.GetCustomAttributes<PropertyValidate>().Any());
 				return (String.Join(",", propertys.Select(s => $@"{modelAliasName}.{s.Name}")), modelAliasName);
 			}
-
+			var fields = (LambdaExpression)statement.Expression;
 			modelAliasName = fields.Parameters[0].Type.Name.ToLower();
 			if (fields.Body.NodeType == ExpressionType.Constant)
 			{

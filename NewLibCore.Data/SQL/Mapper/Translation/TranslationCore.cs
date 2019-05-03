@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
-using NewLibCore.Data.SQL.Mapper;
 using NewLibCore.Data.SQL.Mapper.Config;
 using NewLibCore.Data.SQL.Mapper.Extension;
 
@@ -15,10 +15,14 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
 
 		private Stack<RelationType> _relationTypesStack;
 
-		private readonly IDictionary<String, String> _tableAliasMapper;
+		private StatementStore _statementStore;
 
-		public TranslationCore()
+		private IDictionary<String, String> _tableAliasMapper;
+
+		public TranslationCore(StatementStore statementStore)
 		{
+			_statementStore = statementStore;
+
 			TranslationResult = new TranslationCoreResult();
 			_relationTypesStack = new Stack<RelationType>();
 			_parameterNameStack = new Stack<String>();
@@ -27,32 +31,40 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
 
 		internal TranslationCoreResult TranslationResult { get; private set; }
 
-		public TranslationCoreResult Translate(StatementStore statementStore)
+		public TranslationCoreResult Translate()
 		{
-			foreach (var item in statementStore.Joins)
+			_tableAliasMapper.Clear();
+			foreach (var item in _statementStore.Joins)
 			{
-				foreach (var parameter in ((LambdaExpression)item.Expression).Parameters)
-				{
-					_tableAliasMapper.Add(parameter.Name, parameter.Type.Name.ToLower());
-				}
 				if (item.AliaNameMapper == null)
 				{
 					continue;
 				}
+				foreach (var aliasItem in item.AliaNameMapper)
+				{
+					if (aliasItem.Value.ToLower() == item.MainTable.ToLower())
+					{
+						continue;
+					}
 
-				var joinTemplate = MapperFactory.Instance.JoinBuilder(item.JoinType, item.AliaNameMapper.Value.Value, item.AliaNameMapper.Value.Value.ToLower());
-				TranslationResult.Append(joinTemplate);
+					var joinTemplate = MapperFactory.Instance.JoinBuilder(item.JoinType, aliasItem.Value.ToLower(), aliasItem.Key);
+					TranslationResult.Append(joinTemplate);
 
-				_joinType = item.JoinType;
-				InternalBuildWhere(item.Expression);
-				_tableAliasMapper.Clear();
+					_tableAliasMapper = item.AliaNameMapper.ToDictionary(d => d.Key, d => d.Value);
+					_joinType = item.JoinType;
+					InternalBuildWhere(item.Expression);
+				}
 			}
 
-			if (statementStore.Where != null)
+			if (_statementStore.Where != null)
 			{
 				_joinType = JoinType.NONE;
-				TranslationResult.Append($@" WHERE {(statementStore.Where.AliaNameMapper == null ? "" : $@"{statementStore.Where.AliaNameMapper.Value}.")}");
-				InternalBuildWhere(statementStore.Where.Expression);
+				foreach (var item in _statementStore.Where.AliaNameMapper)
+				{
+					TranslationResult.Append($@" WHERE {$@"{item.Value.ToLower()}"}.");
+				}
+
+				InternalBuildWhere(_statementStore.Where.Expression);
 			}
 
 			return TranslationResult;
@@ -279,7 +291,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
 				throw new Exception($@"没有找到参数名:{leftParameterName}所对应的左表别名");
 			}
 
-			var leftAliasName = _tableAliasMapper[((ParameterExpression)leftMember.Expression).Name];
+			var leftAliasName = _tableAliasMapper[leftParameterName].ToLower();
 
 			if (binaryExp.Right.GetType() == typeof(ConstantExpression))
 			{
@@ -299,12 +311,12 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
 			{
 				var rightMember = (MemberExpression)binaryExp.Right;
 				var rightParameterName = ((ParameterExpression)rightMember.Expression).Name;
-				if (_tableAliasMapper.ContainsKey(rightParameterName))
+				if (!_tableAliasMapper.ContainsKey(rightParameterName))
 				{
 					throw new Exception($@"没有找到参数名:{leftParameterName}所对应的右表别名");
 				}
 
-				var rightAliasName = _tableAliasMapper[rightParameterName];
+				var rightAliasName = _tableAliasMapper[rightParameterName].ToLower();
 				var relationTemplate = MapperFactory.Instance.RelationBuilder(relationType, $"{rightAliasName}.{rightMember.Member.Name}", $"{leftAliasName}.{leftMember.Member.Name}");
 
 				TranslationResult.Append(relationTemplate);

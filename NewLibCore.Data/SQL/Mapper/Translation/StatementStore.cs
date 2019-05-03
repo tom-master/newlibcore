@@ -11,11 +11,13 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
 	{
 		protected internal Expression Expression { get; set; }
 
-		protected internal KeyValuePair<String, String>? AliaNameMapper { get; set; }
+		protected internal IList<KeyValuePair<String, String>> AliaNameMapper { get; set; }
 	}
 
 	internal class JoinStatement : Statement
 	{
+		protected internal String MainTable { get; set; }
+
 		protected internal JoinType JoinType { get; set; }
 	}
 
@@ -46,7 +48,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
 
 		internal PageStatement Page { get; private set; }
 
-		internal IList<JoinStatement> Joins { get; private set; }
+		internal IList<JoinStatement> Joins { get; private set; } = new List<JoinStatement>();
 
 		internal void AddOrderBy<TModel, TKey>(Expression<Func<TModel, TKey>> order, OrderByType orderByType)
 		{
@@ -61,7 +63,15 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
 		internal void Add<TModel, TJoin>(Expression<Func<TModel, TJoin, Boolean>> expression, JoinType joinType = JoinType.NONE) where TModel : PropertyMonitor, new() where TJoin : PropertyMonitor, new()
 		{
 			Parameter.Validate(expression);
-			Joins = expression.Parameters.Select(s => new JoinStatement { Expression = expression, JoinType = joinType, AliaNameMapper = new KeyValuePair<string, string>(s.Name, s.Type.Name) }).ToList();
+
+			Joins.Add(new JoinStatement
+			{
+				Expression = expression,
+				JoinType = joinType,
+				AliaNameMapper = expression.Parameters.Select(s => new KeyValuePair<String, String>(s.Name, s.Type.Name)).ToList(),
+				MainTable = typeof(TModel).Name
+			});
+
 		}
 
 		internal void Add<TModel>(Expression<Func<TModel, Boolean>> expression) where TModel : PropertyMonitor, new()
@@ -69,7 +79,8 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
 			Parameter.Validate(expression);
 			Where = new SimpleStatement
 			{
-				Expression = expression
+				Expression = expression,
+				AliaNameMapper = expression.Parameters.Select(s => new KeyValuePair<String, String>(s.Name, s.Type.Name)).ToList()
 			};
 		}
 
