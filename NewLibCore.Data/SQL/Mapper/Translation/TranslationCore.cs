@@ -57,15 +57,14 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
 					InternalBuildWhere(item.Expression);
 				}
 			}
-
+			Result.Append(" WHERE 1=1 ");
 			if (_statementStore.Where != null)
 			{
 				_joinType = JoinType.NONE;
 				foreach (var item in _statementStore.Where.AliaNameMapper)
 				{
-					Result.Append($@" WHERE {$@"{item.Value.ToLower()}"}.");
+					Result.Append($@" AND {$@"{item.Value.ToLower()}"}.");
 				}
-
 				InternalBuildWhere(_statementStore.Where.Expression);
 			}
 

@@ -50,6 +50,22 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
 
 		internal IList<JoinStatement> Joins { get; private set; } = new List<JoinStatement>();
 
+		internal IList<KeyValuePair<String, String>> MergeAliasMapper()
+		{
+			var newAliasMapper = new List<KeyValuePair<String, String>>();
+			if (Where != null)
+			{
+				newAliasMapper.AddRange(Where.AliaNameMapper);
+			}
+
+			if (Joins.Any())
+			{
+				newAliasMapper.AddRange(Joins.SelectMany(s => s.AliaNameMapper));
+			}
+
+			return newAliasMapper;
+		}
+
 		internal void AddOrderBy<TModel, TKey>(Expression<Func<TModel, TKey>> order, OrderByType orderByType)
 		{
 			Parameter.Validate(order);

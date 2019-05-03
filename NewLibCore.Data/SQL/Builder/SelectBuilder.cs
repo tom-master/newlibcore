@@ -29,33 +29,10 @@ namespace NewLibCore.Data.SQL.Builder
 			translation.Result.Append($@"SELECT {fields.fields} FROM {typeof(TModel).Name} AS {fields.tableAliasName} ");
 			translation.Translate();
 
-			if (_statementStore.Where != null)
+			var aliasMapper = _statementStore.MergeAliasMapper().Select(s => s.Value).Distinct();
+			foreach (var aliasItem in aliasMapper)
 			{
-				translation.Result.Append($@" AND {fields.tableAliasName}.IsDeleted = 0");
-			}
-			else
-			{
-				translation.Result.Append($@" WHERE {fields.tableAliasName}.IsDeleted = 0");
-			}
-
-			if (_statementStore.Joins.Any())
-			{
-				foreach (var item in _statementStore.Joins)
-				{
-					if (item.AliaNameMapper == null)
-					{
-						continue;
-					}
-
-					foreach (var aliasItem in item.AliaNameMapper)
-					{
-						if (aliasItem.Value.ToLower() == item.MainTable.ToLower())
-						{
-							continue;
-						}
-						translation.Result.Append($@" AND {aliasItem.Value.ToLower()}.IsDeleted = 0");
-					}
-				}
+				translation.Result.Append($@" AND {aliasItem.ToLower()}.IsDeleted = 0");
 			}
 
 			if (_statementStore.Order != null)
@@ -67,8 +44,9 @@ namespace NewLibCore.Data.SQL.Builder
 
 			if (_statementStore.Page != null)
 			{
-				translation.Result
-					.Append(MapperFactory.Instance.Extension.Page.Replace("{value}", (_statementStore.Page.Size * (_statementStore.Page.Index - 1)).ToString()).Replace("{pageSize}", _statementStore.Page.Size.ToString()));
+				var pageIndex = (_statementStore.Page.Size * (_statementStore.Page.Index - 1)).ToString();
+				var pageSize = _statementStore.Page.Size.ToString();
+				translation.Result.Append(MapperFactory.Instance.Extension.Page.Replace("{value}", pageIndex).Replace("{pageSize}", pageSize));
 			}
 
 			return translation.Result;
