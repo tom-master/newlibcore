@@ -28,8 +28,6 @@ namespace NewLibCore.Data.SQL.Mapper
 
 		IList<TModel> ToList();
 
-		Int32 Count(Expression<Func<TModel, Boolean>> where = null);
-
 		ISelectEntityMapper<TModel> Select(Expression<Func<TModel, dynamic>> fields = null);
 
 		ISelectEntityMapper<TModel> Where<T>(Expression<Func<T, Boolean>> expression = null) where T : EntityBase, new();
@@ -95,15 +93,6 @@ namespace NewLibCore.Data.SQL.Mapper
 			var executeResult = _execute.Execute(ExecuteType.SELECT, builder.Build());
 			var dataTable = executeResult.Value as DataTable;
 			return dataTable.AsList<TModel>();
-		}
-
-		public Int32 Count(Expression<Func<TModel, Boolean>> where = null)
-		{
-			if (where != null)
-			{
-				_statementStore.Add(where);
-			}
-			return 0;
 		}
 
 		public ISelectEntityMapper<TModel> Select(Expression<Func<TModel, dynamic>> fields = null)
