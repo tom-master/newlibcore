@@ -18,7 +18,7 @@ namespace NewLibCore.Run
 			{
 				context.Select<Role>()
 				.InnerJoin<UserRole>((a, b) => a.Id == b.RoleId)
-				.Where<UserRole>(w => w.UserId == 4).ToList();
+				.Where<UserRole>(w => w.UserId == 4).Page(1, 10).ToList();
 			}
 		}
 	}

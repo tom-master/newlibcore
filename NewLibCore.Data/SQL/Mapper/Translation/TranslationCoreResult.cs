@@ -5,50 +5,60 @@ using System.Text;
 
 namespace NewLibCore.Data.SQL.Mapper.Translation
 {
-    internal class TranslationCoreResult
-    {
-        internal StringBuilder SqlStore { get; private set; }
+	internal class TranslationCoreResult
+	{
+		private StringBuilder _originSql;
 
-        internal IList<EntityParameter> ParameterStore { get; private set; }
+		private IList<EntityParameter> _parameters;
 
-        internal TranslationCoreResult()
-        {
-            SqlStore = new StringBuilder();
-            ParameterStore = new List<EntityParameter>();
-        }
+		internal TranslationCoreResult()
+		{
+			_originSql = new StringBuilder();
+			_parameters = new List<EntityParameter>();
+		}
 
-        internal void Append(String sql, IEnumerable<EntityParameter> entityParameters = null)
-        {
-            SqlStore.Append(sql);
-            if (entityParameters != null)
-            {
-                foreach (var item in entityParameters)
-                {
-                    ParameterStore.Add(item);
-                }
-            }
-        }
+		internal String GetSql()
+		{
+			return _originSql.ToString();
+		}
 
-        internal void Append(params EntityParameter[] entityParameters)
-        {
-            Append(entityParameters.ToList());
-        }
+		internal IList<EntityParameter> GetParameters()
+		{
+			return _parameters;
+		}
 
-        internal void Append(IEnumerable<EntityParameter> entityParameters)
-        {
-            if (entityParameters != null)
-            {
-                foreach (var item in entityParameters)
-                {
-                    ParameterStore.Add(item);
-                }
-            }
-        }
+		internal void Append(String sql, IEnumerable<EntityParameter> entityParameters = null)
+		{
+			_originSql.Append(sql);
+			if (entityParameters != null)
+			{
+				foreach (var item in entityParameters)
+				{
+					_parameters.Add(item);
+				}
+			}
+		}
 
-        internal void Clear()
-        {
-            SqlStore.Clear();
-            ParameterStore.Clear();
-        }
-    }
+		internal void Append(params EntityParameter[] entityParameters)
+		{
+			Append(entityParameters.ToList());
+		}
+
+		internal void Append(IEnumerable<EntityParameter> entityParameters)
+		{
+			if (entityParameters != null)
+			{
+				foreach (var item in entityParameters)
+				{
+					_parameters.Add(item);
+				}
+			}
+		}
+
+		internal void Clear()
+		{
+			_originSql.Clear();
+			_parameters.Clear();
+		}
+	}
 }

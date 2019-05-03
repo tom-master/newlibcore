@@ -9,13 +9,13 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
 {
 	internal class TranslationCore : ITranslateCore
 	{
+		private readonly Stack<String> _parameterNameStack;
+
+		private readonly Stack<RelationType> _relationTypesStack;
+
+		private readonly StatementStore _statementStore;
+
 		private JoinType _joinType;
-
-		private Stack<String> _parameterNameStack;
-
-		private Stack<RelationType> _relationTypesStack;
-
-		private StatementStore _statementStore;
 
 		private IDictionary<String, String> _tableAliasMapper;
 
@@ -23,13 +23,14 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
 		{
 			_statementStore = statementStore;
 
-			TranslationResult = new TranslationCoreResult();
 			_relationTypesStack = new Stack<RelationType>();
 			_parameterNameStack = new Stack<String>();
 			_tableAliasMapper = new Dictionary<String, String>();
+
+			Result = new TranslationCoreResult();
 		}
 
-		internal TranslationCoreResult TranslationResult { get; private set; }
+		internal TranslationCoreResult Result { get; private set; }
 
 		public TranslationCoreResult Translate()
 		{
@@ -40,6 +41,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
 				{
 					continue;
 				}
+
 				foreach (var aliasItem in item.AliaNameMapper)
 				{
 					if (aliasItem.Value.ToLower() == item.MainTable.ToLower())
@@ -47,8 +49,8 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
 						continue;
 					}
 
-					var joinTemplate = MapperFactory.Instance.JoinBuilder(item.JoinType, aliasItem.Value.ToLower(), aliasItem.Key);
-					TranslationResult.Append(joinTemplate);
+					var joinTemplate = MapperFactory.Instance.JoinBuilder(item.JoinType, aliasItem.Value, aliasItem.Value.ToLower());
+					Result.Append(joinTemplate);
 
 					_tableAliasMapper = item.AliaNameMapper.ToDictionary(d => d.Key, d => d.Value);
 					_joinType = item.JoinType;
@@ -61,13 +63,13 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
 				_joinType = JoinType.NONE;
 				foreach (var item in _statementStore.Where.AliaNameMapper)
 				{
-					TranslationResult.Append($@" WHERE {$@"{item.Value.ToLower()}"}.");
+					Result.Append($@" WHERE {$@"{item.Value.ToLower()}"}.");
 				}
 
 				InternalBuildWhere(_statementStore.Where.Expression);
 			}
 
-			return TranslationResult;
+			return Result;
 		}
 
 		private void InternalBuildWhere(Expression expression)
@@ -78,7 +80,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
 				{
 					var binaryExp = (BinaryExpression)expression;
 					InternalBuildWhere(binaryExp.Left);
-					TranslationResult.Append(RelationType.AND.ToString());
+					Result.Append(RelationType.AND.ToString());
 					InternalBuildWhere(binaryExp.Right);
 					break;
 				}
@@ -86,7 +88,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
 				{
 					var binaryExp = (BinaryExpression)expression;
 					InternalBuildWhere(binaryExp.Left);
-					TranslationResult.Append(RelationType.OR.ToString());
+					Result.Append(RelationType.OR.ToString());
 					InternalBuildWhere(binaryExp.Right);
 					break;
 				}
@@ -98,7 +100,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
 				case ExpressionType.Constant:
 				{
 					var binaryExp = (ConstantExpression)expression;
-					TranslationResult.Append(new EntityParameter($@"@{_parameterNameStack.Pop()}", binaryExp.Value));
+					Result.Append(new EntityParameter($@"@{_parameterNameStack.Pop()}", binaryExp.Value));
 					break;
 				}
 				case ExpressionType.Equal:
@@ -179,14 +181,14 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
 						else
 						{
 							var syntax = MapperFactory.Instance.RelationBuilder(_relationTypesStack.Pop(), memberName, $"@{newParameterName}");
-							TranslationResult.Append(syntax);
+							Result.Append(syntax);
 							_parameterNameStack.Push(newParameterName);
 						}
 					}
 					else
 					{
 						var getter = Expression.Lambda(memberExp).Compile();
-						TranslationResult.Append(new EntityParameter($@"@{_parameterNameStack.Pop()}", getter.DynamicInvoke()));
+						Result.Append(new EntityParameter($@"@{_parameterNameStack.Pop()}", getter.DynamicInvoke()));
 						break;
 					}
 					break;
@@ -299,12 +301,12 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
 				if (Boolean.TryParse(constant.Value.ToString(), out var result))
 				{
 					var relationTemplate = MapperFactory.Instance.RelationBuilder(relationType, $"{leftAliasName}.{leftMember.Member.Name}", (result ? 1 : 0).ToString());
-					TranslationResult.Append(relationTemplate);
+					Result.Append(relationTemplate);
 				}
 				else
 				{
 					var relationTemplate = MapperFactory.Instance.RelationBuilder(relationType, $"{leftAliasName}.{leftMember.Member.Name}", constant.Value);
-					TranslationResult.Append(relationTemplate);
+					Result.Append(relationTemplate);
 				}
 			}
 			else
@@ -318,8 +320,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
 
 				var rightAliasName = _tableAliasMapper[rightParameterName].ToLower();
 				var relationTemplate = MapperFactory.Instance.RelationBuilder(relationType, $"{rightAliasName}.{rightMember.Member.Name}", $"{leftAliasName}.{leftMember.Member.Name}");
-
-				TranslationResult.Append(relationTemplate);
+				Result.Append(relationTemplate);
 			}
 		}
 

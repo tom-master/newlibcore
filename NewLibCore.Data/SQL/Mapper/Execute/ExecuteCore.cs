@@ -60,7 +60,7 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
 
 		internal ExecuteCoreResult Execute(ExecuteType executeType, TranslationCoreResult translationCore)
 		{
-			return Execute(executeType, translationCore.SqlStore.ToString(), translationCore.ParameterStore, CommandType.Text);
+			return Execute(executeType, translationCore.GetSql(), translationCore.GetParameters(), CommandType.Text);
 		}
 
 		internal ExecuteCoreResult Execute(ExecuteType executeType, String sql, IEnumerable<EntityParameter> parameters = null, CommandType commandType = CommandType.Text)
