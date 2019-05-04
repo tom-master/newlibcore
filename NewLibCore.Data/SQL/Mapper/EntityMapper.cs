@@ -34,7 +34,7 @@ namespace NewLibCore.Data.SQL.Mapper
 			return new SelectEntityMapper<TModel>(_executeCore).Select(fields);
 		}
 
-		public TModel ExecuteSql<TModel>(String sql, IEnumerable<EntityParameter> parameters = null) where TModel : EntityBase, new()
+		public TModel ExecuteSql<TModel>(String sql, IEnumerable<EntityParameter> parameters = null) where TModel : new()
 		{
 			Parameter.Validate(sql);
 			return new SqlExecutor<TModel>(_executeCore).Execute(sql, parameters);

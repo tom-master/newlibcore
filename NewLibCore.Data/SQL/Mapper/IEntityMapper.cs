@@ -45,12 +45,12 @@ namespace NewLibCore.Data.SQL.Mapper
 		ISelectEntityMapper<TModel> OrderBy<TOrder, TKey>(Expression<Func<TOrder, TKey>> order, OrderByType orderBy = OrderByType.DESC) where TOrder : EntityBase, new();
 	}
 
-	public interface ISqlExecutor<TModel> where TModel : EntityBase, new()
+	public interface ISqlExecutor<TModel> where TModel : new()
 	{
 		TModel Execute(String sql, IEnumerable<EntityParameter> parameters = null);
 	}
 
-	public class SqlExecutor<TModel> : ISqlExecutor<TModel> where TModel : EntityBase, new()
+	public class SqlExecutor<TModel> : ISqlExecutor<TModel> where TModel : new()
 	{
 		private ExecuteCore _executeCore;
 
