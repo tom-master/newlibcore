@@ -26,11 +26,13 @@ namespace NewLibCore.Data.SQL.Mapper
 	{
 		TModel ToOne();
 
-		IList<TModel> ToList();
+		List<TModel> ToList();
 
 		ISelectEntityMapper<TModel> Select(Expression<Func<TModel, dynamic>> fields = null);
 
 		ISelectEntityMapper<TModel> Where<T>(Expression<Func<T, Boolean>> expression = null) where T : EntityBase, new();
+
+		ISelectEntityMapper<TModel> Where(Expression<Func<TModel, Boolean>> expression = null);
 
 		ISelectEntityMapper<TModel> Page(Int32 pageIndex, Int32 pageSize);
 
@@ -87,12 +89,12 @@ namespace NewLibCore.Data.SQL.Mapper
 			return ToList().FirstOrDefault();
 		}
 
-		public IList<TModel> ToList()
+		public List<TModel> ToList()
 		{
 			IBuilder<TModel> builder = new SelectBuilder<TModel>(_statementStore);
 			var executeResult = _execute.Execute(ExecuteType.SELECT, builder.Build());
 			var dataTable = executeResult.Value as DataTable;
-			return dataTable.AsList<TModel>();
+			return dataTable.AsList<TModel>().ToList();
 		}
 
 		public ISelectEntityMapper<TModel> Select(Expression<Func<TModel, dynamic>> fields = null)
@@ -102,6 +104,11 @@ namespace NewLibCore.Data.SQL.Mapper
 				_statementStore.Add(fields);
 			}
 			return this;
+		}
+
+		public ISelectEntityMapper<TModel> Where(Expression<Func<TModel, Boolean>> expression = null)
+		{
+			return Where<TModel>(expression);
 		}
 
 		public ISelectEntityMapper<TModel> Where<T>(Expression<Func<T, Boolean>> expression = null) where T : EntityBase, new()
