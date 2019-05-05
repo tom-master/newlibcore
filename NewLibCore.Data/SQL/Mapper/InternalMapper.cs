@@ -127,6 +127,7 @@ namespace NewLibCore.Data.SQL.Mapper
             {
                 _statementStore.Add(expression);
             }
+
             return this;
         }
 
@@ -136,6 +137,7 @@ namespace NewLibCore.Data.SQL.Mapper
             {
                 _statementStore.Add(expression);
             }
+
             return this;
         }
 
@@ -149,6 +151,7 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             Parameter.Validate(expression);
             _statementStore.Add(expression, JoinType.LEFT);
+            
             return this;
         }
 
@@ -156,6 +159,7 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             Parameter.Validate(expression);
             _statementStore.Add(expression, JoinType.RIGHT);
+
             return this;
         }
 
