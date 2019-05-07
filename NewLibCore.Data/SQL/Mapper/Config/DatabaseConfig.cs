@@ -4,9 +4,13 @@ namespace NewLibCore.Data.SQL.Mapper.Config
 {
     public class MapperFactory
     {
-        internal static MapperInstance Instance { get; private set; }
+        private MapperFactory() { }
 
         internal static ILogger Logger { get; private set; }
+
+        internal static MapperInstance Instance { get; private set; }
+
+        public static MapperFactory Factory { get; } = new MapperFactory();
 
         public MapperFactory InitLogger(ILogger logger = null)
         {

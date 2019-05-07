@@ -13,10 +13,11 @@ namespace NewLibCore.Run
     {
         private static void Main(String[] args)
         {
-            new MapperFactory().SwitchToMySql().InitLogger();
+            //MapperFactory.Factory.SwitchToMySql().InitLogger();
+
             using (var context = new EntityMapper())
             {
-                var r = context.Select<Role>().Count();
+                var r = context.Select<Role>(a => new { a.Id }).Count();
             }
         }
     }

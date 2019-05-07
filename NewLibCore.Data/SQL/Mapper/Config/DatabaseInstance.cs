@@ -19,6 +19,10 @@ namespace NewLibCore.Data.SQL.Mapper.Config
 
         protected MapperInstance()
         {
+            RelationMapper.Clear();
+            JoinTypeMapper.Clear();
+            OrderTypeMapper.Clear();
+
             InitRelationType();
             InitJoinType();
             InitOrderType();
