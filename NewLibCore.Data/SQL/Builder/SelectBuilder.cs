@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -11,7 +10,7 @@ using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Builder
 {
-	internal class SelectBuilder<TModel> : IBuilder<TModel> where TModel : PropertyMonitor, new()
+    internal class SelectBuilder<TModel> : IBuilder<TModel> where TModel : PropertyMonitor, new()
 	{
 		private readonly StatementStore _statementStore;
 
@@ -62,6 +61,7 @@ namespace NewLibCore.Data.SQL.Builder
 				var propertys = modelType.GetProperties().Where(w => w.GetCustomAttributes<PropertyValidate>().Any());
 				return (String.Join(",", propertys.Select(s => $@"{modelAliasName}.{s.Name}")), modelAliasName);
 			}
+
 			var fields = (LambdaExpression)statement.Expression;
 			modelAliasName = fields.Parameters[0].Type.Name.ToLower();
 			if (fields.Body.NodeType == ExpressionType.Constant)
