@@ -30,6 +30,16 @@ namespace NewLibCore.Data.SQL.Mapper.Config
             return this;
         }
 
+        public MapperFactory UseExpressionCache()
+        {
+            return this;
+        }
+
+        public MapperFactory UseStatementCache()
+        {
+            return this;
+        }
+
         private static void SwitchTo(DatabaseType database)
         {
             switch (database)
