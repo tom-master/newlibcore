@@ -10,6 +10,7 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
 	{
 		protected internal IList<PropertyInfo> PropertyInfos { get; }
 
+
 		protected PropertyMonitor()
 		{
 			PropertyInfos = new List<PropertyInfo>();

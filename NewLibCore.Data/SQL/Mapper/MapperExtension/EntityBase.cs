@@ -12,7 +12,6 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
 			IsDeleted = false;
 		}
 
-
 		[PrimaryKey]
 		public Int32 Id { get; internal set; }
 
@@ -42,6 +41,5 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
 			LastModifyTime = DateTime.Now;
 			OnPropertyChanged(nameof(LastModifyTime));
 		}
-
 	}
 }
