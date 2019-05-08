@@ -44,7 +44,7 @@ namespace NewLibCore.Data.SQL.Builder
             var placeHolder = String.Join(",", propertyInfos.Select(key => $@"@{key.Name}"));
             var entityParameters = propertyInfos.Select(c => new EntityParameter($@"@{c.Name}", c.GetValue(_instance)));
 
-            translationResult.Append($@" INSERT {typeof(TModel).Name} ({fields}) VALUES ({placeHolder}) {MapperFactory.Instance.Extension.Identity}", entityParameters);
+            translationResult.Append($@" INSERT {typeof(TModel).Name} ({fields}) VALUES ({placeHolder}) {MapperFactory.Mapper.Extension.Identity}", entityParameters);
             return translationResult;
         }
     }

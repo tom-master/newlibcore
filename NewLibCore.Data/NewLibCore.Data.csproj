@@ -12,14 +12,11 @@
     <PackageReference Include="System.Collections" Version="4.3.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.5.0" />
     <PackageReference Include="System.Linq.Expressions" Version="4.3.0" />
+    <PackageReference Include="System.Runtime.Caching" Version="4.5.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\NewLibCore.Security\NewLibCore.Security.csproj" />
     <ProjectReference Include="..\NewLibCore\NewLibCore.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="SQL\Mapper\Cache\" />
   </ItemGroup>
 </Project>

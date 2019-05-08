@@ -22,8 +22,8 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
 
         internal ExecuteCore()
         {
-            Parameter.Validate(MapperFactory.Instance);
-            _connection = MapperFactory.Instance.GetConnectionInstance();
+            Parameter.Validate(MapperFactory.Mapper);
+            _connection = MapperFactory.Mapper.GetConnectionInstance();
         }
 
         internal void OpenTransaction()
@@ -70,6 +70,13 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
         {
             Parameter.Validate(sql);
             sql = sql.Replace("  ", " ");
+
+            if (MapperFactory.StatementCache)
+            {
+
+            }
+
+
             try
             {
                 Open();

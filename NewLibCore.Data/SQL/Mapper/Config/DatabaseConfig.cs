@@ -1,4 +1,5 @@
 ﻿using System;
+using NewLibCore.Data.SQL.Mapper.Cache;
 using NewLibCore.Data.SQL.Mapper.Extension;
 
 namespace NewLibCore.Data.SQL.Mapper.Config
@@ -7,15 +8,17 @@ namespace NewLibCore.Data.SQL.Mapper.Config
     {
         private MapperFactory() { }
 
+        public static MapperFactory Factory { get; } = new MapperFactory();
+
         internal static Boolean ExpressionCache { get; private set; } = false;
 
         internal static Boolean StatementCache { get; private set; } = false;
 
         internal static ILogger Logger { get; private set; }
 
-        internal static MapperInstance Instance { get; private set; }
+        internal static MapperInstance Mapper { get; private set; }
 
-        public static MapperFactory Factory { get; } = new MapperFactory();
+        internal static MapperCache Cache { get; private set; }
 
         public MapperFactory InitLogger(ILogger logger = null)
         {
@@ -43,7 +46,12 @@ namespace NewLibCore.Data.SQL.Mapper.Config
 
         public MapperFactory UseStatementCache()
         {
-            StatementCache = true;
+            if (!StatementCache)
+            {
+                StatementCache = true;
+                Cache = new StatementCache();
+            }
+
             return this;
         }
 
@@ -53,12 +61,12 @@ namespace NewLibCore.Data.SQL.Mapper.Config
             {
                 case DatabaseType.MSSQL:
                 {
-                    Instance = new MsSqlInstance();
+                    Mapper = new MsSqlInstance();
                     break;
                 }
                 case DatabaseType.MYSQL:
                 {
-                    Instance = new MySqlInstance();
+                    Mapper = new MySqlInstance();
                     break;
                 }
                 default:

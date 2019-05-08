@@ -91,10 +91,12 @@ namespace NewLibCore.Data.SQL.Mapper.Config
         {
             return new SqlConnection(ConnectionString);
         }
+
         internal override DbParameter GetParameterInstance()
         {
             return new SqlParameter();
         }
+
         internal override String RelationBuilder(RelationType relationType, String left, Object right)
         {
             return String.Format(RelationMapper[relationType], left, right);
@@ -127,10 +129,12 @@ namespace NewLibCore.Data.SQL.Mapper.Config
         {
             return new MySqlConnection(ConnectionString);
         }
+
         internal override DbParameter GetParameterInstance()
         {
             return new MySqlParameter();
         }
+
         internal override String RelationBuilder(RelationType relationType, String left, Object right)
         {
             return String.Format(RelationMapper[relationType], left, right);

@@ -53,7 +53,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
                         continue;
                     }
 
-                    var joinTemplate = MapperFactory.Instance.JoinBuilder(item.JoinType, aliasItem.Value, aliasItem.Value.ToLower());
+                    var joinTemplate = MapperFactory.Mapper.JoinBuilder(item.JoinType, aliasItem.Value, aliasItem.Value.ToLower());
                     Result.Append(joinTemplate);
                     _joinType = item.JoinType;
                     InternalBuildWhere(item.Expression);
@@ -183,7 +183,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
                                 throw new ArgumentException($@"没有找到{parameterExp.Type.Name}所对应的形参");
                             }
 
-                            var syntax = MapperFactory.Instance.RelationBuilder(_relationTypesStack.Pop(), $@"{_tableAliasMapper[parameterExp.Name].ToLower()}.{memberExp.Member.Name}", $"@{newParameterName}");
+                            var syntax = MapperFactory.Mapper.RelationBuilder(_relationTypesStack.Pop(), $@"{_tableAliasMapper[parameterExp.Name].ToLower()}.{memberExp.Member.Name}", $"@{newParameterName}");
                             Result.Append(syntax);
                             _parameterNameStack.Push(newParameterName);
                         }
@@ -303,12 +303,12 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
                 var constant = (ConstantExpression)binaryExp.Right;
                 if (Boolean.TryParse(constant.Value.ToString(), out var result))
                 {
-                    var relationTemplate = MapperFactory.Instance.RelationBuilder(relationType, $"{leftAliasName}.{leftMember.Member.Name}", (result ? 1 : 0).ToString());
+                    var relationTemplate = MapperFactory.Mapper.RelationBuilder(relationType, $"{leftAliasName}.{leftMember.Member.Name}", (result ? 1 : 0).ToString());
                     Result.Append(relationTemplate);
                 }
                 else
                 {
-                    var relationTemplate = MapperFactory.Instance.RelationBuilder(relationType, $"{leftAliasName}.{leftMember.Member.Name}", constant.Value);
+                    var relationTemplate = MapperFactory.Mapper.RelationBuilder(relationType, $"{leftAliasName}.{leftMember.Member.Name}", constant.Value);
                     Result.Append(relationTemplate);
                 }
             }
@@ -322,7 +322,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
                 }
 
                 var rightAliasName = _tableAliasMapper[rightParameterName].ToLower();
-                var relationTemplate = MapperFactory.Instance.RelationBuilder(relationType, $"{rightAliasName}.{rightMember.Member.Name}", $"{leftAliasName}.{leftMember.Member.Name}");
+                var relationTemplate = MapperFactory.Mapper.RelationBuilder(relationType, $"{rightAliasName}.{rightMember.Member.Name}", $"{leftAliasName}.{leftMember.Member.Name}");
                 Result.Append(relationTemplate);
             }
         }
