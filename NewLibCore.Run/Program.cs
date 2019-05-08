@@ -16,7 +16,8 @@ namespace NewLibCore.Run
             MapperFactory.Factory.SwitchToMySql().InitLogger().UseExpressionCache().UseStatementCache();
             using (var context = new EntityMapper())
             {
-                var r = context.Select<Role>(a => new { a.Id }).Count();
+                var name = "admin";
+                context.Select<User>(a => new { a.Id, a.Name }).InnerJoin<UserRole>((a, b) => a.Id == b.UserId).Where(w => w.Name == name && !w.IsDisable).FirstOrDefault();
             }
         }
     }

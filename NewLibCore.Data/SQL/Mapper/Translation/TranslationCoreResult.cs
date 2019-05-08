@@ -32,7 +32,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
 		{
 			Parameter.Validate(sql);
 
-			_originSql.Append(sql);
+			_originSql.Append($@" {sql} ");
 			if (entityParameters != null)
 			{
 				foreach (var item in entityParameters)

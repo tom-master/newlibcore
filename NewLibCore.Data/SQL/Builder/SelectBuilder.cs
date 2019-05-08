@@ -25,13 +25,13 @@ namespace NewLibCore.Data.SQL.Builder
 			var translation = new TranslationCore(_statementStore);
 
 			var fields = ExtractFieldsAndTableName(_statementStore.Field);
-			translation.Result.Append($@"SELECT {fields.fields} FROM {typeof(TModel).Name} AS {fields.tableAliasName} ");
+			translation.Result.Append($@"SELECT {fields.fields} FROM {typeof(TModel).Name} AS {fields.tableAliasName}");
 			translation.Translate();
 
 			var aliasMapper = _statementStore.MergeAliasMapper().Select(s => s.Value).Distinct();
 			foreach (var aliasItem in aliasMapper)
 			{
-				translation.Result.Append($@" AND {aliasItem.ToLower()}.IsDeleted = 0");
+				translation.Result.Append($@"AND {aliasItem.ToLower()}.IsDeleted = 0");
 			}
 
 			if (_statementStore.Order != null)
