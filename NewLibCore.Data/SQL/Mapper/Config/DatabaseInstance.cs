@@ -15,7 +15,7 @@ namespace NewLibCore.Data.SQL.Mapper.Config
 
         protected static IDictionary<OrderByType, String> OrderTypeMapper = new Dictionary<OrderByType, String>();
 
-        protected String ConnectionString { get { return Host.GetHostVar("database"); } }
+        protected String ConnectionString { get { return Host.GetHostVar("NewCrmDatabase"); } }
 
         protected MapperInstance()
         {

@@ -30,6 +30,8 @@ namespace NewLibCore.Data.SQL.Mapper
 
         Int32 Count();
 
+        Boolean Exist();
+
         ISelectEntityMapper<TModel> Select(Expression<Func<TModel, dynamic>> fields = null);
 
         ISelectEntityMapper<TModel> Where<T>(Expression<Func<TModel, T, Boolean>> expression = null) where T : EntityBase, new();
@@ -86,6 +88,11 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             _execute = executeCore;
             _statementStore = new StatementStore();
+        }
+
+        public Boolean Exist()
+        {
+            return Count() > 0;
         }
 
         public Int32 Count()
