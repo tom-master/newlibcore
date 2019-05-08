@@ -66,15 +66,15 @@ namespace NewLibCore.Data.SQL.Mapper.Config
         private void InitJoinType()
         {
             JoinTypeMapper.Add(JoinType.NONE, "");
-            JoinTypeMapper.Add(JoinType.INNER, " INNER JOIN {0} AS {1} ON ");
-            JoinTypeMapper.Add(JoinType.LEFT, " LEFT JOIN {0} AS {1} ON ");
-            JoinTypeMapper.Add(JoinType.RIGHT, " RIGHT JOIN {0} AS {1} ON ");
+            JoinTypeMapper.Add(JoinType.INNER, "INNER JOIN {0} AS {1} ON");
+            JoinTypeMapper.Add(JoinType.LEFT, "LEFT JOIN {0} AS {1} ON");
+            JoinTypeMapper.Add(JoinType.RIGHT, "RIGHT JOIN {0} AS {1} ON");
         }
 
         private void InitOrderType()
         {
-            OrderTypeMapper.Add(OrderByType.ASC, " ORDER BY {0} ASC ");
-            OrderTypeMapper.Add(OrderByType.DESC, " ORDER BY {0} DESC ");
+            OrderTypeMapper.Add(OrderByType.ASC, "ORDER BY {0} ASC");
+            OrderTypeMapper.Add(OrderByType.DESC, "ORDER BY {0} DESC");
         }
     }
 

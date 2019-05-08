@@ -69,6 +69,7 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
         internal ExecuteCoreResult Execute(ExecuteType executeType, String sql, IEnumerable<EntityParameter> parameters = null, CommandType commandType = CommandType.Text)
         {
             Parameter.Validate(sql);
+            sql = sql.Replace("  ", " ");
             try
             {
                 Open();
