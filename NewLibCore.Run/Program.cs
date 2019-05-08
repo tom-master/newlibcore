@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading;
 using NewLibCore.Data.SQL.Mapper;
 using NewLibCore.Data.SQL.Mapper.Config;
 using NewLibCore.Data.SQL.Mapper.Extension;
@@ -14,13 +16,19 @@ namespace NewLibCore.Run
         private static void Main(String[] args)
         {
             MapperFactory.Factory.SwitchToMySql().InitLogger().UseStatementCache();
-
             while (true)
             {
                 using (var context = new EntityMapper())
                 {
                     var name = "admin";
+                    var sw = new Stopwatch();
+                    sw.Start();
                     var r = context.Select<User>().InnerJoin<UserRole>((a, b) => a.Id == b.UserId).Where(w => w.Name == name && !w.IsDisable).FirstOrDefault();
+
+                    sw.Stop();
+                    var ts2 = sw.Elapsed;
+                    Console.WriteLine("Stopwatch总共花费{0}ms.", ts2.TotalMilliseconds);
+                    Thread.Sleep(1000);
                 }
 
                 //Console.ReadKey();

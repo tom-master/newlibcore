@@ -9,6 +9,7 @@ using NewLibCore.Data.SQL.Mapper.Extension;
 using NewLibCore.Data.SQL.Mapper.Translation;
 using NewLibCore.InternalExtension;
 using NewLibCore.Validate;
+using Newtonsoft.Json;
 
 namespace NewLibCore.Data.SQL.Mapper
 {
@@ -144,6 +145,9 @@ namespace NewLibCore.Data.SQL.Mapper
         private ExecuteCoreResult InternalExecuteSql(ExecuteType executeType)
         {
             IBuilder<TModel> builder = new SelectBuilder<TModel>(_statementStore);
+
+            var r = _statementStore.MergeExpression();
+
             var executeResult = _execute.Execute(executeType, builder.Build());
             return executeResult;
         }

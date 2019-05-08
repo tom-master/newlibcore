@@ -23,7 +23,7 @@ namespace NewLibCore.Data.SQL.Builder
         public TranslationCoreResult Build()
         {
             var translation = new TranslationCore(_statementStore);
-
+          
             var fields = ExtractFieldsAndTableName(_statementStore.Field);
             translation.Result.Append($@"SELECT {fields.fields} FROM {typeof(TModel).Name} AS {fields.tableAliasName}");
             translation.Translate();
