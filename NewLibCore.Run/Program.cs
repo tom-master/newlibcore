@@ -25,7 +25,9 @@ namespace NewLibCore.Run
                         a.Id,
                         a.Name,
                         a.LoginPassword,
+                        b.UserFace,
                         a.IsAdmin,
+                        b.IsModifyUserFace
                     }).InnerJoin<Config>((a, b) => a.Id == b.UserId).Where(a => a.Name == "userName" && !a.IsDisable).FirstOrDefault();
                 }
 
