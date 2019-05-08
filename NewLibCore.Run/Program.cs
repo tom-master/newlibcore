@@ -20,14 +20,12 @@ namespace NewLibCore.Run
             {
                 using (var context = new EntityMapper())
                 {
-                    var user = context.Select<User>(a => new
+                    var user = context.Select<User, Config>((a, b) => new
                     {
                         a.Id,
                         a.Name,
                         a.LoginPassword,
-                        a.UserFace,
                         a.IsAdmin,
-                        a.IsModifyUserFace
                     }).InnerJoin<Config>((a, b) => a.Id == b.UserId).Where(a => a.Name == "userName" && !a.IsDisable).FirstOrDefault();
                 }
 
@@ -36,7 +34,7 @@ namespace NewLibCore.Run
         }
     }
 
-       public partial class Config : EntityBase
+    public partial class Config : EntityBase
     {
         /// <summary>
         /// 皮肤

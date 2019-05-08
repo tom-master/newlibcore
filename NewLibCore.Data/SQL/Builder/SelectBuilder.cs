@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -23,7 +24,7 @@ namespace NewLibCore.Data.SQL.Builder
         public TranslationCoreResult Build()
         {
             var translation = new TranslationCore(_statementStore);
-          
+
             var fields = ExtractFieldsAndTableName(_statementStore.Field);
             translation.Result.Append($@"SELECT {fields.fields} FROM {typeof(TModel).Name} AS {fields.tableAliasName}");
             translation.Translate();
@@ -53,30 +54,38 @@ namespace NewLibCore.Data.SQL.Builder
 
         private (String fields, String tableAliasName) ExtractFieldsAndTableName(Statement statement)
         {
-            var modelAliasName = "";
+            var modelAliasName = new List<String>();
             if (statement == null)
             {
                 var modelType = typeof(TModel);
-                modelAliasName = modelType.Name.ToLower();
+                modelAliasName.Add(modelType.Name.ToLower());
                 var propertys = modelType.GetProperties().Where(w => w.GetCustomAttributes<PropertyValidate>().Any());
-                return (String.Join(",", propertys.Select(s => $@"{modelAliasName}.{s.Name}")), modelAliasName);
+                return (String.Join(",", propertys.Select(s => $@"{modelAliasName.FirstOrDefault()}.{s.Name}")), modelAliasName.FirstOrDefault());
             }
 
             var fields = (LambdaExpression)statement.Expression;
-            modelAliasName = fields.Parameters[0].Type.Name.ToLower();
+            foreach (var item in fields.Parameters)
+            {
+                modelAliasName.Add(item.Type.Name.ToLower());
+            }
             if (fields.Body.NodeType == ExpressionType.Constant)
             {
                 var constant = (ConstantExpression)fields.Body;
-                return (constant.Value + "", modelAliasName);
+                return (constant.Value + "", modelAliasName.FirstOrDefault());
             }
             if (fields.Body.NodeType == ExpressionType.MemberAccess)
             {
                 var members = (fields.Body as MemberExpression);
-                return (members.Member.Name, modelAliasName);
+                return (members.Member.Name, modelAliasName.FirstOrDefault());
             }
 
-            var dynamicFields = (fields.Body as NewExpression).Members.Select(s => $@"{modelAliasName}.{s.Name}");
-            return (String.Join(",", dynamicFields), modelAliasName);
+            var dynamicFields = new List<String>();
+            foreach (Expression item in (fields.Body as NewExpression).Arguments)
+            {
+                var member = (MemberExpression)item;
+                dynamicFields.Add($@"{((ParameterExpression)member.Expression).Type.Name.ToLower()}.{member.Member.Name}");
+            }
+            return (String.Join(",", dynamicFields), modelAliasName.FirstOrDefault());
         }
     }
 }
