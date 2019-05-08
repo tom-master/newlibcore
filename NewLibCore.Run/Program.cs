@@ -15,12 +15,16 @@ namespace NewLibCore.Run
         {
             MapperFactory.Factory.SwitchToMySql().InitLogger().UseStatementCache();
 
-            using (var context = new EntityMapper())
+            while (true)
             {
-                var name = "admin";
-                var r = context.Select<User>().InnerJoin<UserRole>((a, b) => a.Id == b.UserId).Where(w => w.Name == name && !w.IsDisable).FirstOrDefault();
+                using (var context = new EntityMapper())
+                {
+                    var name = "admin";
+                    var r = context.Select<User>().InnerJoin<UserRole>((a, b) => a.Id == b.UserId).Where(w => w.Name == name && !w.IsDisable).FirstOrDefault();
+                }
+
+                //Console.ReadKey();
             }
-            Console.ReadKey();
         }
     }
 

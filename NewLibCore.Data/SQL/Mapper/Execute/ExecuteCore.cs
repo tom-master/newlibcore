@@ -73,9 +73,17 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
 
             if (MapperFactory.StatementCache)
             {
-
+                var internalSql = sql;
+                foreach (var item in parameters)
+                {
+                    internalSql = internalSql.Replace(item.Key, item.Value.ToString());
+                }
+                var cacheResult = MapperFactory.Cache.Get(internalSql.GetHashCode().ToString());
+                if (cacheResult != null)
+                {
+                    return (ExecuteCoreResult)MapperFactory.Cache.Get(internalSql.GetHashCode().ToString());
+                }
             }
-
 
             try
             {
@@ -114,6 +122,18 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
                         executeResult.Value = cmd.ExecuteScalar();
                     }
                     cmd.Parameters.Clear();
+
+                    if (MapperFactory.StatementCache)
+                    {
+                        var internalSql = sql;
+                        foreach (var item in parameters)
+                        {
+                            internalSql = internalSql.Replace(item.Key, item.Value.ToString());
+                        }
+                        MapperFactory.Cache.Add(internalSql.GetHashCode().ToString(), executeResult);
+
+                    }
+
                     return executeResult;
                 }
             }
