@@ -15,26 +15,114 @@ namespace NewLibCore.Run
     {
         private static void Main(String[] args)
         {
-            MapperFactory.Factory.SwitchToMySql().InitLogger().UseStatementCache();
+            MapperFactory.Factory.SwitchToMySql().InitLogger();
             while (true)
             {
                 using (var context = new EntityMapper())
                 {
-                    var name = "admin";
-                    var sw = new Stopwatch();
-                    sw.Start();
-                    var r = context.Select<User>().InnerJoin<UserRole>((a, b) => a.Id == b.UserId).Where(w => w.Name == name && !w.IsDisable).FirstOrDefault();
-
-                    sw.Stop();
-                    var ts2 = sw.Elapsed;
-                    Console.WriteLine("Stopwatch总共花费{0}ms.", ts2.TotalMilliseconds);
-                    Thread.Sleep(1000);
+                    var user = context.Select<User>(a => new
+                    {
+                        a.Id,
+                        a.Name,
+                        a.LoginPassword,
+                        a.UserFace,
+                        a.IsAdmin,
+                        a.IsModifyUserFace
+                    }).InnerJoin<Config>((a, b) => a.Id == b.UserId).Where(a => a.Name == "userName" && !a.IsDisable).FirstOrDefault();
                 }
 
                 //Console.ReadKey();
             }
         }
     }
+
+       public partial class Config : EntityBase
+    {
+        /// <summary>
+        /// 皮肤
+        /// </summary>
+        [Required, InputRange(10)]
+        public String Skin { get; private set; }
+
+        /// <summary>
+        /// 用户头像
+        /// </summary>
+        [Required, InputRange(150)]
+        public String UserFace { get; private set; }
+
+        /// <summary>
+        /// app尺寸
+        /// </summary>
+        [Required]
+        public Int32 AppSize { get; private set; }
+
+        /// <summary>
+        /// app垂直间距
+        /// </summary>
+        [Required]
+        public Int32 AppVerticalSpacing { get; private set; }
+
+        /// <summary>
+        /// app水平间距
+        /// </summary>
+        [Required]
+        public Int32 AppHorizontalSpacing { get; private set; }
+
+        /// <summary>
+        /// 默认桌面编号
+        /// </summary>
+        [DefaultValue(typeof(Int32), 1)]
+        public Int32 DefaultDeskNumber { get; private set; }
+
+        /// <summary>
+        /// 默认桌面数量
+        /// </summary>
+        [DefaultValue(typeof(Int32), 5)]
+        public Int32 DefaultDeskCount { get; private set; }
+
+        /// <summary>
+        /// 壁纸来源
+        /// </summary>
+        [DefaultValue(typeof(Boolean))]
+        public Boolean IsBing { get; private set; }
+
+
+        /// <summary>
+        /// 账户Id
+        /// </summary>
+        [Required]
+        public Int32 UserId { get; private set; }
+
+        /// <summary>
+        /// 壁纸Id
+        /// </summary>
+        [Required]
+        public Int32 WallpaperId { get; private set; }
+
+        /// <summary>
+        /// 账户头像是否被更改
+        /// </summary>
+        [Required]
+        public Boolean IsModifyUserFace { get; private set; }
+
+        public Config(Int32 userId)
+        {
+            UserFace = @"/images/ui/avatar_48.jpg";
+            Skin = "default";
+            AppSize = 48;
+            AppVerticalSpacing = 50;
+            AppHorizontalSpacing = 50;
+            DefaultDeskNumber = 1;
+            DefaultDeskCount = 5;
+            UserId = userId;
+            IsBing = true;
+            IsModifyUserFace = false;
+            WallpaperId = 3;
+        }
+
+        public Config() { }
+    }
+
 
     public class UserRole : EntityBase
     {

@@ -76,6 +76,15 @@ namespace NewLibCore.Data.SQL.Mapper
             return dataTable.AsList<TModel>().ToList();
         }
 
+        public ISelectEntityMapper<TModel> Select<T>(Expression<Func<TModel, T, dynamic>> fields = null) where T : EntityBase, new()
+        {
+            if (fields != null)
+            {
+                _statementStore.Add(fields);
+            }
+            return this;
+        }
+
         public ISelectEntityMapper<TModel> Select(Expression<Func<TModel, dynamic>> fields = null)
         {
             if (fields != null)

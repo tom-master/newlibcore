@@ -27,6 +27,8 @@ namespace NewLibCore.Data.SQL.Mapper
 
         ISelectEntityMapper<TModel> Select(Expression<Func<TModel, dynamic>> fields = null);
 
+        ISelectEntityMapper<TModel> Select<T>(Expression<Func<TModel, T, dynamic>> fields = null) where T : EntityBase, new();
+
         ISelectEntityMapper<TModel> Where<T>(Expression<Func<TModel, T, Boolean>> expression = null) where T : EntityBase, new();
 
         ISelectEntityMapper<TModel> Where<T>(Expression<Func<T, Boolean>> expression = null) where T : EntityBase, new();

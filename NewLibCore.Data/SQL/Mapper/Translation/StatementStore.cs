@@ -84,7 +84,17 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
             };
         }
 
-        internal void Add<TModl>(Expression<Func<TModl, dynamic>> expression) where TModl : PropertyMonitor, new()
+        internal void Add<TModel>(Expression<Func<TModel, dynamic>> expression) where TModel : PropertyMonitor, new()
+        {
+            Parameter.Validate(expression);
+            Field = new SimpleStatement
+            {
+                Expression = expression
+            };
+        }
+
+        internal void Add<TModel, T>(Expression<Func<TModel, T, dynamic>> expression) where TModel : PropertyMonitor, new()
+        where T : PropertyMonitor, new()
         {
             Parameter.Validate(expression);
             Field = new SimpleStatement
@@ -116,7 +126,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
             {
                 newAliasMapper.AddRange(Joins.SelectMany(s => s.AliaNameMapper));
             }
-
+            newAliasMapper = newAliasMapper.Select(s => s).Distinct().ToList();
             return newAliasMapper;
         }
     }
