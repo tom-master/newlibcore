@@ -10,15 +10,15 @@ namespace NewLibCore.Data.SQL.Mapper.Config
 
         public static MapperFactory Factory { get; } = new MapperFactory();
 
-        internal static Boolean ExpressionCache { get; private set; } = false;
-
-        internal static Boolean StatementCache { get; private set; } = false;
-
         internal static ILogger Logger { get; private set; }
+
+        internal static MapperCache Cache { get; private set; }
 
         internal static MapperInstance Mapper { get; private set; }
 
-        internal static MapperCache Cache { get; private set; }
+        internal static Boolean ExpressionCache { get; private set; } = false;
+
+        internal static Boolean StatementCache { get; private set; } = false;
 
         public MapperFactory InitLogger(ILogger logger = null)
         {
@@ -60,15 +60,15 @@ namespace NewLibCore.Data.SQL.Mapper.Config
             switch (database)
             {
                 case DatabaseType.MSSQL:
-                {
-                    Mapper = new MsSqlInstance();
-                    break;
-                }
+                    {
+                        Mapper = new MsSqlInstance();
+                        break;
+                    }
                 case DatabaseType.MYSQL:
-                {
-                    Mapper = new MySqlInstance();
-                    break;
-                }
+                    {
+                        Mapper = new MySqlInstance();
+                        break;
+                    }
                 default:
                     break;
             }
