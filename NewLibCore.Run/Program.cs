@@ -17,7 +17,7 @@ namespace NewLibCore.Run
             using (var context = new EntityMapper())
             {
                 var name = "admin";
-                context.Select<User>(a => new { a.Id, a.Name }).InnerJoin<UserRole>((a, b) => a.Id == b.UserId).Where(w => w.Name == name && !w.IsDisable).FirstOrDefault();
+                var r = context.Select<User>().InnerJoin<UserRole>((a, b) => a.Id == b.UserId).Where(w => w.Name == name && !w.IsDisable).FirstOrDefault();
             }
         }
     }

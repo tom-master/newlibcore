@@ -105,8 +105,9 @@ namespace NewLibCore.Data.SQL.Mapper
 
         public TModel FirstOrDefault()
         {
-            var executeResult = InternalExecuteSql(ExecuteType.SELECT_SINGLE);
-            return (TModel)executeResult.Value;
+            var executeResult = InternalExecuteSql(ExecuteType.SELECT);
+            var dataTable = executeResult.Value as DataTable;
+            return dataTable.AsSignal<TModel>();
         }
 
         public List<TModel> ToList()
