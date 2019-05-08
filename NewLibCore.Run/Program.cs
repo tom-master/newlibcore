@@ -13,12 +13,17 @@ namespace NewLibCore.Run
     {
         private static void Main(String[] args)
         {
+            var r1 = "123";
+            Console.WriteLine(r1.GetHashCode());
+            Console.WriteLine("123".GetHashCode());
+
             MapperFactory.Factory.SwitchToMySql().InitLogger().UseExpressionCache().UseStatementCache();
             using (var context = new EntityMapper())
             {
                 var name = "admin";
                 var r = context.Select<User>().InnerJoin<UserRole>((a, b) => a.Id == b.UserId).Where(w => w.Name == name && !w.IsDisable).FirstOrDefault();
             }
+            Console.ReadKey();
         }
     }
 

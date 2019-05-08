@@ -1,10 +1,15 @@
-﻿using NewLibCore.Data.SQL.Mapper.Extension;
+﻿using System;
+using NewLibCore.Data.SQL.Mapper.Extension;
 
 namespace NewLibCore.Data.SQL.Mapper.Config
 {
     public class MapperFactory
     {
         private MapperFactory() { }
+
+        internal static Boolean ExpressionCache { get; private set; } = false;
+
+        internal static Boolean StatementCache { get; private set; } = false;
 
         internal static ILogger Logger { get; private set; }
 
@@ -32,11 +37,13 @@ namespace NewLibCore.Data.SQL.Mapper.Config
 
         public MapperFactory UseExpressionCache()
         {
+            ExpressionCache = true;
             return this;
         }
 
         public MapperFactory UseStatementCache()
         {
+            StatementCache = true;
             return this;
         }
 

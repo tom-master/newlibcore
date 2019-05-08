@@ -85,7 +85,9 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
                     {
                         cmd.Parameters.AddRange(parameters.Select(s => (DbParameter)s).ToArray());
                     }
-                    MapperFactory.Logger.Write("INFO", $@"ExecuteType:{executeType} SQL:{sql} PARAMETERS:{(parameters == null ? "" : String.Join(",", parameters.Select(s => $@"{s.Key}::{s.Value}")))}");
+                    MapperFactory.Logger.Write("INFO", $@"ExecuteType:{executeType}");
+                    MapperFactory.Logger.Write("INFO", $@"SQL:{sql}");
+                    MapperFactory.Logger.Write("INFO", $@"PARAMETERS:{Environment.NewLine}{(parameters == null ? "" : String.Join($@"{Environment.NewLine}", parameters.Select(s => $@"{s.Key}----{s.Value}")))}");
                     var executeResult = new ExecuteCoreResult();
                     if (executeType == ExecuteType.SELECT)
                     {

@@ -5,6 +5,7 @@ using System.Linq;
 using NewLibCore.Data.SQL.Mapper.Config;
 using NewLibCore.InternalExtension;
 using NewLibCore.Security;
+using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper
 {
@@ -12,6 +13,9 @@ namespace NewLibCore.Data.SQL.Mapper
     {
         public EntityParameter(String key, Object value)
         {
+            Parameter.Validate(key);
+            Parameter.Validate(value);
+
             Key = key;
             Value = ParseValueType(value);
         }
@@ -22,6 +26,8 @@ namespace NewLibCore.Data.SQL.Mapper
 
         public static implicit operator DbParameter(EntityParameter entityParameter)
         {
+            Parameter.Validate(entityParameter);
+
             var parameter = MapperFactory.Instance.GetParameterInstance();
             parameter.ParameterName = entityParameter.Key;
             parameter.Value = entityParameter.Value;
@@ -30,6 +36,8 @@ namespace NewLibCore.Data.SQL.Mapper
 
         private Object ParseValueType(Object obj)
         {
+            Parameter.Validate(obj);
+
             if (obj == null)
             {
                 throw new ArgumentNullException($@"SQL参数:{Key}的值为null");
