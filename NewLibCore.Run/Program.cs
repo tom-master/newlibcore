@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using NewLibCore.Data.SQL.Mapper;
 using NewLibCore.Data.SQL.Mapper.Config;
-using NewLibCore.Data.SQL.Mapper.Execute;
 using NewLibCore.Data.SQL.Mapper.Extension;
 using NewLibCore.Data.SQL.Mapper.Extension.AssociationMapperExtension;
 using NewLibCore.Data.SQL.Mapper.Extension.PropertyExtension;
