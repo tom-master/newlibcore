@@ -195,7 +195,7 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             IBuilder<TModel> builder = new AddBuilder<TModel>(model, true);
             var executeResult = _executeCore.Execute(ExecuteType.INSERT, builder.Build());
-            model.Id = (Int32)executeResult.Value;
+            model.Id = Int32.Parse(executeResult.Value.ToString());
             return model;
         }
     }
