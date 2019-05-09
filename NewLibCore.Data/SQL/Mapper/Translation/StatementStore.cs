@@ -40,6 +40,8 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
 
     internal class StatementStore
     {
+        internal ExecuteType ExecuteType { get; set; }
+
         internal OrderStatement Order { get; private set; }
 
         internal SimpleStatement Field { get; private set; }

@@ -16,26 +16,12 @@ namespace NewLibCore.Run
         private static void Main(String[] args)
         {
             MapperFactory.Factory.SwitchToMySql().InitLogger().UseStatementCache();
-            while (true)
+
+            using (var context = new EntityMapper())
             {
-                using (var context = new EntityMapper())
-                {
-                    var sw = new Stopwatch();
-                    sw.Start();
-                    var user = context.Select<User, Config>((a, b) => new
-                    {
-                        a.Id,
-                        a.Name,
-                        a.LoginPassword,
-                        b.UserFace,
-                        a.IsAdmin,
-                        b.IsModifyUserFace
-                    }).InnerJoin<Config>((a, b) => a.Id == b.UserId).Where(a => a.Name == "alahuakeba" && !a.IsDisable).FirstOrDefault();
-                    sw.Stop();
-                    var ts2 = sw.Elapsed;
-                    Console.WriteLine("Stopwatch总共花费{0}ms.", ts2.TotalMilliseconds);
-                    Thread.Sleep(1000);
-                }
+                var user = new User();
+                user.Online();
+                var result = context.Modify(user, acc => acc.Id == user.Id);
             }
         }
     }

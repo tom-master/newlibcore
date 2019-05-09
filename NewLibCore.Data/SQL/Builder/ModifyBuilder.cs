@@ -36,7 +36,7 @@ namespace NewLibCore.Data.SQL.Builder
             }
 
             var translation = new TranslationCore(_statementStore);
-            var placeHolder = String.Join(",", properties.Select(key => $@"@{key.Name}"));
+            var placeHolder = String.Join(",", properties.Select(key => $@"{key.Name}=@{key.Name}"));
             var entityParameters = properties.Select(c => new EntityParameter($@"@{c.Name}", c.GetValue(_instance)));
 
             translation.Result.Append($@"UPDATE {typeof(TModel).Name} SET {String.Join(",", placeHolder)}", entityParameters);

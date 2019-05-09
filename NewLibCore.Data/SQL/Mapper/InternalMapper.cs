@@ -154,6 +154,7 @@ namespace NewLibCore.Data.SQL.Mapper
         private ExecuteCoreResult InternalExecuteSql(ExecuteType executeType)
         {
             IBuilder<TModel> builder = new SelectBuilder<TModel>(_statementStore);
+            _statementStore.ExecuteType = executeType;
             var executeResult = _execute.Execute(executeType, builder.Build());
             return executeResult;
         }
@@ -173,13 +174,11 @@ namespace NewLibCore.Data.SQL.Mapper
 
         public Boolean Update(TModel model, Expression<Func<TModel, Boolean>> expression)
         {
-            using (_execute)
-            {
-                _statementStore.Add(expression);
-                IBuilder<TModel> builder = new ModifyBuilder<TModel>(model, _statementStore, true);
-                var executeResult = _execute.Execute(ExecuteType.UPDATE, builder.Build());
-                return (Int32)executeResult.Value > 0;
-            }
+            _statementStore.Add(expression);
+            _statementStore.ExecuteType = ExecuteType.UPDATE;
+            IBuilder<TModel> builder = new ModifyBuilder<TModel>(model, _statementStore, true);
+            var executeResult = _execute.Execute(ExecuteType.UPDATE, builder.Build());
+            return (Int32)executeResult.Value > 0;
         }
     }
 
