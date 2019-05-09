@@ -80,7 +80,7 @@ namespace NewLibCore.Data.SQL.Builder
             }
 
             var dynamicFields = new List<String>();
-            foreach (Expression item in (fields.Body as NewExpression).Arguments)
+            foreach (var item in (fields.Body as NewExpression).Arguments)
             {
                 var member = (MemberExpression)item;
                 dynamicFields.Add($@"{((ParameterExpression)member.Expression).Type.Name.ToLower()}.{member.Member.Name}");
