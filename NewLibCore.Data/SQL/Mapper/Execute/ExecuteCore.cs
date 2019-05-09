@@ -69,19 +69,14 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
         internal ExecuteCoreResult Execute(ExecuteType executeType, String sql, IEnumerable<EntityParameter> parameters = null, CommandType commandType = CommandType.Text)
         {
             Parameter.Validate(sql);
-            sql = sql.Replace("  ", " ");
-
+            sql = ReformatSql(sql);
             if (MapperFactory.StatementCache)
             {
-                var internalSql = sql;
-                foreach (var item in parameters)
-                {
-                    internalSql = internalSql.Replace(item.Key, item.Value.ToString());
-                }
-                var cacheResult = MapperFactory.Cache.Get(internalSql.GetHashCode().ToString());
+                var cacheResult = MapperFactory.Cache.Get(PrepareCacheKey(sql, parameters));
                 if (cacheResult != null)
                 {
-                    return (ExecuteCoreResult)MapperFactory.Cache.Get(internalSql.GetHashCode().ToString());
+                    MapperFactory.Logger.Write("INFO", "return from cache");
+                    return (ExecuteCoreResult)cacheResult;
                 }
             }
 
@@ -125,13 +120,8 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
 
                     if (MapperFactory.StatementCache)
                     {
-                        var internalSql = sql;
-                        foreach (var item in parameters)
-                        {
-                            internalSql = internalSql.Replace(item.Key, item.Value.ToString());
-                        }
-                        MapperFactory.Cache.Add(internalSql.GetHashCode().ToString(), executeResult);
-
+                        MapperFactory.Logger.Write("INFO", "add to cache");
+                        MapperFactory.Cache.Add(PrepareCacheKey(sql, parameters), executeResult);
                     }
 
                     return executeResult;
@@ -142,6 +132,23 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
                 MapperFactory.Logger.Write("ERROR", $@"{ex}");
                 throw;
             }
+        }
+
+        private static String PrepareCacheKey(String sql, IEnumerable<EntityParameter> parameters)
+        {
+            var cacheKey = sql;
+            foreach (var item in parameters)
+            {
+                cacheKey = cacheKey.Replace(item.Key, item.Value.ToString());
+            }
+
+            return cacheKey;
+        }
+
+        private String ReformatSql(String sql)
+        {
+            sql = sql.Replace("  ", " ");
+            return sql;
         }
 
         private void Open()

@@ -15,11 +15,13 @@ namespace NewLibCore.Run
     {
         private static void Main(String[] args)
         {
-            MapperFactory.Factory.SwitchToMySql().InitLogger();
+            MapperFactory.Factory.SwitchToMySql().InitLogger().UseStatementCache();
             while (true)
             {
                 using (var context = new EntityMapper())
                 {
+                    var sw = new Stopwatch();
+                    sw.Start();
                     var user = context.Select<User, Config>((a, b) => new
                     {
                         a.Id,
@@ -28,10 +30,12 @@ namespace NewLibCore.Run
                         b.UserFace,
                         a.IsAdmin,
                         b.IsModifyUserFace
-                    }).InnerJoin<Config>((a, b) => a.Id == b.UserId).Where(a => a.Name == "userName" && !a.IsDisable).FirstOrDefault();
+                    }).InnerJoin<Config>((a, b) => a.Id == b.UserId).Where(a => a.Name == "alahuakeba" && !a.IsDisable).FirstOrDefault();
+                    sw.Stop();
+                    var ts2 = sw.Elapsed;
+                    Console.WriteLine("Stopwatch总共花费{0}ms.", ts2.TotalMilliseconds);
+                    Thread.Sleep(1000);
                 }
-
-                //Console.ReadKey();
             }
         }
     }

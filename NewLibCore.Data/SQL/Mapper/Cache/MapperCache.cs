@@ -21,10 +21,11 @@ namespace NewLibCore.Data.SQL.Mapper.Cache
 
         protected internal override void Add(String key, Object obj, TimeSpan? timeOut = null)
         {
+            var alive = new Random(DateTime.Now.Millisecond).Next(5, 60);
             var cacheItem = new CacheItem(key, obj);
             var itemPolicy = new CacheItemPolicy
             {
-                AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(new Random(DateTime.Now.Millisecond).Next(5, 60))
+                AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(alive)
             };
             _baseCache.Add(cacheItem, itemPolicy);
         }
