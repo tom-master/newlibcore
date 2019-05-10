@@ -302,21 +302,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
             }
 
             var leftAliasName = _tableAliasMapper.Where(w => w.Key == leftParameterExp.Name && w.Value == leftParameterExp.Type.Name).FirstOrDefault().Value.ToLower();
-            if (binaryExp.Right.GetType() == typeof(ConstantExpression))
-            {
-                var constant = (ConstantExpression)binaryExp.Right;
-                if (Boolean.TryParse(constant.Value.ToString(), out var result))
-                {
-                    var relationTemplate = MapperFactory.Mapper.RelationBuilder(relationType, $"{leftAliasName}.{leftMember.Member.Name}", (result ? 1 : 0).ToString());
-                    Result.Append(relationTemplate);
-                }
-                else
-                {
-                    var relationTemplate = MapperFactory.Mapper.RelationBuilder(relationType, $"{leftAliasName}.{leftMember.Member.Name}", constant.Value);
-                    Result.Append(relationTemplate);
-                }
-            }
-            else
+            if (binaryExp.Right.GetType() != typeof(ConstantExpression))
             {
                 var rightMember = (MemberExpression)binaryExp.Right;
                 var rightParameterExp = (ParameterExpression)rightMember.Expression;
@@ -326,6 +312,19 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
                 }
                 var rightAliasName = _tableAliasMapper.Where(w => w.Key == rightParameterExp.Name && w.Value == rightParameterExp.Type.Name).FirstOrDefault().Value.ToLower();
                 var relationTemplate = MapperFactory.Mapper.RelationBuilder(relationType, $"{rightAliasName}.{rightMember.Member.Name}", $"{leftAliasName}.{leftMember.Member.Name}");
+                Result.Append(relationTemplate);
+                return;
+            }
+
+            var constant = (ConstantExpression)binaryExp.Right;
+            if (Boolean.TryParse(constant.Value.ToString(), out var result))
+            {
+                var relationTemplate = MapperFactory.Mapper.RelationBuilder(relationType, $"{leftAliasName}.{leftMember.Member.Name}", (result ? 1 : 0).ToString());
+                Result.Append(relationTemplate);
+            }
+            else
+            {
+                var relationTemplate = MapperFactory.Mapper.RelationBuilder(relationType, $"{leftAliasName}.{leftMember.Member.Name}", constant.Value);
                 Result.Append(relationTemplate);
             }
         }
