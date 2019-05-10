@@ -17,12 +17,14 @@ namespace NewLibCore.Run
 
             using (var context = new EntityMapper())
             {
+                IList<Int32> userIds = new List<Int32> { 1, 2, 3, 4 };
+
                 var result = context.Select<Role>(a => new
                 {
                     a.Id,
                     a.Name,
                     a.RoleIdentity
-                }).InnerJoin<UserRole>((a, b) => a.Id == b.RoleId).Where<UserRole>(a => a.UserId == 4).ToList();
+                }).InnerJoin<UserRole>((a, b) => a.Id == b.RoleId).Where<UserRole>(a => "".Contains(a.Id + "")).ToList();
 
             }
         }

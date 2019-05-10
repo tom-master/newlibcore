@@ -163,7 +163,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
         public ISelectEntityMapper<TModel> InnerJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> expression)
             where TLeft : EntityBase, new()
-            where TRight : EntityBase, new()
+            where TRight : EntityBase, new() 
         {
             Parameter.Validate(expression);
             _statementStore.Add(expression, JoinType.INNER);
@@ -184,8 +184,6 @@ namespace NewLibCore.Data.SQL.Mapper
             var executeResult = _execute.Execute(executeType, builder.Build());
             return executeResult;
         }
-
-
     }
 
     internal class UpdateEntityMapper<TModel> : IUpdateEntityMapper<TModel> where TModel : EntityBase, new()

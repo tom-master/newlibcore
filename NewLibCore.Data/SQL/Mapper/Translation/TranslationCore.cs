@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -204,10 +205,8 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
                 {
                     var memberExpression = (MemberExpression)((UnaryExpression)expression).Operand;
                     var parameterExp = (ParameterExpression)memberExpression.Expression;
-                    var memberName = memberExpression.Member.Name;
-                    var newMember = Expression.MakeMemberAccess(parameterExp, parameterExp.Type.GetMember(memberName)[0]);
-                    var newExpression = Expression.NotEqual(newMember, Expression.Constant(true));
-                    InternalBuildWhere(newExpression);
+                    var newMember = Expression.MakeMemberAccess(parameterExp, parameterExp.Type.GetMember(memberExpression.Member.Name)[0]);
+                    InternalBuildWhere(Expression.NotEqual(newMember, Expression.Constant(true)));
                     break;
                 }
                 default:
@@ -252,7 +251,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
                 {
                     relationType = RelationType.FULL_LIKE;
                 }
-                else if (argumentType.GetGenericTypeDefinition() == typeof(List<>))
+                else if (argumentType.GetInterfaces().Any(a => a == typeof(IEnumerable)))
                 {
                     relationType = RelationType.IN;
                 }
