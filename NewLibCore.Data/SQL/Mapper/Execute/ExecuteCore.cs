@@ -68,20 +68,20 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
 
         internal ExecuteCoreResult Execute(ExecuteType executeType, String sql, IEnumerable<EntityParameter> parameters = null, CommandType commandType = CommandType.Text)
         {
-            Parameter.Validate(sql);
-            sql = ReformatSql(sql);
-            if (MapperFactory.Cache != null)
-            {
-                var cacheResult = MapperFactory.Cache.Get(PrepareCacheKey(sql, parameters));
-                if (cacheResult != null)
-                {
-                    MapperFactory.Logger.Write("INFO", "return from cache");
-                    return (ExecuteCoreResult)cacheResult;
-                }
-            }
-
             try
             {
+                Parameter.Validate(sql);
+                sql = ReformatSql(sql);
+                if (MapperFactory.Cache != null)
+                {
+                    var cacheResult = MapperFactory.Cache.Get(PrepareCacheKey(sql, parameters));
+                    if (cacheResult != null)
+                    {
+                        MapperFactory.Logger.Write("INFO", "return from cache");
+                        return (ExecuteCoreResult)cacheResult;
+                    }
+                }
+
                 Open();
                 using (var cmd = _connection.CreateCommand())
                 {

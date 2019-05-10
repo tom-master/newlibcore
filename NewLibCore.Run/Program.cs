@@ -14,19 +14,21 @@ namespace NewLibCore.Run
         private static void Main(String[] args)
         {
             MapperFactory.GetFactoryInstance().SwitchToMySql().InitLogger().UseCache();
-            MapperFactory.GetFactoryInstance().SwitchToMySql().InitLogger().UseCache();
 
-            using (var context = new EntityMapper())
+            while (true)
             {
-                IList<Int32> userIds = new List<Int32> { 1, 2, 3, 4 };
-
-                var result = context.Select<Role>(a => new
+                using (var context = new EntityMapper())
                 {
-                    a.Id,
-                    a.Name,
-                    a.RoleIdentity
-                }).InnerJoin<UserRole>((a, b) => a.Id == b.RoleId).Where<UserRole>(a => "".Contains(a.Id + "")).ToList();
+                    IList<Int32> userIds = new List<Int32> { 1, 2, 3, 4 };
 
+                    var result = context.Select<Role>(a => new
+                    {
+                        a.Id,
+                        a.Name,
+                        a.RoleIdentity
+                    }).InnerJoin<UserRole>((a, b) => a.Id == b.RoleId).Where<UserRole>(a => userIds.Contains(a.Id)).ToList();
+
+                }
             }
         }
     }
