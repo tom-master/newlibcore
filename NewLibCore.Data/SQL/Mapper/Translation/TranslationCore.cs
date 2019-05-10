@@ -237,7 +237,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
                 obj = methodCallExp.Object;
             }
 
-            var relationType = default(RelationType);
+            RelationType relationType = default;
             if (methodName == "StartsWith")
             {
                 relationType = RelationType.START_LIKE;
