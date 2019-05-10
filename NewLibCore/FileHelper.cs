@@ -2,6 +2,7 @@
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
+using NewLibCore.Validate;
 
 namespace NewLibCore
 {
@@ -12,6 +13,7 @@ namespace NewLibCore
         /// </summary>
         public static Boolean IsExistDirectory(String directoryPath)
         {
+            Parameter.Validate(directoryPath);
             return Directory.Exists(directoryPath);
         }
 
@@ -21,6 +23,7 @@ namespace NewLibCore
         /// </summary>
         public static Boolean IsExistFile(String filePath)
         {
+            Parameter.Validate(filePath);
             return File.Exists(filePath);
         }
         #endregion
@@ -45,10 +48,7 @@ namespace NewLibCore
         /// </summary>
         public static Int32 GetLineCount(String filePath)
         {
-            if (String.IsNullOrEmpty(filePath))
-            {
-                throw new ArgumentException("filePath长度不能为0或null");
-            }
+            Parameter.Validate(filePath);
 
             //将文本文件的各行读到一个字符串数组中
             var rows = File.ReadAllLines(filePath);
@@ -82,17 +82,13 @@ namespace NewLibCore
         /// </summary>
         public static String[] GetFileNames(String directoryPath, String searchPattern, Boolean isSearchChild)
         {
+
+            Parameter.Validate(searchPattern);
             //如果目录不存在，则抛出异常
             if (!IsExistDirectory(directoryPath))
             {
                 throw new FileNotFoundException();
             }
-
-            if (String.IsNullOrEmpty(searchPattern))
-            {
-                throw new ArgumentException("searchPattern参数不能为空");
-            }
-
             try
             {
                 if (isSearchChild)
@@ -114,11 +110,7 @@ namespace NewLibCore
         /// </summary>
         public static String[] GetDirectories(String directoryPath)
         {
-            if (String.IsNullOrEmpty(directoryPath))
-            {
-                throw new ArgumentException("directoryPath不能为空");
-            }
-
+            Parameter.Validate(directoryPath);
             try
             {
                 return Directory.GetDirectories(directoryPath);
@@ -134,10 +126,7 @@ namespace NewLibCore
         /// </summary>
         public static String[] GetDirectories(String directoryPath, String searchPattern, Boolean isSearchChild)
         {
-            if (String.IsNullOrEmpty(searchPattern))
-            {
-                throw new ArgumentException("searchPattern不能为空");
-            }
+            Parameter.Validate(searchPattern);
 
             try
             {
@@ -160,12 +149,7 @@ namespace NewLibCore
         /// </summary>
         public static void WriteText(String filePath, String content)
         {
-            if (String.IsNullOrEmpty(filePath))
-            {
-                throw new ArgumentException("filepath不能为空");
-            }
-
-            //向文件写入内容
+            Parameter.Validate(filePath);
             File.WriteAllText(filePath, content);
         }
         #endregion
@@ -176,10 +160,9 @@ namespace NewLibCore
         /// </summary>
         public static void AppendText(String filePath, String content)
         {
-            if (String.IsNullOrEmpty(filePath))
-            {
-                throw new ArgumentException("filepath不能为空");
-            }
+            Parameter.Validate(filePath);
+            Parameter.Validate(content);
+
             File.AppendAllText(filePath, content);
         }
         #endregion
@@ -190,14 +173,9 @@ namespace NewLibCore
         /// </summary>
         public static void Copy(String sourceFilePath, String destFilePath)
         {
-            if (String.IsNullOrEmpty(sourceFilePath))
-            {
-                throw new ArgumentException("sourceFilePath不能为空");
-            }
-            if (String.IsNullOrEmpty(destFilePath))
-            {
-                throw new ArgumentException("destFilePath不能为空");
-            }
+            Parameter.Validate(sourceFilePath);
+            Parameter.Validate(destFilePath);
+
             File.Copy(sourceFilePath, destFilePath, true);
         }
         #endregion
@@ -208,18 +186,11 @@ namespace NewLibCore
         /// </summary>
         public static void Move(String sourceFilePath, String descDirectoryPath)
         {
-            if (String.IsNullOrEmpty(sourceFilePath))
-            {
-                throw new ArgumentException("sourceFilePath不能为空");
-            }
-            if (String.IsNullOrEmpty(descDirectoryPath))
-            {
-                throw new ArgumentException("destFilePath不能为空");
-            }
+            Parameter.Validate(sourceFilePath);
+            Parameter.Validate(descDirectoryPath);
 
             //获取源文件的名称
             var sourceFileName = GetFileName(sourceFilePath);
-
             if (IsExistDirectory(descDirectoryPath))
             {
                 //如果目标中存在同名文件,则删除
@@ -239,11 +210,7 @@ namespace NewLibCore
         /// </summary>
         public static String GetFileName(String filePath)
         {
-            if (String.IsNullOrEmpty(filePath))
-            {
-                throw new ArgumentException("filePath不能为空");
-            }
-
+            Parameter.Validate(filePath);
             return new FileInfo(filePath).Name;
         }
         #endregion
@@ -254,11 +221,7 @@ namespace NewLibCore
         /// </summary>
         public static String GetFileNameNoExtension(String filePath)
         {
-            if (String.IsNullOrEmpty(filePath))
-            {
-                throw new ArgumentException("filePath不能为空");
-            }
-
+            Parameter.Validate(filePath);
             return new FileInfo(filePath).Name.Split('.')[0];
         }
         #endregion
@@ -269,11 +232,7 @@ namespace NewLibCore
         /// </summary>
         public static String GetExtension(String filePath)
         {
-            if (String.IsNullOrEmpty(filePath))
-            {
-                throw new ArgumentException("filePath不能为空");
-            }
-
+            Parameter.Validate(filePath);
             return new FileInfo(filePath).Extension;
         }
         #endregion
@@ -284,11 +243,7 @@ namespace NewLibCore
         /// </summary>
         public static void ClearDirectory(String directoryPath)
         {
-            if (String.IsNullOrEmpty(directoryPath))
-            {
-                throw new ArgumentException("directoryPath不能为空");
-            }
-
+            Parameter.Validate(directoryPath);
             if (IsExistDirectory(directoryPath))
             {
                 //删除目录中所有的文件
@@ -314,11 +269,7 @@ namespace NewLibCore
         /// </summary>
         public static void DeleteFile(String filePath)
         {
-            if (String.IsNullOrEmpty(filePath))
-            {
-                throw new ArgumentException("filePath不能为空");
-            }
-
+            Parameter.Validate(filePath);
             if (IsExistFile(filePath))
             {
                 File.Delete(filePath);
@@ -332,11 +283,7 @@ namespace NewLibCore
         /// </summary>
         public static void DeleteDirectory(String directoryPath)
         {
-            if (String.IsNullOrEmpty(directoryPath))
-            {
-                throw new ArgumentException("directoryPath不能为空");
-            }
-
+            Parameter.Validate(directoryPath);
             if (IsExistDirectory(directoryPath))
             {
                 Directory.Delete(directoryPath, true);
@@ -349,10 +296,8 @@ namespace NewLibCore
         /// </summary>
         public static String GetMD5(Stream stream)
         {
-            if (stream == null)
-            {
-                throw new ArgumentNullException($@"{nameof(stream)} is null");
-            }
+            Parameter.Validate(stream);
+
             var md5 = new MD5CryptoServiceProvider();
             md5.ComputeHash(stream);
             var b = md5.Hash;
