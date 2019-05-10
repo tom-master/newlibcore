@@ -70,7 +70,7 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
         {
             Parameter.Validate(sql);
             sql = ReformatSql(sql);
-            if (MapperFactory.StatementCache)
+            if (MapperFactory.Cache != null)
             {
                 var cacheResult = MapperFactory.Cache.Get(PrepareCacheKey(sql, parameters));
                 if (cacheResult != null)
@@ -118,7 +118,7 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
                     }
                     cmd.Parameters.Clear();
 
-                    if (MapperFactory.StatementCache)
+                    if (MapperFactory.Cache != null)
                     {
                         MapperFactory.Logger.Write("INFO", "add to cache");
                         MapperFactory.Cache.Add(PrepareCacheKey(sql, parameters), executeResult);

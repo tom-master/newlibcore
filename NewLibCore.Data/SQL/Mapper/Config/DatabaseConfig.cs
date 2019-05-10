@@ -6,9 +6,11 @@ namespace NewLibCore.Data.SQL.Mapper.Config
 {
     public class MapperFactory
     {
-        private MapperFactory() { }
+        private static MapperFactory _mapperInstance;
 
-        public static MapperFactory Factory { get; } = new MapperFactory();
+        private static readonly Object _obj = new Object();
+
+        private MapperFactory() { }
 
         internal static ILogger Logger { get; private set; }
 
@@ -18,40 +20,54 @@ namespace NewLibCore.Data.SQL.Mapper.Config
 
         internal static Boolean ExpressionCache { get; private set; } = false;
 
-        internal static Boolean StatementCache { get; private set; } = false;
+        public static MapperFactory GetFactoryInstance()
+        {
+            if (_mapperInstance == null)
+            {
+                lock (_obj)
+                {
+                    if (_mapperInstance == null)
+                    {
+                        _mapperInstance = new MapperFactory();
+                    }
+                }
+            }
+            return _mapperInstance;
+        }
 
         public MapperFactory InitLogger(ILogger logger = null)
         {
-            Logger = logger ?? new ConsoleLogger();
+            if (Logger == null)
+            {
+                Logger = logger ?? new ConsoleLogger();
+            }
             return this;
         }
 
         public MapperFactory SwitchToMySql()
         {
-            SwitchTo(DatabaseType.MYSQL);
+            if (Mapper == null)
+            {
+                SwitchTo(DatabaseType.MYSQL);
+            }
             return this;
         }
 
         public MapperFactory SwitchToMsSql()
         {
-            SwitchTo(DatabaseType.MSSQL);
-            return this;
-        }
-
-        public MapperFactory UseExpressionCache()
-        {
-            ExpressionCache = true;
-            return this;
-        }
-
-        public MapperFactory UseStatementCache()
-        {
-            if (!StatementCache)
+            if (Mapper == null)
             {
-                StatementCache = true;
+                SwitchTo(DatabaseType.MSSQL);
+            }
+            return this;
+        }
+
+        public MapperFactory UseCache()
+        {
+            if (Cache == null)
+            {
                 Cache = new StatementCache();
             }
-
             return this;
         }
 
@@ -60,15 +76,15 @@ namespace NewLibCore.Data.SQL.Mapper.Config
             switch (database)
             {
                 case DatabaseType.MSSQL:
-                    {
-                        Mapper = new MsSqlInstance();
-                        break;
-                    }
+                {
+                    Mapper = new MsSqlInstance();
+                    break;
+                }
                 case DatabaseType.MYSQL:
-                    {
-                        Mapper = new MySqlInstance();
-                        break;
-                    }
+                {
+                    Mapper = new MySqlInstance();
+                    break;
+                }
                 default:
                     break;
             }

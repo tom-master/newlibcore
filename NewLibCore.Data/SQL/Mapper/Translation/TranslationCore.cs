@@ -292,8 +292,10 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
 
         private void GetJoin(BinaryExpression binaryExp, RelationType relationType)
         {
+            Parameter.Validate(binaryExp);
+
             var leftMember = (MemberExpression)binaryExp.Left;
-            var leftParameterExp = ((ParameterExpression)leftMember.Expression);
+            var leftParameterExp = (ParameterExpression)leftMember.Expression;
 
             if (!_tableAliasMapper.Any(a => a.Key == leftParameterExp.Name && a.Value == leftParameterExp.Type.Name))
             {
