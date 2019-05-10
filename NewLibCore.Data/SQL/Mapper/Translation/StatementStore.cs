@@ -116,7 +116,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
             };
         }
 
-        internal IList<KeyValuePair<String, String>> MergeAliasMapper()
+        internal List<KeyValuePair<String, String>> MergeAliasMapper()
         {
             var newAliasMapper = new List<KeyValuePair<String, String>>();
             if (Where != null)

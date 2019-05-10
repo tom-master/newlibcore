@@ -40,6 +40,11 @@ namespace NewLibCore
                 return v1;
             }
 
+            v1 = ConfigurationManager.ConnectionStrings[varName].ConnectionString;
+            if (!String.IsNullOrEmpty(v1))
+            {
+                return v1;
+            }
             throw new Exception($@"没有找到设置的{varName}环境变量");
         }
     }

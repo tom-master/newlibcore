@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading;
 using NewLibCore.Data.SQL.Mapper;
 using NewLibCore.Data.SQL.Mapper.Config;
 using NewLibCore.Data.SQL.Mapper.Extension;
@@ -19,9 +17,13 @@ namespace NewLibCore.Run
 
             using (var context = new EntityMapper())
             {
-                var user = new User();
-                user.Online();
-                var result = context.Modify(user, acc => acc.Id == user.Id);
+                var result = context.Select<Role>(a => new
+                {
+                    a.Id,
+                    a.Name,
+                    a.RoleIdentity
+                }).InnerJoin<UserRole>((a, b) => a.Id == b.RoleId).Where<UserRole>(a => a.UserId == 4).ToList();
+
             }
         }
     }
