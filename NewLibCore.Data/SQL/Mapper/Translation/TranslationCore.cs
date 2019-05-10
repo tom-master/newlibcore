@@ -10,13 +10,13 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
 {
     internal class TranslationCore : ITranslateCore
     {
+        private JoinType _joinType;
+
         private readonly Stack<String> _parameterNameStack;
 
         private readonly Stack<RelationType> _relationTypesStack;
 
         private readonly StatementStore _statementStore;
-
-        private JoinType _joinType;
 
         private List<KeyValuePair<String, String>> _tableAliasMapper;
 

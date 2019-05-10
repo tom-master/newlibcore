@@ -9,7 +9,6 @@ using NewLibCore.Data.SQL.Mapper.Extension;
 using NewLibCore.Data.SQL.Mapper.Translation;
 using NewLibCore.InternalExtension;
 using NewLibCore.Validate;
-using Newtonsoft.Json;
 
 namespace NewLibCore.Data.SQL.Mapper
 {
@@ -144,6 +143,33 @@ namespace NewLibCore.Data.SQL.Mapper
             return this;
         }
 
+        public ISelectEntityMapper<TModel> LeftJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> expression)
+          where TLeft : EntityBase, new()
+          where TRight : EntityBase, new()
+        {
+            Parameter.Validate(expression);
+            _statementStore.Add(expression, JoinType.LEFT);
+            return this;
+        }
+
+        public ISelectEntityMapper<TModel> RightJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> expression)
+            where TLeft : EntityBase, new()
+            where TRight : EntityBase, new()
+        {
+            Parameter.Validate(expression);
+            _statementStore.Add(expression, JoinType.RIGHT);
+            return this;
+        }
+
+        public ISelectEntityMapper<TModel> InnerJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> expression)
+            where TLeft : EntityBase, new()
+            where TRight : EntityBase, new()
+        {
+            Parameter.Validate(expression);
+            _statementStore.Add(expression, JoinType.INNER);
+            return this;
+        }
+
         public ISelectEntityMapper<TModel> OrderBy<TOrder, TKey>(Expression<Func<TOrder, TKey>> order, OrderByType orderBy = OrderByType.DESC) where TOrder : EntityBase, new()
         {
             Parameter.Validate(order);
@@ -158,6 +184,7 @@ namespace NewLibCore.Data.SQL.Mapper
             var executeResult = _execute.Execute(executeType, builder.Build());
             return executeResult;
         }
+
 
     }
 
