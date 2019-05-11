@@ -26,7 +26,7 @@ namespace NewLibCore.Run
 						a.Id,
 						a.Name,
 						a.RoleIdentity
-					}).InnerJoin<UserRole>((a, b) => a.Id == b.RoleId).Where<UserRole>(a => userIds.Contains(a.UserId)).ToList();
+					}).InnerJoin<UserRole>((a, b) => a.Id == b.RoleId).Where<Role>(a => a.Name.Contains("admin")).ToList();
 
 				}
 			}
