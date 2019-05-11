@@ -48,20 +48,21 @@ namespace NewLibCore.Data.SQL.Mapper
                 return (Boolean)obj ? 1 : 0;
             }
 
-            if (obj.IsComplexType())
-            {
-                var objType = obj.GetType();
-                if (objType.IsArray || objType.GetGenericTypeDefinition() == typeof(List<>))
-                {
-                    if (objType.GetGenericArguments()[0] == typeof(String))
-                    {
-                        return String.Join(",", ((IList<String>)obj).Select(s => $@"'{s}'"));
-                    }
-                    return String.Join(",", (IList<Int32>)obj);
-                }
-            }
 
-            return obj;
+			if (obj.IsComplexType())
+			{
+				var objType = obj.GetType();
+				if (objType.IsArray || objType.GetGenericTypeDefinition() == typeof(List<>))
+				{
+					if (objType.GetGenericArguments()[0] == typeof(String))
+					{
+						return String.Join(",", ((IList<String>)obj).Select(s => $@"'{s}'"));
+					}
+					return String.Join(",", (IList<Int32>)obj);
+				}
+			}
+
+			return obj;
         }
     }
 }
