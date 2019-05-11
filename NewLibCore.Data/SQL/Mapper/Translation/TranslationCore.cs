@@ -268,7 +268,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
                 InternalBuildWhere(obj);
                 InternalBuildWhere(argument);
             }
-            else if (argumentType.GetGenericTypeDefinition() == typeof(List<>))
+            else if (argumentType.GetInterfaces().Any(a => a == typeof(IEnumerable)))
             {
                 InternalBuildWhere(argument);
                 InternalBuildWhere(obj);

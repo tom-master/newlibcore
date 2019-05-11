@@ -38,11 +38,6 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             Parameter.Validate(obj);
 
-            if (obj == null)
-            {
-                throw new ArgumentNullException($@"SQL参数:{Key}的值为null");
-            }
-
             if (obj.GetType() == typeof(String))
             {
                 return UnlegalChatDetection.FilterBadChat(obj.ToString());
