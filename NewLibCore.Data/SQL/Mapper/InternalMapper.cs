@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -13,7 +14,7 @@ using NewLibCore.Validate;
 namespace NewLibCore.Data.SQL.Mapper
 {
 
-    internal class SqlExecutor<TModel> : ISqlExecutor<TModel> where TModel : new()
+    internal class SqlExecutor : ISqlExecutor
     {
         private ExecuteCore _executeCore;
 
@@ -22,17 +23,12 @@ namespace NewLibCore.Data.SQL.Mapper
             _executeCore = executeCore;
         }
 
-        public TModel Execute(String sql, IEnumerable<EntityParameter> parameters = null)
+        public DataTable Execute(String sql, IEnumerable<EntityParameter> parameters = null)
         {
             ExecuteCoreResult executeResult;
-            if (typeof(TModel).IsNumeric())
-            {
-                executeResult = _executeCore.Execute(ExecuteType.SELECT_SINGLE, sql, parameters, CommandType.Text);
-                return (TModel)executeResult.Value;
-            }
             executeResult = _executeCore.Execute(ExecuteType.SELECT, sql, parameters, CommandType.Text);
             var dataTable = (DataTable)executeResult.Value;
-            return (TModel)dataTable.AsList<TModel>();
+            return dataTable;
         }
 
     }
@@ -65,14 +61,14 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             var executeResult = InternalExecuteSql(ExecuteType.SELECT);
             var dataTable = executeResult.Value as DataTable;
-            return dataTable.AsSignal<TModel>();
+            return dataTable.ToSingle<TModel>();
         }
 
         public List<TModel> ToList()
         {
             var executeResult = InternalExecuteSql(ExecuteType.SELECT);
             var dataTable = executeResult.Value as DataTable;
-            return dataTable.AsList<TModel>().ToList();
+            return dataTable.ToList<TModel>().ToList();
         }
 
         public ISelectEntityMapper<TModel> Select<T>(Expression<Func<TModel, T, dynamic>> fields = null) where T : EntityBase, new()
@@ -163,7 +159,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
         public ISelectEntityMapper<TModel> InnerJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> expression)
             where TLeft : EntityBase, new()
-            where TRight : EntityBase, new() 
+            where TRight : EntityBase, new()
         {
             Parameter.Validate(expression);
             _statementStore.Add(expression, JoinType.INNER);

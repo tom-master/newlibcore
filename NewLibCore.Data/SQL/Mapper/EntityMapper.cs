@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq.Expressions;
 using NewLibCore.Data.SQL.Mapper.Execute;
 using NewLibCore.Data.SQL.Mapper.Extension;
@@ -40,10 +41,10 @@ namespace NewLibCore.Data.SQL.Mapper
             return new SelectEntityMapper<TModel>(_executeCore).Select(fields);
         }
 
-        public TModel ExecuteSql<TModel>(String sql, IEnumerable<EntityParameter> parameters = null) where TModel : new()
+        public DataTable ExecuteSql(String sql, IEnumerable<EntityParameter> parameters = null)
         {
             Parameter.Validate(sql);
-            return new SqlExecutor<TModel>(_executeCore).Execute(sql, parameters);
+            return new SqlExecutor(_executeCore).Execute(sql, parameters);
         }
 
         public void OpenTransaction()

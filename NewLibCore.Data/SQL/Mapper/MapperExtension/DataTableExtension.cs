@@ -12,7 +12,7 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
         /// <summary>
         /// 获取列表
         /// </summary>
-        internal static IList<T> AsList<T>(this DataTable dataTable) where T : new()
+        internal static IList<T> ToList<T>(this DataTable dataTable) where T : new()
         {
             if (dataTable == null || dataTable.Rows.Count == 0)
             {
@@ -25,9 +25,9 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
         /// <summary>
         /// 获取单值
         /// </summary>
-        internal static T AsSignal<T>(this DataTable dataTable) where T : new()
+        internal static T ToSingle<T>(this DataTable dataTable) where T : new()
         {
-            return AsList<T>(dataTable).FirstOrDefault();
+            return ToList<T>(dataTable).FirstOrDefault();
         }
 
         private static List<T> ConvertToList<T>(DataTable dt) where T : new()
