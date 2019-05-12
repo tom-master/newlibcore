@@ -12,7 +12,7 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
         /// <summary>
         /// 获取列表
         /// </summary>
-        internal static IList<T> ToList<T>(this DataTable dataTable) where T : new()
+        internal static List<T> ToList<T>(this DataTable dataTable) where T : new()
         {
             if (dataTable == null || dataTable.Rows.Count == 0)
             {

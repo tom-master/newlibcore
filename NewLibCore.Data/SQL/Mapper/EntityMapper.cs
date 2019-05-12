@@ -41,10 +41,16 @@ namespace NewLibCore.Data.SQL.Mapper
             return new SelectEntityMapper<TModel>(_executeCore).Select(fields);
         }
 
-        public DataTable ExecuteSql(String sql, IEnumerable<EntityParameter> parameters = null)
+        public List<TModel> ExecuteToList<TModel>(String sql, IEnumerable<EntityParameter> parameters = null) where TModel : new()
         {
             Parameter.Validate(sql);
-            return new SqlExecutor(_executeCore).Execute(sql, parameters);
+            return new SqlExecutor(_executeCore).ToList<TModel>(sql, parameters);
+        }
+
+        public TModel ExecuteToSingle<TModel>(String sql, IEnumerable<EntityParameter> parameters = null) where TModel : new()
+        {
+            Parameter.Validate(sql);
+            return new SqlExecutor(_executeCore).ToSingle<TModel>(sql, parameters);
         }
 
         public void OpenTransaction()

@@ -23,14 +23,27 @@ namespace NewLibCore.Data.SQL.Mapper
             _executeCore = executeCore;
         }
 
-        public DataTable Execute(String sql, IEnumerable<EntityParameter> parameters = null)
+        public List<TModel> ToList<TModel>(String sql, IEnumerable<EntityParameter> parameters = null) where TModel : new()
         {
-            ExecuteCoreResult executeResult;
-            executeResult = _executeCore.Execute(ExecuteType.SELECT, sql, parameters, CommandType.Text);
+            var executeResult = _executeCore.Execute(ExecuteType.SELECT, sql, parameters, CommandType.Text);
             var dataTable = (DataTable)executeResult.Value;
-            return dataTable;
+            return dataTable.ToList<TModel>();
         }
 
+        public TModel ToSingle<TModel>(string sql, IEnumerable<EntityParameter> parameters = null) where TModel : new()
+        {
+            var modelType = typeof(TModel);
+            ExecuteCoreResult executeResult;
+            if (modelType.IsNumeric())
+            {
+                executeResult = _executeCore.Execute(ExecuteType.SELECT_SINGLE, sql, parameters, CommandType.Text);
+                return (TModel)Convert.ChangeType(executeResult.Value, modelType);
+            }
+
+            executeResult = _executeCore.Execute(ExecuteType.SELECT, sql, parameters, CommandType.Text);
+            var dataTable = (DataTable)executeResult.Value;
+            return dataTable.ToSingle<TModel>();
+        }
     }
 
     internal class SelectEntityMapper<TModel> : ISelectEntityMapper<TModel> where TModel : EntityBase, new()
