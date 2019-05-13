@@ -19,7 +19,7 @@ namespace NewLibCore.Run
             {
                 using (var context = new EntityMapper())
                 {
-                    var ar = context.ExecuteToSingle<Int32>("SELECT * FROM User AS a WHERE 1=1 ");
+                    var r = context.ExecuteToSingle<Int32>("SELECT * FROM User AS a WHERE 1=1 ");
                 }
             }
         }
@@ -112,7 +112,6 @@ namespace NewLibCore.Run
         public Config() { }
     }
 
-
     public class UserRole : EntityBase
     {
         [Required]
@@ -129,6 +128,7 @@ namespace NewLibCore.Run
 
         public UserRole() { }
     }
+
     public partial class User : EntityBase
     {
         /// <summary>
@@ -322,7 +322,6 @@ namespace NewLibCore.Run
             return this;
         }
     }
-
 
     public partial class Member : EntityBase
     {

@@ -136,6 +136,7 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
 
         private static String PrepareCacheKey(String sql, IEnumerable<EntityParameter> parameters)
         {
+            Parameter.Validate(sql);
             var cacheKey = sql;
             foreach (var item in parameters)
             {
@@ -147,6 +148,7 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
 
         private String ReformatSql(String sql)
         {
+            Parameter.Validate(sql);
             sql = sql.Replace("  ", " ");
             return sql;
         }
