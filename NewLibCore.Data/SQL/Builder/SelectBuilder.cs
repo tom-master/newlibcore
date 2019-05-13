@@ -24,20 +24,20 @@ namespace NewLibCore.Data.SQL.Builder
         public TranslationCoreResult Build()
         {
             var translation = new TranslationCore(_statementStore);
-            var fields = ExtractFieldsAndTableName(_statementStore.Field);
-            translation.Result.Append($@"SELECT {fields.fields} FROM {typeof(TModel).Name} AS {fields.tableAliasName}");
+            var fields = StatementParse(_statementStore.Field);
+            translation.Result.Append($@"SELECT {fields.fields} FROM {typeof(TModel).Name} AS {fields.tableName}");
             translation.Translate();
 
-            var aliasMapper = _statementStore.MergeAliasMapper().Select(s => s.Value).Distinct();
+            var aliasMapper = _statementStore.MergeAliasMapper();
             foreach (var aliasItem in aliasMapper)
             {
-                translation.Result.Append($@"AND {aliasItem.ToLower()}.IsDeleted = 0");
+                translation.Result.Append($@"AND {aliasItem.Value.ToLower()}.IsDeleted = 0");
             }
 
             if (_statementStore.Order != null)
             {
-                var order = ExtractFieldsAndTableName(_statementStore.Order);
-                var orderTemplate = MapperFactory.Mapper.OrderByBuilder(_statementStore.Order.OrderBy, $@"{order.tableAliasName}.{order.fields}");
+                var order = StatementParse(_statementStore.Order);
+                var orderTemplate = MapperFactory.Mapper.OrderByBuilder(_statementStore.Order.OrderBy, $@"{order.tableName}.{order.fields}");
                 translation.Result.Append(orderTemplate);
             }
 
@@ -51,7 +51,7 @@ namespace NewLibCore.Data.SQL.Builder
             return translation.Result;
         }
 
-        private (String fields, String tableAliasName) ExtractFieldsAndTableName(Statement statement)
+        private (String fields, String tableName) StatementParse(Statement statement)
         {
             var modelAliasName = new List<String>();
             if (statement == null)
@@ -67,6 +67,7 @@ namespace NewLibCore.Data.SQL.Builder
             {
                 modelAliasName.Add(item.Type.Name.ToLower());
             }
+
             if (fields.Body.NodeType == ExpressionType.Constant)
             {
                 var constant = (ConstantExpression)fields.Body;
