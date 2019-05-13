@@ -24,8 +24,8 @@ namespace NewLibCore.Data.SQL.Builder
         public TranslationCoreResult Build()
         {
             var translation = new TranslationCore(_statementStore);
-            var fields = StatementParse(_statementStore.Field);
-            translation.Result.Append($@"SELECT {fields.fields} FROM {typeof(TModel).Name} AS {fields.tableName}");
+            var statement = StatementParse(_statementStore.Field);
+            translation.Result.Append($@"SELECT {statement.fields} FROM {typeof(TModel).Name} AS {statement.tableName}");
             translation.Translate();
 
             var aliasMapper = _statementStore.MergeAliasMapper();

@@ -26,18 +26,16 @@ namespace NewLibCore.Data.SQL.Builder
 
         public TranslationCoreResult Build()
         {
-            var properties = _instance.PropertyInfos;
-            Parameter.Validate(properties);
-
+            Parameter.Validate(_instance.PropertyInfos);
             _instance.SetUpdateTime();
             if (_isValidate)
             {
-                _instance.Validate(properties);
+                _instance.Validate();
             }
 
             var translation = new TranslationCore(_statementStore);
-            var placeHolder = String.Join(",", properties.Select(key => $@"{key.Name}=@{key.Name}"));
-            var entityParameters = properties.Select(c => new EntityParameter($@"@{c.Name}", c.GetValue(_instance)));
+            var placeHolder = String.Join(",", _instance.PropertyInfos.Select(key => $@"{key.Key.Name}=@{key.Key.Name}"));
+            var entityParameters = _instance.PropertyInfos.Select(c => new EntityParameter($@"@{c.Key.Name}", c.Value));
 
             translation.Result.Append($@"UPDATE {typeof(TModel).Name} SET {String.Join(",", placeHolder)}", entityParameters);
 

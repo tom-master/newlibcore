@@ -37,7 +37,7 @@ namespace NewLibCore.Data.SQL.Builder
             _instance.SetAddTime();
             if (_isVerifyModel)
             {
-                _instance.Validate(propertyInfos);
+                _instance.Validate();
             }
             var translationResult = new TranslationCoreResult();
             var fields = String.Join(",", propertyInfos.Select(c => c.Name));

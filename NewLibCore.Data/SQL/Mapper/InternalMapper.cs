@@ -23,7 +23,7 @@ namespace NewLibCore.Data.SQL.Mapper
         }
 
         public List<TModel> ToList<TModel>(String sql, IEnumerable<EntityParameter> parameters = null) where TModel : new()
-        { 
+        {
             var dataTable = (DataTable)InternalExecuteSql(ExecuteType.SELECT, sql, parameters).Value;
             return dataTable.ToList<TModel>();
         }
@@ -83,6 +83,7 @@ namespace NewLibCore.Data.SQL.Mapper
         public List<TModel> ToList()
         {
             var executeResult = InternalExecuteSql(ExecuteType.SELECT);
+            return default;
             var dataTable = executeResult.Value as DataTable;
             return dataTable.ToList<TModel>().ToList();
         }
@@ -193,6 +194,8 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             IBuilder<TModel> builder = new SelectBuilder<TModel>(_statementStore);
             _statementStore.ExecuteType = executeType;
+            var r = builder.Build();
+            return default;
             var executeResult = _execute.Execute(executeType, builder.Build());
             return executeResult;
         }

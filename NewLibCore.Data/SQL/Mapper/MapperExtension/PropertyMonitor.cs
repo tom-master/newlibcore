@@ -7,117 +7,113 @@ using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper.Extension
 {
-	public abstract class PropertyMonitor
-	{
-		protected internal IList<PropertyInfo> PropertyInfos { get; }
+    public abstract class PropertyMonitor
+    {
+        protected internal IList<KeyValuePair<PropertyInfo, Object>> PropertyInfos { get; }
 
-		protected PropertyMonitor()
-		{
-			PropertyInfos = new List<PropertyInfo>();
-		}
+        protected PropertyMonitor()
+        {
+            PropertyInfos = new List<KeyValuePair<PropertyInfo, Object>>();
+        }
 
-		protected void OnPropertyChanged(String propertyName)
-		{
-			Parameter.Validate(propertyName);
+        protected void OnPropertyChanged(String propertyName, Object propertyValue)
+        {
+            Parameter.Validate(propertyName);
 
-			var propertyInfo = GetType().GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
-			Parameter.Validate(propertyInfo);
+            var propertyInfo = GetType().GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
+            if (propertyInfo == null)
+            {
+                throw new ArgumentException($@"属性：{propertyName},不属于类：{GetType().Name}或它的父类");
+            }
+            PropertyInfos.Add(new KeyValuePair<PropertyInfo, Object>(propertyInfo, propertyValue));
+        }
 
-			if (propertyInfo != null)
-			{
-				PropertyInfos.Add(propertyInfo);
-				return;
-			}
-			throw new ArgumentException($@"属性：{propertyName},不属于类：{GetType().Name}或它的父类");
-		}
+        protected internal virtual void SetUpdateTime() { }
 
-		protected internal virtual void SetUpdateTime() { }
+        protected internal virtual void SetAddTime() { }
 
-		protected internal virtual void SetAddTime() { }
+        protected internal void Validate()
+        {
+            Parameter.Validate(PropertyInfos);
+            foreach (var keyValuePair in PropertyInfos)
+            {
+                var propertyItem = keyValuePair.Key;
+                if (!propertyItem.CustomAttributes.Any())
+                {
+                    continue;
+                }
 
-		protected internal void Validate(IEnumerable<PropertyInfo> propertyInfos)
-		{
-			Parameter.Validate(propertyInfos);
+                var validateBases = GetValidateAttributes(propertyItem);
+                var propertyValue = keyValuePair.Value;
+                for (var i = 0; i < validateBases.Count; i++)
+                {
+                    if (validateBases[i] is RequiredAttribute)
+                    {
+                        if (!validateBases[i].IsValidate(propertyValue))
+                        {
+                            if (i + 1 >= validateBases.Count)
+                            {
+                                ThrowValidateException(validateBases[i + 1], propertyItem);
+                            }
 
-			var propertys = propertyInfos;
-			foreach (var propertyItem in propertys)
-			{
-				if (!propertyItem.CustomAttributes.Any())
-				{
-					continue;
-				}
+                            if (validateBases[i + 1] is DefaultValueAttribute)
+                            {
+                                SetPropertyDefaultValue((DefaultValueAttribute)validateBases[i + 1], propertyItem, propertyValue);
+                                i = i + 1;
+                                continue;
+                            }
+                            ThrowValidateException(validateBases[i], propertyItem);
+                        }
+                    }
+                    else if (validateBases[i] is DefaultValueAttribute)
+                    {
+                        if (!validateBases[i].IsValidate(propertyValue))
+                        {
+                            ThrowValidateException(validateBases[i], propertyItem);
+                        }
+                        SetPropertyDefaultValue((DefaultValueAttribute)validateBases[i], propertyItem, propertyValue);
+                    }
+                    else if (validateBases[i] is InputRangeAttribute)
+                    {
+                        if (!validateBases[i].IsValidate(propertyValue))
+                        {
+                            ThrowValidateException(validateBases[i], propertyItem);
+                        }
+                    }
+                }
+            }
+        }
 
-				var validateBases = GetValidateAttributes(propertyItem);
-				var propertyValue = propertyItem.GetValue(this);
-				for (var i = 0; i < validateBases.Count; i++)
-				{
-					if (validateBases[i] is RequiredAttribute)
-					{
-						if (!validateBases[i].IsValidate(propertyValue))
-						{
-							if (i + 1 >= validateBases.Count)
-							{
-								ThrowValidateException(validateBases[i + 1], propertyItem);
-							}
+        private void SetPropertyDefaultValue(DefaultValueAttribute defaultValueAttribute, PropertyInfo propertyItem, Object rawPropertyValue)
+        {
+            Parameter.Validate(defaultValueAttribute);
+            Parameter.Validate(propertyItem);
 
-							if (validateBases[i + 1] is DefaultValueAttribute)
-							{
-								SetPropertyDefaultValue((DefaultValueAttribute)validateBases[i + 1], propertyItem, propertyValue);
-								i = i + 1;
-								continue;
-							}
-							ThrowValidateException(validateBases[i], propertyItem);
-						}
-					}
-					else if (validateBases[i] is DefaultValueAttribute)
-					{
-						if (!validateBases[i].IsValidate(propertyValue))
-						{
-							ThrowValidateException(validateBases[i], propertyItem);
-						}
-						SetPropertyDefaultValue((DefaultValueAttribute)validateBases[i], propertyItem, propertyValue);
-					}
-					else if (validateBases[i] is InputRangeAttribute)
-					{
-						if (!validateBases[i].IsValidate(propertyValue))
-						{
-							ThrowValidateException(validateBases[i], propertyItem);
-						}
-					}
-				}
-			}
-		}
+            var propertyInstanceValue = rawPropertyValue;
+            if (String.IsNullOrEmpty(propertyInstanceValue + "") || (propertyInstanceValue.GetType() == typeof(DateTime) && (DateTime)propertyInstanceValue == default(DateTime)))
+            {
+                propertyItem.SetValue(this, defaultValueAttribute.Value);
+            }
+        }
 
-		private void SetPropertyDefaultValue(DefaultValueAttribute defaultValueAttribute, PropertyInfo propertyItem, Object rawPropertyValue)
-		{
-			Parameter.Validate(defaultValueAttribute);
-			Parameter.Validate(propertyItem);
+        private void ThrowValidateException(PropertyValidate validateBase, PropertyInfo propertyItem)
+        {
+            throw new Exception(validateBase.FailReason($@"{propertyItem.DeclaringType.FullName}.{propertyItem.Name}"));
+        }
 
-			var propertyInstanceValue = rawPropertyValue;
-			if (String.IsNullOrEmpty(propertyInstanceValue + "") || (propertyInstanceValue.GetType() == typeof(DateTime) && (DateTime)propertyInstanceValue == default(DateTime)))
-			{
-				propertyItem.SetValue(this, defaultValueAttribute.Value);
-			}
-		}
+        private IList<PropertyValidate> GetValidateAttributes(PropertyInfo propertyInfo)
+        {
+            Parameter.Validate(propertyInfo);
 
-		private void ThrowValidateException(PropertyValidate validateBase, PropertyInfo propertyItem)
-		{
-			throw new Exception(validateBase.FailReason($@"{propertyItem.DeclaringType.FullName}.{propertyItem.Name}"));
-		}
+            var validateAttributes = propertyInfo.GetCustomAttributes<PropertyValidate>(true);
+            if (validateAttributes.GroupBy(g => g.Order).Where(w => w.Count() > 1).Any())
+            {
+                throw new Exception($@"{propertyInfo.Name} 中使用了多个优先级相同的特性");
+            }
 
-		private IList<PropertyValidate> GetValidateAttributes(PropertyInfo propertyInfo)
-		{
-			Parameter.Validate(propertyInfo);
-
-			var validateAttributes = propertyInfo.GetCustomAttributes<PropertyValidate>(true);
-			if (validateAttributes.GroupBy(g => g.Order).Where(w => w.Count() > 1).Any())
-			{
-				throw new Exception($@"{propertyInfo.Name} 中使用了多个优先级相同的特性");
-			}
-
-			return validateAttributes.OrderByDescending(o => o.Order).ToList();
-		}
-	}
+            return validateAttributes.OrderByDescending(o => o.Order).ToList();
+        }
+    }
 }
 
 

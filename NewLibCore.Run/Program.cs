@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading;
 using NewLibCore.Data.SQL.Mapper;
 using NewLibCore.Data.SQL.Mapper.Config;
 using NewLibCore.Data.SQL.Mapper.Extension;
@@ -17,10 +19,17 @@ namespace NewLibCore.Run
 
             while (true)
             {
+                var sw = new Stopwatch();
+                sw.Start();
+
                 using (var context = new EntityMapper())
                 {
-                    var r = context.ExecuteToSingle<Int32>("SELECT * FROM User AS a WHERE 1=1 ");
+                    var r = context.Select<User>().InnerJoin<Config>((a, b) => a.Id == b.UserId).ToList();
                 }
+
+                sw.Stop();
+                Console.WriteLine("Stopwatch总共花费{0}ms.", sw.Elapsed.TotalMilliseconds);
+                Thread.Sleep(1000);
             }
         }
     }
@@ -215,7 +224,7 @@ namespace NewLibCore.Run
             }
 
             LoginPassword = password;
-            OnPropertyChanged(nameof(LoginPassword));
+            OnPropertyChanged(nameof(LoginPassword), LoginPassword);
             return this;
         }
 
@@ -230,7 +239,7 @@ namespace NewLibCore.Run
             }
 
             LockScreenPassword = password;
-            OnPropertyChanged(nameof(LockScreenPassword));
+            OnPropertyChanged(nameof(LockScreenPassword), LockScreenPassword);
             return this;
         }
 
@@ -240,7 +249,7 @@ namespace NewLibCore.Run
         public User ModifyConfigId(Int32 configId)
         {
             ConfigId = configId;
-            OnPropertyChanged(nameof(ConfigId));
+            OnPropertyChanged(nameof(ConfigId), ConfigId);
             return this;
         }
 
@@ -250,7 +259,7 @@ namespace NewLibCore.Run
         public User Enable()
         {
             IsDisable = false;
-            OnPropertyChanged(nameof(IsDisable));
+            OnPropertyChanged(nameof(IsDisable), IsDisable);
             return this;
         }
 
@@ -260,7 +269,7 @@ namespace NewLibCore.Run
         public User Disable()
         {
             IsDisable = true;
-            OnPropertyChanged(nameof(IsDisable));
+            OnPropertyChanged(nameof(IsDisable), IsDisable);
             return this;
         }
 
@@ -271,10 +280,10 @@ namespace NewLibCore.Run
         public User Online()
         {
             IsOnline = true;
-            OnPropertyChanged(nameof(IsOnline));
+            OnPropertyChanged(nameof(IsOnline), IsOnline);
 
             LastLoginTime = DateTime.Now;
-            OnPropertyChanged(nameof(LastLoginTime));
+            OnPropertyChanged(nameof(LastLoginTime), LastLoginTime);
             return this;
         }
 
@@ -285,7 +294,7 @@ namespace NewLibCore.Run
         public User Offline()
         {
             IsOnline = false;
-            OnPropertyChanged(nameof(IsOnline));
+            OnPropertyChanged(nameof(IsOnline), IsOnline);
             return this;
         }
 
@@ -307,7 +316,7 @@ namespace NewLibCore.Run
         public User DetachAdminRole()
         {
             IsAdmin = false;
-            OnPropertyChanged(nameof(IsAdmin));
+            OnPropertyChanged(nameof(IsAdmin), IsAdmin);
             return this;
         }
 
@@ -318,7 +327,7 @@ namespace NewLibCore.Run
         public User AttachAdminRole()
         {
             IsAdmin = true;
-            OnPropertyChanged(nameof(IsAdmin));
+            OnPropertyChanged(nameof(IsAdmin), IsAdmin);
             return this;
         }
     }
@@ -493,7 +502,7 @@ namespace NewLibCore.Run
             }
 
             Width = width;
-            OnPropertyChanged(nameof(Width));
+            OnPropertyChanged(nameof(Width), Width);
             return this;
         }
 
@@ -510,7 +519,7 @@ namespace NewLibCore.Run
             }
 
             Height = height;
-            OnPropertyChanged(nameof(Height));
+            OnPropertyChanged(nameof(Height), Height);
             return this;
         }
 
@@ -522,7 +531,7 @@ namespace NewLibCore.Run
             }
 
             FolderId = folderId;
-            OnPropertyChanged(nameof(FolderId));
+            OnPropertyChanged(nameof(FolderId), FolderId);
             return this;
         }
 
@@ -539,7 +548,7 @@ namespace NewLibCore.Run
             }
 
             Name = name;
-            OnPropertyChanged(nameof(Name));
+            OnPropertyChanged(nameof(Name), Name);
             return this;
         }
 
@@ -556,7 +565,7 @@ namespace NewLibCore.Run
             }
 
             IconUrl = iconUrl;
-            OnPropertyChanged(nameof(IconUrl));
+            OnPropertyChanged(nameof(IconUrl), IconUrl);
             return this;
         }
 
@@ -573,77 +582,77 @@ namespace NewLibCore.Run
             }
 
             AppUrl = appUrl;
-            OnPropertyChanged(nameof(AppUrl));
+            OnPropertyChanged(nameof(AppUrl), AppUrl);
             return this;
         }
 
         public Member OnDock()
         {
             IsOnDock = true;
-            OnPropertyChanged(nameof(IsOnDock));
+            OnPropertyChanged(nameof(IsOnDock), IsOnDock);
             return this;
         }
 
         public Member OutDock()
         {
             IsOnDock = false;
-            OnPropertyChanged(nameof(IsOnDock));
+            OnPropertyChanged(nameof(IsOnDock), IsOnDock);
             return this;
         }
 
         public Member Setbar()
         {
             IsSetbar = true;
-            OnPropertyChanged(nameof(IsSetbar));
+            OnPropertyChanged(nameof(IsSetbar), IsSetbar);
             return this;
         }
 
         public Member NotSetbar()
         {
             IsSetbar = false;
-            OnPropertyChanged(nameof(IsSetbar));
+            OnPropertyChanged(nameof(IsSetbar), IsSetbar);
             return this;
         }
 
         public Member OpenMax()
         {
             IsOpenMax = true;
-            OnPropertyChanged(nameof(IsOpenMax));
+            OnPropertyChanged(nameof(IsOpenMax), IsOpenMax);
             return this;
         }
 
         public Member NotOpenMax()
         {
             IsOpenMax = false;
-            OnPropertyChanged(nameof(IsOpenMax));
+            OnPropertyChanged(nameof(IsOpenMax), IsOpenMax);
             return this;
         }
 
         public Member Flash()
         {
             IsFlash = true;
-            OnPropertyChanged(nameof(IsFlash));
+            OnPropertyChanged(nameof(IsFlash), IsFlash);
             return this;
         }
 
         public Member NotFlash()
         {
             IsFlash = false;
-            OnPropertyChanged(nameof(IsFlash));
+            OnPropertyChanged(nameof(IsFlash), IsFlash);
             return this;
         }
 
         public Member Resize()
         {
             IsResize = true;
-            OnPropertyChanged(nameof(IsResize));
+            OnPropertyChanged(nameof(IsResize), IsResize);
             return this;
         }
 
         public Member NotResize()
         {
             IsResize = false;
-            OnPropertyChanged(nameof(IsResize));
+            OnPropertyChanged(nameof(IsResize), IsResize);
             return this;
         }
 
@@ -660,21 +669,21 @@ namespace NewLibCore.Run
             }
 
             DeskIndex = deskIndex;
-            OnPropertyChanged(nameof(DeskIndex));
+            OnPropertyChanged(nameof(DeskIndex), DeskIndex);
             return this;
         }
 
         public Member IconNotFromUpload()
         {
             IsIconByUpload = false;
-            OnPropertyChanged(nameof(IsIconByUpload));
+            OnPropertyChanged(nameof(IsIconByUpload), IsIconByUpload);
             return this;
         }
 
         public Member IconFromUpload()
         {
             IsIconByUpload = true;
-            OnPropertyChanged(nameof(IsIconByUpload));
+            OnPropertyChanged(nameof(IsIconByUpload), IsIconByUpload);
             return this;
         }
     }
@@ -749,7 +758,7 @@ namespace NewLibCore.Run
             }
 
             Name = roleName;
-            OnPropertyChanged(nameof(Name));
+            OnPropertyChanged(nameof(Name), Name);
             return this;
         }
 
