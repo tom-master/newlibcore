@@ -7,6 +7,7 @@ using NewLibCore.Data.SQL.Mapper.Config;
 using NewLibCore.Data.SQL.Mapper.Extension;
 using NewLibCore.Data.SQL.Mapper.Extension.PropertyExtension;
 using NewLibCore.Data.SQL.Mapper.Translation;
+using NewLibCore.InternalExtension;
 using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Builder
@@ -83,7 +84,16 @@ namespace NewLibCore.Data.SQL.Builder
             foreach (var item in (fields.Body as NewExpression).Arguments)
             {
                 var member = (MemberExpression)item;
-                dynamicFields.Add($@"{((ParameterExpression)member.Expression).Type.Name.ToLower()}.{member.Member.Name}");
+                var fieldName = ((ParameterExpression)member.Expression).Type.Name.ToLower();
+                if (member.Type.IsComplexType())
+                {
+                    var propertys = member.Type.GetProperties().Where(w => w.GetCustomAttributes<PropertyValidate>().Any());
+                    dynamicFields.AddRange(propertys.Select(s => $@"{member.Type.Name.ToLower()}.{s.Name}"));
+                }
+                else
+                {
+                    dynamicFields.Add($@"{fieldName}.{member.Member.Name}");
+                }
             }
             return (String.Join(",", dynamicFields), modelAliasName.FirstOrDefault());
         }

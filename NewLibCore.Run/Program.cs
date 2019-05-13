@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading;
 using NewLibCore.Data.SQL.Mapper;
 using NewLibCore.Data.SQL.Mapper.Config;
@@ -19,16 +18,10 @@ namespace NewLibCore.Run
 
             while (true)
             {
-                var sw = new Stopwatch();
-                sw.Start();
-
                 using (var context = new EntityMapper())
                 {
-                    var r = context.Select<User>().InnerJoin<Config>((a, b) => a.Id == b.UserId).ToList();
+                    var r = context.Select<User>(s => new { s.Id, s.Name, s.Config }).InnerJoin<Config>((a, b) => a.Id == b.UserId).ToList();
                 }
-
-                sw.Stop();
-                Console.WriteLine("Stopwatch总共花费{0}ms.", sw.Elapsed.TotalMilliseconds);
                 Thread.Sleep(1000);
             }
         }
@@ -84,11 +77,10 @@ namespace NewLibCore.Run
         [DefaultValue(typeof(Boolean))]
         public Boolean IsBing { get; private set; }
 
-
         /// <summary>
         /// 账户Id
         /// </summary>
-        [Required]
+        [Required, ForeignKey("user.Id")]
         public Int32 UserId { get; private set; }
 
         /// <summary>
@@ -188,12 +180,8 @@ namespace NewLibCore.Run
         [Required]
         public Int32 ConfigId { get; private set; }
 
-        /// <summary>
-        /// 账户头像
-        /// </summary>
-        public String UserFace { get; private set; }
-
-        public Boolean IsModifyUserFace { get; private set; }
+        [SubModel]
+        public Config Config { get; set; }
 
         /// <summary>
         /// 实例化一个用户对象

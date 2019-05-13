@@ -97,7 +97,7 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
                     }
                     MapperFactory.Logger.Write("INFO", $@"ExecuteType:{executeType}");
                     MapperFactory.Logger.Write("INFO", $@"SQL:{sql}");
-                    MapperFactory.Logger.Write("INFO", $@"PARAMETERS:{Environment.NewLine}{(parameters == null ? "" : String.Join($@"{Environment.NewLine}", parameters.Select(s => $@"{s.Key}----{s.Value}")))}");
+                    MapperFactory.Logger.Write("INFO", $@"PARAMETERS:{(parameters == null || !parameters.Any() ? "" : String.Join($@"{Environment.NewLine}", parameters.Select(s => $@"{s.Key}----{s.Value}")))}");
                     var executeResult = new ExecuteCoreResult();
                     if (executeType == ExecuteType.SELECT)
                     {
@@ -187,6 +187,7 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
 
         private void Dispose(Boolean disposing)
         {
+            MapperFactory.Logger.Write("INFO", $@"close connection {Environment.NewLine}");
             if (!_disposed)
             {
                 if (!disposing)
@@ -202,7 +203,6 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
                     }
                     _connection.Dispose();
                     _connection = null;
-                    MapperFactory.Logger.Write("INFO", "close connection");
                 }
                 _disposed = true;
             }

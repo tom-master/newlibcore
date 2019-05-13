@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using NewLibCore.Data.SQL.Builder;
+using NewLibCore.Data.SQL.Mapper.Config;
 using NewLibCore.Data.SQL.Mapper.Execute;
 using NewLibCore.Data.SQL.Mapper.Extension;
 using NewLibCore.Data.SQL.Mapper.Translation;
@@ -82,10 +84,16 @@ namespace NewLibCore.Data.SQL.Mapper
 
         public List<TModel> ToList()
         {
+            var sw = new Stopwatch();
+            sw.Start();
+
             var executeResult = InternalExecuteSql(ExecuteType.SELECT);
-            return default;
             var dataTable = executeResult.Value as DataTable;
-            return dataTable.ToList<TModel>().ToList();
+            var models = dataTable.ToList<TModel>();
+            MapperFactory.Logger.Write("INFO", $@"总共花费{Math.Round(sw.Elapsed.TotalSeconds, 2)}s"); 
+
+            sw.Stop();
+            return models;
         }
 
         public ISelectEntityMapper<TModel> Select<T>(Expression<Func<TModel, T, dynamic>> fields = null) where T : EntityBase, new()
@@ -194,8 +202,6 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             IBuilder<TModel> builder = new SelectBuilder<TModel>(_statementStore);
             _statementStore.ExecuteType = executeType;
-            var r = builder.Build();
-            return default;
             var executeResult = _execute.Execute(executeType, builder.Build());
             return executeResult;
         }
