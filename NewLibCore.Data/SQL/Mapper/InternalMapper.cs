@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -24,25 +23,29 @@ namespace NewLibCore.Data.SQL.Mapper
         }
 
         public List<TModel> ToList<TModel>(String sql, IEnumerable<EntityParameter> parameters = null) where TModel : new()
-        {
-            var executeResult = _executeCore.Execute(ExecuteType.SELECT, sql, parameters, CommandType.Text);
-            var dataTable = (DataTable)executeResult.Value;
+        { 
+            var dataTable = (DataTable)InternalExecuteSql(ExecuteType.SELECT, sql, parameters).Value;
             return dataTable.ToList<TModel>();
         }
 
-        public TModel ToSingle<TModel>(string sql, IEnumerable<EntityParameter> parameters = null) where TModel : new()
+        public TModel ToSingle<TModel>(String sql, IEnumerable<EntityParameter> parameters = null) where TModel : new()
         {
             var modelType = typeof(TModel);
             ExecuteCoreResult executeResult;
             if (modelType.IsNumeric())
             {
-                executeResult = _executeCore.Execute(ExecuteType.SELECT_SINGLE, sql, parameters, CommandType.Text);
+                executeResult = InternalExecuteSql(ExecuteType.SELECT_SINGLE, sql, parameters);
                 return (TModel)Convert.ChangeType(executeResult.Value, modelType);
             }
 
-            executeResult = _executeCore.Execute(ExecuteType.SELECT, sql, parameters, CommandType.Text);
+            executeResult = InternalExecuteSql(ExecuteType.SELECT, sql, parameters);
             var dataTable = (DataTable)executeResult.Value;
             return dataTable.ToSingle<TModel>();
+        }
+
+        private ExecuteCoreResult InternalExecuteSql(ExecuteType executeType, String sql, IEnumerable<EntityParameter> parameters = null)
+        {
+            return _executeCore.Execute(executeType, sql, parameters);
         }
     }
 
