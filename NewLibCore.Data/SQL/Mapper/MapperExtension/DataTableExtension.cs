@@ -39,10 +39,10 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
                 var propertys = t.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public);
                 foreach (var propertyInfo in propertys)
                 {
-                    var tempName = propertyInfo.Name;
-                    if (dt.Columns.Contains(tempName))
+                    var aliasName = $@"{propertyInfo.ReflectedType.Name.ToLower()}_{propertyInfo.Name}";
+                    if (dt.Columns.Contains(aliasName))
                     {
-                        var value = dr[tempName];
+                        var value = dr[aliasName];
                         if (value != DBNull.Value)
                         {
                             try

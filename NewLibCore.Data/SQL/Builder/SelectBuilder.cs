@@ -85,15 +85,15 @@ namespace NewLibCore.Data.SQL.Builder
             foreach (var item in (fields.Body as NewExpression).Arguments)
             {
                 var member = (MemberExpression)item;
-                var fieldName = ((ParameterExpression)member.Expression).Type.Name.ToLower();
                 if (member.Type.IsComplexType() && member.Member.GetAttribute<SubModelAttribute>(true) != null)
                 {
                     var propertys = member.Type.GetProperties().Where(w => w.GetCustomAttributes<PropertyValidate>().Any());
-                    dynamicFields.AddRange(propertys.Select(s => $@"{member.Type.Name.ToLower()}.{s.Name}"));
+                    dynamicFields.AddRange(propertys.Select(s => $@"{member.Type.Name.ToLower()}.{s.Name} AS {member.Type.Name.ToLower()}_{s.Name}"));
                 }
                 else
                 {
-                    dynamicFields.Add($@"{fieldName}.{member.Member.Name}");
+                    var fieldName = ((ParameterExpression)member.Expression).Type.Name.ToLower();
+                    dynamicFields.Add($@"{fieldName}.{member.Member.Name} AS {fieldName}_{member.Member.Name}");
                 }
             }
             return (String.Join(",", dynamicFields), modelAliasName.FirstOrDefault());
