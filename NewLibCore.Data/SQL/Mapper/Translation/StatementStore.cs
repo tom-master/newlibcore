@@ -65,15 +65,14 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
         internal void Add<TModel, TJoin>(Expression<Func<TModel, TJoin, Boolean>> expression, JoinType joinType = JoinType.NONE) where TModel : PropertyMonitor, new() where TJoin : PropertyMonitor, new()
         {
             Parameter.Validate(expression);
-
+            var parameters = expression.Parameters.Select(s => new KeyValuePair<String, String>(s.Name, s.Type.Name)).ToList();
             Joins.Add(new JoinStatement
             {
                 Expression = expression,
                 JoinType = joinType,
-                AliaNameMapper = expression.Parameters.Select(s => new KeyValuePair<String, String>(s.Name, s.Type.Name)).ToList(),
+                AliaNameMapper = parameters,
                 MainTable = typeof(TModel).Name
             });
-
         }
 
         internal void Add<TModel>(Expression<Func<TModel, Boolean>> expression) where TModel : PropertyMonitor, new()

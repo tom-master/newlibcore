@@ -20,7 +20,7 @@ namespace NewLibCore.Run
             {
                 using (var context = new EntityMapper())
                 {
-                    var r = context.Select<User>(s => new { s.Id, s.Name, s.Config }).InnerJoin<Config>((a, b) => a.Id == b.UserId).ToList();
+                    var r = context.Select<User>(s => new { s.Id, s.Name, s.Config }).InnerJoin<Config>((a, b) => a.Config.Id == b.Id).ToList();
                 }
                 Thread.Sleep(1000);
             }
