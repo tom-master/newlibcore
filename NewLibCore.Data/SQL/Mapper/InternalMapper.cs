@@ -177,6 +177,7 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             Parameter.Validate(expression);
             _statementStore.Add(expression, JoinType.LEFT);
+
             return this;
         }
 
