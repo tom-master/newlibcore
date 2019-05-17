@@ -197,6 +197,7 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             Parameter.Validate(expression);
             _statementStore.Add(expression, JoinType.INNER);
+
             return this;
         }
 
