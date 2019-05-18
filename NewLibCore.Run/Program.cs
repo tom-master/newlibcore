@@ -80,7 +80,7 @@ namespace NewLibCore.Run
         /// <summary>
         /// 账户Id
         /// </summary>
-        [Required, ForeignKey("user.Id")]
+        [Required]
         public Int32 UserId { get; private set; }
 
         /// <summary>

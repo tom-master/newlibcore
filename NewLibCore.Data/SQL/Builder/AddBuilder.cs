@@ -35,6 +35,7 @@ namespace NewLibCore.Data.SQL.Builder
             }
 
             _instance.SetAddTime();
+            _instance.SetUpdateTime();
             if (_isVerifyModel)
             {
                 _instance.Validate();
