@@ -88,12 +88,12 @@ namespace NewLibCore.Data.SQL.Builder
                 if (member.Type.IsComplexType() && member.Member.GetAttribute<SubModelAttribute>(true) != null)
                 {
                     var propertys = member.Type.GetProperties().Where(w => w.GetCustomAttributes<PropertyValidate>().Any());
-                    dynamicFields.AddRange(propertys.Select(s => $@"{member.Type.Name.ToLower()}.{s.Name} AS {member.Type.Name.ToLower()}_{s.Name}"));
+                    dynamicFields.AddRange(propertys.Select(s => $@"{member.Type.Name.ToLower()}.{s.Name} "));
                 }
                 else
                 {
                     var fieldName = ((ParameterExpression)member.Expression).Type.Name.ToLower();
-                    dynamicFields.Add($@"{fieldName}.{member.Member.Name} AS {fieldName}_{member.Member.Name}");
+                    dynamicFields.Add($@"{fieldName}.{member.Member.Name}");
                 }
             }
             return (String.Join(",", dynamicFields), modelAliasName.FirstOrDefault());

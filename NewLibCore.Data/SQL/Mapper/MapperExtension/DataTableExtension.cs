@@ -39,7 +39,7 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
                 var propertys = t.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public);
                 foreach (var propertyInfo in propertys)
                 {
-                    var aliasName = $@"{propertyInfo.ReflectedType.Name.ToLower()}_{propertyInfo.Name}";
+                    var aliasName = $@"{propertyInfo.Name}";
                     if (dt.Columns.Contains(aliasName))
                     {
                         var value = dr[aliasName];

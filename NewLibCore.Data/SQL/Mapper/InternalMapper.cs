@@ -40,7 +40,7 @@ namespace NewLibCore.Data.SQL.Mapper
                 return (TModel)Convert.ChangeType(executeResult.Value, modelType);
             }
 
-            executeResult = InternalExecuteSql(ExecuteType.SELECT_SINGLE, sql, parameters);
+            executeResult = InternalExecuteSql(ExecuteType.SELECT, sql, parameters);
             var dataTable = (DataTable)executeResult.Value;
             return dataTable.ToSingle<TModel>();
         }
