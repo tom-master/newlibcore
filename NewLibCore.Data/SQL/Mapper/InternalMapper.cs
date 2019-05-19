@@ -205,6 +205,7 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             Parameter.Validate(order);
             _statementStore.AddOrderBy(order, orderBy);
+            
             return this;
         }
 
