@@ -2,10 +2,11 @@
 
 namespace NewLibCore.Data.Redis.CacheEvent
 {
-    internal interface ICacheCreateEvent
+    public abstract class CacheEvent
     {
-        event EventHandler OnCacheCreate;
+        protected abstract event EventHandler OnCreate;
+        
+        protected abstract event EventHandler OnModify;
 
-        void CacheCreate();
     }
 }
