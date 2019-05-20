@@ -205,7 +205,7 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             Parameter.Validate(order);
             _statementStore.AddOrderBy(order, orderBy);
-            
+
             return this;
         }
 
@@ -214,6 +214,7 @@ namespace NewLibCore.Data.SQL.Mapper
             IBuilder<TModel> builder = new SelectBuilder<TModel>(_statementStore);
             _statementStore.ExecuteType = executeType;
             var executeResult = _execute.Execute(executeType, builder.Build());
+            
             return executeResult;
         }
     }
