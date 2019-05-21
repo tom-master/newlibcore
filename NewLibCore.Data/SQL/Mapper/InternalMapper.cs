@@ -214,7 +214,7 @@ namespace NewLibCore.Data.SQL.Mapper
             IBuilder<TModel> builder = new SelectBuilder<TModel>(_statementStore);
             _statementStore.ExecuteType = executeType;
             var executeResult = _execute.Execute(executeType, builder.Build());
-            
+
             return executeResult;
         }
     }
@@ -222,6 +222,7 @@ namespace NewLibCore.Data.SQL.Mapper
     internal class UpdateEntityMapper<TModel> : IUpdateEntityMapper<TModel> where TModel : EntityBase, new()
     {
         private ExecuteCore _execute;
+        
         private StatementStore _statementStore;
 
         public UpdateEntityMapper(ExecuteCore executeCore)
