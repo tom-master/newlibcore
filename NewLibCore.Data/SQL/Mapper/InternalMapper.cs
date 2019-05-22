@@ -222,7 +222,7 @@ namespace NewLibCore.Data.SQL.Mapper
     internal class UpdateEntityMapper<TModel> : IUpdateEntityMapper<TModel> where TModel : EntityBase, new()
     {
         private ExecuteCore _execute;
-        
+
         private StatementStore _statementStore;
 
         public UpdateEntityMapper(ExecuteCore executeCore)
@@ -257,6 +257,5 @@ namespace NewLibCore.Data.SQL.Mapper
             model.Id = Int32.Parse(executeResult.Value.ToString());
             return model;
         }
-    }
-
+    } 
 }
