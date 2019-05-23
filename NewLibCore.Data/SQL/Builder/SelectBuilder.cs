@@ -96,6 +96,7 @@ namespace NewLibCore.Data.SQL.Builder
                     dynamicFields.Add($@"{fieldName}.{member.Member.Name}");
                 }
             }
+            
             return (String.Join(",", dynamicFields), modelAliasName.FirstOrDefault());
         }
     }
