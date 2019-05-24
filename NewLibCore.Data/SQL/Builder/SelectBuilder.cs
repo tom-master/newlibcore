@@ -75,6 +75,7 @@ namespace NewLibCore.Data.SQL.Builder
                 var constant = (ConstantExpression)fields.Body;
                 return (constant.Value + "", modelAliasName.FirstOrDefault());
             }
+            
             if (fields.Body.NodeType == ExpressionType.MemberAccess)
             {
                 var members = (fields.Body as MemberExpression);
