@@ -56,6 +56,7 @@ namespace NewLibCore.Data.SQL.Builder
         private (String fields, String tableName) StatementParse(Statement statement)
         {
             var modelAliasName = new List<String>();
+            
             if (statement == null)
             {
                 var modelType = typeof(TModel);
