@@ -20,9 +20,9 @@ namespace NewLibCore.Data.SQL.Builder
             Parameter.Validate(statementStore);
 
             _isValidate = isValidate;
-            _statementStore = statementStore; 
+            _statementStore = statementStore;
             _instance = model;
-        }  
+        }
 
         public TranslationCoreResult Build()
         {
@@ -38,7 +38,7 @@ namespace NewLibCore.Data.SQL.Builder
             var placeHolder = String.Join(",", _instance.PropertyInfos.Select(key => $@"{key.Key.Name}=@{key.Key.Name}"));
             var entityParameters = _instance.PropertyInfos.Select(c => new EntityParameter($@"@{c.Key.Name}", c.Value));
 
-            translation.Result.Append($@"UPDATE {typeof(TModel).Name} SET {String.Join(",", placeHolder)}", entityParameters);
+            translation.Result.Append($@"UPDATE {typeof(TModel).GetAliasName()} SET {String.Join(",", placeHolder)}", entityParameters);
 
             if (_statementStore.Where != null)
             {
