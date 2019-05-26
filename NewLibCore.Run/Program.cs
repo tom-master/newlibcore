@@ -17,7 +17,7 @@ namespace NewLibCore.Run
             MapperFactory.GetFactoryInstance().SwitchToMySql().InitLogger();
             using (var context = new EntityMapper())
             {
-                context.Select<User>().ToList();
+                context.Select<User>().InnerJoin<Config>((a,b)=>a.Id==b.UserId).ToList();
             }
         }
     }
