@@ -12,13 +12,14 @@ namespace NewLibCore.Run
 {
     internal class Program
     {
-        private static void Main(String[] args)  
-        { 
+        private static void Main(String[] args)
+        {
         }
     }
 
+    [TableName("newcrm_user_config")]
     public partial class Config : EntityBase
-    { 
+    {
         /// <summary> 
         /// 皮肤
         /// </summary> 
@@ -29,7 +30,7 @@ namespace NewLibCore.Run
         /// 用户头像
         /// </summary>
         [Required, InputRange(150)]
-        public String UserFace { get; private set; } 
+        public String UserFace { get; private set; }
 
         /// <summary>
         /// app尺寸
@@ -103,6 +104,7 @@ namespace NewLibCore.Run
         public Config() { }
     }
 
+    [TableName("newcrm_user_role")]
     public class UserRole : EntityBase
     {
         [Required]
@@ -120,6 +122,7 @@ namespace NewLibCore.Run
         public UserRole() { }
     }
 
+    [TableName("newcrm_user")]
     public partial class User : EntityBase
     {
         /// <summary>
@@ -310,6 +313,7 @@ namespace NewLibCore.Run
         }
     }
 
+    [TableName("newcrm_user_member")]
     public partial class Member : EntityBase
     {
         /// <summary>
@@ -666,6 +670,7 @@ namespace NewLibCore.Run
         }
     }
 
+    [TableName("newcrm_role")]
     public partial class Role : EntityBase
     {
         /// <summary>
@@ -752,6 +757,7 @@ namespace NewLibCore.Run
 
     }
 
+    [TableName("newcrm_role_power")]
     public class RolePower : EntityBase
     {
         [Required, ForeignKey("Role.Id")]
