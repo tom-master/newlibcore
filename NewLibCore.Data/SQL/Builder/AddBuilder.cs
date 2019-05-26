@@ -31,7 +31,7 @@ namespace NewLibCore.Data.SQL.Builder
             var propertyInfos = _propertyInfos.Where(w => w.GetCustomAttributes<PropertyValidate>().Any());
             if (!propertyInfos.Any())
             {
-                throw new Exception($@"{typeof(TModel).Name}:没有要插入的列");
+                throw new Exception($@"{typeof(TModel).GetAliasName()}:没有要插入的列");
             }
 
             _instance.SetAddTime();
@@ -45,7 +45,7 @@ namespace NewLibCore.Data.SQL.Builder
             var placeHolder = String.Join(",", propertyInfos.Select(key => $@"@{key.Name}"));
             var entityParameters = propertyInfos.Select(c => new EntityParameter($@"@{c.Name}", c.GetValue(_instance)));
 
-            translationResult.Append($@" INSERT {typeof(TModel).Name} ({fields}) VALUES ({placeHolder}) {MapperFactory.Mapper.Extension.Identity}", entityParameters);
+            translationResult.Append($@" INSERT {typeof(TModel).GetAliasName()} ({fields}) VALUES ({placeHolder}) {MapperFactory.Mapper.Extension.Identity}", entityParameters);
             return translationResult;
         }
     }
