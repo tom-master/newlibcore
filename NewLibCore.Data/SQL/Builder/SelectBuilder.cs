@@ -60,7 +60,7 @@ namespace NewLibCore.Data.SQL.Builder
             if (statement == null)
             {
                 var modelType = typeof(TModel);
-                modelAliasName.Add(modelType.Name.ToLower());
+                modelAliasName.Add(modelType.GetAliasName().ToLower());
                 var propertys = modelType.GetProperties().Where(w => w.GetCustomAttributes<PropertyValidate>().Any());
                 return (String.Join(",", propertys.Select(s => $@"{modelAliasName.FirstOrDefault()}.{s.Name}")), modelAliasName.FirstOrDefault());
             }
@@ -68,7 +68,7 @@ namespace NewLibCore.Data.SQL.Builder
             var fields = (LambdaExpression)statement.Expression;
             foreach (var item in fields.Parameters)
             {
-                modelAliasName.Add(item.Type.Name.ToLower());
+                modelAliasName.Add(item.Type.GetAliasName().ToLower());
             }
 
             if (fields.Body.NodeType == ExpressionType.Constant)
@@ -90,11 +90,11 @@ namespace NewLibCore.Data.SQL.Builder
                 if (member.Type.IsComplexType() && member.Member.GetAttribute<SubModelAttribute>(true) != null)
                 {
                     var propertys = member.Type.GetProperties().Where(w => w.GetCustomAttributes<PropertyValidate>().Any());
-                    dynamicFields.AddRange(propertys.Select(s => $@"{member.Type.Name.ToLower()}.{s.Name} "));
+                    dynamicFields.AddRange(propertys.Select(s => $@"{member.Type.GetAliasName().ToLower()}.{s.Name} "));
                 }
                 else
                 {
-                    var fieldName = ((ParameterExpression)member.Expression).Type.Name.ToLower();
+                    var fieldName = ((ParameterExpression)member.Expression).Type.GetAliasName().ToLower();
                     dynamicFields.Add($@"{fieldName}.{member.Member.Name}");
                 }
             }

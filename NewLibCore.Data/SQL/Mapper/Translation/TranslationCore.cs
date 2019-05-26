@@ -312,21 +312,21 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
                 leftParameterExp = (ParameterExpression)internalExp;
             }
 
-            if (!_tableAliasMapper.Any(a => a.Key == leftParameterExp.Name && a.Value == leftParameterExp.Type.Name))
+            if (!_tableAliasMapper.Any(a => a.Key == leftParameterExp.Name && a.Value == leftParameterExp.Type.GetAliasName()))
             {
                 throw new Exception($@"没有找到参数名:{leftParameterExp.Name}所对应的左表别名");
             }
 
-            var leftAliasName = _tableAliasMapper.Where(w => w.Key == leftParameterExp.Name && w.Value == leftParameterExp.Type.Name).FirstOrDefault().Value.ToLower();
+            var leftAliasName = _tableAliasMapper.Where(w => w.Key == leftParameterExp.Name && w.Value == leftParameterExp.Type.GetAliasName()).FirstOrDefault().Value.ToLower();
             if (binaryExp.Right.GetType() != typeof(ConstantExpression))
             {
                 var rightMember = (MemberExpression)binaryExp.Right;
                 var rightParameterExp = (ParameterExpression)rightMember.Expression;
-                if (!_tableAliasMapper.Any(a => a.Key == rightParameterExp.Name && a.Value == rightParameterExp.Type.Name))
+                if (!_tableAliasMapper.Any(a => a.Key == rightParameterExp.Name && a.Value == rightParameterExp.Type.GetAliasName()))
                 {
                     throw new Exception($@"没有找到参数名:{rightParameterExp.Name}所对应的右表别名");
                 }
-                var rightAliasName = _tableAliasMapper.Where(w => w.Key == rightParameterExp.Name && w.Value == rightParameterExp.Type.Name).FirstOrDefault().Value.ToLower();
+                var rightAliasName = _tableAliasMapper.Where(w => w.Key == rightParameterExp.Name && w.Value == rightParameterExp.Type.GetAliasName()).FirstOrDefault().Value.ToLower();
                 var relationTemplate = MapperFactory.Mapper.RelationBuilder(relationType, $"{rightAliasName}.{rightMember.Member.Name}", $"{leftAliasName}.{leftMember.Member.Name}");
                 Result.Append(relationTemplate);
                 return;

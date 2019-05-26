@@ -71,7 +71,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
                 Expression = expression,
                 JoinType = joinType,
                 AliaNameMapper = parameters,
-                MainTable = typeof(TModel).Name
+                MainTable = typeof(TModel).GetAliasName()
             });
         }
 
