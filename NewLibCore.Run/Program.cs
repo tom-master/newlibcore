@@ -13,10 +13,13 @@ namespace NewLibCore.Run
     {
         private static void Main(String[] args) 
         {
-            MapperFactory.GetFactoryInstance().SwitchToMySql().InitLogger(); 
-            using (var context = new EntityMapper())
+            MapperFactory.GetFactoryInstance().SwitchToMySql().InitLogger().UseCache();
+            while (true)
             {
-                context.Select<User>().InnerJoin<Config>((a,b)=>a.Id==b.UserId).ToList();
+                using (var context = new EntityMapper())
+                {
+                    context.Select<User>().InnerJoin<Config>((a, b) => a.Id == b.UserId).ToList();
+                }
             }
         }
     }
