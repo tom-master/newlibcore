@@ -767,7 +767,7 @@ namespace NewLibCore.Run
     [TableName("newcrm_role_power")]
     public class RolePower : EntityBase
     {
-        [Required, ForeignKey("Role.Id")]
+        [Required]
         public Int32 RoleId { get; private set; }
 
         [Required]
