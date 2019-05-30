@@ -10,10 +10,22 @@ namespace NewLibCore
     {
         public static String GetMD5(Stream stream)
         {
-            Parameter.Validate(stream);
+            var bs = new Byte[stream.Length];
+            stream.Write(bs, 0, bs.Length);
+            return InternalMd5(bs);
+        }
+
+        public static String GetMD5(String input)
+        {
+            return InternalMd5(Encoding.Default.GetBytes(input));
+        }
+
+        private static String InternalMd5(Byte[] bs)
+        {
+            Parameter.Validate(bs);
 
             var md5 = new MD5CryptoServiceProvider();
-            md5.ComputeHash(stream);
+            md5.ComputeHash(bs);
             var b = md5.Hash;
             md5.Clear();
             var sb = new StringBuilder(32);
@@ -21,32 +33,7 @@ namespace NewLibCore
             {
                 sb.Append(t.ToString("X2"));
             }
-
-            if (stream.CanSeek)
-            {
-                stream.Position = 0;
-            }
-
             return sb.ToString();
-        }
-
-        public static String GetMD5(String input)
-        {
-            if (input == null)
-            {
-                return null;
-            }
-
-            var md5Hash = MD5.Create();
-            var data = md5Hash.ComputeHash(Encoding.UTF8.GetBytes(input));
-
-            var sBuilder = new StringBuilder();
-            for (var i = 0; i < data.Length; i++)
-            {
-                sBuilder.Append(data[i].ToString("x2"));
-            }
-
-            return sBuilder.ToString();
         }
     }
 }
