@@ -74,7 +74,7 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
                 sql = ReformatSql(sql);
                 if ((executeType == ExecuteType.SELECT || executeType == ExecuteType.SELECT_SINGLE) && MapperFactory.Cache != null)
                 {
-                    var md5 = MD.GetMD5(PrepareCacheKey(sql, parameters));
+                    var md5 = PrepareCacheKey(sql, parameters);
                     var cacheResult = MapperFactory.Cache.Get(md5);
                     if (cacheResult != null)
                     {
@@ -122,7 +122,7 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
                     if ((executeType == ExecuteType.SELECT || executeType == ExecuteType.SELECT_SINGLE) && MapperFactory.Cache != null)
                     {
                         MapperFactory.Logger.Write("INFO", "add to cache");
-                        MapperFactory.Cache.Add(MD.GetMD5(PrepareCacheKey(sql, parameters)), executeResult);
+                        MapperFactory.Cache.Add(PrepareCacheKey(sql, parameters), executeResult);
                     }
 
                     return executeResult;
@@ -143,8 +143,7 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
             {
                 cacheKey = cacheKey.Replace(item.Key, item.Value.ToString());
             }
-
-            return cacheKey;
+            return MD.GetMD5(cacheKey); ;
         }
 
         private String ReformatSql(String sql)
