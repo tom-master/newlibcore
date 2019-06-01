@@ -180,11 +180,11 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
                             var internalAliasName = "";
                             if (_statementStore.ExecuteType != ExecuteType.UPDATE)
                             {
-                                if (!_tableAliasMapper.Any(a => a.Key == parameterExp.Name && a.Value == parameterExp.Type.Name))
+                                if (!_tableAliasMapper.Any(a => a.Key == parameterExp.Name && a.Value == parameterExp.Type.GetAliasName()))
                                 {
                                     throw new ArgumentException($@"没有找到{parameterExp.Type.Name}所对应的形参");
                                 }
-                                internalAliasName = $@"{ _tableAliasMapper.Where(w => w.Key == parameterExp.Name && w.Value == parameterExp.Type.Name).FirstOrDefault().Value.ToLower()}.";
+                                internalAliasName = $@"{ _tableAliasMapper.Where(w => w.Key == parameterExp.Name && w.Value == parameterExp.Type.GetAliasName()).FirstOrDefault().Value.ToLower()}.";
                             }
 
                             var newParameterName = $@"{Guid.NewGuid().ToString().Replace("-", "")}";
