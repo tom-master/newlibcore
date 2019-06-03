@@ -214,11 +214,10 @@ namespace NewLibCore.Data.SQL.Mapper
             IBuilder<TModel> builder = new SelectBuilder<TModel>(_statementStore);
             _statementStore.ExecuteType = executeType;
 
-            var translationCoreResult = builder.Build();
-            var sql = ReformatSql(translationCoreResult.GetSql());
+            var translationResult = builder.Build();
             if ((executeType == ExecuteType.SELECT || executeType == ExecuteType.SELECT_SINGLE) && MapperFactory.Cache != null)
             {
-                var cacheResult = MapperFactory.Cache.Get(PrepareCacheKey(sql, translationCoreResult.GetParameters()));
+                var cacheResult = MapperFactory.Cache.Get(translationResult.PrepareCacheKey());
                 if (cacheResult != null)
                 {
                     MapperFactory.Logger.Write("INFO", "return from cache");
@@ -226,32 +225,16 @@ namespace NewLibCore.Data.SQL.Mapper
                 }
             }
 
-            var executeResult = _execute.Execute(executeType, builder.Build());
+            var executeResult = _execute.Execute(executeType, translationResult);
 
             if ((executeType == ExecuteType.SELECT || executeType == ExecuteType.SELECT_SINGLE) && MapperFactory.Cache != null)
             {
                 MapperFactory.Logger.Write("INFO", "add to cache");
-                MapperFactory.Cache.Add(PrepareCacheKey(sql, translationCoreResult.GetParameters()), executeResult);
+                MapperFactory.Cache.Add(translationResult.PrepareCacheKey(), executeResult);
             }
 
             return executeResult;
         }
-
-
-
-        private static String PrepareCacheKey(String sql, IEnumerable<EntityParameter> parameters)
-        {
-            Parameter.Validate(sql);
-            var cacheKey = sql;
-            foreach (var item in parameters)
-            {
-                cacheKey = cacheKey.Replace(item.Key, item.Value.ToString());
-            }
-            return MD.GetMD5(cacheKey);
-            ;
-        }
-
-
 
         private String ReformatSql(String sql)
         {

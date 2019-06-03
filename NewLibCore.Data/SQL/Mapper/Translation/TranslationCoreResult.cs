@@ -28,6 +28,17 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
             return _parameters;
         }
 
+        internal String PrepareCacheKey()
+        {
+            Parameter.Validate(_originSql);
+            var cacheKey = GetSql();
+            foreach (var item in GetParameters())
+            {
+                cacheKey = cacheKey.Replace(item.Key, item.Value.ToString());
+            }
+            return MD.GetMD5(cacheKey); 
+        }
+
         internal void Append(String sql, IEnumerable<EntityParameter> entityParameters = null)
         {
             Parameter.Validate(sql);
@@ -63,7 +74,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
             _originSql.Clear();
             _parameters.Clear();
         }
-
+        
         public override String ToString()
         {
             return _originSql.ToString();
