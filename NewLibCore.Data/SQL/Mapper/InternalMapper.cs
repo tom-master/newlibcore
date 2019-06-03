@@ -90,10 +90,10 @@ namespace NewLibCore.Data.SQL.Mapper
             var executeResult = InternalExecuteSql(ExecuteType.SELECT);
             var dataTable = executeResult.Value as DataTable;
             var models = dataTable.ToList<TModel>();
-            MapperFactory.Logger.Write("INFO", $@"总共花费{Math.Round(sw.Elapsed.TotalSeconds, 2)}s"); 
+            MapperFactory.Logger.Write("INFO", $@"总共花费{Math.Round(sw.Elapsed.TotalSeconds, 2)}s");
 
             sw.Stop();
-            return models; 
+            return models;
         }
 
         public ISelectEntityMapper<TModel> Select<T>(Expression<Func<TModel, T, dynamic>> fields = null) where T : EntityBase, new()
@@ -112,7 +112,7 @@ namespace NewLibCore.Data.SQL.Mapper
             {
                 _statementStore.Add(fields);
             }
-            
+
             return this;
         }
 
@@ -151,7 +151,7 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             Parameter.Validate(expression);
             _statementStore.Add(expression, JoinType.LEFT);
-            
+
             return this;
         }
 
@@ -167,7 +167,7 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             Parameter.Validate(expression);
             _statementStore.Add(expression, JoinType.INNER);
-            
+
             return this;
         }
 
@@ -213,9 +213,51 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             IBuilder<TModel> builder = new SelectBuilder<TModel>(_statementStore);
             _statementStore.ExecuteType = executeType;
+
+            var translationCoreResult = builder.Build();
+            var sql = ReformatSql(translationCoreResult.GetSql());
+            if ((executeType == ExecuteType.SELECT || executeType == ExecuteType.SELECT_SINGLE) && MapperFactory.Cache != null)
+            {
+                var cacheResult = MapperFactory.Cache.Get(PrepareCacheKey(sql, translationCoreResult.GetParameters()));
+                if (cacheResult != null)
+                {
+                    MapperFactory.Logger.Write("INFO", "return from cache");
+                    return (ExecuteCoreResult)cacheResult;
+                }
+            }
+
             var executeResult = _execute.Execute(executeType, builder.Build());
 
+            if ((executeType == ExecuteType.SELECT || executeType == ExecuteType.SELECT_SINGLE) && MapperFactory.Cache != null)
+            {
+                MapperFactory.Logger.Write("INFO", "add to cache");
+                MapperFactory.Cache.Add(PrepareCacheKey(sql, translationCoreResult.GetParameters()), executeResult);
+            }
+
             return executeResult;
+        }
+
+
+
+        private static String PrepareCacheKey(String sql, IEnumerable<EntityParameter> parameters)
+        {
+            Parameter.Validate(sql);
+            var cacheKey = sql;
+            foreach (var item in parameters)
+            {
+                cacheKey = cacheKey.Replace(item.Key, item.Value.ToString());
+            }
+            return MD.GetMD5(cacheKey);
+            ;
+        }
+
+
+
+        private String ReformatSql(String sql)
+        {
+            Parameter.Validate(sql);
+            sql = sql.Replace("  ", " ");
+            return sql;
         }
     }
 
@@ -257,5 +299,5 @@ namespace NewLibCore.Data.SQL.Mapper
             model.Id = Int32.Parse(executeResult.Value.ToString());
             return model;
         }
-    } 
+    }
 }

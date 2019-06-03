@@ -70,18 +70,8 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
         {
             try
             {
-                Parameter.Validate(sql);
-                sql = ReformatSql(sql);
-                if ((executeType == ExecuteType.SELECT || executeType == ExecuteType.SELECT_SINGLE) && MapperFactory.Cache != null)
-                { 
-                    var cacheResult = MapperFactory.Cache.Get(PrepareCacheKey(sql, parameters));
-                    if (cacheResult != null)
-                    {
-                        MapperFactory.Logger.Write("INFO", "return from cache");
-                        return (ExecuteCoreResult)cacheResult;
-                    }
-                }
-
+                Parameter.Validate(sql); 
+                
                 Open();
                 using (var cmd = _connection.CreateCommand())
                 {
@@ -118,12 +108,6 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
                     }
                     cmd.Parameters.Clear();
 
-                    if ((executeType == ExecuteType.SELECT || executeType == ExecuteType.SELECT_SINGLE) && MapperFactory.Cache != null)
-                    {
-                        MapperFactory.Logger.Write("INFO", "add to cache");
-                        MapperFactory.Cache.Add(PrepareCacheKey(sql, parameters), executeResult);
-                    }
-
                     return executeResult;
                 }
             }
@@ -132,25 +116,7 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
                 MapperFactory.Logger.Write("ERROR", $@"{ex}");
                 throw;
             }
-        }
-
-        private static String PrepareCacheKey(String sql, IEnumerable<EntityParameter> parameters)
-        {
-            Parameter.Validate(sql);
-            var cacheKey = sql;
-            foreach (var item in parameters)
-            {
-                cacheKey = cacheKey.Replace(item.Key, item.Value.ToString());
-            }
-            return MD.GetMD5(cacheKey); ;
-        }
-
-        private String ReformatSql(String sql)
-        {
-            Parameter.Validate(sql);
-            sql = sql.Replace("  ", " ");
-            return sql;
-        }
+        } 
 
         private void Open()
         {
