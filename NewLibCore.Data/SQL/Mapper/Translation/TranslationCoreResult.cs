@@ -20,8 +20,10 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
 
         internal String GetSql()
         {
-            return _originSql.ToString();
+            return ReformatSql(_originSql.ToString());
         }
+
+        
 
         internal IList<EntityParameter> GetParameters()
         {
@@ -36,7 +38,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
             {
                 cacheKey = cacheKey.Replace(item.Key, item.Value.ToString());
             }
-            return MD.GetMD5(cacheKey); 
+            return MD.GetMD5(cacheKey);
         }
 
         internal void Append(String sql, IEnumerable<EntityParameter> entityParameters = null)
@@ -74,10 +76,17 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
             _originSql.Clear();
             _parameters.Clear();
         }
-        
+
+        private String ReformatSql(String sql)
+        {
+            Parameter.Validate(sql);
+            sql = sql.Replace("  ", " ");
+            return sql;
+        }
+
         public override String ToString()
         {
-            return _originSql.ToString();
+            return ReformatSql(_originSql.ToString());
         }
     }
 }

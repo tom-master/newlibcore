@@ -234,14 +234,7 @@ namespace NewLibCore.Data.SQL.Mapper
             }
 
             return executeResult;
-        }
-
-        private String ReformatSql(String sql)
-        {
-            Parameter.Validate(sql);
-            sql = sql.Replace("  ", " ");
-            return sql;
-        }
+        } 
     }
 
     internal class UpdateEntityMapper<TModel> : IUpdateEntityMapper<TModel> where TModel : EntityBase, new()
