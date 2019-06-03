@@ -73,9 +73,8 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
                 Parameter.Validate(sql);
                 sql = ReformatSql(sql);
                 if ((executeType == ExecuteType.SELECT || executeType == ExecuteType.SELECT_SINGLE) && MapperFactory.Cache != null)
-                {
-                    var md5 = PrepareCacheKey(sql, parameters);
-                    var cacheResult = MapperFactory.Cache.Get(md5);
+                { 
+                    var cacheResult = MapperFactory.Cache.Get(PrepareCacheKey(sql, parameters));
                     if (cacheResult != null)
                     {
                         MapperFactory.Logger.Write("INFO", "return from cache");
