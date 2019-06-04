@@ -56,7 +56,7 @@ namespace NewLibCore.Data.SQL.Builder
         private (String fields, String tableName) StatementParse(Statement statement)
         {
             var modelAliasName = new List<String>();
-            
+
             if (statement == null)
             {
                 var modelType = typeof(TModel);
@@ -76,7 +76,7 @@ namespace NewLibCore.Data.SQL.Builder
                 var constant = (ConstantExpression)fields.Body;
                 return (constant.Value + "", modelAliasName.FirstOrDefault());
             }
-            
+
             if (fields.Body.NodeType == ExpressionType.MemberAccess)
             {
                 var members = (fields.Body as MemberExpression);
@@ -84,7 +84,8 @@ namespace NewLibCore.Data.SQL.Builder
             }
 
             var dynamicFields = new List<String>();
-            foreach (var item in (fields.Body as NewExpression).Arguments)
+            var bodyArguments = (fields.Body as NewExpression).Arguments;
+            foreach (var item in bodyArguments)
             {
                 var member = (MemberExpression)item;
                 if (member.Type.IsComplexType() && member.Member.GetAttribute<SubModelAttribute>(true) != null)
@@ -98,7 +99,7 @@ namespace NewLibCore.Data.SQL.Builder
                     dynamicFields.Add($@"{fieldName}.{member.Member.Name}");
                 }
             }
-            
+
             return (String.Join(",", dynamicFields), modelAliasName.FirstOrDefault());
         }
     }

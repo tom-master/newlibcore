@@ -234,7 +234,7 @@ namespace NewLibCore.Data.SQL.Mapper
             }
 
             return executeResult;
-        } 
+        }
     }
 
     internal class UpdateEntityMapper<TModel> : IUpdateEntityMapper<TModel> where TModel : EntityBase, new()

@@ -8,7 +8,6 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
     {
         public static String GetAliasName(this Type t)
         {
-
             var attrubutes = t.GetCustomAttributes(typeof(TableNameAttribute), true);
             if (!attrubutes.Any())
             {

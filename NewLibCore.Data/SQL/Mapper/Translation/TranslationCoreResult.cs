@@ -23,8 +23,6 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
             return ReformatSql(_originSql.ToString());
         }
 
-        
-
         internal IList<EntityParameter> GetParameters()
         {
             return _parameters;
