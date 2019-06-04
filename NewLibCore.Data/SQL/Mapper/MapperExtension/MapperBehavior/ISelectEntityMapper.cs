@@ -1,21 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq.Expressions;
 using NewLibCore.Data.SQL.Mapper.Extension;
 
-namespace NewLibCore.Data.SQL.Mapper
+namespace NewLibCore.Data.SQL.Mapper.MapperExtension.MapperBehavior
 {
-    public interface IAddEntityMapper<TModel> where TModel : EntityBase, new()
-    {
-        TModel Add(TModel model);
-    }
-
-    public interface IUpdateEntityMapper<TModel> where TModel : EntityBase, new()
-    {
-        Boolean Update(TModel model, Expression<Func<TModel, Boolean>> expression);
-    }
-
     public interface ISelectEntityMapper<TModel> where TModel : EntityBase, new()
     {
         TModel FirstOrDefault();
@@ -52,12 +41,4 @@ namespace NewLibCore.Data.SQL.Mapper
 
         ISelectEntityMapper<TModel> OrderBy<TOrder, TKey>(Expression<Func<TOrder, TKey>> order, OrderByType orderBy = OrderByType.DESC) where TOrder : EntityBase, new();
     }
-   
-    public interface ISqlExecutor
-    { 
-        List<TModel> ToList<TModel>(String sql, IEnumerable<EntityParameter> parameters = null) where TModel : new();
-
-        TModel ToSingle<TModel>(String sql, IEnumerable<EntityParameter> parameters = null) where TModel : new();
- 
-    } 
 }

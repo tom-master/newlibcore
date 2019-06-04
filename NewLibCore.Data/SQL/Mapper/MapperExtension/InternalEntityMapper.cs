@@ -2,19 +2,17 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
-using System.Linq;
 using System.Linq.Expressions;
 using NewLibCore.Data.SQL.Builder;
 using NewLibCore.Data.SQL.Mapper.Config;
 using NewLibCore.Data.SQL.Mapper.Execute;
-using NewLibCore.Data.SQL.Mapper.Extension;
+using NewLibCore.Data.SQL.Mapper.MapperExtension.MapperBehavior;
 using NewLibCore.Data.SQL.Mapper.Translation;
 using NewLibCore.InternalExtension;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Data.SQL.Mapper
+namespace NewLibCore.Data.SQL.Mapper.Extension
 {
-
     internal class SqlExecutor : ISqlExecutor
     {
         private ExecuteCore _executeCore;

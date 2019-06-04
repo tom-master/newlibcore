@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq.Expressions;
 using NewLibCore.Data.SQL.Mapper.Execute;
 using NewLibCore.Data.SQL.Mapper.Extension;
+using NewLibCore.Data.SQL.Mapper.MapperExtension.MapperBehavior;
 using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper
