@@ -15,9 +15,9 @@ namespace NewLibCore.Data.SQL.Builder
 {
     internal class SelectBuilder<TModel> : IBuilder<TModel> where TModel : PropertyMonitor, new()
     {
-        private readonly StatementStore _statementStore;
+        private readonly TranslationStatementStore _statementStore;
 
-        internal SelectBuilder(StatementStore statementStore)
+        internal SelectBuilder(TranslationStatementStore statementStore)
         {
             Parameter.Validate(statementStore);
             _statementStore = statementStore;

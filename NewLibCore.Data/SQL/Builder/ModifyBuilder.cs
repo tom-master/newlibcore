@@ -11,10 +11,10 @@ namespace NewLibCore.Data.SQL.Builder
     internal class ModifyBuilder<TModel> : IBuilder<TModel> where TModel : PropertyMonitor, new()
     {
         private readonly Boolean _isValidate;
-        private readonly StatementStore _statementStore;
+        private readonly TranslationStatementStore _statementStore;
         private readonly TModel _instance;
 
-        public ModifyBuilder(TModel model, StatementStore statementStore, Boolean isValidate = false)
+        public ModifyBuilder(TModel model, TranslationStatementStore statementStore, Boolean isValidate = false)
         {
             Parameter.Validate(model);
             Parameter.Validate(statementStore);

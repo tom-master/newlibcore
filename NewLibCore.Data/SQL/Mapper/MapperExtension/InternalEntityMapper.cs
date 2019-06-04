@@ -52,12 +52,12 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
     internal class SelectEntityMapper<TModel> : ISelectEntityMapper<TModel> where TModel : EntityBase, new()
     {
         private ExecuteCore _execute;
-        private StatementStore _statementStore;
+        private TranslationStatementStore _statementStore;
 
         public SelectEntityMapper(ExecuteCore executeCore)
         {
             _execute = executeCore;
-            _statementStore = new StatementStore();
+            _statementStore = new TranslationStatementStore();
         }
 
         public Boolean Exist()
@@ -239,12 +239,12 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
     {
         private ExecuteCore _execute;
 
-        private StatementStore _statementStore;
+        private TranslationStatementStore _statementStore;
 
         public UpdateEntityMapper(ExecuteCore executeCore)
         {
             _execute = executeCore;
-            _statementStore = new StatementStore();
+            _statementStore = new TranslationStatementStore();
         }
 
         public Boolean Update(TModel model, Expression<Func<TModel, Boolean>> expression)
