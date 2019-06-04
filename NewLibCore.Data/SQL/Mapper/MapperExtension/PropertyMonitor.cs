@@ -34,9 +34,8 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
 
         protected internal void Validate()
         {
-            Parameter.Validate(GetPropertys());
-            var propertys = GetPropertys();
-            foreach (var keyValuePair in propertys)
+            Parameter.Validate(_propertys); 
+            foreach (var keyValuePair in _propertys)
             {
                 var propertyItem = keyValuePair.Key;
                 if (!propertyItem.CustomAttributes.Any())
