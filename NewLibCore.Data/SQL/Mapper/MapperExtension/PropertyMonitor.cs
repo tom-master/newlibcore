@@ -9,14 +9,9 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
 {
     public abstract class PropertyMonitor
     {
-        protected internal IList<KeyValuePair<PropertyInfo, Object>> PropertyInfos { get; }
+        private readonly List<KeyValuePair<PropertyInfo, Object>> _propertys = new List<KeyValuePair<PropertyInfo, Object>>();
 
-        protected PropertyMonitor()
-        {
-            PropertyInfos = new List<KeyValuePair<PropertyInfo, Object>>();
-        }
-
-        protected void OnPropertyChanged(String propertyName, Object propertyValue)
+        protected void OnChanged(String propertyName, Object propertyValue)
         {
             Parameter.Validate(propertyName);
 
@@ -25,7 +20,12 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
             {
                 throw new ArgumentException($@"属性：{propertyName},不属于类：{GetType().Name}或它的父类");
             }
-            PropertyInfos.Add(new KeyValuePair<PropertyInfo, Object>(propertyInfo, propertyValue));
+            _propertys.Add(new KeyValuePair<PropertyInfo, Object>(propertyInfo, propertyValue));
+        }
+
+        protected internal IReadOnlyList<KeyValuePair<PropertyInfo, Object>> GetPropertys()
+        {
+            return _propertys.AsReadOnly();
         }
 
         protected internal virtual void SetUpdateTime() { }
@@ -34,8 +34,9 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
 
         protected internal void Validate()
         {
-            Parameter.Validate(PropertyInfos);
-            foreach (var keyValuePair in PropertyInfos)
+            Parameter.Validate(GetPropertys());
+            var propertys = GetPropertys();
+            foreach (var keyValuePair in propertys)
             {
                 var propertyItem = keyValuePair.Key;
                 if (!propertyItem.CustomAttributes.Any())
@@ -82,6 +83,11 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
                     }
                 }
             }
+        }
+
+        internal void Reset()
+        {
+            _propertys.Clear();
         }
 
         private void SetPropertyDefaultValue(DefaultValueAttribute defaultValueAttribute, PropertyInfo propertyItem, Object rawPropertyValue)
