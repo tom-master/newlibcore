@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading;
 using NewLibCore.Data.SQL.Mapper;
 using NewLibCore.Data.SQL.Mapper.Config;
@@ -15,7 +14,6 @@ namespace NewLibCore.Run
     {
         private static void Main(String[] args)
         {
-            new Program().aa("123");
             MapperFactory.GetFactoryInstance().SwitchToMySql().InitLogger().UseCache();
             while (true)
             {
@@ -35,23 +33,6 @@ namespace NewLibCore.Run
                     }).Where(a => a.Source == WallpaperSource.System).ToList();
                 }
                 Thread.Sleep(1000);
-            }
-        }
-
-        private void aa(String wasd)
-        {
-            var stackTrace = new StackTrace();
-            var stackFrame = stackTrace.GetFrame(0);
-            // 如果要获取上层函数信息调用 GetFrame(1)， 这样就可以写成通用函数了
-
-            var methodBase = stackFrame.GetMethod();
-            Console.WriteLine("函数名：" + methodBase.Name);
-
-            var parameterInfos = methodBase.GetParameters();
-
-            foreach (var parameterInfo in parameterInfos)
-            {
-                Console.WriteLine("参数信息：" + parameterInfo.Name);
             }
         }
     }
