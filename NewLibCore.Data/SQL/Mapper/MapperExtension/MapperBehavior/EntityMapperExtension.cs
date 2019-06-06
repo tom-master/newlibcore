@@ -218,7 +218,6 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension.MapperBehavior
                 var cacheResult = MapperFactory.Cache.Get(translationResult.PrepareCacheKey());
                 if (cacheResult != null)
                 {
-                    MapperFactory.Logger.Write("INFO", "return from cache");
                     return (ExecuteCoreResult)cacheResult;
                 }
             }
@@ -227,7 +226,6 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension.MapperBehavior
 
             if ((executeType == ExecuteType.SELECT || executeType == ExecuteType.SELECT_SINGLE) && MapperFactory.Cache != null)
             {
-                MapperFactory.Logger.Write("INFO", "add to cache");
                 MapperFactory.Cache.Add(translationResult.PrepareCacheKey(), executeResult);
             }
 
