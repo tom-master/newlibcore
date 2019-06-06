@@ -122,7 +122,6 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
             {
                 newAliasMapper.AddRange(Where.AliaNameMapper);
             }
-
             if (Joins.Any())
             {
                 newAliasMapper.AddRange(Joins.SelectMany(s => s.AliaNameMapper));
