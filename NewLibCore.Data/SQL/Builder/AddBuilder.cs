@@ -14,7 +14,6 @@ namespace NewLibCore.Data.SQL.Builder
     internal class AddBuilder<TModel> : IBuilder<TModel> where TModel : PropertyMonitor, new()
     {
         private readonly Boolean _isVerifyModel;
-        private readonly IEnumerable<PropertyInfo> _propertyInfos;
         private readonly TModel _instance;
 
         internal AddBuilder(TModel model, Boolean isVerifyModel = false)
@@ -22,28 +21,22 @@ namespace NewLibCore.Data.SQL.Builder
             Parameter.Validate(model);
 
             _isVerifyModel = isVerifyModel;
-            _propertyInfos = typeof(TModel).GetProperties();
             _instance = model;
         }
 
         public TranslationCoreResult Build()
         {
-            var propertyInfos = _propertyInfos.Where(w => w.GetCustomAttributes<PropertyValidate>().Any());
-            if (!propertyInfos.Any())
-            {
-                throw new Exception($@"{typeof(TModel).GetAliasName()}:没有要插入的列");
-            }
-
-            _instance.SetAddTime();
-            _instance.SetUpdateTime();
+            _instance.OnChanged();
             if (_isVerifyModel)
             {
                 _instance.Validate();
             }
+
+            var propertyInfos = _instance.GetPropertys();
             var translationResult = new TranslationCoreResult();
-            var fields = String.Join(",", propertyInfos.Select(c => c.Name));
-            var placeHolder = String.Join(",", propertyInfos.Select(key => $@"@{key.Name}"));
-            var entityParameters = propertyInfos.Select(c => new EntityParameter($@"@{c.Name}", c.GetValue(_instance)));
+            var fields = String.Join(",", propertyInfos.Select(c => c.Key));
+            var placeHolder = String.Join(",", propertyInfos.Select(key => $@"@{key.Key}"));
+            var entityParameters = propertyInfos.Select(c => new EntityParameter($@"@{c.Key}", c.Value));
 
             translationResult.Append($@" INSERT {typeof(TModel).GetAliasName()} ({fields}) VALUES ({placeHolder}) {MapperFactory.Mapper.Extension.Identity}", entityParameters);
             return translationResult;

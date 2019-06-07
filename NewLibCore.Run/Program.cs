@@ -19,18 +19,9 @@ namespace NewLibCore.Run
             {
                 using (var context = new EntityMapper())
                 {
-                    context.Select<Wallpaper>(a => new
-                    {
-                        a.UserId,
-                        a.Height,
-                        a.Id,
-                        a.Md5,
-                        a.ShortUrl,
-                        a.Source,
-                        a.Title,
-                        a.Url,
-                        a.Width
-                    }).Where(a => a.Source == WallpaperSource.System).ToList();
+                    var role = new Role();
+                    role.ModifyRoleName("wasd123123");
+                    context.Modify(role, w => w.Id == 100);
                 }
                 Thread.Sleep(1000);
             }

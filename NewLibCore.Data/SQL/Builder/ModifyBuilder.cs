@@ -26,7 +26,6 @@ namespace NewLibCore.Data.SQL.Builder
 
         public TranslationCoreResult Build()
         {
-            Parameter.Validate(_instance.GetPropertys());
             _instance.SetUpdateTime();
 
             if (_isValidate)
@@ -35,8 +34,8 @@ namespace NewLibCore.Data.SQL.Builder
             }
 
             var translation = new TranslationCore(_statementStore);
-            var placeHolder = String.Join(",", _instance.GetPropertys().Select(key => $@"{key.Key.Name}=@{key.Key.Name}"));
-            var entityParameters = _instance.GetPropertys().Select(c => new EntityParameter($@"@{c.Key.Name}", c.Value));
+            var placeHolder = String.Join(",", _instance.GetPropertys().Select(p => $@"{p.Key}=@{p.Key}"));
+            var entityParameters = _instance.GetPropertys().Select(c => new EntityParameter($@"@{c.Key}", c.Value));
 
             translation.Result.Append($@"UPDATE {typeof(TModel).GetAliasName()} SET {String.Join(",", placeHolder)}", entityParameters);
 

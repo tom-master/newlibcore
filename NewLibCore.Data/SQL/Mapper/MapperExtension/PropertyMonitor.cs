@@ -7,9 +7,17 @@ using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper.Extension
 {
+    internal class PO
+    {
+        internal PropertyInfo PropertyInfo { get; set; }
+
+        internal Object Value { get; set; }
+    }
+
+
     public abstract class PropertyMonitor
     {
-        private readonly List<KeyValuePair<PropertyInfo, Object>> _propertys = new List<KeyValuePair<PropertyInfo, Object>>();
+        private readonly IList<PO> _propertys = new List<PO>();
 
         protected void OnChanged(String propertyName, Object propertyValue)
         {
@@ -20,12 +28,27 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
             {
                 throw new ArgumentException($@"属性：{propertyName},不属于类：{GetType().Name}或它的父类");
             }
-            _propertys.Add(new KeyValuePair<PropertyInfo, Object>(propertyInfo, propertyValue));
+            _propertys.Add(new PO
+            {
+                PropertyInfo = propertyInfo,
+                Value = propertyValue
+            });
         }
 
-        protected internal IReadOnlyList<KeyValuePair<PropertyInfo, Object>> GetPropertys()
+        internal void OnChanged()
         {
-            return _propertys.AsReadOnly();
+            var propertys = GetType().GetProperties().Where(w => w.GetCustomAttributes<PropertyValidate>().Any() && w.Name != "AddTime" && w.Name != "LastModifyTime");
+            SetAddTime();
+            SetUpdateTime();
+            foreach (var item in propertys)
+            {
+                OnChanged(item.Name, item.GetValue(this));
+            }
+        }
+
+        internal IReadOnlyList<KeyValuePair<String, Object>> GetPropertys()
+        {
+            return _propertys.Select(s => new KeyValuePair<String, Object>(s.PropertyInfo.Name, s.Value)).ToList().AsReadOnly();
         }
 
         protected internal virtual void SetUpdateTime() { }
@@ -34,17 +57,16 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
 
         protected internal void Validate()
         {
-            Parameter.Validate(_propertys); 
-            foreach (var keyValuePair in _propertys)
+            foreach (var po in _propertys)
             {
-                var propertyItem = keyValuePair.Key;
+                var propertyItem = po.PropertyInfo;
                 if (!propertyItem.CustomAttributes.Any())
                 {
                     continue;
                 }
 
                 var validateBases = GetValidateAttributes(propertyItem);
-                var propertyValue = keyValuePair.Value;
+                var propertyValue = po.Value;
                 for (var i = 0; i < validateBases.Count; i++)
                 {
                     if (validateBases[i] is RequiredAttribute)
@@ -58,7 +80,7 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
 
                             if (validateBases[i + 1] is DefaultValueAttribute)
                             {
-                                SetPropertyDefaultValue((DefaultValueAttribute)validateBases[i + 1], propertyItem, propertyValue);
+                                SetPropertyDefaultValue((DefaultValueAttribute)validateBases[i + 1], po, propertyValue);
                                 i = i + 1;
                                 continue;
                             }
@@ -71,7 +93,7 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
                         {
                             ThrowValidateException(validateBases[i], propertyItem);
                         }
-                        SetPropertyDefaultValue((DefaultValueAttribute)validateBases[i], propertyItem, propertyValue);
+                        SetPropertyDefaultValue((DefaultValueAttribute)validateBases[i], po, propertyValue);
                     }
                     else if (validateBases[i] is InputRangeAttribute)
                     {
@@ -89,7 +111,7 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
             _propertys.Clear();
         }
 
-        private void SetPropertyDefaultValue(DefaultValueAttribute defaultValueAttribute, PropertyInfo propertyItem, Object rawPropertyValue)
+        private void SetPropertyDefaultValue(DefaultValueAttribute defaultValueAttribute, PO propertyItem, Object rawPropertyValue)
         {
             Parameter.Validate(defaultValueAttribute);
             Parameter.Validate(propertyItem);
@@ -97,7 +119,7 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
             var propertyInstanceValue = rawPropertyValue;
             if (String.IsNullOrEmpty(propertyInstanceValue + "") || (propertyInstanceValue.GetType() == typeof(DateTime) && (DateTime)propertyInstanceValue == default(DateTime)))
             {
-                propertyItem.SetValue(this, defaultValueAttribute.Value);
+                propertyItem.Value = defaultValueAttribute.Value;
             }
         }
 

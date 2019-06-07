@@ -75,22 +75,25 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension.MapperBehavior
 
         public TModel FirstOrDefault()
         {
+            var sw = new Stopwatch();
+            sw.Start();
             var executeResult = InternalExecuteSql(ExecuteType.SELECT);
             var dataTable = executeResult.Value as DataTable;
-            return dataTable.ToSingle<TModel>();
+            var result = dataTable.ToSingle<TModel>();
+            sw.Stop();
+            MapperFactory.Logger.Write("INFO", $@"共花费{Math.Round(sw.Elapsed.TotalSeconds, 2)}s");
+            return result;
         }
 
         public List<TModel> ToList()
         {
             var sw = new Stopwatch();
             sw.Start();
-
             var executeResult = InternalExecuteSql(ExecuteType.SELECT);
             var dataTable = executeResult.Value as DataTable;
             var models = dataTable.ToList<TModel>();
-            MapperFactory.Logger.Write("INFO", $@"总共花费{Math.Round(sw.Elapsed.TotalSeconds, 2)}s");
-
             sw.Stop();
+            MapperFactory.Logger.Write("INFO", $@"共花费{Math.Round(sw.Elapsed.TotalSeconds, 2)}s");
             return models;
         }
 
