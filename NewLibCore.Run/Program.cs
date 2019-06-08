@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using NewLibCore.Data.SQL.CombinationCondition;
+using NewLibCore.Data.SQL.CombinationCondition.ConcreteCombinationCondition;
 using NewLibCore.Data.SQL.Mapper;
 using NewLibCore.Data.SQL.Mapper.Config;
 using NewLibCore.Data.SQL.Mapper.Extension;
@@ -19,9 +21,11 @@ namespace NewLibCore.Run
             {
                 using (var context = new EntityMapper())
                 {
-                    var role = new Role();
-                    role.ModifyRoleName("wasd123123");
-                    context.Modify(role, w => w.Id == 100);
+                    var r = CombinationFactory.Create<Member>(a => a.IsDeleted);
+                    r.And(a => a.IsFlash);
+                    r.Or(a => a.FolderId != 0);
+                    
+                    context.Select<Member>(a => new { a.Id, a.Name, a.IconUrl }).Where(r).ToList();
                 }
                 Thread.Sleep(1000);
             }

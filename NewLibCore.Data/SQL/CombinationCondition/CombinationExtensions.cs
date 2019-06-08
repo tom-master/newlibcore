@@ -24,7 +24,7 @@ namespace NewLibCore.Data.SQL.CombinationCondition
             var parameterVister = new ParameterVisitor(internalParameter);
             var leftBody = parameterVister.Replace(left.Expression.Body);
             var rightBody = parameterVister.Replace(right.Body);
-            var newExpression = Expression.And(leftBody, rightBody);
+            var newExpression = Expression.AndAlso(leftBody, rightBody);
             left.Expression = Expression.Lambda<Func<T, Boolean>>(newExpression, internalParameter);
 
         }
@@ -42,7 +42,7 @@ namespace NewLibCore.Data.SQL.CombinationCondition
             var parameterVister = new ParameterVisitor(internalParameter);
             var leftBody = parameterVister.Replace(left.Expression.Body);
             var rightBody = parameterVister.Replace(right.Body);
-            var orExpression = Expression.Or(leftBody, rightBody);
+            var orExpression = Expression.OrElse(leftBody, rightBody);
             left.Expression = Expression.Lambda<Func<T, Boolean>>(orExpression, internalParameter);
         }
 

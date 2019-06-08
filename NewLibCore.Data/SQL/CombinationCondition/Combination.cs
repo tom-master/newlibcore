@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq.Expressions;
+using NewLibCore.Data.SQL.CombinationCondition.ConcreteCombinationCondition;
 using NewLibCore.Data.SQL.Mapper.Extension;
+using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.CombinationCondition
 {
@@ -31,9 +33,10 @@ namespace NewLibCore.Data.SQL.CombinationCondition
         /// </summary>
         public abstract void ResetOrderByExpressions();
 
-        //public static explicit operator Specification<T>(Expression<Func<T, Boolean>> expression)
-        //{
-        //    return new DefaultSpecification<T>(expression);
-        //}
+        public static implicit operator Expression<Func<T, Boolean>>(Combination<T> combination)
+        {
+            Parameter.Validate(combination);
+            return combination.Expression;
+        }
     }
 }
