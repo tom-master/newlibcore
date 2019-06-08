@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace NewLibCore.Data.SQL.CombineCondition
+namespace NewLibCore.Data.SQL.CombinationCondition
 {
 
     internal sealed class ParameterVisitor : ExpressionVisitor

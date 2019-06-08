@@ -2,13 +2,13 @@
 using System.Linq.Expressions;
 using NewLibCore.Data.SQL.Mapper.Extension;
 
-namespace NewLibCore.Data.SQL.CombineCondition
+namespace NewLibCore.Data.SQL.CombinationCondition
 {
 
     /// <summary>
     /// 规约模式扩展
     /// </summary>
-    public static class CombineExtensions
+    public static class CombinationExtensions
     {
         /// <summary>
         /// 逻辑和
@@ -17,7 +17,7 @@ namespace NewLibCore.Data.SQL.CombineCondition
         /// <param name="left"></param>
         /// <param name="right"></param>
         /// <returns></returns>
-        public static void And<T>(this Combine<T> left, Expression<Func<T, Boolean>> right) where T : EntityBase
+        public static void And<T>(this Combination<T> left, Expression<Func<T, Boolean>> right) where T : EntityBase
         {
 
             var internalParameter = Expression.Parameter(typeof(T), "entity");
@@ -36,7 +36,7 @@ namespace NewLibCore.Data.SQL.CombineCondition
         /// <param name="left"></param>
         /// <param name="right"></param>
         /// <returns></returns>
-        public static void Or<T>(this Combine<T> left, Expression<Func<T, Boolean>> right) where T : EntityBase
+        public static void Or<T>(this Combination<T> left, Expression<Func<T, Boolean>> right) where T : EntityBase
         {
             var internalParameter = Expression.Parameter(typeof(T), "entity");
             var parameterVister = new ParameterVisitor(internalParameter);
@@ -52,7 +52,7 @@ namespace NewLibCore.Data.SQL.CombineCondition
         /// <typeparam name="T"></typeparam>
         /// <param name="left"></param>
         /// <returns></returns>
-        public static void Not<T>(this Combine<T> left) where T : EntityBase
+        public static void Not<T>(this Combination<T> left) where T : EntityBase
         {
             var internalParameter = left.Expression.Parameters[0];
             var newExpression = Expression.Not(left.Expression.Body);
@@ -66,7 +66,7 @@ namespace NewLibCore.Data.SQL.CombineCondition
         /// <param name="left"></param>
         /// <param name="right"></param>
         /// <returns></returns>
-        public static Combine<T> OrderByDescending<T>(this Combine<T> left, Expression<Func<T, Object>> right) where T : EntityBase
+        public static Combination<T> OrderByDescending<T>(this Combination<T> left, Expression<Func<T, Object>> right) where T : EntityBase
         {
             left.AddOrderByExpression(right);
             return left;

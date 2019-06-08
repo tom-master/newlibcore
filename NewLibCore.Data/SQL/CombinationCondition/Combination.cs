@@ -2,13 +2,13 @@
 using System.Linq.Expressions;
 using NewLibCore.Data.SQL.Mapper.Extension;
 
-namespace NewLibCore.Data.SQL.CombineCondition
+namespace NewLibCore.Data.SQL.CombinationCondition
 {
     /// <summary>
     /// 规约抽象类
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class Combine<T> where T : EntityBase
+    public abstract class Combination<T> where T : EntityBase
     {
         /// <summary>
         /// 查询表达式

@@ -2,13 +2,13 @@
 using System.Linq.Expressions;
 using NewLibCore.Data.SQL.Mapper.Extension;
 
-namespace NewLibCore.Data.SQL.CombineCondition.ConcreteCombineCondition
+namespace NewLibCore.Data.SQL.CombinationCondition.ConcreteCombinationCondition
 {
     /// <summary>
     /// 默认规约 
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    internal class DefaultCombine<T> : Combine<T> where T : EntityBase
+    internal class DefaultCombination<T> : Combination<T> where T : EntityBase
     {
         public override Expression<Func<T, Boolean>> Expression { get; internal set; }
 
@@ -17,13 +17,13 @@ namespace NewLibCore.Data.SQL.CombineCondition.ConcreteCombineCondition
             get; protected set;
         }
 
-        public DefaultCombine(Expression<Func<T, Boolean>> expression)
+        public DefaultCombination(Expression<Func<T, Boolean>> expression)
         {
             Expression = expression;
             OrderBy = t => t.Id;
         }
 
-        public DefaultCombine() : this(T => true) { }
+        public DefaultCombination() : this(T => true) { }
 
         public override void AddOrderByExpression(Expression<Func<T, Object>> expression)
         {
