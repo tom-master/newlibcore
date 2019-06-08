@@ -32,8 +32,9 @@ namespace NewLibCore.Data.SQL.Builder
                 _instance.Validate();
             }
 
-            var propertyInfos = _instance.GetPropertys();
             var translationResult = new TranslationCoreResult();
+            
+            var propertyInfos = _instance.GetPropertys();
             var fields = String.Join(",", propertyInfos.Select(c => c.Key));
             var placeHolder = String.Join(",", propertyInfos.Select(key => $@"@{key.Key}"));
             var entityParameters = propertyInfos.Select(c => new EntityParameter($@"@{c.Key}", c.Value));
