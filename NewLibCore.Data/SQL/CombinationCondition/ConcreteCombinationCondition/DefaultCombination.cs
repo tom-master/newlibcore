@@ -10,28 +10,9 @@ namespace NewLibCore.Data.SQL.CombinationCondition.ConcreteCombinationCondition
     /// <typeparam name="T"></typeparam>
     internal class DefaultCombination<T> : Combination<T> where T : EntityBase
     {
-        public override Expression<Func<T, Boolean>> Expression { get; internal set; }
-
-        public sealed override Expression<Func<T, Object>> OrderBy
+        internal DefaultCombination(Expression<Func<T, Boolean>> exp)
         {
-            get; protected set;
+            Expression = exp;
         }
-
-        public DefaultCombination(Expression<Func<T, Boolean>> expression)
-        {
-            Expression = expression;
-            OrderBy = t => t.Id;
-        }
-
-        public DefaultCombination() : this(T => true) { }
-
-        public override void AddOrderByExpression(Expression<Func<T, Object>> expression)
-        {
-            OrderBy = expression;
-        }
-
-        public override void ResetOrderByExpressions() => OrderBy = null;
-
-
     }
 }

@@ -6,32 +6,32 @@ using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.CombinationCondition
 {
-    /// <summary>
-    /// 规约抽象类
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
     public abstract class Combination<T> where T : EntityBase
     {
-        /// <summary>
-        /// 查询表达式
-        /// </summary>
-        public abstract Expression<Func<T, Boolean>> Expression { get; internal set; }
+        public Expression<Func<T, Boolean>> Expression { get; set; }
 
-        /// <summary>
-        /// 排序表达式集合
-        /// </summary>
-        public abstract Expression<Func<T, Object>> OrderBy { get; protected set; }
+        public Expression<Func<T, T1, Boolean>> AppendCombination<T1>(Combination<T1> right) where T1 : EntityBase
+        {
+            Expression leftBody, rightBody;
+            ParameterExpression leftParameter, rightParameter;
+            {
+                var type = typeof(T);
+                leftParameter = System.Linq.Expressions.Expression.Parameter(type, type.GetAliasName());
+                var parameterVister = new ParameterVisitor(leftParameter);
+                leftBody = parameterVister.Replace(Expression.Body);
+            }
 
-        /// <summary>
-        /// 添加一个排序表达式
-        /// </summary>
-        /// <param name="expression"></param>
-        public abstract void AddOrderByExpression(Expression<Func<T, Object>> expression);
+            {
+                var type = typeof(T1);
+                rightParameter = System.Linq.Expressions.Expression.Parameter(type, type.GetAliasName());
+                var parameterVister = new ParameterVisitor(rightParameter);
+                rightBody = parameterVister.Replace(right.Expression.Body);
+            }
 
-        /// <summary>
-        /// 重置排序表达式集合
-        /// </summary>
-        public abstract void ResetOrderByExpressions();
+            var newExpression = System.Linq.Expressions.Expression.AndAlso(leftBody, rightBody);
+            return System.Linq.Expressions.Expression.Lambda<Func<T, T1, Boolean>>(newExpression, leftParameter, rightParameter);
+        }
+
 
         public static implicit operator Expression<Func<T, Boolean>>(Combination<T> combination)
         {

@@ -9,9 +9,9 @@ namespace NewLibCore.Data.SQL.CombinationCondition.ConcreteCombinationCondition
     /// </summary>
     public sealed class CombinationFactory
     {
-        public static Combination<T> Create<T>(Expression<Func<T, Boolean>> expression = null) where T : EntityBase
+        public static Combination<T> Create<T>(Expression<Func<T, Boolean>> exp) where T : EntityBase
         {
-            return expression == null ? new DefaultCombination<T>() : new DefaultCombination<T>(expression);
+            return new DefaultCombination<T>(exp);
         }
     }
 }
