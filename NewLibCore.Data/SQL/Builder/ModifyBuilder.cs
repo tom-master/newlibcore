@@ -34,8 +34,10 @@ namespace NewLibCore.Data.SQL.Builder
             }
 
             var translation = new TranslationCore(_statementStore);
-            var placeHolder = String.Join(",", _instance.GetPropertys().Select(p => $@"{p.Key}=@{p.Key}"));
-            var entityParameters = _instance.GetPropertys().Select(c => new EntityParameter($@"@{c.Key}", c.Value));
+            
+            var propertys = _instance.GetPropertys();
+            var placeHolder = String.Join(",", propertys.Select(p => $@"{p.Key}=@{p.Key}"));
+            var entityParameters = propertys.Select(c => new EntityParameter($@"@{c.Key}", c.Value));
 
             translation.Result.Append($@"UPDATE {typeof(TModel).GetAliasName()} SET {String.Join(",", placeHolder)}", entityParameters);
 
