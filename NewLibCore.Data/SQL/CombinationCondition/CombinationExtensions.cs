@@ -10,6 +10,12 @@ namespace NewLibCore.Data.SQL.CombinationCondition
 
         public static void And<T>(this Combination<T> left, Expression<Func<T, Boolean>> right) where T : EntityBase
         {
+            if (left.Expression == default)
+            {
+                left.Expression = right;
+                return;
+            }
+
             var type = typeof(T);
             var internalParameter = Expression.Parameter(type, type.GetAliasName());
             var parameterVister = new ParameterVisitor(internalParameter);
@@ -21,6 +27,13 @@ namespace NewLibCore.Data.SQL.CombinationCondition
 
         public static void Or<T>(this Combination<T> left, Expression<Func<T, Boolean>> right) where T : EntityBase
         {
+
+            if (left.Expression == default)
+            {
+                left.Expression = right;
+                return;
+            }
+
             var type = typeof(T);
             var internalParameter = Expression.Parameter(type, type.GetAliasName());
             var parameterVister = new ParameterVisitor(internalParameter);

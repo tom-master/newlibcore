@@ -10,9 +10,6 @@ namespace NewLibCore.Data.SQL.CombinationCondition.ConcreteCombinationCondition
     /// <typeparam name="T"></typeparam>
     internal class DefaultCombination<T> : Combination<T> where T : EntityBase
     {
-        internal DefaultCombination(Expression<Func<T, Boolean>> exp)
-        {
-            Expression = exp;
-        }
+       
     }
 }

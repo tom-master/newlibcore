@@ -21,8 +21,11 @@ namespace NewLibCore.Run
             {
                 using (var context = new EntityMapper())
                 {
-                    var master = CombinationFactory.Create<Member>(a => a.FolderId != 0);
-                    var slave = CombinationFactory.Create<User>(a => a.Id != 0); 
+                    var master = CombinationFactory.Create<Member>();
+                    master.And(a => a.FolderId != 0);
+
+                    var slave = CombinationFactory.Create<User>(); 
+                    slave.And(a => a.Id != 0);
 
                     context.Select<Member>(a => new { a.Id, a.Name, a.IconUrl }).Where<User>(master.AppendCombination(slave)).ToList();
                 }
