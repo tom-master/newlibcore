@@ -4,7 +4,6 @@ using NewLibCore.Data.SQL.Mapper.Extension;
 
 namespace NewLibCore.Data.SQL.CombinationCondition
 {
-
     /// <summary>
     /// 规约模式扩展
     /// </summary>
@@ -19,14 +18,13 @@ namespace NewLibCore.Data.SQL.CombinationCondition
         /// <returns></returns>
         public static void And<T>(this Combination<T> left, Expression<Func<T, Boolean>> right) where T : EntityBase
         {
-
-            var internalParameter = Expression.Parameter(typeof(T), "entity");
+            var type = typeof(T);
+            var internalParameter = Expression.Parameter(type, type.GetAliasName());
             var parameterVister = new ParameterVisitor(internalParameter);
             var leftBody = parameterVister.Replace(left.Expression.Body);
             var rightBody = parameterVister.Replace(right.Body);
             var newExpression = Expression.AndAlso(leftBody, rightBody);
             left.Expression = Expression.Lambda<Func<T, Boolean>>(newExpression, internalParameter);
-
         }
 
         /// <summary>
@@ -38,7 +36,8 @@ namespace NewLibCore.Data.SQL.CombinationCondition
         /// <returns></returns>
         public static void Or<T>(this Combination<T> left, Expression<Func<T, Boolean>> right) where T : EntityBase
         {
-            var internalParameter = Expression.Parameter(typeof(T), "entity");
+            var type = typeof(T);
+            var internalParameter = Expression.Parameter(type, type.GetAliasName());
             var parameterVister = new ParameterVisitor(internalParameter);
             var leftBody = parameterVister.Replace(left.Expression.Body);
             var rightBody = parameterVister.Replace(right.Body);
