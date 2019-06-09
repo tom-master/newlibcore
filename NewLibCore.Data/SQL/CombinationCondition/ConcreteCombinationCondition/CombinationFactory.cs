@@ -11,7 +11,7 @@ namespace NewLibCore.Data.SQL.CombinationCondition.ConcreteCombinationCondition
     {
         public static Combination<T> Create<T>(Expression<Func<T, Boolean>> exp = default) where T : EntityBase
         {
-            return new DefaultCombination<T>(exp);
+            return new DefaultCombination<T>(exp == default ? a => true : exp);
         }
     }
 }

@@ -42,7 +42,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
             _tableAliasMapper = _statementStore.MergeAliasMapper();
             foreach (var item in _statementStore.Joins)
             {
-                if (item.AliaNameMapper == null)
+                if (item.AliaNameMapper == null || item.JoinType == JoinType.NONE)
                 {
                     continue;
                 }
