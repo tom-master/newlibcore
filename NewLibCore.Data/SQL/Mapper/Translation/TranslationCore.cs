@@ -79,6 +79,11 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
                     {
                         var binaryExp = (BinaryExpression)expression;
                         InternalBuildWhere(binaryExp.Left);
+                        if (binaryExp.Right.NodeType == ExpressionType.Constant)
+                        {
+                            break;
+                        }
+
                         Result.Append(RelationType.AND.ToString());
                         InternalBuildWhere(binaryExp.Right);
                         break;

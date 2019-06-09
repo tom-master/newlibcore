@@ -22,7 +22,7 @@ namespace NewLibCore.Run
                 using (var context = new EntityMapper())
                 {
                     var master = CombinationFactory.Create<Member>(a => a.FolderId != 0);
-                    var slave = CombinationFactory.Create<User>(a => a.Name != "");
+                    var slave = CombinationFactory.Create<User>();
 
                     context.Select<Member>(a => new { a.Id, a.Name, a.IconUrl })
                     .InnerJoin<User>((a, b) => a.UserId == b.Id)

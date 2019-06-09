@@ -75,6 +75,16 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
             });
         }
 
+        internal void Add<TModel, TJoin>(Expression<Func<TModel, TJoin, Boolean>> expression) where TModel : PropertyMonitor, new()
+        {
+            Parameter.Validate(expression);
+            Where = new SimpleStatement
+            {
+                Expression = expression,
+                AliaNameMapper = expression.Parameters.Select(s => new KeyValuePair<String, String>(s.Name, s.Type.GetAliasName())).ToList()
+            };
+        }
+
         internal void Add<TModel>(Expression<Func<TModel, Boolean>> expression) where TModel : PropertyMonitor, new()
         {
             Parameter.Validate(expression);
