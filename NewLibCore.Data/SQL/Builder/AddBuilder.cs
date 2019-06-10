@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using NewLibCore.Data.SQL.Mapper;
 using NewLibCore.Data.SQL.Mapper.Config;
 using NewLibCore.Data.SQL.Mapper.Extension;
-using NewLibCore.Data.SQL.Mapper.Extension.PropertyExtension;
 using NewLibCore.Data.SQL.Mapper.Translation;
 using NewLibCore.Validate;
 
@@ -33,13 +30,13 @@ namespace NewLibCore.Data.SQL.Builder
             }
 
             var translationResult = new TranslationCoreResult();
-            
+
             var propertyInfos = _instance.GetPropertys();
             var fields = String.Join(",", propertyInfos.Select(c => c.Key));
             var placeHolder = String.Join(",", propertyInfos.Select(key => $@"@{key.Key}"));
             var entityParameters = propertyInfos.Select(c => new EntityParameter($@"@{c.Key}", c.Value));
 
-            translationResult.Append($@" INSERT {typeof(TModel).GetAliasName()} ({fields}) VALUES ({placeHolder}) {MapperFactory.Mapper.Extension.Identity}", entityParameters);
+            translationResult.Append($@" INSERT {typeof(TModel).GetAliasName()} ({fields}) VALUES ({placeHolder}) {MapperFactory.Instance.Extension.Identity}", entityParameters);
             return translationResult;
         }
     }

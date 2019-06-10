@@ -28,20 +28,20 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             Parameter.Validate(entityParameter);
 
-            var parameter = MapperFactory.Mapper.GetParameterInstance();
-            parameter.ParameterName = entityParameter.Key; 
-            parameter.Value = entityParameter.Value; 
-            return parameter; 
+            var parameter = MapperFactory.Instance.GetParameterInstance();
+            parameter.ParameterName = entityParameter.Key;
+            parameter.Value = entityParameter.Value;
+            return parameter;
         }
 
         private Object ParseValueType(Object obj)
         {
-            Parameter.Validate(obj); 
+            Parameter.Validate(obj);
 
-            if (obj.GetType() == typeof(String)) 
+            if (obj.GetType() == typeof(String))
             {
-                return UnlegalChatDetection.FilterBadChat(obj.ToString()); 
-            } 
+                return UnlegalChatDetection.FilterBadChat(obj.ToString());
+            }
 
             if (obj.GetType() == typeof(Boolean))
             {
@@ -53,13 +53,13 @@ namespace NewLibCore.Data.SQL.Mapper
                 var objType = obj.GetType();
                 if (objType.IsArray || objType.GetGenericTypeDefinition() == typeof(List<>))
                 {
-                    if (objType.GetGenericArguments().Any() && objType.GetGenericArguments()[0] == typeof(String)) 
+                    if (objType.GetGenericArguments().Any() && objType.GetGenericArguments()[0] == typeof(String))
                     {
                         return String.Join(",", ((IList<String>)obj).Select(s => $@"'{s}'"));
                     }
                     return String.Join(",", (IList<Int32>)obj);
                 }
-            }  
+            }
 
             return obj;
         }
