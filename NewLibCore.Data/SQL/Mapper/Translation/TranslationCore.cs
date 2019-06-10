@@ -19,7 +19,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
 
         private readonly TranslationStatementStore _statementStore;
 
-        private List<KeyValuePair<String, String>> _tableAliasMapper;
+        private IReadOnlyList<KeyValuePair<String, String>> _tableAliasMapper;
 
         internal TranslationCore(TranslationStatementStore statementStore)
         {
@@ -38,7 +38,6 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
 
         public TranslationCoreResult Translate()
         {
-            _tableAliasMapper.Clear();
             _tableAliasMapper = _statementStore.MergeAliasMapper();
             foreach (var item in _statementStore.Joins)
             {
