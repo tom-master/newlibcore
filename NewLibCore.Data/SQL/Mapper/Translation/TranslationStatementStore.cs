@@ -124,7 +124,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
             };
         }
 
-        internal List<KeyValuePair<String, String>> MergeAliasMapper()
+        internal IReadOnlyList<KeyValuePair<String, String>> MergeAliasMapper()
         {
             var newAliasMapper = new List<KeyValuePair<String, String>>();
             if (Where != null)
@@ -141,7 +141,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
 
         private IReadOnlyList<KeyValuePair<String, String>> ParseParameterToKeyValuePair(Expression expression)
         {
-            return ((LambdaExpression)expression).Parameters.Select(s => new KeyValuePair<String, String>(s.Name, s.Type.GetAliasName())).ToList().AsReadOnly();
+            return ((LambdaExpression)expression).Parameters.Select(s => new KeyValuePair<String, String>(s.Name, s.Type.GetAliasName())).ToList();
         }
     }
 }
