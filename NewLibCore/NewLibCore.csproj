@@ -14,7 +14,5 @@
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.4.1" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.4.1" />
   </ItemGroup>
- <ItemGroup>
-    <ProjectReference Include="..\NewLibCore.Security\NewLibCore.Security.csproj" />
-  </ItemGroup>
+
 </Project>
