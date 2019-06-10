@@ -67,9 +67,15 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension.MapperBehavior
 
         public Int32 Count()
         {
+            var sw = new Stopwatch();
+            sw.Start();
+
             Select(s => "COUNT(*)");
             var executeResult = InternalExecuteSql(ExecuteType.SELECT_SINGLE);
             Int32.TryParse(executeResult.Value.ToString(), out var count);
+            sw.Stop();
+            MapperFactory.Instance.Logger.Write("INFO", $@"共花费{Math.Round(sw.Elapsed.TotalSeconds, 2)}s");
+
             return count;
         }
 
@@ -81,7 +87,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension.MapperBehavior
             var dataTable = executeResult.Value as DataTable;
             var result = dataTable.ToSingle<TModel>();
             sw.Stop();
-            MapperFactory.Logger.Write("INFO", $@"共花费{Math.Round(sw.Elapsed.TotalSeconds, 2)}s");
+            MapperFactory.Instance.Logger.Write("INFO", $@"共花费{Math.Round(sw.Elapsed.TotalSeconds, 2)}s");
             return result;
         }
 
@@ -93,7 +99,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension.MapperBehavior
             var dataTable = executeResult.Value as DataTable;
             var models = dataTable.ToList<TModel>();
             sw.Stop();
-            MapperFactory.Logger.Write("INFO", $@"共花费{Math.Round(sw.Elapsed.TotalSeconds, 2)}s");
+            MapperFactory.Instance.Logger.Write("INFO", $@"共花费{Math.Round(sw.Elapsed.TotalSeconds, 2)}s");
             return models;
         }
 

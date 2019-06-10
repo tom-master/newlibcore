@@ -19,7 +19,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
 
         private readonly TranslationStatementStore _statementStore;
 
-        private List<KeyValuePair<String, String>> _tableAliasMapper;
+        private IReadOnlyList<KeyValuePair<String, String>> _tableAliasMapper;
 
         internal TranslationCore(TranslationStatementStore statementStore)
         {
@@ -38,7 +38,6 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
 
         public TranslationCoreResult Translate()
         {
-            _tableAliasMapper.Clear();
             _tableAliasMapper = _statementStore.MergeAliasMapper();
             foreach (var item in _statementStore.Joins)
             {
@@ -54,7 +53,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
                         continue;
                     }
 
-                    var joinTemplate = MapperFactory.Mapper.JoinBuilder(item.JoinType, aliasItem.Value, aliasItem.Value.ToLower());
+                    var joinTemplate = MapperFactory.Instance.JoinBuilder(item.JoinType, aliasItem.Value, aliasItem.Value.ToLower());
                     Result.Append(joinTemplate);
                     _joinType = item.JoinType;
                     InternalBuildWhere(item.Expression);
@@ -205,7 +204,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
 
                                 var newParameterName = $@"{Guid.NewGuid().ToString().Replace("-", "")}";
                                 var relationType = _relationTypesStack.Pop();
-                                var syntax = MapperFactory.Mapper.RelationBuilder(relationType, $@"{internalAliasName}{memberExp.Member.Name}", $"@{newParameterName}");
+                                var syntax = MapperFactory.Instance.RelationBuilder(relationType, $@"{internalAliasName}{memberExp.Member.Name}", $"@{newParameterName}");
                                 Result.Append(syntax);
                                 _parameterNameStack.Push(newParameterName);
                             }
@@ -349,22 +348,14 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
                     throw new Exception($@"没有找到参数名:{rightParameterExp.Name}所对应的右表别名");
                 }
                 var rightAliasName = _tableAliasMapper.Where(w => w.Key == rightParameterExp.Name && w.Value == rightParameterExp.Type.GetAliasName()).FirstOrDefault().Value.ToLower();
-                var relationTemplate = MapperFactory.Mapper.RelationBuilder(relationType, $"{rightAliasName}.{rightMember.Member.Name}", $"{leftAliasName}.{leftMember.Member.Name}");
+                var relationTemplate = MapperFactory.Instance.RelationBuilder(relationType, $"{rightAliasName}.{rightMember.Member.Name}", $"{leftAliasName}.{leftMember.Member.Name}");
                 Result.Append(relationTemplate);
                 return;
             }
 
             var constant = (ConstantExpression)binaryExp.Right;
-            if (Boolean.TryParse(constant.Value.ToString(), out var result))
-            {
-                var relationTemplate = MapperFactory.Mapper.RelationBuilder(relationType, $"{leftAliasName}.{leftMember.Member.Name}", (result ? 1 : 0).ToString());
-                Result.Append(relationTemplate);
-            }
-            else
-            {
-                var relationTemplate = MapperFactory.Mapper.RelationBuilder(relationType, $"{leftAliasName}.{leftMember.Member.Name}", constant.Value);
-                Result.Append(relationTemplate);
-            }
+            Object value = Boolean.TryParse(constant.Value.ToString(), out var result) ? (result ? 1 : 0).ToString() : constant.Value;
+            Result.Append(MapperFactory.Instance.RelationBuilder(relationType, $"{leftAliasName}.{leftMember.Member.Name}", value));
         }
 
     }

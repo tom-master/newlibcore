@@ -6,58 +6,35 @@ namespace NewLibCore.Data.SQL.Mapper.Config
 {
     public class MapperFactory
     {
-        private static MapperFactory _mapperInstance;
-
         private static readonly Object _obj = new Object();
 
         private MapperFactory() { }
 
-        internal static ILogger Logger { get; private set; }
+        static MapperFactory()
+        {
+            Factory = new MapperFactory();
+        }
 
         internal static MapperCache Cache { get; private set; }
 
-        internal static MapperInstance Mapper { get; private set; }
+        internal static MapperInstance Instance { get; private set; }
 
-        internal static Boolean ExpressionCache { get; private set; } = false;
+        public static MapperFactory Factory { get; private set; }
 
-        public static MapperFactory GetFactoryInstance()
+        public MapperFactory SwitchToMySql(ILogger logger = null)
         {
-            if (_mapperInstance == null)
+            if (Instance == null)
             {
-                lock (_obj)
-                {
-                    if (_mapperInstance == null)
-                    {
-                        _mapperInstance = new MapperFactory();
-                    }
-                }
-            }
-            return _mapperInstance;
-        }
-
-        public MapperFactory InitLogger(ILogger logger = null)
-        {
-            if (Logger == null)
-            {
-                Logger = logger ?? new ConsoleLogger();
+                SwitchTo(DatabaseType.MYSQL, logger);
             }
             return this;
         }
 
-        public MapperFactory SwitchToMySql()
+        public MapperFactory SwitchToMsSql(ILogger logger = null)
         {
-            if (Mapper == null)
+            if (Instance == null)
             {
-                SwitchTo(DatabaseType.MYSQL);
-            }
-            return this;
-        }
-
-        public MapperFactory SwitchToMsSql()
-        {
-            if (Mapper == null)
-            {
-                SwitchTo(DatabaseType.MSSQL);
+                SwitchTo(DatabaseType.MSSQL, logger);
             }
             return this;
         }
@@ -71,18 +48,18 @@ namespace NewLibCore.Data.SQL.Mapper.Config
             return this;
         }
 
-        private static void SwitchTo(DatabaseType database)
+        private static void SwitchTo(DatabaseType database, ILogger logger)
         {
             switch (database)
             {
                 case DatabaseType.MSSQL:
                 {
-                    Mapper = new MsSqlInstance();
+                    Instance = new MsSqlInstance(logger);
                     break;
                 }
                 case DatabaseType.MYSQL:
                 {
-                    Mapper = new MySqlInstance();
+                    Instance = new MySqlInstance(logger);
                     break;
                 }
                 default:
