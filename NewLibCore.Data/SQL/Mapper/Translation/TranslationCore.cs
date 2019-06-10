@@ -78,14 +78,25 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
                 case ExpressionType.AndAlso:
                     {
                         var binaryExp = (BinaryExpression)expression;
-                        InternalBuildWhere(binaryExp.Left);
-                        if (binaryExp.Right.NodeType == ExpressionType.Constant)
+
+                        if (binaryExp.Left.NodeType != ExpressionType.Constant && binaryExp.Right.NodeType != ExpressionType.Constant)
                         {
-                            break;
+                            InternalBuildWhere(binaryExp.Left);
+                            Result.Append(RelationType.AND.ToString());
+                            InternalBuildWhere(binaryExp.Right);
+                        }
+                        else
+                        {
+                            if (binaryExp.Left.NodeType != ExpressionType.Constant)
+                            {
+                                InternalBuildWhere(binaryExp.Left);
+                            }
+                            else if (binaryExp.Right.NodeType != ExpressionType.Constant)
+                            {
+                                InternalBuildWhere(binaryExp.Right);
+                            }
                         }
 
-                        Result.Append(RelationType.AND.ToString());
-                        InternalBuildWhere(binaryExp.Right);
                         break;
                     }
                 case ExpressionType.OrElse:
