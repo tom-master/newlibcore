@@ -311,15 +311,6 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
             {
                 leftParameterExp = (ParameterExpression)leftMember.Expression;
             }
-            else
-            {
-                var internalExp = leftMember.Expression;
-                while (internalExp.NodeType != ExpressionType.Parameter)
-                {
-                    internalExp = ((MemberExpression)internalExp).Expression;
-                }
-                leftParameterExp = (ParameterExpression)internalExp;
-            }
 
             if (!_tableAliasMapper.Any(a => a.Key == leftParameterExp.Name && a.Value == leftParameterExp.Type.GetAliasName()))
             {

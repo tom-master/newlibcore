@@ -11,7 +11,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
     {
         protected internal Expression Expression { get; set; }
 
-        protected internal IList<KeyValuePair<String, String>> AliaNameMapper { get; set; }
+        protected internal IReadOnlyList<KeyValuePair<String, String>> AliaNameMapper { get; set; }
     }
 
     internal class JoinStatement : Statement
@@ -65,12 +65,11 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
         internal void Add<TModel, TJoin>(Expression<Func<TModel, TJoin, Boolean>> expression, JoinType joinType = JoinType.NONE) where TModel : PropertyMonitor, new() where TJoin : PropertyMonitor, new()
         {
             Parameter.Validate(expression);
-            var parameters = expression.Parameters.Select(s => new KeyValuePair<String, String>(s.Name, s.Type.GetAliasName())).ToList();
             Joins.Add(new JoinStatement
             {
                 Expression = expression,
                 JoinType = joinType,
-                AliaNameMapper = parameters,
+                AliaNameMapper = ParseParameterToKeyValuePair(expression),
                 MainTable = typeof(TModel).GetAliasName()
             });
         }
@@ -81,7 +80,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
             Where = new SimpleStatement
             {
                 Expression = expression,
-                AliaNameMapper = expression.Parameters.Select(s => new KeyValuePair<String, String>(s.Name, s.Type.GetAliasName())).ToList()
+                AliaNameMapper = ParseParameterToKeyValuePair(expression)
             };
         }
 
@@ -91,7 +90,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
             Where = new SimpleStatement
             {
                 Expression = expression,
-                AliaNameMapper = expression.Parameters.Select(s => new KeyValuePair<String, String>(s.Name, s.Type.GetAliasName())).ToList()
+                AliaNameMapper = ParseParameterToKeyValuePair(expression)
             };
         }
 
@@ -138,6 +137,11 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
             }
             newAliasMapper = newAliasMapper.Select(s => s).Distinct().ToList();
             return newAliasMapper;
+        }
+
+        private IReadOnlyList<KeyValuePair<String, String>> ParseParameterToKeyValuePair(Expression expression)
+        {
+            return ((LambdaExpression)expression).Parameters.Select(s => new KeyValuePair<String, String>(s.Name, s.Type.GetAliasName())).ToList().AsReadOnly();
         }
     }
 }
