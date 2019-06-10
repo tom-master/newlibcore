@@ -5,4 +5,10 @@
     <LangVersion>7.1</LangVersion>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Reference Include="NewLibCore">
+      <HintPath>..\NewLibCore\bin\Debug\netstandard2.0\NewLibCore.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using NewLibCore.Validate;
 
 namespace NewLibCore.Security
 {
@@ -12,15 +13,8 @@ namespace NewLibCore.Security
 
         public static Boolean ComparePasswords(String dbPassword, String userPassword)
         {
-            if (String.IsNullOrEmpty(dbPassword))
-            {
-                throw new ArgumentException("dbPassword不能为空");
-            }
-
-            if (String.IsNullOrEmpty(userPassword))
-            {
-                throw new ArgumentException("userPassword不能为空");
-            }
+            Parameter.Validate(dbPassword);
+            Parameter.Validate(userPassword);
 
             var dbPwd = Convert.FromBase64String(dbPassword);
             var hashedPwd = HashString(userPassword);
@@ -45,6 +39,8 @@ namespace NewLibCore.Security
 
         public static String CreateDbPassword(String userPassword)
         {
+            Parameter.Validate(userPassword);
+
             if (String.IsNullOrEmpty(userPassword))
             {
                 throw new ArgumentException("userPassword不能为空");
@@ -61,6 +57,8 @@ namespace NewLibCore.Security
 
         private static Byte[] HashString(String str)
         {
+            Parameter.Validate(str);
+
             if (String.IsNullOrEmpty(str))
             {
                 throw new ArgumentException("str不能为空");
@@ -75,6 +73,9 @@ namespace NewLibCore.Security
 
         private static Boolean CompareByteArray(ICollection<Byte> array1, IList<Byte> array2 = null)
         {
+            Parameter.Validate(array1);
+            Parameter.Validate(array2);
+
             if (array2 == null)
             {
                 throw new ArgumentNullException($@"{nameof(array2)} is null");
@@ -88,6 +89,9 @@ namespace NewLibCore.Security
 
         private static Byte[] CreateSaltedPassword(Byte[] saltValue, Byte[] unsaltedPassword)
         {
+            Parameter.Validate(saltValue);
+            Parameter.Validate(unsaltedPassword);
+
             var rawSalted = new Byte[unsaltedPassword.Length + saltValue.Length];
             unsaltedPassword.CopyTo(rawSalted, 0);
             saltValue.CopyTo(rawSalted, unsaltedPassword.Length);

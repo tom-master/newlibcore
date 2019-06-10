@@ -1,11 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Threading;
-using NewLibCore.Data.SQL.CombinationCondition;
-using NewLibCore.Data.SQL.CombinationCondition.ConcreteCombinationCondition;
-using NewLibCore.Data.SQL.Mapper;
-using NewLibCore.Data.SQL.Mapper.Config;
 using NewLibCore.Data.SQL.Mapper.Extension;
 using NewLibCore.Data.SQL.Mapper.Extension.AssociationMapperExtension;
 using NewLibCore.Data.SQL.Mapper.Extension.PropertyExtension;
@@ -17,26 +12,30 @@ namespace NewLibCore.Run
     {
         private static void Main(String[] args)
         {
-            MapperFactory.GetFactoryInstance().SwitchToMySql().InitLogger().UseCache();
-            while (true)
-            {
-                using (var context = new EntityMapper())
-                {
-                    var r = context.Select<Log>(a => new
-                    {
-                        a.LogLevelEnum,
-                        a.Controller,
-                        a.Action,
-                        a.ExceptionMessage,
-                        a.UserId,
-                        a.AddTime
-                    }).LeftJoin<User>((a, b) => a.UserId == b.Id)
-                       .Page(1, 10)
-                       .OrderBy<Log, DateTime>(a => a.AddTime)
-                       .ToList();
-                }
-                Thread.Sleep(1000);
-            }
+            var a = 38 | 53;
+            Console.WriteLine(a);
+            Console.ReadKey();
+
+            //MapperFactory.GetFactoryInstance().SwitchToMySql().InitLogger().UseCache();
+            //while (true)
+            //{
+            //    using (var context = new EntityMapper())
+            //    {
+            //        var r = context.Select<Log>(a => new
+            //        {
+            //            a.LogLevelEnum,
+            //            a.Controller,
+            //            a.Action,
+            //            a.ExceptionMessage,
+            //            a.UserId,
+            //            a.AddTime
+            //        }).LeftJoin<User>((a, b) => a.UserId == b.Id)
+            //           .Page(1, 10)
+            //           .OrderBy<Log, DateTime>(a => a.AddTime)
+            //           .ToList();
+            //    }
+            //    Thread.Sleep(1000);
+            //}
         }
     }
 
