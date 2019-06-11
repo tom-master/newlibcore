@@ -38,7 +38,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
         internal Int32 Size { get; set; }
     }
 
-    internal class TranslationStatementStore
+    internal class StatementStore
     {
         internal ExecuteType ExecuteType { get; set; }
 

@@ -17,11 +17,11 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
 
         private readonly Stack<RelationType> _relationTypesStack;
 
-        private readonly TranslationStatementStore _statementStore;
+        private readonly StatementStore _statementStore;
 
         private IReadOnlyList<KeyValuePair<String, String>> _tableAliasMapper;
 
-        internal TranslationCore(TranslationStatementStore statementStore)
+        internal TranslationCore(StatementStore statementStore)
         {
             Parameter.Validate(statementStore);
 
