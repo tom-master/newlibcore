@@ -29,11 +29,10 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
                 throw new ArgumentException($@"属性：{propertyName},不属于类：{GetType().Name}或它的父类");
             }
 
-            var fast = new FastProperty(propertyInfo);
             _propertys.Add(new PO
             {
                 PropertyInfo = propertyInfo,
-                Value = fast.Get(this)
+                Value = new FastProperty(propertyInfo).Get(this)
             });
         }
 
@@ -119,7 +118,7 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
             Parameter.Validate(propertyItem);
 
             var propertyInstanceValue = rawPropertyValue;
-            if (String.IsNullOrEmpty(propertyInstanceValue + "") || (propertyInstanceValue.GetType() == typeof(DateTime) && (DateTime)propertyInstanceValue == default(DateTime)))
+            if (String.IsNullOrEmpty(propertyInstanceValue + "") || (propertyInstanceValue.GetType() == typeof(DateTime) && (DateTime)propertyInstanceValue == default))
             {
                 propertyItem.Value = defaultValueAttribute.Value;
             }
