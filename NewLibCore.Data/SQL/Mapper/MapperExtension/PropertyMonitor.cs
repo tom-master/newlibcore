@@ -19,7 +19,7 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
     {
         private readonly IList<PO> _propertys = new List<PO>();
 
-        protected void OnChanged(String propertyName, Object propertyValue)
+        protected void OnChanged(String propertyName)
         {
             Parameter.Validate(propertyName);
 
@@ -28,10 +28,12 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
             {
                 throw new ArgumentException($@"属性：{propertyName},不属于类：{GetType().Name}或它的父类");
             }
+
+            var fast = new FastProperty(propertyInfo);
             _propertys.Add(new PO
             {
                 PropertyInfo = propertyInfo,
-                Value = propertyValue
+                Value = fast.Get(this)
             });
         }
 
@@ -42,7 +44,7 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
             SetUpdateTime();
             foreach (var item in propertys)
             {
-                OnChanged(item.Name, item.GetValue(this));
+                OnChanged(item.Name);
             }
         }
 

@@ -26,19 +26,19 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
         public virtual void Remove()
         {
             IsDeleted = true;
-            OnChanged(nameof(IsDeleted), IsDeleted);
+            OnChanged(nameof(IsDeleted));
         }
 
         protected internal override void SetAddTime()
         {
             AddTime = DateTime.Now;
-            OnChanged(nameof(AddTime), AddTime);
+            OnChanged(nameof(AddTime));
         }
 
         protected internal override void SetUpdateTime()
         {
             LastModifyTime = DateTime.Now;
-            OnChanged(nameof(LastModifyTime), LastModifyTime);
+            OnChanged(nameof(LastModifyTime));
         }
     }
 }
