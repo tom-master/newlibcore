@@ -328,10 +328,6 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
             {
                 leftParameterExp = (ParameterExpression)leftMember.Expression;
             }
-<<<<<<< HEAD
-
-=======
->>>>>>> 65c51d9efde5b73f8404497ee34cab1077fdf446
             if (!_tableAliasMapper.Any(a => a.Key == leftParameterExp.Name && a.Value == leftParameterExp.Type.GetAliasName()))
             {
                 throw new Exception($@"没有找到参数名:{leftParameterExp.Name}所对应的左表别名");
