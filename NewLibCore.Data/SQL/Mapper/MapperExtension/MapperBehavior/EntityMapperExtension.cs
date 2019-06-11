@@ -52,12 +52,12 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension.MapperBehavior
     internal class SelectEntityMapper<TModel> : ISelectEntityMapper<TModel> where TModel : EntityBase, new()
     {
         private ExecuteCore _execute;
-        private TranslationStatementStore _statementStore;
+        private StatementStore _statementStore;
 
         public SelectEntityMapper(ExecuteCore executeCore)
         {
             _execute = executeCore;
-            _statementStore = new TranslationStatementStore();
+            _statementStore = new StatementStore();
         }
 
         public Boolean Exist()
@@ -244,14 +244,13 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension.MapperBehavior
 
     internal class UpdateEntityMapper<TModel> : IUpdateEntityMapper<TModel> where TModel : EntityBase, new()
     {
-        private ExecuteCore _execute;
-
-        private TranslationStatementStore _statementStore;
+        private ExecuteCore _execute; 
+        private StatementStore _statementStore;
 
         public UpdateEntityMapper(ExecuteCore executeCore)
         {
             _execute = executeCore;
-            _statementStore = new TranslationStatementStore();
+            _statementStore = new StatementStore();
         }
 
         public Boolean Update(TModel model, Expression<Func<TModel, Boolean>> expression)

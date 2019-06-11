@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
-using NewLibCore.Data.SQL.CombinationCondition;
-using NewLibCore.Data.SQL.CombinationCondition.ConcreteCombinationCondition;
 using NewLibCore.Data.SQL.Mapper;
 using NewLibCore.Data.SQL.Mapper.Config;
 using NewLibCore.Data.SQL.Mapper.Extension;
@@ -308,7 +306,7 @@ namespace NewLibCore.Run
             }
 
             LoginPassword = password;
-            OnChanged(nameof(LoginPassword), LoginPassword);
+            OnChanged(nameof(LoginPassword));
             return this;
         }
 
@@ -323,17 +321,7 @@ namespace NewLibCore.Run
             }
 
             LockScreenPassword = password;
-            OnChanged(nameof(LockScreenPassword), LockScreenPassword);
-            return this;
-        }
-
-        /// <summary>
-        /// 修改关联配置文件Id
-        /// </summary>
-        public User ModifyConfigId(Int32 configId)
-        {
-            ConfigId = configId;
-            OnChanged(nameof(ConfigId), ConfigId);
+            OnChanged(nameof(LockScreenPassword));
             return this;
         }
 
@@ -343,7 +331,7 @@ namespace NewLibCore.Run
         public User Enable()
         {
             IsDisable = false;
-            OnChanged(nameof(IsDisable), IsDisable);
+            OnChanged(nameof(IsDisable));
             return this;
         }
 
@@ -353,7 +341,7 @@ namespace NewLibCore.Run
         public User Disable()
         {
             IsDisable = true;
-            OnChanged(nameof(IsDisable), IsDisable);
+            OnChanged(nameof(IsDisable));
             return this;
         }
 
@@ -364,10 +352,10 @@ namespace NewLibCore.Run
         public User Online()
         {
             IsOnline = true;
-            OnChanged(nameof(IsOnline), IsOnline);
+            OnChanged(nameof(IsOnline));
 
             LastLoginTime = DateTime.Now;
-            OnChanged(nameof(LastLoginTime), LastLoginTime);
+            OnChanged(nameof(LastLoginTime));
             return this;
         }
 
@@ -378,7 +366,7 @@ namespace NewLibCore.Run
         public User Offline()
         {
             IsOnline = false;
-            OnChanged(nameof(IsOnline), IsOnline);
+            OnChanged(nameof(IsOnline));
             return this;
         }
 
@@ -400,7 +388,7 @@ namespace NewLibCore.Run
         public User DetachAdminRole()
         {
             IsAdmin = false;
-            OnChanged(nameof(IsAdmin), IsAdmin);
+            OnChanged(nameof(IsAdmin));
             return this;
         }
 
@@ -411,7 +399,7 @@ namespace NewLibCore.Run
         public User AttachAdminRole()
         {
             IsAdmin = true;
-            OnChanged(nameof(IsAdmin), IsAdmin);
+            OnChanged(nameof(IsAdmin));
             return this;
         }
     }
@@ -587,7 +575,7 @@ namespace NewLibCore.Run
             }
 
             Width = width;
-            OnChanged(nameof(Width), Width);
+            OnChanged(nameof(Width));
             return this;
         }
 
@@ -604,7 +592,7 @@ namespace NewLibCore.Run
             }
 
             Height = height;
-            OnChanged(nameof(Height), Height);
+            OnChanged(nameof(Height));
             return this;
         }
 
@@ -616,7 +604,7 @@ namespace NewLibCore.Run
             }
 
             FolderId = folderId;
-            OnChanged(nameof(FolderId), FolderId);
+            OnChanged(nameof(FolderId));
             return this;
         }
 
@@ -633,7 +621,7 @@ namespace NewLibCore.Run
             }
 
             Name = name;
-            OnChanged(nameof(Name), Name);
+            OnChanged(nameof(Name));
             return this;
         }
 
@@ -650,7 +638,7 @@ namespace NewLibCore.Run
             }
 
             IconUrl = iconUrl;
-            OnChanged(nameof(IconUrl), IconUrl);
+            OnChanged(nameof(IconUrl));
             return this;
         }
 
@@ -667,77 +655,77 @@ namespace NewLibCore.Run
             }
 
             AppUrl = appUrl;
-            OnChanged(nameof(AppUrl), AppUrl);
+            OnChanged(nameof(AppUrl));
             return this;
         }
 
         public Member OnDock()
         {
             IsOnDock = true;
-            OnChanged(nameof(IsOnDock), IsOnDock);
+            OnChanged(nameof(IsOnDock));
             return this;
         }
 
         public Member OutDock()
         {
             IsOnDock = false;
-            OnChanged(nameof(IsOnDock), IsOnDock);
+            OnChanged(nameof(IsOnDock));
             return this;
         }
 
         public Member Setbar()
         {
             IsSetbar = true;
-            OnChanged(nameof(IsSetbar), IsSetbar);
+            OnChanged(nameof(IsSetbar));
             return this;
         }
 
         public Member NotSetbar()
         {
             IsSetbar = false;
-            OnChanged(nameof(IsSetbar), IsSetbar);
+            OnChanged(nameof(IsSetbar));
             return this;
         }
 
         public Member OpenMax()
         {
             IsOpenMax = true;
-            OnChanged(nameof(IsOpenMax), IsOpenMax);
+            OnChanged(nameof(IsOpenMax));
             return this;
         }
 
         public Member NotOpenMax()
         {
             IsOpenMax = false;
-            OnChanged(nameof(IsOpenMax), IsOpenMax);
+            OnChanged(nameof(IsOpenMax));
             return this;
         }
 
         public Member Flash()
         {
             IsFlash = true;
-            OnChanged(nameof(IsFlash), IsFlash);
+            OnChanged(nameof(IsFlash));
             return this;
         }
 
         public Member NotFlash()
         {
             IsFlash = false;
-            OnChanged(nameof(IsFlash), IsFlash);
+            OnChanged(nameof(IsFlash));
             return this;
         }
 
         public Member Resize()
         {
             IsResize = true;
-            OnChanged(nameof(IsResize), IsResize);
+            OnChanged(nameof(IsResize));
             return this;
         }
 
         public Member NotResize()
         {
             IsResize = false;
-            OnChanged(nameof(IsResize), IsResize);
+            OnChanged(nameof(IsResize));
             return this;
         }
 
@@ -754,21 +742,21 @@ namespace NewLibCore.Run
             }
 
             DeskIndex = deskIndex;
-            OnChanged(nameof(DeskIndex), DeskIndex);
+            OnChanged(nameof(DeskIndex));
             return this;
         }
 
         public Member IconNotFromUpload()
         {
             IsIconByUpload = false;
-            OnChanged(nameof(IsIconByUpload), IsIconByUpload);
+            OnChanged(nameof(IsIconByUpload));
             return this;
         }
 
         public Member IconFromUpload()
         {
             IsIconByUpload = true;
-            OnChanged(nameof(IsIconByUpload), IsIconByUpload);
+            OnChanged(nameof(IsIconByUpload));
             return this;
         }
     }
@@ -844,7 +832,7 @@ namespace NewLibCore.Run
             }
 
             Name = roleName;
-            OnChanged(nameof(Name), Name);
+            OnChanged(nameof(Name));
             return this;
         }
 
