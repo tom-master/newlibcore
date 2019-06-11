@@ -22,7 +22,6 @@ namespace NewLibCore.Run
                 using (var context = new EntityMapper())
                 {
                     var master = CombinationFactory.Create<Member>();
-                    master.And(a => a.UserId == 4);
                     context.Select<Member>(a => new { a.Id, a.Name, a.IconUrl })
                     .Where(master).ToList();
                 }

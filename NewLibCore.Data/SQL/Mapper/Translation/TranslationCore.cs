@@ -62,9 +62,15 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
             Result.Append("WHERE 1=1");
             if (_statementStore.Where != null)
             {
+                var lambdaExp = (LambdaExpression)_statementStore.Where.Expression;
+                if (lambdaExp.Body.NodeType == ExpressionType.Constant)
+                {
+                    return Result;
+                }
+
                 _joinType = JoinType.NONE;
                 Result.Append(RelationType.AND.ToString());
-                InternalBuildWhere(_statementStore.Where.Expression);
+                InternalBuildWhere(lambdaExp);
             }
 
             return Result;
@@ -156,6 +162,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
                 case ExpressionType.Lambda:
                     {
                         var lamdbaExp = (LambdaExpression)expression;
+
                         if (lamdbaExp.Body is BinaryExpression)
                         {
                             InternalBuildWhere((BinaryExpression)lamdbaExp.Body);
@@ -322,15 +329,6 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
             if (leftMember.Expression.NodeType == ExpressionType.Parameter)
             {
                 leftParameterExp = (ParameterExpression)leftMember.Expression;
-            }
-            else
-            {
-                var internalExp = leftMember.Expression;
-                while (internalExp.NodeType != ExpressionType.Parameter)
-                {
-                    internalExp = ((MemberExpression)internalExp).Expression;
-                }
-                leftParameterExp = (ParameterExpression)internalExp;
             }
 
             if (!_tableAliasMapper.Any(a => a.Key == leftParameterExp.Name && a.Value == leftParameterExp.Type.GetAliasName()))
