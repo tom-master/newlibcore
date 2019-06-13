@@ -11,10 +11,13 @@ namespace NewLibCore.Data.Redis.InternalHelper
     /// </summary>
     public class DefaultRedisQueryProvider : ICacheQueryProvider
     {
-        private readonly ConnectionMultiplexer _conn;
-        private String _customKey;
-        private IDatabase _database = null;
 
+        private String _customKey;
+
+        private readonly IDatabase _database = null;
+        
+        private readonly ConnectionMultiplexer _conn;
+        
         #region 构造函数
 
         public DefaultRedisQueryProvider(Int32 dbIndex, String connectionString)
