@@ -126,6 +126,9 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
 
         private void ThrowValidateException(PropertyValidate validateBase, PropertyInfo propertyItem)
         {
+            Parameter.Validate(validateBase);
+            Parameter.Validate(propertyItem);
+
             throw new Exception(validateBase.FailReason($@"{propertyItem.DeclaringType.FullName}.{propertyItem.Name}"));
         }
 
