@@ -66,8 +66,7 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
         {
             foreach (var po in _propertys)
             {
-                var propertyItem = po.Validates;
-                if (!propertyItem.Any())
+                if (!po.Validates.Any())
                 {
                     continue;
                 }
@@ -132,8 +131,8 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
 
         private void ThrowValidateException(PropertyValidate validateBase, PO po)
         {
-            Parameter.Validate(validateBase);
             Parameter.Validate(po);
+            Parameter.Validate(validateBase);
             throw new Exception(validateBase.FailReason($@"{po.DeclaringTypeFullName}.{po.PropertyName}"));
         }
 
