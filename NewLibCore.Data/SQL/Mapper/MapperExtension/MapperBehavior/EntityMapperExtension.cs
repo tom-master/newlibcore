@@ -222,9 +222,9 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension.MapperBehavior
             _statementStore.ExecuteType = executeType;
 
             var translationResult = builder.Build();
-            if ((executeType == ExecuteType.SELECT || executeType == ExecuteType.SELECT_SINGLE) && MapperFactory.Cache != null)
+            if ((executeType == ExecuteType.SELECT || executeType == ExecuteType.SELECT_SINGLE) && MapperFactory.Instance.Cache != null)
             {
-                var cacheResult = MapperFactory.Cache.Get(translationResult.PrepareCacheKey());
+                var cacheResult = MapperFactory.Instance.Cache.Get(translationResult.PrepareCacheKey());
                 if (cacheResult != null)
                 {
                     return (ExecuteCoreResult)cacheResult;
@@ -233,9 +233,9 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension.MapperBehavior
 
             var executeResult = _execute.Execute(executeType, translationResult);
 
-            if ((executeType == ExecuteType.SELECT || executeType == ExecuteType.SELECT_SINGLE) && MapperFactory.Cache != null)
+            if ((executeType == ExecuteType.SELECT || executeType == ExecuteType.SELECT_SINGLE) && MapperFactory.Instance.Cache != null)
             {
-                MapperFactory.Cache.Add(translationResult.PrepareCacheKey(), executeResult);
+                MapperFactory.Instance.Cache.Add(translationResult.PrepareCacheKey(), executeResult);
             }
 
             return executeResult;
@@ -244,7 +244,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension.MapperBehavior
 
     internal class UpdateEntityMapper<TModel> : IUpdateEntityMapper<TModel> where TModel : EntityBase, new()
     {
-        private ExecuteCore _execute; 
+        private ExecuteCore _execute;
         private StatementStore _statementStore;
 
         public UpdateEntityMapper(ExecuteCore executeCore)
