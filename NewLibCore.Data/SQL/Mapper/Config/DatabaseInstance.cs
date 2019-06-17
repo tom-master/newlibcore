@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Data.SqlClient;
 using MySql.Data.MySqlClient;
+using NewLibCore.Data.SQL.Mapper.Cache;
 using NewLibCore.Data.SQL.Mapper.Extension;
 
 namespace NewLibCore.Data.SQL.Mapper.Config
@@ -20,6 +21,8 @@ namespace NewLibCore.Data.SQL.Mapper.Config
         protected String ConnectionString { get { return Host.GetHostVar("NewCrmDatabase"); } }
 
         public virtual String UnionPlaceHolder { get { return Guid.NewGuid().ToString().Replace("-", ""); } }
+
+        internal MapperCache Cache { get; set; }
 
         protected MapperInstance(ILogger logger)
         {

@@ -8,18 +8,30 @@ namespace NewLibCore.Data.SQL.Mapper.Config
     {
         private static readonly Object _obj = new Object();
 
+        private static MapperFactory _mapperFactory;
+
         private MapperFactory() { }
 
-        static MapperFactory()
+
+        public static MapperFactory Factory
         {
-            Factory = new MapperFactory();
+            get
+            {
+                if (_mapperFactory == null)
+                {
+                    lock (_obj)
+                    {
+                        if (_mapperFactory == null)
+                        {
+                            _mapperFactory = new MapperFactory();
+                        }
+                    }
+                }
+                return _mapperFactory;
+            }
         }
 
-        internal static MapperCache Cache { get; private set; }
-
         internal static MapperInstance Instance { get; private set; }
-
-        public static MapperFactory Factory { get; private set; }
 
         public MapperFactory SwitchToMySql(ILogger logger = null)
         {
@@ -41,9 +53,9 @@ namespace NewLibCore.Data.SQL.Mapper.Config
 
         public MapperFactory UseCache()
         {
-            if (Cache == null)
+            if (Instance != null)
             {
-                Cache = new StatementCache();
+                Instance.Cache = new StatementCache();
             }
             return this;
         }
