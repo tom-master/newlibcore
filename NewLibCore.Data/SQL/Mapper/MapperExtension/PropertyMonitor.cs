@@ -9,9 +9,13 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
 {
     internal class PO
     {
-        internal PropertyInfo PropertyInfo { get; set; }
+        internal String DeclaringTypeFullName { get; set; }
+
+        internal String PropertyName { get; set; }
 
         internal Object Value { get; set; }
+
+        internal PropertyValidate[] Validates { get; set; }
     }
 
 
@@ -31,8 +35,10 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
 
             _propertys.Add(new PO
             {
-                PropertyInfo = propertyInfo,
-                Value = new FastProperty(propertyInfo).Get(this)
+                DeclaringTypeFullName = propertyInfo.DeclaringType.FullName,
+                PropertyName = propertyName,
+                Value = new FastProperty(propertyInfo).Get(this),
+                Validates = propertyInfo.GetCustomAttributes<PropertyValidate>(true).ToArray()
             });
         }
 
@@ -49,7 +55,7 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
 
         internal IReadOnlyList<KeyValuePair<String, Object>> GetPropertys()
         {
-            return _propertys.Select(s => new KeyValuePair<String, Object>(s.PropertyInfo.Name, s.Value)).ToList().AsReadOnly();
+            return _propertys.Select(s => new KeyValuePair<String, Object>(s.PropertyName, s.Value)).ToList().AsReadOnly();
         }
 
         protected internal virtual void SetUpdateTime() { }
@@ -60,13 +66,13 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
         {
             foreach (var po in _propertys)
             {
-                var propertyItem = po.PropertyInfo;
-                if (!propertyItem.CustomAttributes.Any())
+                var propertyItem = po.Validates;
+                if (!propertyItem.Any())
                 {
                     continue;
                 }
 
-                var validateBases = GetValidateAttributes(propertyItem);
+                var validateBases = ValidateAttributeOrder(po.PropertyName, po.Validates);
                 var propertyValue = po.Value;
                 for (var i = 0; i < validateBases.Count; i++)
                 {
@@ -76,7 +82,7 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
                         {
                             if (i + 1 >= validateBases.Count)
                             {
-                                ThrowValidateException(validateBases[i + 1], propertyItem);
+                                ThrowValidateException(validateBases[i + 1], po);
                             }
 
                             if (validateBases[i + 1] is DefaultValueAttribute)
@@ -85,14 +91,14 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
                                 i = i + 1;
                                 continue;
                             }
-                            ThrowValidateException(validateBases[i], propertyItem);
+                            ThrowValidateException(validateBases[i], po);
                         }
                     }
                     else if (validateBases[i] is DefaultValueAttribute)
                     {
                         if (!validateBases[i].IsValidate(propertyValue))
                         {
-                            ThrowValidateException(validateBases[i], propertyItem);
+                            ThrowValidateException(validateBases[i], po);
                         }
                         SetPropertyDefaultValue((DefaultValueAttribute)validateBases[i], po, propertyValue);
                     }
@@ -100,7 +106,7 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
                     {
                         if (!validateBases[i].IsValidate(propertyValue))
                         {
-                            ThrowValidateException(validateBases[i], propertyItem);
+                            ThrowValidateException(validateBases[i], po);
                         }
                     }
                 }
@@ -124,25 +130,21 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
             }
         }
 
-        private void ThrowValidateException(PropertyValidate validateBase, PropertyInfo propertyItem)
+        private void ThrowValidateException(PropertyValidate validateBase, PO po)
         {
             Parameter.Validate(validateBase);
-            Parameter.Validate(propertyItem);
-
-            throw new Exception(validateBase.FailReason($@"{propertyItem.DeclaringType.FullName}.{propertyItem.Name}"));
+            Parameter.Validate(po);
+            throw new Exception(validateBase.FailReason($@"{po.DeclaringTypeFullName}.{po.PropertyName}"));
         }
 
-        private IList<PropertyValidate> GetValidateAttributes(PropertyInfo propertyInfo)
+        private IList<PropertyValidate> ValidateAttributeOrder(String propertyName, PropertyValidate[] validates)
         {
-            Parameter.Validate(propertyInfo);
-
-            var validateAttributes = propertyInfo.GetCustomAttributes<PropertyValidate>(true);
-            if (validateAttributes.GroupBy(g => g.Order).Where(w => w.Count() > 1).Any())
+            Parameter.Validate(validates);
+            if (validates.GroupBy(g => g.Order).Where(w => w.Count() > 1).Any())
             {
-                throw new Exception($@"{propertyInfo.Name} 中使用了多个优先级相同的特性");
+                throw new Exception($@"{propertyName} 中使用了多个优先级相同的特性");
             }
-
-            return validateAttributes.OrderByDescending(o => o.Order).ToList();
+            return validates.OrderByDescending(o => o.Order).ToList();
         }
     }
 }

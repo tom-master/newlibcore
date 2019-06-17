@@ -16,7 +16,6 @@ namespace NewLibCore.Data.SQL.Builder
         internal AddBuilder(TModel model, Boolean isVerifyModel = false)
         {
             Parameter.Validate(model);
-
             _isVerifyModel = isVerifyModel;
             _instance = model;
         }
@@ -29,13 +28,12 @@ namespace NewLibCore.Data.SQL.Builder
                 _instance.Validate();
             }
 
-            var translationResult = new TranslationCoreResult();
-
             var propertyInfos = _instance.GetPropertys();
             var fields = String.Join(",", propertyInfos.Select(c => c.Key));
             var placeHolder = String.Join(",", propertyInfos.Select(key => $@"@{key.Key}"));
             var entityParameters = propertyInfos.Select(c => new EntityParameter($@"@{c.Key}", c.Value));
 
+            var translationResult = new TranslationCoreResult();
             translationResult.Append($@" INSERT {typeof(TModel).GetAliasName()} ({fields}) VALUES ({placeHolder}) {MapperFactory.Instance.Extension.Identity}", entityParameters);
             return translationResult;
         }
