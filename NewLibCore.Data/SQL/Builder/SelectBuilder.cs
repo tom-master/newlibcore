@@ -25,8 +25,9 @@ namespace NewLibCore.Data.SQL.Builder
 
         public TranslationCoreResult Build()
         {
-            var translation = new TranslationCore(_statementStore);
             var statement = StatementParse(_statementStore.Field);
+
+            var translation = new TranslationCore(_statementStore);
             translation.Result.Append($@"SELECT {statement.fields} FROM {typeof(TModel).GetAliasName()} AS {statement.tableName}");
             translation.Translate();
 

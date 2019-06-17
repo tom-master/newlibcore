@@ -10,45 +10,45 @@ namespace NewLibCore.Data.SQL.CombinationCondition
 
         public static void And<T>(this Combination<T> left, Expression<Func<T, Boolean>> right) where T : EntityBase
         {
-            if (left.Expression == default)
+            if (left.CombinationExpression == default)
             {
-                left.Expression = right;
+                left.CombinationExpression = right;
                 return;
             }
 
             var type = typeof(T);
             var internalParameter = Expression.Parameter(type, type.GetAliasName());
             var parameterVister = new ParameterVisitor(internalParameter);
-            var leftBody = parameterVister.Replace(left.Expression.Body);
+            var leftBody = parameterVister.Replace(left.CombinationExpression.Body);
             var rightBody = parameterVister.Replace(right.Body);
             var newExpression = Expression.AndAlso(leftBody, rightBody);
-            left.Expression = Expression.Lambda<Func<T, Boolean>>(newExpression, internalParameter);
+            left.CombinationExpression = Expression.Lambda<Func<T, Boolean>>(newExpression, internalParameter);
         }
 
         public static void Or<T>(this Combination<T> left, Expression<Func<T, Boolean>> right) where T : EntityBase
         {
 
-            if (left.Expression == default)
+            if (left.CombinationExpression == default)
             {
-                left.Expression = right;
+                left.CombinationExpression = right;
                 return;
             }
 
             var type = typeof(T);
             var internalParameter = Expression.Parameter(type, type.GetAliasName());
             var parameterVister = new ParameterVisitor(internalParameter);
-            var leftBody = parameterVister.Replace(left.Expression.Body);
+            var leftBody = parameterVister.Replace(left.CombinationExpression.Body);
             var rightBody = parameterVister.Replace(right.Body);
             var orExpression = Expression.OrElse(leftBody, rightBody);
-            left.Expression = Expression.Lambda<Func<T, Boolean>>(orExpression, internalParameter);
+            left.CombinationExpression = Expression.Lambda<Func<T, Boolean>>(orExpression, internalParameter);
         }
 
         public static void Not<T>(this Combination<T> left) where T : EntityBase
         {
-            var lambdaExpression = (LambdaExpression)left.Expression;
+            var lambdaExpression = (LambdaExpression)left.CombinationExpression;
             var internalParameter = lambdaExpression.Parameters[0];
             var newExpression = Expression.Not(lambdaExpression.Body);
-            left.Expression = Expression.Lambda<Func<T, Boolean>>(newExpression, internalParameter);
+            left.CombinationExpression = Expression.Lambda<Func<T, Boolean>>(newExpression, internalParameter);
         }
 
         /// <summary>

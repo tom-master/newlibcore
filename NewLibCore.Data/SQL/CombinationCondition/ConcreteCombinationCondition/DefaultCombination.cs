@@ -12,7 +12,7 @@ namespace NewLibCore.Data.SQL.CombinationCondition.ConcreteCombinationCondition
     {
         internal DefaultCombination(Expression<Func<T, Boolean>> exp)
         {
-            Expression = exp;
+            CombinationExpression = exp;
         }
     }
 }
