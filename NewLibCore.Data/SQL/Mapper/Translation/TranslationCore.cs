@@ -162,6 +162,12 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
                 case ExpressionType.Lambda:
                 {
                     var lamdbaExp = (LambdaExpression)expression;
+
+                    if (lamdbaExp.NodeType == ExpressionType.Constant)
+                    {
+                        break;
+                    }
+
                     if (lamdbaExp.Body is BinaryExpression)
                     {
                         InternalBuildWhere((BinaryExpression)lamdbaExp.Body);

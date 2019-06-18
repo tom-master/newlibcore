@@ -51,7 +51,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension.MapperBehavior
 
     internal class SelectEntityMapper<TModel> : ISelectEntityMapper<TModel> where TModel : EntityBase, new()
     {
-        private ExecuteCore _execute;
+        private readonly ExecuteCore _execute;
         private StatementStore _statementStore;
 
         public SelectEntityMapper(ExecuteCore executeCore)
@@ -222,9 +222,12 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension.MapperBehavior
             _statementStore.ExecuteType = executeType;
 
             var translationResult = builder.Build();
-            var executeResult = GetResultFormCache(executeType, translationResult) ?? _execute.Execute(executeType, translationResult);
-            SetCacheFormResult(executeType, translationResult, executeResult);
-
+            var executeResult = GetResultFormCache(executeType, translationResult);
+            if (executeResult == null)
+            {
+                executeResult = _execute.Execute(executeType, translationResult);
+                SetCacheFormResult(executeType, translationResult, executeResult);
+            }
             return executeResult;
         }
 
