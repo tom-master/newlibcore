@@ -35,20 +35,20 @@ namespace NewLibCore.Data.SQL.Mapper.Config
             InitOrderType();
         }
 
-        protected internal abstract void AppendRelationType();
+        protected abstract void AppendRelationType();
 
         internal virtual InstanceExtension Extension { get; }
+
+        internal ILogger Logger
+        {
+            get { return _logger; }
+        }
 
         internal abstract DbConnection GetConnectionInstance();
 
         internal abstract DbParameter GetParameterInstance();
 
         internal abstract String RelationBuilder(RelationType relationType, String left, Object right);
-
-        internal virtual ILogger Logger
-        {
-            get { return _logger; }
-        }
 
         internal String JoinBuilder(JoinType joinType, String left, String right)
         {
