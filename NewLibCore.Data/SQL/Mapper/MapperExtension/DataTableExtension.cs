@@ -39,11 +39,6 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
                 var propertys = mainModel.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public);
                 foreach (var propertyInfo in propertys)
                 {
-                    if (propertyInfo.PropertyType.BaseType == typeof(EntityBase))
-                    {
-                        var aliasName = propertyInfo.PropertyType.BaseType;
-                    }
-
                     if (dt.Columns.Contains(propertyInfo.Name))
                     {
                         var value = dr[propertyInfo.Name];
