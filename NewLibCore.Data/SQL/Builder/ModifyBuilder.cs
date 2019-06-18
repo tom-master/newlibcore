@@ -45,7 +45,7 @@ namespace NewLibCore.Data.SQL.Builder
             }
             _instance.Reset();
 
-            translation.Result.Append($@"{MapperFactory.Instance.Extension.RowCount}");
+            translation.Result.Append($@"{DatabaseConfigFactory.Instance.Extension.RowCount}");
             return translation.Result;
         }
     }

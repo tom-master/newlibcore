@@ -15,7 +15,7 @@ namespace NewLibCore.Run
     {
         private static void Main(String[] args)
         {
-            MapperFactory.Factory.SwitchToMySql().UseCache();
+            DatabaseConfigFactory.Init().SwitchToMySql().UseCache();
             while (true)
             {
                 using (var context = new EntityMapper())

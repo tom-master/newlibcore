@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
-using System.Data.SqlClient;
-using MySql.Data.MySqlClient;
 using NewLibCore.Data.SQL.Mapper.Cache;
 using NewLibCore.Data.SQL.Mapper.Extension;
 
 namespace NewLibCore.Data.SQL.Mapper.Config
 {
-    internal abstract class MapperInstance
+    internal abstract class DatabaseInstanceConfig
     {
         private readonly ILogger _logger;
 
@@ -24,7 +22,7 @@ namespace NewLibCore.Data.SQL.Mapper.Config
 
         internal MapperCache Cache { get; set; }
 
-        protected MapperInstance(ILogger logger)
+        protected DatabaseInstanceConfig(ILogger logger)
         {
             _logger = logger ?? new ConsoleLogger();
 
@@ -91,93 +89,6 @@ namespace NewLibCore.Data.SQL.Mapper.Config
         }
     }
 
-    internal class MsSqlInstance : MapperInstance
-    {
-        protected internal MsSqlInstance(ILogger logger) : base(logger)
-        {
-
-        }
-
-        protected override void AppendRelationType()
-        {
-            RelationMapper.Add(RelationType.FULL_LIKE, "{0} LIKE '%{1}%'");
-            RelationMapper.Add(RelationType.START_LIKE, "{0} LIKE '{1}%'");
-            RelationMapper.Add(RelationType.END_LIKE, "{0} LIKE '%{1}' ");
-            RelationMapper.Add(RelationType.IN, "{0} IN ({1})");
-        }
-
-        internal override DbConnection GetConnectionInstance()
-        {
-            return new SqlConnection(ConnectionString);
-        }
-
-        internal override DbParameter GetParameterInstance()
-        {
-            return new SqlParameter();
-        }
-
-        internal override String RelationBuilder(RelationType relationType, String left, Object right)
-        {
-            return String.Format(RelationMapper[relationType], left, right);
-        }
-
-        internal override InstanceExtension Extension
-        {
-            get
-            {
-                return new InstanceExtension
-                {
-                    Identity = " SELECT @@IDENTITY",
-                    RowCount = " SELECT @@ROWCOUNT",
-                    Page = " OFFSET ({value}) ROWS FETCH NEXT {pageSize} ROWS ONLY"
-                };
-            }
-        }
-    }
-
-    internal class MySqlInstance : MapperInstance
-    {
-        protected internal MySqlInstance(ILogger logger) : base(logger)
-        {
-
-        }
-
-        protected override void AppendRelationType()
-        {
-            RelationMapper.Add(RelationType.FULL_LIKE, "{0} LIKE CONCAT('%',{1},'%')");
-            RelationMapper.Add(RelationType.START_LIKE, "{0} LIKE CONCAT('',{1},'%')");
-            RelationMapper.Add(RelationType.END_LIKE, "{0} LIKE CONCAT('%',{1},'')");
-            RelationMapper.Add(RelationType.IN, "FIND_IN_SET({0},{1})");
-        }
-
-        internal override DbConnection GetConnectionInstance()
-        {
-            return new MySqlConnection(ConnectionString);
-        }
-
-        internal override DbParameter GetParameterInstance()
-        {
-            return new MySqlParameter();
-        }
-
-        internal override String RelationBuilder(RelationType relationType, String left, Object right)
-        {
-            return String.Format(RelationMapper[relationType], left, right);
-        }
-
-        internal override InstanceExtension Extension
-        {
-            get
-            {
-                return new InstanceExtension
-                {
-                    Identity = " ; SELECT CAST(@@IDENTITY AS SIGNED) AS c ",
-                    RowCount = " ; SELECT CAST(ROW_COUNT() AS SIGNED) AS c ",
-                    Page = " LIMIT {value},{pageSize}"
-                };
-            }
-        }
-    }
 
     internal class InstanceExtension
     {

@@ -22,13 +22,13 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
 
         internal ExecuteCore()
         {
-            Parameter.Validate(MapperFactory.Instance);
-            _connection = MapperFactory.Instance.GetConnectionInstance();
+            Parameter.Validate(DatabaseConfigFactory.Instance);
+            _connection = DatabaseConfigFactory.Instance.GetConnectionInstance();
         }
 
         internal void OpenTransaction()
         {
-            MapperFactory.Instance.Logger.Write("INFO", "open transaction");
+            DatabaseConfigFactory.Instance.Logger.Write("INFO", "open transaction");
             _useTransaction = true;
         }
 
@@ -39,7 +39,7 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
                 if (_dataTransaction != null)
                 {
                     _dataTransaction.Commit();
-                    MapperFactory.Instance.Logger.Write("INFO", "commit transaction");
+                    DatabaseConfigFactory.Instance.Logger.Write("INFO", "commit transaction");
                 }
                 return;
             }
@@ -53,7 +53,7 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
                 if (_dataTransaction != null)
                 {
                     _dataTransaction.Rollback();
-                    MapperFactory.Instance.Logger.Write("INFO", "rollback transaction ");
+                    DatabaseConfigFactory.Instance.Logger.Write("INFO", "rollback transaction ");
                 }
                 return;
             }
@@ -85,9 +85,9 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
                     {
                         cmd.Parameters.AddRange(parameters.Select(s => (DbParameter)s).ToArray());
                     }
-                    MapperFactory.Instance.Logger.Write("INFO", $@"ExecuteType:{executeType}");
-                    MapperFactory.Instance.Logger.Write("INFO", $@"SQL:{sql}");
-                    MapperFactory.Instance.Logger.Write("INFO", $@"PARAMETERS:{(parameters == null || !parameters.Any() ? "" : String.Join($@"{Environment.NewLine}", parameters.Select(s => $@"{s.Key}----{s.Value}")))}");
+                    DatabaseConfigFactory.Instance.Logger.Write("INFO", $@"ExecuteType:{executeType}");
+                    DatabaseConfigFactory.Instance.Logger.Write("INFO", $@"SQL:{sql}");
+                    DatabaseConfigFactory.Instance.Logger.Write("INFO", $@"PARAMETERS:{(parameters == null || !parameters.Any() ? "" : String.Join($@"{Environment.NewLine}", parameters.Select(s => $@"{s.Key}----{s.Value}")))}");
                     var executeResult = new ExecuteCoreResult();
                     if (executeType == ExecuteType.SELECT)
                     {
@@ -113,7 +113,7 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
             }
             catch (Exception ex)
             {
-                MapperFactory.Instance.Logger.Write("ERROR", $@"{ex}");
+                DatabaseConfigFactory.Instance.Logger.Write("ERROR", $@"{ex}");
                 throw;
             }
         }
@@ -122,7 +122,7 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
         {
             if (_connection.State == ConnectionState.Closed)
             {
-                MapperFactory.Instance.Logger.Write("INFO", "open connection");
+                DatabaseConfigFactory.Instance.Logger.Write("INFO", "open connection");
                 _connection.Open();
             }
         }
@@ -135,7 +135,7 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
                 {
                     _useTransaction = true;
                     _dataTransaction = _connection.BeginTransaction();
-                    MapperFactory.Instance.Logger.Write("INFO", "begin transaction");
+                    DatabaseConfigFactory.Instance.Logger.Write("INFO", "begin transaction");
                 }
                 return _dataTransaction;
             }
@@ -152,7 +152,7 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
 
         private void Dispose(Boolean disposing)
         {
-            MapperFactory.Instance.Logger.Write("INFO", $@"close connection {Environment.NewLine}");
+            DatabaseConfigFactory.Instance.Logger.Write("INFO", $@"close connection {Environment.NewLine}");
             if (!_disposed)
             {
                 if (!disposing)

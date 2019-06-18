@@ -62,7 +62,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
             };
         }
 
-        internal void Add<TModel, TJoin>(Expression<Func<TModel, TJoin, Boolean>> expression, JoinType joinType = JoinType.NONE) where TModel : PropertyMonitor, new() where TJoin : PropertyMonitor, new()
+        internal void Add<TModel, TJoin>(Expression<Func<TModel, TJoin, Boolean>> expression, JoinType joinType) where TModel : PropertyMonitor, new() where TJoin : PropertyMonitor, new()
         {
             Parameter.Validate(expression);
             Joins.Add(new JoinStatement

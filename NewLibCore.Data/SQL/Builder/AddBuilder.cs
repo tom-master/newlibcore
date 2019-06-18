@@ -34,7 +34,7 @@ namespace NewLibCore.Data.SQL.Builder
             var entityParameters = propertyInfos.Select(c => new EntityParameter($@"@{c.Key}", c.Value));
 
             var translationResult = new TranslationCoreResult();
-            translationResult.Append($@" INSERT {typeof(TModel).GetAliasName()} ({fields}) VALUES ({placeHolder}) {MapperFactory.Instance.Extension.Identity}", entityParameters);
+            translationResult.Append($@" INSERT {typeof(TModel).GetAliasName()} ({fields}) VALUES ({placeHolder}) {DatabaseConfigFactory.Instance.Extension.Identity}", entityParameters);
             return translationResult;
         }
     }

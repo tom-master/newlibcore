@@ -74,7 +74,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension.MapperBehavior
             var executeResult = InternalExecuteSql(ExecuteType.SELECT_SINGLE);
             Int32.TryParse(executeResult.Value.ToString(), out var count);
             sw.Stop();
-            MapperFactory.Instance.Logger.Write("INFO", $@"共花费{Math.Round(sw.Elapsed.TotalSeconds, 2)}s");
+            DatabaseConfigFactory.Instance.Logger.Write("INFO", $@"共花费{Math.Round(sw.Elapsed.TotalSeconds, 2)}s");
 
             return count;
         }
@@ -87,7 +87,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension.MapperBehavior
             var dataTable = executeResult.Value as DataTable;
             var result = dataTable.ToSingle<TModel>();
             sw.Stop();
-            MapperFactory.Instance.Logger.Write("INFO", $@"共花费{Math.Round(sw.Elapsed.TotalSeconds, 2)}s");
+            DatabaseConfigFactory.Instance.Logger.Write("INFO", $@"共花费{Math.Round(sw.Elapsed.TotalSeconds, 2)}s");
             return result;
         }
 
@@ -99,7 +99,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension.MapperBehavior
             var dataTable = executeResult.Value as DataTable;
             var models = dataTable.ToList<TModel>();
             sw.Stop();
-            MapperFactory.Instance.Logger.Write("INFO", $@"共花费{Math.Round(sw.Elapsed.TotalSeconds, 2)}s");
+            DatabaseConfigFactory.Instance.Logger.Write("INFO", $@"共花费{Math.Round(sw.Elapsed.TotalSeconds, 2)}s");
             return models;
         }
 
@@ -222,9 +222,9 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension.MapperBehavior
             _statementStore.ExecuteType = executeType;
 
             var translationResult = builder.Build();
-            if ((executeType == ExecuteType.SELECT || executeType == ExecuteType.SELECT_SINGLE) && MapperFactory.Instance.Cache != null)
+            if ((executeType == ExecuteType.SELECT || executeType == ExecuteType.SELECT_SINGLE) && DatabaseConfigFactory.Instance.Cache != null)
             {
-                var cacheResult = MapperFactory.Instance.Cache.Get(translationResult.PrepareCacheKey());
+                var cacheResult = DatabaseConfigFactory.Instance.Cache.Get(translationResult.PrepareCacheKey());
                 if (cacheResult != null)
                 {
                     return (ExecuteCoreResult)cacheResult;
@@ -233,9 +233,9 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension.MapperBehavior
 
             var executeResult = _execute.Execute(executeType, translationResult);
 
-            if ((executeType == ExecuteType.SELECT || executeType == ExecuteType.SELECT_SINGLE) && MapperFactory.Instance.Cache != null)
+            if ((executeType == ExecuteType.SELECT || executeType == ExecuteType.SELECT_SINGLE) && DatabaseConfigFactory.Instance.Cache != null)
             {
-                MapperFactory.Instance.Cache.Add(translationResult.PrepareCacheKey(), executeResult);
+                DatabaseConfigFactory.Instance.Cache.Add(translationResult.PrepareCacheKey(), executeResult);
             }
 
             return executeResult;

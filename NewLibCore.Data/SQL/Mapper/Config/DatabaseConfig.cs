@@ -4,36 +4,33 @@ using NewLibCore.Data.SQL.Mapper.Extension;
 
 namespace NewLibCore.Data.SQL.Mapper.Config
 {
-    public class MapperFactory
+    public class DatabaseConfigFactory
     {
         private static readonly Object _obj = new Object();
 
-        private static MapperFactory _mapperFactory;
+        private static DatabaseConfigFactory _databaseConfigFactory;
 
-        private MapperFactory() { }
+        private DatabaseConfigFactory() { }
 
-
-        public static MapperFactory Factory
+        public static DatabaseConfigFactory Init()
         {
-            get
+            if (_databaseConfigFactory == null)
             {
-                if (_mapperFactory == null)
+                lock (_obj)
                 {
-                    lock (_obj)
+                    if (_databaseConfigFactory == null)
                     {
-                        if (_mapperFactory == null)
-                        {
-                            _mapperFactory = new MapperFactory();
-                        }
+                        _databaseConfigFactory = new DatabaseConfigFactory();
                     }
                 }
-                return _mapperFactory;
             }
+            return _databaseConfigFactory;
         }
 
-        internal static MapperInstance Instance { get; private set; }
 
-        public MapperFactory SwitchToMySql(ILogger logger = null)
+        internal static DatabaseInstanceConfig Instance { get; private set; }
+
+        public DatabaseConfigFactory SwitchToMySql(ILogger logger = null)
         {
             if (Instance == null)
             {
@@ -42,7 +39,7 @@ namespace NewLibCore.Data.SQL.Mapper.Config
             return this;
         }
 
-        public MapperFactory SwitchToMsSql(ILogger logger = null)
+        public DatabaseConfigFactory SwitchToMsSql(ILogger logger = null)
         {
             if (Instance == null)
             {
@@ -51,7 +48,7 @@ namespace NewLibCore.Data.SQL.Mapper.Config
             return this;
         }
 
-        public MapperFactory UseCache()
+        public DatabaseConfigFactory UseCache()
         {
             if (Instance != null)
             {
@@ -66,12 +63,12 @@ namespace NewLibCore.Data.SQL.Mapper.Config
             {
                 case DatabaseType.MSSQL:
                 {
-                    Instance = new MsSqlInstance(logger);
+                    Instance = new MsSqlInstanceConfig(logger);
                     break;
                 }
                 case DatabaseType.MYSQL:
                 {
-                    Instance = new MySqlInstance(logger);
+                    Instance = new MySqlInstanceConfig(logger);
                     break;
                 }
                 default:
