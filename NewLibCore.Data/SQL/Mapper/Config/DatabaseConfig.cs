@@ -12,6 +12,8 @@ namespace NewLibCore.Data.SQL.Mapper.Config
 
         private DatabaseConfigFactory() { }
 
+        internal static DatabaseInstanceConfig Instance { get; private set; }
+
         public static DatabaseConfigFactory Init()
         {
             if (_databaseConfigFactory == null)
@@ -27,54 +29,59 @@ namespace NewLibCore.Data.SQL.Mapper.Config
             return _databaseConfigFactory;
         }
 
-
-        internal static DatabaseInstanceConfig Instance { get; private set; }
-
         public DatabaseConfigFactory SwitchToMySql(ILogger logger = null)
         {
-            if (Instance == null)
-            {
-                SwitchTo(DatabaseType.MYSQL, logger);
-            }
+            SwitchTo(DatabaseType.MYSQL, logger);
             return this;
         }
 
         public DatabaseConfigFactory SwitchToMsSql(ILogger logger = null)
         {
-            if (Instance == null)
-            {
-                SwitchTo(DatabaseType.MSSQL, logger);
-            }
+            SwitchTo(DatabaseType.MSSQL, logger);
             return this;
         }
 
         public DatabaseConfigFactory UseCache()
         {
-            if (Instance != null)
+            if (Instance.Cache == null)
             {
-                Instance.Cache = new StatementCache();
+                lock (_obj)
+                {
+                    if (Instance.Cache == null)
+                    {
+                        Instance.Cache = new StatementCache();
+                    }
+                }
             }
             return this;
         }
 
         private static void SwitchTo(DatabaseType database, ILogger logger)
         {
-            switch (database)
+            if (Instance == null)
             {
-                case DatabaseType.MSSQL:
+                lock (_obj)
                 {
-                    Instance = new MsSqlInstanceConfig(logger);
-                    break;
+                    if (Instance == null)
+                    {
+                        switch (database)
+                        {
+                            case DatabaseType.MSSQL:
+                            {
+                                Instance = new MsSqlInstanceConfig(logger);
+                                break;
+                            }
+                            case DatabaseType.MYSQL:
+                            {
+                                Instance = new MySqlInstanceConfig(logger);
+                                break;
+                            }
+                            default:
+                                break;
+                        }
+                    }
                 }
-                case DatabaseType.MYSQL:
-                {
-                    Instance = new MySqlInstanceConfig(logger);
-                    break;
-                }
-                default:
-                    break;
             }
         }
     }
-
 }

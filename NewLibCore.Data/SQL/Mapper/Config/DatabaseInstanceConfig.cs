@@ -35,7 +35,7 @@ namespace NewLibCore.Data.SQL.Mapper.Config
             InitOrderType();
         }
 
-        protected virtual void AppendRelationType() { }
+        protected internal abstract void AppendRelationType();
 
         internal virtual InstanceExtension Extension { get; }
 
@@ -92,14 +92,6 @@ namespace NewLibCore.Data.SQL.Mapper.Config
 
     internal class InstanceExtension
     {
-        public String Insert { get { return "INSERT"; } }
-
-        public String Values { get { return "VALUES"; } }
-
-        public String Select { get { return "SELECT"; } }
-
-        public String Where { get { return "WHERE"; } }
-
         public String Identity { get; internal set; }
 
         public String RowCount { get; internal set; }
