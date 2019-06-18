@@ -25,16 +25,17 @@ namespace NewLibCore.Data.SQL.Builder
 
         public TranslationCoreResult Build()
         {
-            var statement = StatementParse(_statementStore.Field);
-
             var translation = new TranslationCore(_statementStore);
-            translation.Result.Append($@"SELECT {statement.fields} FROM {typeof(TModel).GetAliasName()} AS {statement.tableName}");
-            translation.Translate();
-
-            var aliasMapper = _statementStore.MergeAliasMapper();
-            foreach (var aliasItem in aliasMapper)
             {
-                translation.Result.Append($@"AND {aliasItem.Value.ToLower()}.IsDeleted = 0");
+                var statement = StatementParse(_statementStore.Field);
+                translation.Result.Append($@"SELECT {statement.fields} FROM {typeof(TModel).GetAliasName()} AS {statement.tableName}");
+                translation.Translate();
+
+                var aliasMapper = _statementStore.MergeAliasMapper();
+                foreach (var aliasItem in aliasMapper)
+                {
+                    translation.Result.Append($@"AND {aliasItem.Value.ToLower()}.IsDeleted = 0");
+                }
             }
 
             if (_statementStore.Order != null)
@@ -57,13 +58,35 @@ namespace NewLibCore.Data.SQL.Builder
         private (String fields, String tableName) StatementParse(Statement statement)
         {
             var modelAliasName = new List<String>();
-
             if (statement == null)
             {
                 var modelType = typeof(TModel);
-                modelAliasName.Add(modelType.GetAliasName().ToLower());
-                var propertys = modelType.GetProperties().Where(w => w.GetCustomAttributes<PropertyValidate>().Any());
-                return (String.Join(",", propertys.Select(s => $@"{modelAliasName.FirstOrDefault()}.{s.Name}")), modelAliasName.FirstOrDefault());
+                var f = new List<String>();
+
+                {
+                    var typeName = modelType.GetAliasName().ToLower();
+                    modelAliasName.Add(typeName);
+                    var mainModelPropertys = modelType.GetProperties().Where(w => w.GetCustomAttributes<PropertyValidate>().Any()).ToList();
+                    foreach (var item in mainModelPropertys)
+                    {
+                        f.Add($@"{typeName}.{item.Name}");
+                    }
+                }
+                {
+                    var subProperty = modelType.GetProperties().Where(w => w.GetCustomAttribute<SubModelAttribute>() != null);
+                    if (subProperty != null)
+                    {
+                        var propertyType = subProperty.FirstOrDefault().PropertyType;
+                        var typeName = propertyType.GetAliasName().ToLower();
+                        var subModelPropertys = propertyType.GetProperties().Where(w => w.GetCustomAttributes<PropertyValidate>().Any()).ToList();
+                        foreach (var item in subModelPropertys)
+                        {
+                            f.Add($@"{typeName}.{item.Name}");
+                        }
+                    }
+                }
+
+                return (String.Join(",", f), modelAliasName.FirstOrDefault());
             }
 
             var fields = (LambdaExpression)statement.Expression;

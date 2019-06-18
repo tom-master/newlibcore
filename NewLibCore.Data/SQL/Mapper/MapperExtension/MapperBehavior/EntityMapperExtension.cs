@@ -287,7 +287,8 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension.MapperBehavior
         {
             IBuilder<TModel> builder = new AddBuilder<TModel>(model, true);
             var executeResult = _executeCore.Execute(ExecuteType.INSERT, builder.Build());
-            model.Id = Int32.Parse(executeResult.Value.ToString());
+            Int32.TryParse(executeResult.Value.ToString(), out var modelId);
+            model.Id = modelId;
             return model;
         }
     }

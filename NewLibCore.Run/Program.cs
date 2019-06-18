@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
-using NewLibCore.Data.SQL.CombinationCondition.ConcreteCombinationCondition;
 using NewLibCore.Data.SQL.Mapper;
 using NewLibCore.Data.SQL.Mapper.Config;
 using NewLibCore.Data.SQL.Mapper.Extension;
@@ -15,14 +14,12 @@ namespace NewLibCore.Run
     {
         private static void Main(String[] args)
         {
-            DatabaseConfigFactory.Init().SwitchToMySql().UseCache();
+            DatabaseConfigFactory.Init().SwitchToMySql();
             while (true)
             {
                 using (var context = new EntityMapper())
                 {
-                    var master = CombinationFactory.Create<Member>();
-                    context.Select<Member>(a => new { a.Id, a.Name, a.IconUrl })
-                    .Where(master).ToList();
+                    var a = context.Select<User>().InnerJoin<Config>((u, c) => u.ConfigId == c.Id).Where(u => u.Id == 4).ToList();
                 }
                 Thread.Sleep(1000);
             }
@@ -171,16 +168,13 @@ namespace NewLibCore.Run
         public Boolean IsBing { get; private set; }
 
         /// <summary>
-        /// 账户Id
-        /// </summary>
-        [Required]
-        public Int32 UserId { get; private set; }
-
-        /// <summary>
         /// 壁纸Id
         /// </summary>
-        [Required]
+        [Required, ForeignKey]
         public Int32 WallpaperId { get; private set; }
+
+        [SubModel]
+        public Wallpaper Wallpaper { get; set; }
 
         /// <summary>
         /// 账户头像是否被更改
@@ -188,7 +182,7 @@ namespace NewLibCore.Run
         [Required]
         public Boolean IsModifyUserFace { get; private set; }
 
-        public Config(Int32 userId)
+        public Config()
         {
             UserFace = @"/images/ui/avatar_48.jpg";
             Skin = "default";
@@ -197,13 +191,10 @@ namespace NewLibCore.Run
             AppHorizontalSpacing = 50;
             DefaultDeskNumber = 1;
             DefaultDeskCount = 5;
-            UserId = userId;
             IsBing = true;
             IsModifyUserFace = false;
             WallpaperId = 3;
         }
-
-        public Config() { }
     }
 
     [TableName("newcrm_user_role")]
@@ -272,7 +263,7 @@ namespace NewLibCore.Run
         /// <summary>
         /// 配置Id
         /// </summary>
-        [Required]
+        [Required, ForeignKey]
         public Int32 ConfigId { get; private set; }
 
         [SubModel]
