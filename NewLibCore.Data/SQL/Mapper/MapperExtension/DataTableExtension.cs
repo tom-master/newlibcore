@@ -32,11 +32,14 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
 
         private static List<T> ConvertToList<T>(DataTable dt) where T : new()
         {
+            //typeof(T).GetAliasName().ToLower()
+            //var r = dt.Columns.Cast<DataColumn>().GroupBy(w => w.ColumnName.Substring(0, w.ColumnName.LastIndexOf("_")));
+
             var list = new List<T>();
             foreach (DataRow dr in dt.Rows)
             {
-                var t = new T();
-                var propertys = t.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public);
+                var mainModel = Activator.CreateInstance<T>();
+                var propertys = mainModel.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public);
                 foreach (var propertyInfo in propertys)
                 {
                     var aliasName = $@"{propertyInfo.Name}";
@@ -48,7 +51,7 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
                             try
                             {
                                 var fast = new FastProperty(propertyInfo);
-                                fast.Set(t, ConvertExtension.ChangeType(value, propertyInfo.PropertyType));
+                                fast.Set(mainModel, ConvertExtension.ChangeType(value, propertyInfo.PropertyType));
                             }
                             catch (Exception)
                             {
@@ -57,7 +60,7 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
                         }
                     }
                 }
-                list.Add(t);
+                list.Add(mainModel);
             }
             return list;
         }

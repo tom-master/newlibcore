@@ -62,16 +62,16 @@ namespace NewLibCore.Data.SQL.Builder
             {
                 var modelType = typeof(TModel);
                 var f = new List<String>();
-
                 {
                     var typeName = modelType.GetAliasName().ToLower();
                     modelAliasName.Add(typeName);
                     var mainModelPropertys = modelType.GetProperties().Where(w => w.GetCustomAttributes<PropertyValidate>().Any()).ToList();
                     foreach (var item in mainModelPropertys)
                     {
-                        f.Add($@"{typeName}.{item.Name}");
+                        f.Add($@"{typeName}.{item.Name} AS {typeName}_{item.Name}");
                     }
                 }
+
                 {
                     var subProperty = modelType.GetProperties().Where(w => w.GetCustomAttribute<SubModelAttribute>() != null);
                     if (subProperty != null)
@@ -81,7 +81,7 @@ namespace NewLibCore.Data.SQL.Builder
                         var subModelPropertys = propertyType.GetProperties().Where(w => w.GetCustomAttributes<PropertyValidate>().Any()).ToList();
                         foreach (var item in subModelPropertys)
                         {
-                            f.Add($@"{typeName}.{item.Name}");
+                            f.Add($@"{typeName}.{item.Name} AS {typeName}_{item.Name}");
                         }
                     }
                 }
