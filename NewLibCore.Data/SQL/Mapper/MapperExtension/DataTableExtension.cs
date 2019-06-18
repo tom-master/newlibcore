@@ -32,9 +32,6 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
 
         private static List<T> ConvertToList<T>(DataTable dt) where T : new()
         {
-            //typeof(T).GetAliasName().ToLower()
-            //var r = dt.Columns.Cast<DataColumn>().GroupBy(w => w.ColumnName.Substring(0, w.ColumnName.LastIndexOf("_")));
-
             var list = new List<T>();
             foreach (DataRow dr in dt.Rows)
             {
@@ -42,10 +39,14 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
                 var propertys = mainModel.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public);
                 foreach (var propertyInfo in propertys)
                 {
-                    var aliasName = $@"{propertyInfo.Name}";
-                    if (dt.Columns.Contains(aliasName))
+                    if (propertyInfo.PropertyType.BaseType == typeof(EntityBase))
                     {
-                        var value = dr[aliasName];
+                        var aliasName = propertyInfo.PropertyType.BaseType;
+                    }
+
+                    if (dt.Columns.Contains(propertyInfo.Name))
+                    {
+                        var value = dr[propertyInfo.Name];
                         if (value != DBNull.Value)
                         {
                             try
