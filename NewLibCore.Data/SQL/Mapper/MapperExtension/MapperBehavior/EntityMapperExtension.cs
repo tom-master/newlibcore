@@ -222,6 +222,22 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension.MapperBehavior
             _statementStore.ExecuteType = executeType;
 
             var translationResult = builder.Build();
+            var executeResult = GetResultFormCache(executeType, translationResult) ?? _execute.Execute(executeType, translationResult);
+            SetCacheFormResult(executeType, translationResult, executeResult);
+
+            return executeResult;
+        }
+
+        private static void SetCacheFormResult(ExecuteType executeType, TranslationCoreResult translationResult, ExecuteCoreResult executeResult)
+        {
+            if ((executeType == ExecuteType.SELECT || executeType == ExecuteType.SELECT_SINGLE) && DatabaseConfigFactory.Instance.Cache != null)
+            {
+                DatabaseConfigFactory.Instance.Cache.Add(translationResult.PrepareCacheKey(), executeResult);
+            }
+        }
+
+        private static ExecuteCoreResult GetResultFormCache(ExecuteType executeType, TranslationCoreResult translationResult)
+        {
             if ((executeType == ExecuteType.SELECT || executeType == ExecuteType.SELECT_SINGLE) && DatabaseConfigFactory.Instance.Cache != null)
             {
                 var cacheResult = DatabaseConfigFactory.Instance.Cache.Get(translationResult.PrepareCacheKey());
@@ -230,15 +246,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension.MapperBehavior
                     return (ExecuteCoreResult)cacheResult;
                 }
             }
-
-            var executeResult = _execute.Execute(executeType, translationResult);
-
-            if ((executeType == ExecuteType.SELECT || executeType == ExecuteType.SELECT_SINGLE) && DatabaseConfigFactory.Instance.Cache != null)
-            {
-                DatabaseConfigFactory.Instance.Cache.Add(translationResult.PrepareCacheKey(), executeResult);
-            }
-
-            return executeResult;
+            return default;
         }
     }
 
