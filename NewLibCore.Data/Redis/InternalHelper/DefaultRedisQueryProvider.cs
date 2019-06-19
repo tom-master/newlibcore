@@ -15,9 +15,9 @@ namespace NewLibCore.Data.Redis.InternalHelper
         private String _customKey;
 
         private readonly IDatabase _database = null;
-        
+
         private readonly ConnectionMultiplexer _conn;
-        
+
         #region 构造函数
 
         public DefaultRedisQueryProvider(Int32 dbIndex, String connectionString)
@@ -750,7 +750,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
             }
 
             var prefixKey = _customKey ?? RedisConnectionHelp.SysCustomKey;
-            return prefixKey + oldKey;
+            return $@"{prefixKey}{oldKey}";
         }
 
         private String ConvertJson<T>(T value)
