@@ -32,7 +32,7 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
 
         private static List<T> ConvertToList<T>(DataTable dt) where T : new()
         {
-            var list = new List<T>();
+            var list = new List<T>(); 
             foreach (DataRow dr in dt.Rows)
             {
                 var mainModel = Activator.CreateInstance<T>();
