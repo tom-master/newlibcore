@@ -742,7 +742,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
 
         #region 辅助方法
 
-        private String AddSysCustomKey(String oldKey)
+        private String GetKey(String oldKey)
         {
             if (String.IsNullOrEmpty(oldKey))
             {
