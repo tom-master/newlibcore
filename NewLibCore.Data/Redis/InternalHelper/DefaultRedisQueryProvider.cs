@@ -42,7 +42,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public Boolean StringSet(String key, String value, TimeSpan? expiry = default(TimeSpan?))
         {
-            key = AddSysCustomKey(key);
+            key = GetKey(key);
             return _database.StringSet(key, value, expiry);
         }
 
@@ -52,7 +52,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         public Boolean StringSet(IEnumerable<KeyValuePair<RedisKey, RedisValue>> keyValues)
         {
 
-            var newkeyValues = keyValues.Select(p => new KeyValuePair<RedisKey, RedisValue>(AddSysCustomKey(p.Key), p.Value)).ToList();
+            var newkeyValues = keyValues.Select(p => new KeyValuePair<RedisKey, RedisValue>(GetKey(p.Key), p.Value)).ToList();
             return _database.StringSet(newkeyValues.ToArray());
         }
 
@@ -61,7 +61,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public Boolean StringSet<T>(String key, T obj, TimeSpan? expiry = default(TimeSpan?))
         {
-            key = AddSysCustomKey(key);
+            key = GetKey(key);
             return _database.StringSet(key, ConvertJson(obj), expiry);
         }
 
@@ -70,7 +70,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public String StringGet(String key)
         {
-            key = AddSysCustomKey(key);
+            key = GetKey(key);
             return _database.StringGet(key);
         }
 
@@ -79,7 +79,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public RedisValue[] StringGet(IEnumerable<String> listKey)
         {
-            var newKeys = listKey.Select(AddSysCustomKey).ToList();
+            var newKeys = listKey.Select(GetKey).ToList();
             return _database.StringGet(ConvertRedisKeys(newKeys));
         }
 
@@ -88,7 +88,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public T StringGet<T>(String key)
         {
-            key = AddSysCustomKey(key);
+            key = GetKey(key);
             return ConvertObj<T>(_database.StringGet(key));
         }
 
@@ -97,7 +97,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public Double StringIncrement(String key, Double val = 1)
         {
-            key = AddSysCustomKey(key);
+            key = GetKey(key);
             return _database.StringIncrement(key, val);
         }
 
