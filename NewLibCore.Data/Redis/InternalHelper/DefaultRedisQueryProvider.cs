@@ -106,7 +106,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public Double StringDecrement(String key, Double val = 1)
         {
-            key = AddSysCustomKey(key);
+            key = GetKey(key);
             return _database.StringDecrement(key, val);
         }
 
@@ -119,7 +119,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public async Task<Boolean> StringSetAsync(String key, String value, TimeSpan? expiry = default(TimeSpan?))
         {
-            key = AddSysCustomKey(key);
+            key = GetKey(key);
             return await _database.StringSetAsync(key, value, expiry);
         }
 
@@ -129,7 +129,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         public async Task<Boolean> StringSetAsync(IEnumerable<KeyValuePair<RedisKey, RedisValue>> keyValues)
         {
             var newkeyValues =
-                keyValues.Select(p => new KeyValuePair<RedisKey, RedisValue>(AddSysCustomKey(p.Key), p.Value)).ToList();
+                keyValues.Select(p => new KeyValuePair<RedisKey, RedisValue>(GetKey(p.Key), p.Value)).ToList();
             return await _database.StringSetAsync(newkeyValues.ToArray());
         }
 
@@ -138,7 +138,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public async Task<Boolean> StringSetAsync<T>(String key, T obj, TimeSpan? expiry = default(TimeSpan?))
         {
-            key = AddSysCustomKey(key);
+            key = GetKey(key);
             return await _database.StringSetAsync(key, ConvertJson(obj), expiry);
         }
 
@@ -147,7 +147,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public async Task<String> StringGetAsync(String key)
         {
-            key = AddSysCustomKey(key);
+            key = GetKey(key);
             return await _database.StringGetAsync(key);
         }
 
@@ -156,7 +156,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public async Task<RedisValue[]> StringGetAsync(IEnumerable<String> listKey)
         {
-            var newKeys = listKey.Select(AddSysCustomKey).ToList();
+            var newKeys = listKey.Select(GetKey).ToList();
             return await _database.StringGetAsync(ConvertRedisKeys(newKeys));
         }
 
@@ -165,7 +165,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public async Task<T> StringGetAsync<T>(String key)
         {
-            key = AddSysCustomKey(key);
+            key = GetKey(key);
             var result = await _database.StringGetAsync(key);
             return ConvertObj<T>(result);
         }
