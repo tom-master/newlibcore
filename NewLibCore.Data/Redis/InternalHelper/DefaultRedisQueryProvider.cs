@@ -175,7 +175,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public async Task<Double> StringIncrementAsync(String key, Double val = 1)
         {
-            key = AddSysCustomKey(key);
+            key = GetKey(key);
             return await _database.StringIncrementAsync(key, val);
         }
 
@@ -184,7 +184,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public async Task<Double> StringDecrementAsync(String key, Double val = 1)
         {
-            key = AddSysCustomKey(key);
+            key = GetKey(key);
             return await _database.StringDecrementAsync(key, val);
         }
 
@@ -210,7 +210,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public Boolean HashSet<T>(String key, String dataKey, T t)
         {
-            key = AddSysCustomKey(key);
+            key = GetKey(key);
             return _database.HashSet(key, dataKey, ConvertJson(t));
         }
 
@@ -219,7 +219,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public Boolean HashDelete(String key, String dataKey)
         {
-            key = AddSysCustomKey(key);
+            key = GetKey(key);
             return _database.HashDelete(key, dataKey);
         }
 
@@ -228,7 +228,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public Int64 HashDelete(String key, IEnumerable<RedisValue> dataKeys)
         {
-            key = AddSysCustomKey(key);
+            key = GetKey(key);
             return _database.HashDelete(key, dataKeys.ToArray());
         }
 
@@ -237,7 +237,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public T HashGet<T>(String key, String dataKey)
         {
-            key = AddSysCustomKey(key);
+            key = GetKey(key);
             return ConvertObj<T>(_database.HashGet(key, dataKey));
         }
 
@@ -246,7 +246,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public Double HashIncrement(String key, String dataKey, Double val = 1)
         {
-            key = AddSysCustomKey(key);
+            key = GetKey(key);
             return _database.HashIncrement(key, dataKey, val);
         }
 
@@ -255,7 +255,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public Double HashDecrement(String key, String dataKey, Double val = 1)
         {
-            key = AddSysCustomKey(key);
+            key = GetKey(key);
             return _database.HashDecrement(key, dataKey, val);
         }
 
@@ -286,7 +286,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public async Task<Boolean> HashSetAsync<T>(String key, String dataKey, T t)
         {
-            key = AddSysCustomKey(key);
+            key = GetKey(key);
             return await _database.HashSetAsync(key, dataKey, ConvertJson(t));
         }
 
@@ -295,7 +295,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public async Task<Boolean> HashDeleteAsync(String key, String dataKey)
         {
-            key = AddSysCustomKey(key);
+            key = GetKey(key);
             return await _database.HashDeleteAsync(key, dataKey);
         }
 
@@ -304,7 +304,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public async Task<Int64> HashDeleteAsync(String key, IEnumerable<RedisValue> dataKeys)
         {
-            key = AddSysCustomKey(key);
+            key = GetKey(key);
             return await _database.HashDeleteAsync(key, dataKeys.ToArray());
         }
 
