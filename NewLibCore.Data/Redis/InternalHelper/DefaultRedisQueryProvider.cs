@@ -201,7 +201,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public Boolean HashExists(String key, String dataKey)
         {
-            key = AddSysCustomKey(key);
+            key = GetKey(key);
             return _database.HashExists(key, dataKey);
         }
 
@@ -313,7 +313,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public async Task<T> HashGeAsync<T>(String key, String dataKey)
         {
-            key = AddSysCustomKey(key);
+            key = GetKey(key);
             String value = await _database.HashGetAsync(key, dataKey);
             return ConvertObj<T>(value);
         }
@@ -323,7 +323,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public async Task<Double> HashIncrementAsync(String key, String dataKey, Double val = 1)
         {
-            key = AddSysCustomKey(key);
+            key = GetKey(key);
             return await _database.HashIncrementAsync(key, dataKey, val);
         }
 
@@ -332,7 +332,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public async Task<Double> HashDecrementAsync(String key, String dataKey, Double val = 1)
         {
-            key = AddSysCustomKey(key);
+            key = GetKey(key);
             return await _database.HashDecrementAsync(key, dataKey, val);
         }
 
@@ -358,7 +358,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public void ListRemove<T>(String key, T value)
         {
-            key = AddSysCustomKey(key);
+            key = GetKey(key);
             _database.ListRemove(key, ConvertJson(value));
         }
 
@@ -367,7 +367,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public List<T> ListRange<T>(String key)
         {
-            key = AddSysCustomKey(key);
+            key = GetKey(key);
             var values = _database.ListRange(key);
             return ConvetList<T>(values);
         }
@@ -387,7 +387,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public void ListRightPush<T>(String key, T value)
         {
-            key = AddSysCustomKey(key);
+            key = GetKey(key);
             _database.ListRightPush(key, ConvertJson(value));
         }
 
@@ -396,7 +396,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public T ListRightPop<T>(String key)
         {
-            key = AddSysCustomKey(key);
+            key = GetKey(key);
             var value = _database.ListRightPop(key);
             return ConvertObj<T>(value);
         }
@@ -406,7 +406,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public void ListLeftPush<T>(String key, T value)
         {
-            key = AddSysCustomKey(key);
+            key = GetKey(key);
             _database.ListLeftPush(key, ConvertJson(value));
         }
 
@@ -438,7 +438,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public async Task<Int64> ListRemoveAsync<T>(String key, T value)
         {
-            key = AddSysCustomKey(key);
+            key = GetKey(key);
             return await _database.ListRemoveAsync(key, ConvertJson(value));
         }
 
@@ -447,7 +447,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public async Task<List<T>> ListRangeAsync<T>(String key)
         {
-            key = AddSysCustomKey(key);
+            key = GetKey(key);
             var values = await _database.ListRangeAsync(key);
             return ConvetList<T>(values);
         }
@@ -457,7 +457,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public async Task<Int64> ListRightPushAsync<T>(String key, T value)
         {
-            key = AddSysCustomKey(key);
+            key = GetKey(key);
             return await _database.ListRightPushAsync(key, ConvertJson(value));
         }
 
