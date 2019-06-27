@@ -540,7 +540,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public Int64 SortedSetLength(String key)
         {
-            key = AddSysCustomKey(key);
+            key = GetKey(key);
             return _database.SortedSetLength(key);
         }
 
@@ -553,7 +553,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public async Task<Boolean> SortedSetAddAsync<T>(String key, T value, Double score)
         {
-            key = AddSysCustomKey(key);
+            key = GetKey(key);
             return await _database.SortedSetAddAsync(key, ConvertJson(value), score);
         }
 
@@ -562,7 +562,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public async Task<Boolean> SortedSetRemoveAsync<T>(String key, T value)
         {
-            key = AddSysCustomKey(key);
+            key = GetKey(key);
             return await _database.SortedSetRemoveAsync(key, ConvertJson(value));
         }
 
