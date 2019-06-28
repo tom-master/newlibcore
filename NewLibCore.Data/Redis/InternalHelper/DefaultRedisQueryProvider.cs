@@ -485,7 +485,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public async Task<T> ListLeftPopAsync<T>(String key)
         {
-            key = AddSysCustomKey(key);
+            key = GetKey(key);
             var value = await _database.ListLeftPopAsync(key);
             return ConvertObj<T>(value);
         }
@@ -571,7 +571,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public async Task<List<T>> SortedSetRangeByRankAsync<T>(String key)
         {
-            key = AddSysCustomKey(key);
+            key = GetKey(key);
             var values = await _database.SortedSetRangeByRankAsync(key);
             return ConvetList<T>(values);
         }
