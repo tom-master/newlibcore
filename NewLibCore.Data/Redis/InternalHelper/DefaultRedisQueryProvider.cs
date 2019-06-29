@@ -581,7 +581,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public async Task<Int64> SortedSetLengthAsync(String key)
         {
-            key = AddSysCustomKey(key);
+            key = GetKey(key);
             return await _database.SortedSetLengthAsync(key);
         }
 
@@ -596,7 +596,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public Boolean KeyDelete(String key)
         {
-            key = AddSysCustomKey(key);
+            key = GetKey(key);
             return _database.KeyDelete(key);
         }
 
