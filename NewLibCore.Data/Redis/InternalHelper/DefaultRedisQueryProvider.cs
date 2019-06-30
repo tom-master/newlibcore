@@ -512,7 +512,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public Boolean SortedSetAdd<T>(String key, T value, Double score)
         {
-            key = AddSysCustomKey(key);
+            key = GetKey(key);
             return _database.SortedSetAdd(key, ConvertJson(value), score);
         }
 
@@ -521,7 +521,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public Boolean SortedSetRemove<T>(String key, T value)
         {
-            key = AddSysCustomKey(key);
+            key = GetKey(key);
             return _database.SortedSetRemove(key, ConvertJson(value));
         }
 
@@ -530,7 +530,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public List<T> SortedSetRangeByRank<T>(String key)
         {
-            key = AddSysCustomKey(key);
+            key = GetKey(key);
             var values = _database.SortedSetRangeByRank(key);
             return ConvetList<T>(values);
         }
