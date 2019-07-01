@@ -264,7 +264,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public List<T> HashKeys<T>(String key)
         {
-            key = AddSysCustomKey(key);
+            key = GetKey(key);
             return ConvetList<T>(_database.HashKeys(key));
         }
 
