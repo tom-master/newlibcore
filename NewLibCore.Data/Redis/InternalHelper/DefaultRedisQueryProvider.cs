@@ -377,7 +377,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public List<T> ListRange<T>(String key, Int32 start, Int32 end)
         {
-            key = AddSysCustomKey(key);
+            key = GetKey(key);
             var values = _database.ListRange(key, start, end);
             return ConvetList<T>(values);
         }
