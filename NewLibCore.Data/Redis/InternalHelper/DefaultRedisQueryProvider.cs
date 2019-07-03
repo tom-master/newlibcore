@@ -277,7 +277,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public async Task<Boolean> HashExistsAsync(String key, String dataKey)
         {
-            key = AddSysCustomKey(key);
+            key = GetKey(key);
             return await _database.HashExistsAsync(key, dataKey);
         }
 
