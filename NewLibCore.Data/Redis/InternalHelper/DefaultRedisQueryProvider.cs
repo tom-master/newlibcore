@@ -605,7 +605,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public Int64 KeyDelete(List<String> keys)
         {
-            var newKeys = keys.Select(AddSysCustomKey).ToList();
+            var newKeys = keys.Select(GetKey).ToList();
             return _database.KeyDelete(ConvertRedisKeys(newKeys));
         }
 
