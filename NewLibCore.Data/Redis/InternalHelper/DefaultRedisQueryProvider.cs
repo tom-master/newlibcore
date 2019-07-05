@@ -614,7 +614,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public Boolean KeyExists(String key)
         {
-            key = AddSysCustomKey(key);
+            key = GetKey(key);
             return _database.KeyExists(key);
         }
 
