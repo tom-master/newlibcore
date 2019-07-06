@@ -623,7 +623,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public Boolean KeyRename(String key, String newKey)
         {
-            key = AddSysCustomKey(key);
+            key = GetKey(key);
             return _database.KeyRename(key, newKey);
         }
 
