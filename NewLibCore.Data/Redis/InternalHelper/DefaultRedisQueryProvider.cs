@@ -632,7 +632,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public Boolean KeyExpire(String key, TimeSpan? expiry = default(TimeSpan?))
         {
-            key = AddSysCustomKey(key);
+            key = GetKey(key);
             return _database.KeyExpire(key, expiry);
         }
 
