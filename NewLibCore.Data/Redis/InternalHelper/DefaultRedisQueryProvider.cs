@@ -791,7 +791,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
 
         public RedisType GetKeyType(String key)
         {
-            key = AddSysCustomKey(key);
+            key = GetKey(key);
             return _database.KeyType(key);
         }
     }
