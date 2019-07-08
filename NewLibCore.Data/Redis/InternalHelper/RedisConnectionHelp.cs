@@ -15,7 +15,9 @@ namespace NewLibCore.Data.Redis.InternalHelper
         private static ConsoleLogger _consoleLogger;
 
         private static readonly Object _locker = new Object();
+
         private static ConnectionMultiplexer _instance;
+
         private static readonly ConcurrentDictionary<String, ConnectionMultiplexer> _connectionCache = new ConcurrentDictionary<String, ConnectionMultiplexer>();
 
         static RedisConnectionHelp()
@@ -72,7 +74,8 @@ namespace NewLibCore.Data.Redis.InternalHelper
         {
             var connect = ConnectionMultiplexer.Connect(connectionString);
             connect.PreserveAsyncOrder = false;
-            //注册如下事件
+            
+            
             connect.ConnectionFailed += MuxerConnectionFailed;
             connect.ConnectionRestored += MuxerConnectionRestored;
             connect.ErrorMessage += MuxerErrorMessage;
