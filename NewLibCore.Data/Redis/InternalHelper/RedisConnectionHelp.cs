@@ -36,7 +36,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         public static ConnectionMultiplexer Instance
         {
             get
-            {
+            { 
                 if (_instance == null)
                 {
                     lock (_locker)
