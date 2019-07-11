@@ -37,7 +37,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
             var tableName = typeof(TModel).GetTableName().TableName;
             var template = ReplacePlaceholder(propertyInfos, tableName);
-            return TranslateResult.CreateResult().Append(template, propertyInfos.Select(c => new EntityParameter(c.Key, c.Value))).Execute();
+            return TranslateResult.CreateResult(null).Append(template, propertyInfos.Select(c => new EntityParameter(c.Key, c.Value))).Execute();
         }
 
 
