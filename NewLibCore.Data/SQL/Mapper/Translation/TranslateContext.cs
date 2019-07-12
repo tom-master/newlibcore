@@ -48,7 +48,7 @@ namespace NewLibCore.Data.SQL.Mapper
             _tableAliasMapper = new List<KeyValuePair<String, String>>();
 
 
-            Result = TranslateResult.CreateResult();
+            Result = TranslateResult.CreateResult(null);
         }
 
         internal TranslateResult Result { get; private set; }
