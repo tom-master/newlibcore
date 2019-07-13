@@ -49,7 +49,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         private static ConnectionMultiplexer InitConnection(String connectionString = null)
         {
             var connect = ConnectionMultiplexer.Connect(connectionString);
-            connect.PreserveAsyncOrder = false;
+            //connect.PreserveAsyncOrder = false;
 
 
             connect.ConnectionFailed += MuxerConnectionFailed;
