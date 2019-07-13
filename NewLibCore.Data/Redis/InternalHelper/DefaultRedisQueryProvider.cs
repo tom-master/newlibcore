@@ -27,7 +27,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
                 throw new ArgumentException("connectionString不能为空");
             }
 
-            _conn = RedisConnectionHelp.GetConnectionMultiplexer(connectionString);
+            _conn = RedisConnectionHelp.GetConnection(connectionString);
             _database = _conn.GetDatabase(dbIndex);
         }
 

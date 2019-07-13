@@ -16,8 +16,6 @@ namespace NewLibCore.Data.Redis.InternalHelper
 
         private static readonly Object _locker = new Object();
 
-        private static ConnectionMultiplexer _instance;
-
         private static readonly ConcurrentDictionary<String, ConnectionMultiplexer> _connectionCache = new ConcurrentDictionary<String, ConnectionMultiplexer>();
 
         static RedisConnectionHelp()
@@ -30,33 +28,13 @@ namespace NewLibCore.Data.Redis.InternalHelper
             _consoleLogger = new ConsoleLogger();
         }
 
-        /// <summary>
-        /// 单例获取
-        /// </summary>
-        public static ConnectionMultiplexer Instance
-        {
-            get
-            { 
-                if (_instance == null)
-                {
-                    lock (_locker)
-                    {
-                        if (_instance == null || !_instance.IsConnected)
-                        {
-                            _instance = GetManager();
-                        }
-                    }
-                }
-                return _instance;
-            }
-        }
 
         /// <summary>
         /// 缓存获取
         /// </summary>
         /// <param name="connectionString"></param>
         /// <returns></returns>
-        public static ConnectionMultiplexer GetConnectionMultiplexer(String connectionString)
+        public static ConnectionMultiplexer GetConnection(String connectionString)
         {
             if (String.IsNullOrEmpty(connectionString))
             {
@@ -65,17 +43,23 @@ namespace NewLibCore.Data.Redis.InternalHelper
 
             if (!_connectionCache.ContainsKey(connectionString))
             {
-                _connectionCache[connectionString] = GetManager(connectionString);
+                lock (_locker)
+                {
+                    if (!_connectionCache.ContainsKey(connectionString) || _connectionCache[connectionString].IsConnected)
+                    {
+                        _connectionCache[connectionString] = InitConnection(connectionString);
+                    }
+                }
             }
             return _connectionCache[connectionString];
         }
 
-        private static ConnectionMultiplexer GetManager(String connectionString = null)
+        private static ConnectionMultiplexer InitConnection(String connectionString = null)
         {
             var connect = ConnectionMultiplexer.Connect(connectionString);
             connect.PreserveAsyncOrder = false;
-            
-            
+
+
             connect.ConnectionFailed += MuxerConnectionFailed;
             connect.ConnectionRestored += MuxerConnectionRestored;
             connect.ErrorMessage += MuxerErrorMessage;
