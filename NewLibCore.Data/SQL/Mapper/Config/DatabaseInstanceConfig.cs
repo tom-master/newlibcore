@@ -6,6 +6,9 @@ using NewLibCore.Data.SQL.Mapper.Extension;
 
 namespace NewLibCore.Data.SQL.Mapper.Config
 {
+    /// <summary>
+    /// 数据库实例配置
+    /// </summary>
     internal abstract class DatabaseInstanceConfig
     {
         private readonly ILogger _logger;
@@ -20,7 +23,7 @@ namespace NewLibCore.Data.SQL.Mapper.Config
 
         public virtual String UnionPlaceHolder { get { return Guid.NewGuid().ToString().Replace("-", ""); } }
 
-        internal MapperCache Cache { get; set; }
+        internal ResultCache Cache { get; set; }
 
         protected DatabaseInstanceConfig(ILogger logger)
         {
@@ -35,31 +38,74 @@ namespace NewLibCore.Data.SQL.Mapper.Config
             InitOrderType();
         }
 
+        /// <summary>
+        /// 追加关系类型
+        /// </summary>
+
         protected abstract void AppendRelationType();
 
+        /// <summary>
+        /// 实例扩展
+        /// </summary>
+        /// <value></value>
         internal virtual InstanceExtension Extension { get; }
 
+        /// <summary>
+        /// 日志
+        /// </summary>
+        /// <value></value>
         internal ILogger Logger
         {
             get { return _logger; }
         }
 
+        /// <summary>
+        /// 获取数据库连接对象实例
+        /// </summary>
+        /// <returns></returns>
         internal abstract DbConnection GetConnectionInstance();
 
+        /// <summary>
+        /// 获取SQL语句参数对象实例
+        /// </summary>
+        /// <returns></returns>
         internal abstract DbParameter GetParameterInstance();
 
+        /// <summary>
+        /// 逻辑关系构建
+        /// </summary>
+        /// <param name="relationType"></param>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
         internal abstract String RelationBuilder(RelationType relationType, String left, Object right);
 
+        /// <summary>
+        /// 连接语句构建
+        /// </summary>
+        /// <param name="joinType"></param>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
         internal String JoinBuilder(JoinType joinType, String left, String right)
         {
             return String.Format(JoinTypeMapper[joinType], left, right);
         }
 
+        /// <summary>
+        /// 排序语句构建
+        /// </summary>
+        /// <param name="orderByType"></param>
+        /// <param name="left"></param>
+        /// <returns></returns>
         internal String OrderByBuilder(OrderByType orderByType, String left)
         {
             return String.Format(OrderTypeMapper[orderByType], left);
         }
 
+        /// <summary>
+        /// 初始化默认逻辑关系
+        /// </summary>
         private void InitRelationType()
         {
             RelationMapper.Add(RelationType.AND, "{0} AND {1}");
@@ -74,6 +120,9 @@ namespace NewLibCore.Data.SQL.Mapper.Config
             AppendRelationType();
         }
 
+        /// <summary>
+        /// 初始化默认连接语句
+        /// </summary>
         private void InitJoinType()
         {
             JoinTypeMapper.Add(JoinType.NONE, "");
@@ -82,6 +131,9 @@ namespace NewLibCore.Data.SQL.Mapper.Config
             JoinTypeMapper.Add(JoinType.RIGHT, "RIGHT JOIN {0} AS {1} ON");
         }
 
+        /// <summary>
+        /// 初始化排序类型
+        /// </summary>
         private void InitOrderType()
         {
             OrderTypeMapper.Add(OrderByType.ASC, "ORDER BY {0} ASC");
@@ -89,13 +141,27 @@ namespace NewLibCore.Data.SQL.Mapper.Config
         }
     }
 
-
+    /// <summary>
+    /// 数据库实例扩展
+    /// </summary>
     internal class InstanceExtension
     {
+        /// <summary>
+        /// 自增主键
+        /// </summary>
+        /// <value></value>
         public String Identity { get; internal set; }
 
+        /// <summary>
+        /// 执行受影响的行数
+        /// </summary>
+        /// <value></value>
         public String RowCount { get; internal set; }
 
+        /// <summary>
+        /// 分页 每页条数与多少页
+        /// </summary>
+        /// <value></value>
         public String Page { get; internal set; }
     }
 }
