@@ -201,7 +201,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// <param name="key"></param>
         /// <param name="dataKeys"></param>
         /// <returns></returns>
-        //Int64 HashDelete(String key, IEnumerable<RedisValue> dataKeys);
+        Int64 HashDelete(String key, IEnumerable<RedisValue> dataKeys);
 
 
         /// <summary>
@@ -281,7 +281,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// <param name="key"></param>
         /// <param name="dataKeys"></param>
         /// <returns></returns>
-        //Task<Int64> HashDeleteAsync(String key, IEnumerable<RedisValue> dataKeys);
+        Task<Int64> HashDeleteAsync(String key, IEnumerable<RedisValue> dataKeys);
 
 
         /// <summary>
@@ -542,7 +542,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         /// <param name="keys">rediskey</param>
         /// <returns>成功删除的个数</returns>
-        Int64 KeyDelete(List<String> keys);
+        Int64 KeyDelete(IEnumerable<String> keys);
 
         /// <summary>
         /// 判断key是否存储

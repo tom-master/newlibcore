@@ -42,7 +42,6 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public Boolean StringSet(String key, String value, TimeSpan? expiry = default(TimeSpan?))
         {
-            key = GetKey(key);
             return _database.StringSet(key, value, expiry);
         }
 
@@ -51,8 +50,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public Boolean StringSet(IEnumerable<KeyValuePair<RedisKey, RedisValue>> keyValues)
         {
-
-            var newkeyValues = keyValues.Select(p => new KeyValuePair<RedisKey, RedisValue>(GetKey(p.Key), p.Value)).ToList();
+            var newkeyValues = keyValues.Select(p => new KeyValuePair<RedisKey, RedisValue>(p.Key, p.Value)).ToList();
             return _database.StringSet(newkeyValues.ToArray());
         }
 
@@ -61,7 +59,6 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public Boolean StringSet<T>(String key, T obj, TimeSpan? expiry = default(TimeSpan?))
         {
-            key = GetKey(key);
             return _database.StringSet(key, ConvertJson(obj), expiry);
         }
 
@@ -70,7 +67,6 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public String StringGet(String key)
         {
-            key = GetKey(key);
             return _database.StringGet(key);
         }
 
@@ -78,9 +74,8 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// 获取多个Key
         /// </summary>
         public RedisValue[] StringGet(IEnumerable<String> listKey)
-        {
-            var newKeys = listKey.Select(GetKey).ToList();
-            return _database.StringGet(ConvertRedisKeys(newKeys));
+        { 
+            return _database.StringGet(ConvertRedisKeys(listKey));
         }
 
         /// <summary>
@@ -88,7 +83,6 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public T StringGet<T>(String key)
         {
-            key = GetKey(key);
             return ConvertObj<T>(_database.StringGet(key));
         }
 
@@ -97,7 +91,6 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public Double StringIncrement(String key, Double val = 1)
         {
-            key = GetKey(key);
             return _database.StringIncrement(key, val);
         }
 
@@ -106,7 +99,6 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public Double StringDecrement(String key, Double val = 1)
         {
-            key = GetKey(key);
             return _database.StringDecrement(key, val);
         }
 
@@ -119,7 +111,6 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public async Task<Boolean> StringSetAsync(String key, String value, TimeSpan? expiry = default(TimeSpan?))
         {
-            key = GetKey(key);
             return await _database.StringSetAsync(key, value, expiry);
         }
 
@@ -128,8 +119,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public async Task<Boolean> StringSetAsync(IEnumerable<KeyValuePair<RedisKey, RedisValue>> keyValues)
         {
-            var newkeyValues =
-                keyValues.Select(p => new KeyValuePair<RedisKey, RedisValue>(GetKey(p.Key), p.Value)).ToList();
+            var newkeyValues = keyValues.Select(p => new KeyValuePair<RedisKey, RedisValue>(p.Key, p.Value)).ToList();
             return await _database.StringSetAsync(newkeyValues.ToArray());
         }
 
@@ -137,8 +127,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// 保存一个对象
         /// </summary>
         public async Task<Boolean> StringSetAsync<T>(String key, T obj, TimeSpan? expiry = default(TimeSpan?))
-        {
-            key = GetKey(key);
+        { 
             return await _database.StringSetAsync(key, ConvertJson(obj), expiry);
         }
 
@@ -146,8 +135,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// 获取单个key的值
         /// </summary>
         public async Task<String> StringGetAsync(String key)
-        {
-            key = GetKey(key);
+        { 
             return await _database.StringGetAsync(key);
         }
 
@@ -155,17 +143,15 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// 获取多个Key
         /// </summary>
         public async Task<RedisValue[]> StringGetAsync(IEnumerable<String> listKey)
-        {
-            var newKeys = listKey.Select(GetKey).ToList();
-            return await _database.StringGetAsync(ConvertRedisKeys(newKeys));
+        { 
+            return await _database.StringGetAsync(ConvertRedisKeys(listKey));
         }
 
         /// <summary>
         /// 获取一个key的对象
         /// </summary>
         public async Task<T> StringGetAsync<T>(String key)
-        {
-            key = GetKey(key);
+        { 
             var result = await _database.StringGetAsync(key);
             return ConvertObj<T>(result);
         }
@@ -174,8 +160,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// 为数字增长val
         /// </summary>
         public async Task<Double> StringIncrementAsync(String key, Double val = 1)
-        {
-            key = GetKey(key);
+        { 
             return await _database.StringIncrementAsync(key, val);
         }
 
@@ -183,8 +168,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// 为数字减少val
         /// </summary>
         public async Task<Double> StringDecrementAsync(String key, Double val = 1)
-        {
-            key = GetKey(key);
+        { 
             return await _database.StringDecrementAsync(key, val);
         }
 
@@ -200,8 +184,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// 判断某个数据是否已经被缓存
         /// </summary>
         public Boolean HashExists(String key, String dataKey)
-        {
-            key = GetKey(key);
+        { 
             return _database.HashExists(key, dataKey);
         }
 
@@ -209,8 +192,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// 存储数据到hash表
         /// </summary>
         public Boolean HashSet<T>(String key, String dataKey, T t)
-        {
-            key = GetKey(key);
+        { 
             return _database.HashSet(key, dataKey, ConvertJson(t));
         }
 
@@ -218,8 +200,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// 移除hash中的某值
         /// </summary>
         public Boolean HashDelete(String key, String dataKey)
-        {
-            key = GetKey(key);
+        { 
             return _database.HashDelete(key, dataKey);
         }
 
@@ -227,8 +208,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// 移除hash中的多个值
         /// </summary>
         public Int64 HashDelete(String key, IEnumerable<RedisValue> dataKeys)
-        {
-            key = GetKey(key);
+        { 
             return _database.HashDelete(key, dataKeys.ToArray());
         }
 
@@ -236,8 +216,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// 从hash表获取数据
         /// </summary>
         public T HashGet<T>(String key, String dataKey)
-        {
-            key = GetKey(key);
+        { 
             return ConvertObj<T>(_database.HashGet(key, dataKey));
         }
 
@@ -245,8 +224,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// 为数字增长val
         /// </summary>
         public Double HashIncrement(String key, String dataKey, Double val = 1)
-        {
-            key = GetKey(key);
+        { 
             return _database.HashIncrement(key, dataKey, val);
         }
 
@@ -254,8 +232,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// 为数字减少val
         /// </summary>
         public Double HashDecrement(String key, String dataKey, Double val = 1)
-        {
-            key = GetKey(key);
+        { 
             return _database.HashDecrement(key, dataKey, val);
         }
 
@@ -263,8 +240,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// 获取hashkey所有Redis key
         /// </summary>
         public List<T> HashKeys<T>(String key)
-        {
-            key = GetKey(key);
+        { 
             return ConvetList<T>(_database.HashKeys(key));
         }
 
@@ -276,8 +252,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// 判断某个数据是否已经被缓存
         /// </summary>
         public async Task<Boolean> HashExistsAsync(String key, String dataKey)
-        {
-            key = GetKey(key);
+        { 
             return await _database.HashExistsAsync(key, dataKey);
         }
 
@@ -285,8 +260,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// 存储数据到hash表
         /// </summary>
         public async Task<Boolean> HashSetAsync<T>(String key, String dataKey, T t)
-        {
-            key = GetKey(key);
+        { 
             return await _database.HashSetAsync(key, dataKey, ConvertJson(t));
         }
 
@@ -294,8 +268,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// 移除hash中的某值
         /// </summary>
         public async Task<Boolean> HashDeleteAsync(String key, String dataKey)
-        {
-            key = GetKey(key);
+        { 
             return await _database.HashDeleteAsync(key, dataKey);
         }
 
@@ -303,8 +276,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// 移除hash中的多个值
         /// </summary>
         public async Task<Int64> HashDeleteAsync(String key, IEnumerable<RedisValue> dataKeys)
-        {
-            key = GetKey(key);
+        { 
             return await _database.HashDeleteAsync(key, dataKeys.ToArray());
         }
 
@@ -312,8 +284,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// 从hash表获取数据
         /// </summary>
         public async Task<T> HashGeAsync<T>(String key, String dataKey)
-        {
-            key = GetKey(key);
+        { 
             String value = await _database.HashGetAsync(key, dataKey);
             return ConvertObj<T>(value);
         }
@@ -322,8 +293,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// 为数字增长val
         /// </summary>
         public async Task<Double> HashIncrementAsync(String key, String dataKey, Double val = 1)
-        {
-            key = GetKey(key);
+        { 
             return await _database.HashIncrementAsync(key, dataKey, val);
         }
 
@@ -331,8 +301,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// 为数字减少val
         /// </summary>
         public async Task<Double> HashDecrementAsync(String key, String dataKey, Double val = 1)
-        {
-            key = GetKey(key);
+        { 
             return await _database.HashDecrementAsync(key, dataKey, val);
         }
 
@@ -340,8 +309,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// 获取hashkey所有Redis key
         /// </summary>
         public async Task<List<T>> HashKeysAsync<T>(String key)
-        {
-            key = GetKey(key);
+        { 
             return ConvetList<T>(await _database.HashKeysAsync(key));
         }
 
@@ -357,8 +325,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// 移除指定ListId的内部List的值
         /// </summary>
         public void ListRemove<T>(String key, T value)
-        {
-            key = GetKey(key);
+        { 
             _database.ListRemove(key, ConvertJson(value));
         }
 
@@ -366,8 +333,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// 获取指定key的List
         /// </summary>
         public List<T> ListRange<T>(String key)
-        {
-            key = GetKey(key);
+        { 
             var values = _database.ListRange(key);
             return ConvetList<T>(values);
         }
@@ -376,8 +342,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// 获取指定key的List
         /// </summary>
         public List<T> ListRange<T>(String key, Int32 start, Int32 end)
-        {
-            key = GetKey(key);
+        { 
             var values = _database.ListRange(key, start, end);
             return ConvetList<T>(values);
         }
@@ -386,8 +351,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// 入队
         /// </summary>
         public void ListRightPush<T>(String key, T value)
-        {
-            key = GetKey(key);
+        { 
             _database.ListRightPush(key, ConvertJson(value));
         }
 
@@ -395,8 +359,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// 出队
         /// </summary>
         public T ListRightPop<T>(String key)
-        {
-            key = GetKey(key);
+        {  
             var value = _database.ListRightPop(key);
             return ConvertObj<T>(value);
         }
@@ -405,8 +368,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// 入栈
         /// </summary>
         public void ListLeftPush<T>(String key, T value)
-        {
-            key = GetKey(key);
+        { 
             _database.ListLeftPush(key, ConvertJson(value));
         }
 
@@ -414,8 +376,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// 出栈
         /// </summary>
         public T ListLeftPop<T>(String key)
-        {
-            key = GetKey(key);
+        { 
             var value = _database.ListLeftPop(key);
             return ConvertObj<T>(value);
         }
@@ -424,8 +385,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// 获取集合中的数量
         /// </summary>
         public Int64 ListLength(String key)
-        {
-            key = GetKey(key);
+        { 
             return _database.ListLength(key);
         }
 
@@ -437,8 +397,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// 移除指定ListId的内部List的值
         /// </summary>
         public async Task<Int64> ListRemoveAsync<T>(String key, T value)
-        {
-            key = GetKey(key);
+        { 
             return await _database.ListRemoveAsync(key, ConvertJson(value));
         }
 
@@ -446,8 +405,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// 获取指定key的List
         /// </summary>
         public async Task<List<T>> ListRangeAsync<T>(String key)
-        {
-            key = GetKey(key);
+        { 
             var values = await _database.ListRangeAsync(key);
             return ConvetList<T>(values);
         }
@@ -456,8 +414,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// 入队
         /// </summary>
         public async Task<Int64> ListRightPushAsync<T>(String key, T value)
-        {
-            key = GetKey(key);
+        { 
             return await _database.ListRightPushAsync(key, ConvertJson(value));
         }
 
@@ -465,8 +422,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// 出队
         /// </summary>
         public async Task<T> ListRightPopAsync<T>(String key)
-        {
-            key = GetKey(key);
+        { 
             var value = await _database.ListRightPopAsync(key);
             return ConvertObj<T>(value);
         }
@@ -475,8 +431,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// 入栈
         /// </summary>
         public async Task<Int64> ListLeftPushAsync<T>(String key, T value)
-        {
-            key = GetKey(key);
+        { 
             return await _database.ListLeftPushAsync(key, ConvertJson(value));
         }
 
@@ -484,8 +439,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// 出栈
         /// </summary>
         public async Task<T> ListLeftPopAsync<T>(String key)
-        {
-            key = GetKey(key);
+        { 
             var value = await _database.ListLeftPopAsync(key);
             return ConvertObj<T>(value);
         }
@@ -494,8 +448,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// 获取集合中的数量
         /// </summary>
         public async Task<Int64> ListLengthAsync(String key)
-        {
-            key = GetKey(key);
+        { 
             return await _database.ListLengthAsync(key);
         }
 
@@ -511,8 +464,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// 添加
         /// </summary>
         public Boolean SortedSetAdd<T>(String key, T value, Double score)
-        {
-            key = GetKey(key);
+        { 
             return _database.SortedSetAdd(key, ConvertJson(value), score);
         }
 
@@ -520,8 +472,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// 删除
         /// </summary>
         public Boolean SortedSetRemove<T>(String key, T value)
-        {
-            key = GetKey(key);
+        { 
             return _database.SortedSetRemove(key, ConvertJson(value));
         }
 
@@ -529,8 +480,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// 获取全部
         /// </summary>
         public List<T> SortedSetRangeByRank<T>(String key)
-        {
-            key = GetKey(key);
+        { 
             var values = _database.SortedSetRangeByRank(key);
             return ConvetList<T>(values);
         }
@@ -539,8 +489,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// 获取集合中的数量
         /// </summary>
         public Int64 SortedSetLength(String key)
-        {
-            key = GetKey(key);
+        { 
             return _database.SortedSetLength(key);
         }
 
@@ -552,8 +501,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// 添加
         /// </summary>
         public async Task<Boolean> SortedSetAddAsync<T>(String key, T value, Double score)
-        {
-            key = GetKey(key);
+        { 
             return await _database.SortedSetAddAsync(key, ConvertJson(value), score);
         }
 
@@ -561,8 +509,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// 删除
         /// </summary>
         public async Task<Boolean> SortedSetRemoveAsync<T>(String key, T value)
-        {
-            key = GetKey(key);
+        { 
             return await _database.SortedSetRemoveAsync(key, ConvertJson(value));
         }
 
@@ -570,8 +517,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// 获取全部
         /// </summary>
         public async Task<List<T>> SortedSetRangeByRankAsync<T>(String key)
-        {
-            key = GetKey(key);
+        { 
             var values = await _database.SortedSetRangeByRankAsync(key);
             return ConvetList<T>(values);
         }
@@ -580,8 +526,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// 获取集合中的数量
         /// </summary>
         public async Task<Int64> SortedSetLengthAsync(String key)
-        {
-            key = GetKey(key);
+        { 
             return await _database.SortedSetLengthAsync(key);
         }
 
@@ -595,26 +540,23 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// 删除单个key
         /// </summary>
         public Boolean KeyDelete(String key)
-        {
-            key = GetKey(key);
+        { 
             return _database.KeyDelete(key);
         }
 
         /// <summary>
         /// 删除多个key
         /// </summary>
-        public Int64 KeyDelete(List<String> keys)
-        {
-            var newKeys = keys.Select(GetKey).ToList();
-            return _database.KeyDelete(ConvertRedisKeys(newKeys));
+        public Int64 KeyDelete(IEnumerable<String> keys)
+        { 
+            return _database.KeyDelete(ConvertRedisKeys(keys));
         }
 
         /// <summary>
         /// 判断key是否存储
         /// </summary>
         public Boolean KeyExists(String key)
-        {
-            key = GetKey(key);
+        { 
             return _database.KeyExists(key);
         }
 
@@ -622,8 +564,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// 重新命名key
         /// </summary>
         public Boolean KeyRename(String key, String newKey)
-        {
-            key = GetKey(key);
+        { 
             return _database.KeyRename(key, newKey);
         }
 
@@ -631,8 +572,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// 设置Key的时间
         /// </summary>
         public Boolean KeyExpire(String key, TimeSpan? expiry = default(TimeSpan?))
-        {
-            key = GetKey(key);
+        { 
             return _database.KeyExpire(key, expiry);
         }
 
@@ -742,17 +682,6 @@ namespace NewLibCore.Data.Redis.InternalHelper
 
         #region 辅助方法
 
-        private String GetKey(String oldKey)
-        {
-            if (String.IsNullOrEmpty(oldKey))
-            {
-                throw new ArgumentException("oldKey不能为空");
-            }
-
-            var prefixKey = _customKey ?? RedisConnectionHelp.SysCustomKey;
-            return $@"{prefixKey}{oldKey}";
-        }
-
         private String ConvertJson<T>(T value)
         {
             var result = value is String ? value.ToString() : JsonConvert.SerializeObject(value, Formatting.Indented, new JsonSerializerSettings
@@ -777,7 +706,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
             return values.Select(s => JsonConvert.DeserializeObject<T>(s)).ToList();
         }
 
-        private RedisKey[] ConvertRedisKeys(List<String> redisKeys)
+        private RedisKey[] ConvertRedisKeys(IEnumerable<String> redisKeys)
         {
             return redisKeys.Select(redisKey => (RedisKey)redisKey).ToArray();
         }
@@ -790,8 +719,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         };
 
         public RedisType GetKeyType(String key)
-        {
-            key = GetKey(key);
+        { 
             return _database.KeyType(key);
         }
     }

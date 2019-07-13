@@ -9,21 +9,13 @@ namespace NewLibCore.Data.Redis.InternalHelper
     /// </summary>
     internal class RedisConnectionHelp
     {
-        //系统自定义Key前缀
-        public static readonly String SysCustomKey = "";
-
         private static ConsoleLogger _consoleLogger;
 
         private static readonly Object _locker = new Object();
 
         private static readonly ConcurrentDictionary<String, ConnectionMultiplexer> _connectionCache = new ConcurrentDictionary<String, ConnectionMultiplexer>();
 
-        static RedisConnectionHelp()
-        {
-            new RedisConnectionHelp();
-        }
-
-        private RedisConnectionHelp()
+        internal RedisConnectionHelp()
         {
             _consoleLogger = new ConsoleLogger();
         }
@@ -34,7 +26,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         /// <param name="connectionString"></param>
         /// <returns></returns>
-        public static ConnectionMultiplexer GetConnection(String connectionString)
+        internal static ConnectionMultiplexer GetConnection(String connectionString)
         {
             if (String.IsNullOrEmpty(connectionString))
             {
