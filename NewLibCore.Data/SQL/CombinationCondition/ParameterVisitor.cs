@@ -3,6 +3,9 @@
 namespace NewLibCore.Data.SQL.CombinationCondition
 {
 
+    /// <summary>
+    /// 表达式树 参数访问类
+    /// </summary>
     internal sealed class ParameterVisitor : ExpressionVisitor
     {
         internal ParameterVisitor(ParameterExpression paramExpr)
