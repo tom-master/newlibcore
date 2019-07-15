@@ -31,12 +31,12 @@ namespace NewLibCore.Data.SQL.Mapper
             return new ModifyMapper<TModel>(_executeCore).Update(model, expression);
         }
 
-        public ISelectEntityMapper<TModel> Select<TModel>(Expression<Func<TModel, dynamic>> fields = null) where TModel : EntityBase, new()
+        public ISearchMapper<TModel> Select<TModel>(Expression<Func<TModel, dynamic>> fields = null) where TModel : EntityBase, new()
         {
             return new SearchMapper<TModel>(_executeCore).Select(fields);
         }
 
-        public ISelectEntityMapper<TModel> Select<TModel, T>(Expression<Func<TModel, T, dynamic>> fields = null) where TModel : EntityBase, new()
+        public ISearchMapper<TModel> Select<TModel, T>(Expression<Func<TModel, T, dynamic>> fields = null) where TModel : EntityBase, new()
         where T : EntityBase, new()
         {
             return new SearchMapper<TModel>(_executeCore).Select(fields);

@@ -5,7 +5,7 @@ using NewLibCore.Data.SQL.Mapper.Extension;
 
 namespace NewLibCore.Data.SQL.Mapper.MapperExtension.MapperBehavior.Imp
 {
-    internal class AddMapper<TModel> : IAddEntityMapper<TModel> where TModel : EntityBase, new()
+    internal class AddMapper<TModel> : IAddMapper<TModel> where TModel : EntityBase, new()
     {
         private readonly ExecuteCore _executeCore;
 
