@@ -34,7 +34,7 @@ namespace NewLibCore.Data.SQL.Builder
         /// 构建一个修改操作的翻译结果
         /// </summary>
         /// <returns></returns>
-        public TranslationCoreResult Build()
+        public TranslationResult Build()
         {
             _instance.SetUpdateTime();
 
@@ -47,7 +47,7 @@ namespace NewLibCore.Data.SQL.Builder
             var placeHolder = String.Join(",", propertys.Select(p => $@"{p.Key}=@{p.Key}"));
             var entityParameters = propertys.Select(c => new EntityParameter($@"@{c.Key}", c.Value));
 
-            var translation = new TranslationCore(_statementStore);
+            var translation = new TranslateExpression(_statementStore);
             translation.Result.Append($@"UPDATE {typeof(TModel).GetAliasName()} SET {String.Join(",", placeHolder)}", entityParameters);
             if (_statementStore.Where != null)
             {

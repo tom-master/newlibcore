@@ -2,6 +2,9 @@
 
 namespace NewLibCore.Data.SQL.Mapper.Extension
 {
+    /// <summary>
+    /// 执行的类型
+    /// </summary>
     public enum ExecuteType
     {
         SELECT = 1,
@@ -10,6 +13,9 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
         SELECT_SINGLE = 4
     }
 
+    /// <summary>
+    /// 数据库类型
+    /// </summary>
     public enum DatabaseType
     {
         NONE = 0,
@@ -17,12 +23,18 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
         MYSQL = 2
     }
 
+    /// <summary>
+    /// 排序类型
+    /// </summary>
     public enum OrderByType
     {
         ASC = 1,
         DESC = 2
     }
 
+    /// <summary>
+    /// 连接类型
+    /// </summary>
     public enum JoinType
     {
         NONE = 0,
@@ -31,6 +43,9 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
         RIGHT = 3
     }
 
+    /// <summary>
+    /// 关系类型
+    /// </summary>
     internal enum RelationType
     {
         AND = 1,

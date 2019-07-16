@@ -29,7 +29,7 @@ namespace NewLibCore.Data.SQL.Builder
         /// 构建一个新增操作的翻译结果
         /// </summary>
         /// <returns></returns>
-        public TranslationCoreResult Build()
+        public TranslationResult Build()
         {
             _instance.OnChanged();
             if (_isVerifyModel)
@@ -42,7 +42,7 @@ namespace NewLibCore.Data.SQL.Builder
             var placeHolder = String.Join(",", propertyInfos.Select(key => $@"@{key.Key}"));
             var entityParameters = propertyInfos.Select(c => new EntityParameter($@"@{c.Key}", c.Value));
 
-            var translationResult = new TranslationCoreResult();
+            var translationResult = new TranslationResult();
             translationResult.Append($@" INSERT {typeof(TModel).GetAliasName()} ({fields}) VALUES ({placeHolder}) {DatabaseConfigFactory.Instance.Extension.Identity}", entityParameters);
             return translationResult;
         }

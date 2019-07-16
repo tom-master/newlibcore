@@ -44,13 +44,13 @@ namespace NewLibCore.Data.SQL.Mapper
         public List<TModel> ExecuteToList<TModel>(String sql, IEnumerable<EntityParameter> parameters = null) where TModel : new()
         {
             Parameter.Validate(sql);
-            return new SqlExecutor(_executeCore).ToList<TModel>(sql, parameters);
+            return new RawExecutor(_executeCore).ToList<TModel>(sql, parameters);
         }
 
         public TModel ExecuteToSingle<TModel>(String sql, IEnumerable<EntityParameter> parameters = null) where TModel : new()
         {
             Parameter.Validate(sql);
-            return new SqlExecutor(_executeCore).ToSingle<TModel>(sql, parameters);
+            return new RawExecutor(_executeCore).ToSingle<TModel>(sql, parameters);
         }
 
         public void OpenTransaction()

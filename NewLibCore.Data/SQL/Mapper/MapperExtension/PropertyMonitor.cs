@@ -18,7 +18,9 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
         internal PropertyValidate[] Validates { get; set; }
     }
 
-
+    /// <summary>
+    /// 监控实体值变更
+    /// </summary>
     public abstract class PropertyMonitor
     {
         private readonly IList<PO> _propertys = new List<PO>();
@@ -58,10 +60,19 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
             return _propertys.Select(s => new KeyValuePair<String, Object>(s.PropertyName, s.Value)).ToList().AsReadOnly();
         }
 
+        /// <summary>
+        /// 设置更新时间
+        /// </summary>
         protected internal virtual void SetUpdateTime() { }
 
+        /// <summary>
+        /// 设置添加时间
+        /// </summary>
         protected internal virtual void SetAddTime() { }
 
+        /// <summary>
+        /// 验证属性是否合法
+        /// </summary>
         protected internal void Validate()
         {
             foreach (var po in _propertys)
@@ -112,11 +123,20 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
             }
         }
 
+        /// <summary>
+        /// 清空存储的属性
+        /// </summary>
         internal void Reset()
         {
             _propertys.Clear();
         }
 
+        /// <summary>
+        /// 如果属性值为空并且用默认值特性进行了修饰则设置属性默认值
+        /// </summary>
+        /// <param name="defaultValueAttribute"></param>
+        /// <param name="propertyItem"></param>
+        /// <param name="rawPropertyValue"></param>
         private void SetPropertyDefaultValue(DefaultValueAttribute defaultValueAttribute, PO propertyItem, Object rawPropertyValue)
         {
             Parameter.Validate(defaultValueAttribute);
@@ -129,6 +149,11 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
             }
         }
 
+        /// <summary>
+        /// 抛出异常
+        /// </summary>
+        /// <param name="validateBase"></param>
+        /// <param name="po"></param>
         private void ThrowValidateException(PropertyValidate validateBase, PO po)
         {
             Parameter.Validate(po);
@@ -136,6 +161,12 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
             throw new Exception(validateBase.FailReason($@"{po.DeclaringTypeFullName}.{po.PropertyName}"));
         }
 
+        /// <summary>
+        /// 将属性上同时应用的多个特性进行排序
+        /// </summary>
+        /// <param name="propertyName"></param>
+        /// <param name="validates"></param>
+        /// <returns></returns>
         private IList<PropertyValidate> ValidateAttributeOrder(String propertyName, PropertyValidate[] validates)
         {
             Parameter.Validate(validates);

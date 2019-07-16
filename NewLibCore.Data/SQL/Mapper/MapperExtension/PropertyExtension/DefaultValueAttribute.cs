@@ -2,6 +2,9 @@
 
 namespace NewLibCore.Data.SQL.Mapper.Extension.PropertyExtension
 {
+    /// <summary>
+    /// 提供默认值
+    /// </summary>
     public class DefaultValueAttribute : PropertyValidate
     {
         public DefaultValueAttribute(Object value) : this(value.GetType(), value)

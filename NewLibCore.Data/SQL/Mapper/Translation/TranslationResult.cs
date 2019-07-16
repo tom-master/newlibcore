@@ -6,13 +6,16 @@ using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper.Translation
 {
-    internal class TranslationCoreResult
+    /// <summary>
+    /// 翻译结果管理
+    /// </summary>
+    internal class TranslationResult
     {
         private StringBuilder _originSql;
 
         private IList<EntityParameter> _parameters;
 
-        internal TranslationCoreResult()
+        internal TranslationResult()
         {
             _originSql = new StringBuilder();
             _parameters = new List<EntityParameter>();

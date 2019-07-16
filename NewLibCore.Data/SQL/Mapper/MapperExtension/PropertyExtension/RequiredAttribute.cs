@@ -2,6 +2,9 @@
 
 namespace NewLibCore.Data.SQL.Mapper.Extension.PropertyExtension
 {
+	/// <summary>
+	/// 非空验证
+	/// </summary>
 	public class RequiredAttribute : PropertyValidate
 	{
 		public override Int32 Order

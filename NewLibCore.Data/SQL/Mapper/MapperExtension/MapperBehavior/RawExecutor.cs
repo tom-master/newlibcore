@@ -255,7 +255,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension.MapperBehavior
             return executeResult;
         }
 
-        private static void SetCacheFormResult(ExecuteType executeType, TranslationCoreResult translationResult, RawExecuteResult executeResult)
+        private static void SetCacheFormResult(ExecuteType executeType, TranslationResult translationResult, RawExecuteResult executeResult)
         {
             if ((executeType == ExecuteType.SELECT || executeType == ExecuteType.SELECT_SINGLE) && DatabaseConfigFactory.Instance.Cache != null)
             {
@@ -263,7 +263,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension.MapperBehavior
             }
         }
 
-        private static RawExecuteResult GetResultFormCache(ExecuteType executeType, TranslationCoreResult translationResult)
+        private static RawExecuteResult GetResultFormCache(ExecuteType executeType, TranslationResult translationResult)
         {
             if ((executeType == ExecuteType.SELECT || executeType == ExecuteType.SELECT_SINGLE) && DatabaseConfigFactory.Instance.Cache != null)
             {

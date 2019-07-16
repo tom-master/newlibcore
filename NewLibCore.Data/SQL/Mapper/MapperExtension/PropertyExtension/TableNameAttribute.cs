@@ -2,13 +2,14 @@ using System;
 
 namespace NewLibCore.Data.SQL.Mapper.Extension.PropertyExtension
 {
+    /// <summary>
+    /// 琛ㄥ悕
+    /// </summary>
     public class TableNameAttribute : Attribute
     {
         public String TableName { get; private set; }
 
-        /// <summary>
-        /// 表数据变更时讲缓存失效
-        /// </summary>
+        
         public Boolean InvalidCacheThenUpdate { get; private set; }
 
         public TableNameAttribute(String name, Boolean invalidCacheThenUpdate) : this(name)

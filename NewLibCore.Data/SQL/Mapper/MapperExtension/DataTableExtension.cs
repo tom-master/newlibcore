@@ -7,6 +7,9 @@ using System.Reflection;
 
 namespace NewLibCore.Data.SQL.Mapper.Extension
 {
+    /// <summary>
+    /// 将一个DataTable转换为指定的集合
+    /// </summary>
     internal static class DataTableExtension
     {
         /// <summary>

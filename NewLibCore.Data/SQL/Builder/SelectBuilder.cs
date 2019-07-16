@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using NewLibCore.Data.SQL.Mapper.Config;
+using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
 using NewLibCore.Data.SQL.Mapper.Extension;
 using NewLibCore.Data.SQL.Mapper.Extension.AssociationMapperExtension;
 using NewLibCore.Data.SQL.Mapper.Extension.PropertyExtension;
@@ -31,9 +32,9 @@ namespace NewLibCore.Data.SQL.Builder
         /// 构建一个查询操作的翻译结果
         /// </summary>
         /// <returns></returns>
-        public TranslationCoreResult Build()
+        public TranslationResult Build()
         {
-            var translation = new TranslationCore(_statementStore);
+            var translation = new TranslateExpression(_statementStore);
             {
                 var statement = StatementParse(_statementStore.Field);
                 translation.Result.Append($@"SELECT {statement.fields} FROM {typeof(TModel).GetAliasName()} AS {statement.tableName}");

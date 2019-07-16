@@ -10,6 +10,6 @@ namespace NewLibCore.Data.SQL.Builder
         /// 构建一个翻译结果对象
         /// </summary>
         /// <returns></returns>
-        TranslationCoreResult Build();
+        TranslationResult Build();
     }
 }

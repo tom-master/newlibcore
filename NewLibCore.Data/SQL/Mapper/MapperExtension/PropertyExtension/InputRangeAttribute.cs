@@ -2,7 +2,9 @@
 
 namespace NewLibCore.Data.SQL.Mapper.Extension.PropertyExtension
 {
-
+    /// <summary>
+    /// 验证输入是否在指定范围内
+    /// </summary>
     public class InputRangeAttribute : PropertyValidate
     {
         private readonly Int32 _min;
@@ -25,6 +27,7 @@ namespace NewLibCore.Data.SQL.Mapper.Extension.PropertyExtension
         public InputRangeAttribute(Int32 max, Boolean canbeEmpty = false) : this(0, max)
         {
         }
+
 
         public override Boolean IsValidate(Object value)
         {
