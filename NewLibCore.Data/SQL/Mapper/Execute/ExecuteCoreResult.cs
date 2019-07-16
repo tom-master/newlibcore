@@ -2,11 +2,14 @@
 
 namespace NewLibCore.Data.SQL.Mapper.Execute
 {
-    internal class ExecuteCoreResult
+    /// <summary>
+    /// 存储未包装过的sql执行结果
+    /// </summary>
+    internal class RawExecuteResult
     {
         internal Object Value { get; set; }
 
-        internal ExecuteCoreResult()
+        internal RawExecuteResult()
         {
         }
     }

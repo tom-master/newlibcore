@@ -10,6 +10,9 @@ using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper.Execute
 {
+    /// <summary>
+    /// sql语句执行
+    /// </summary>
     public sealed class ExecuteCore : IDisposable
     {
         private DbConnection _connection;
@@ -26,12 +29,18 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
             _connection = DatabaseConfigFactory.Instance.GetConnectionInstance();
         }
 
+        /// <summary>
+        /// 开启一个事物
+        /// </summary>
         internal void OpenTransaction()
         {
             DatabaseConfigFactory.Instance.Logger.Write("INFO", "open transaction");
             _useTransaction = true;
         }
 
+        /// <summary>
+        /// 提交一个事物
+        /// </summary>
         internal void Commit()
         {
             if (_useTransaction)
@@ -46,6 +55,9 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
             throw new Exception("没有启动事务，无法执行事务提交");
         }
 
+        /// <summary>
+        /// 回滚一个事物
+        /// </summary>
         internal void Rollback()
         {
             if (_useTransaction)
@@ -60,13 +72,27 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
             throw new Exception("没有启动事务，无法执行事务回滚");
         }
 
-        internal ExecuteCoreResult Execute(ExecuteType executeType, TranslationCoreResult translationCore)
+        /// <summary>
+        /// 将表达式翻译结果执行
+        /// </summary>
+        /// <param name="executeType"></param>
+        /// <param name="translationCore"></param>
+        /// <returns></returns>
+        internal RawExecuteResult Execute(ExecuteType executeType, TranslationCoreResult translationCore)
         {
             Parameter.Validate(translationCore);
-            return Execute(executeType, translationCore.GetSql(), translationCore.GetParameters(), CommandType.Text);
+            return RawExecute(executeType, translationCore.GetSql(), translationCore.GetParameters(), CommandType.Text);
         }
 
-        internal ExecuteCoreResult Execute(ExecuteType executeType, String sql, IEnumerable<EntityParameter> parameters = null, CommandType commandType = CommandType.Text)
+        /// <summary>
+        /// 执行原生sql语句
+        /// </summary>
+        /// <param name="executeType"></param>
+        /// <param name="sql"></param>
+        /// <param name="parameters"></param>
+        /// <param name="commandType"></param>
+        /// <returns></returns>
+        internal RawExecuteResult RawExecute(ExecuteType executeType, String sql, IEnumerable<EntityParameter> parameters = null, CommandType commandType = CommandType.Text)
         {
             try
             {
@@ -88,7 +114,7 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
                     DatabaseConfigFactory.Instance.Logger.Write("INFO", $@"ExecuteType:{executeType}");
                     DatabaseConfigFactory.Instance.Logger.Write("INFO", $@"SQL:{sql}");
                     DatabaseConfigFactory.Instance.Logger.Write("INFO", $@"PARAMETERS:{(parameters == null || !parameters.Any() ? "" : String.Join($@"{Environment.NewLine}", parameters.Select(s => $@"{s.Key}----{s.Value}")))}");
-                    var executeResult = new ExecuteCoreResult();
+                    var executeResult = new RawExecuteResult();
                     if (executeType == ExecuteType.SELECT)
                     {
                         using (var dr = cmd.ExecuteReader())
@@ -118,6 +144,9 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
             }
         }
 
+        /// <summary>
+        /// 打开实例连接
+        /// </summary>
         private void Open()
         {
             if (_connection.State == ConnectionState.Closed)
@@ -127,6 +156,10 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
             }
         }
 
+        /// <summary>
+        /// 事物起始
+        /// </summary>
+        /// <returns></returns>
         private DbTransaction BeginTransaction()
         {
             if (_useTransaction)

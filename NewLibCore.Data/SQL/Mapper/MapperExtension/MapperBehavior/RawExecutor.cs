@@ -13,39 +13,63 @@ using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper.MapperExtension.MapperBehavior
 {
-    internal class SqlExecutor : ISqlExecutor
+    /// <summary>
+    /// 直接执行sql语句
+    /// </summary>
+    internal class RawExecutor : IRawExecutor
     {
         private ExecuteCore _executeCore;
 
-        public SqlExecutor(ExecuteCore executeCore)
+        public RawExecutor(ExecuteCore executeCore)
         {
             _executeCore = executeCore;
         }
 
+        /// <summary>
+        /// 获取一个TModel的对象列表
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="parameters"></param>
+        /// <typeparam name="TModel"></typeparam>
+        /// <returns></returns>
         public List<TModel> ToList<TModel>(String sql, IEnumerable<EntityParameter> parameters = null) where TModel : new()
         {
-            var dataTable = (DataTable)InternalExecuteSql(ExecuteType.SELECT, sql, parameters).Value;
+            var dataTable = (DataTable)ExecuteRawSql(ExecuteType.SELECT, sql, parameters).Value;
             return dataTable.ToList<TModel>();
         }
 
+        /// <summary>
+        /// 获取一个TModel对象
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="parameters"></param>
+        /// <typeparam name="TModel"></typeparam>
+        /// <returns></returns>
         public TModel ToSingle<TModel>(String sql, IEnumerable<EntityParameter> parameters = null) where TModel : new()
         {
             var modelType = typeof(TModel);
-            ExecuteCoreResult executeResult;
+            RawExecuteResult executeResult;
             if (modelType.IsNumeric())
             {
-                executeResult = InternalExecuteSql(ExecuteType.SELECT_SINGLE, sql, parameters);
+                executeResult = ExecuteRawSql(ExecuteType.SELECT_SINGLE, sql, parameters);
                 return (TModel)Convert.ChangeType(executeResult.Value, modelType);
             }
 
-            executeResult = InternalExecuteSql(ExecuteType.SELECT, sql, parameters);
+            executeResult = ExecuteRawSql(ExecuteType.SELECT, sql, parameters);
             var dataTable = (DataTable)executeResult.Value;
             return dataTable.ToSingle<TModel>();
         }
 
-        private ExecuteCoreResult InternalExecuteSql(ExecuteType executeType, String sql, IEnumerable<EntityParameter> parameters = null)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="executeType"></param>
+        /// <param name="sql"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        private RawExecuteResult ExecuteRawSql(ExecuteType executeType, String sql, IEnumerable<EntityParameter> parameters = null)
         {
-            return _executeCore.Execute(executeType, sql, parameters);
+            return _executeCore.RawExecute(executeType, sql, parameters);
         }
     }
 
@@ -216,7 +240,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension.MapperBehavior
             return this;
         }
 
-        private ExecuteCoreResult InternalExecuteSql(ExecuteType executeType)
+        private RawExecuteResult InternalExecuteSql(ExecuteType executeType)
         {
             IBuilder<TModel> builder = new SelectBuilder<TModel>(_statementStore);
             _statementStore.ExecuteType = executeType;
@@ -231,7 +255,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension.MapperBehavior
             return executeResult;
         }
 
-        private static void SetCacheFormResult(ExecuteType executeType, TranslationCoreResult translationResult, ExecuteCoreResult executeResult)
+        private static void SetCacheFormResult(ExecuteType executeType, TranslationCoreResult translationResult, RawExecuteResult executeResult)
         {
             if ((executeType == ExecuteType.SELECT || executeType == ExecuteType.SELECT_SINGLE) && DatabaseConfigFactory.Instance.Cache != null)
             {
@@ -239,14 +263,14 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension.MapperBehavior
             }
         }
 
-        private static ExecuteCoreResult GetResultFormCache(ExecuteType executeType, TranslationCoreResult translationResult)
+        private static RawExecuteResult GetResultFormCache(ExecuteType executeType, TranslationCoreResult translationResult)
         {
             if ((executeType == ExecuteType.SELECT || executeType == ExecuteType.SELECT_SINGLE) && DatabaseConfigFactory.Instance.Cache != null)
             {
                 var cacheResult = DatabaseConfigFactory.Instance.Cache.Get(translationResult.PrepareCacheKey());
                 if (cacheResult != null)
                 {
-                    return (ExecuteCoreResult)cacheResult;
+                    return (RawExecuteResult)cacheResult;
                 }
             }
             return default;
