@@ -13,6 +13,10 @@ using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Builder
 {
+    /// <summary>
+    /// 查询操作builder类
+    /// </summary>
+    /// <typeparam name="TModel"></typeparam>
     internal class SelectBuilder<TModel> : IBuilder<TModel> where TModel : PropertyMonitor, new()
     {
         private readonly StatementStore _statementStore;
@@ -23,6 +27,10 @@ namespace NewLibCore.Data.SQL.Builder
             _statementStore = statementStore;
         }
 
+        /// <summary>
+        /// 构建一个查询操作的翻译结果
+        /// </summary>
+        /// <returns></returns>
         public TranslationCoreResult Build()
         {
             var translation = new TranslationCore(_statementStore);

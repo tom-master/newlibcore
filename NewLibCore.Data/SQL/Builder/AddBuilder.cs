@@ -8,6 +8,11 @@ using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Builder
 {
+
+    /// <summary>
+    /// 新增操作builder类
+    /// </summary>
+    /// <typeparam name="TModel"></typeparam>
     internal class AddBuilder<TModel> : IBuilder<TModel> where TModel : PropertyMonitor, new()
     {
         private readonly Boolean _isVerifyModel;
@@ -20,6 +25,10 @@ namespace NewLibCore.Data.SQL.Builder
             _instance = model;
         }
 
+        /// <summary>
+        /// 构建一个新增操作的翻译结果
+        /// </summary>
+        /// <returns></returns>
         public TranslationCoreResult Build()
         {
             _instance.OnChanged();
