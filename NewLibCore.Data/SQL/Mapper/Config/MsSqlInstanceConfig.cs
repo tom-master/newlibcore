@@ -5,6 +5,9 @@ using NewLibCore.Data.SQL.Mapper.Extension;
 
 namespace NewLibCore.Data.SQL.Mapper.Config
 {
+    /// <summary>
+    /// mssql数据库实例配置
+    /// </summary>
     internal class MsSqlInstanceConfig : DatabaseInstanceConfig
     {
         protected internal MsSqlInstanceConfig(ILogger logger) : base(logger)
