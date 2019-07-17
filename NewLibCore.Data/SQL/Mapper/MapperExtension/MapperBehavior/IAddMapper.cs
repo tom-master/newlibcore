@@ -6,7 +6,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension.MapperBehavior
     /// 新增操作
     /// </summary>
     /// <typeparam name="TModel"></typeparam>
-    public interface IAddEntityMapper<TModel> where TModel : EntityBase, new()
+    public interface IAddMapper<TModel> where TModel : EntityBase, new()
     {
         /// <summary>
         /// 新增一个TModel

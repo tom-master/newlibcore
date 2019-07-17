@@ -8,7 +8,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension.MapperBehavior
     /// 更新操作
     /// </summary>
     /// <typeparam name="TModel"></typeparam>
-    public interface IUpdateEntityMapper<TModel> where TModel : EntityBase, new()
+    public interface IModifyMapper<TModel> where TModel : EntityBase, new()
     {
         /// <summary>
         /// 更新一个TModel
