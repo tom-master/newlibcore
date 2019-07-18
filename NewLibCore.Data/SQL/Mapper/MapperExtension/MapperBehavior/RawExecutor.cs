@@ -69,9 +69,4 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension.MapperBehavior
             return _executeCore.RawExecute(executeType, sql, parameters);
         }
     }
-
-   
-    
-
-    
 }

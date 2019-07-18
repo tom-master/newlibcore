@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 using NewLibCore.Data.SQL.Mapper.Execute;
 using NewLibCore.Data.SQL.Mapper.Extension;
 using NewLibCore.Data.SQL.Mapper.MapperExtension.MapperBehavior;
+using NewLibCore.Data.SQL.Mapper.MapperExtension.MapperBehavior.Imp;
 using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper
@@ -20,25 +21,25 @@ namespace NewLibCore.Data.SQL.Mapper
         public TModel Add<TModel>(TModel model) where TModel : EntityBase, new()
         {
             Parameter.Validate(model);
-            return new AddEntityMapper<TModel>(_executeCore).Add(model);
+            return new AddMapper<TModel>(_executeCore).Add(model);
         }
 
         public Boolean Modify<TModel>(TModel model, Expression<Func<TModel, Boolean>> expression) where TModel : EntityBase, new()
         {
             Parameter.Validate(model);
             Parameter.Validate(expression);
-            return new UpdateEntityMapper<TModel>(_executeCore).Update(model, expression);
+            return new ModifyMapper<TModel>(_executeCore).Update(model, expression);
         }
 
         public ISelectEntityMapper<TModel> Select<TModel>(Expression<Func<TModel, dynamic>> fields = null) where TModel : EntityBase, new()
         {
-            return new SelectEntityMapper<TModel>(_executeCore).Select(fields);
+            return new SearchMapper<TModel>(_executeCore).Select(fields);
         }
 
         public ISelectEntityMapper<TModel> Select<TModel, T>(Expression<Func<TModel, T, dynamic>> fields = null) where TModel : EntityBase, new()
         where T : EntityBase, new()
         {
-            return new SelectEntityMapper<TModel>(_executeCore).Select(fields);
+            return new SearchMapper<TModel>(_executeCore).Select(fields);
         }
 
         public List<TModel> ExecuteToList<TModel>(String sql, IEnumerable<EntityParameter> parameters = null) where TModel : new()
