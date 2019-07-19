@@ -71,26 +71,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension.MapperBehavior
     }
 
    
-    internal class UpdateEntityMapper<TModel> : IUpdateEntityMapper<TModel> where TModel : EntityBase, new()
-    {
-        private ExecuteCore _execute;
-        private StatementStore _statementStore;
-
-        public UpdateEntityMapper(ExecuteCore executeCore)
-        {
-            _execute = executeCore;
-            _statementStore = new StatementStore();
-        }
-
-        public Boolean Update(TModel model, Expression<Func<TModel, Boolean>> expression)
-        {
-            _statementStore.Add(expression);
-            _statementStore.ExecuteType = ExecuteType.UPDATE;
-            IBuilder<TModel> builder = new ModifyBuilder<TModel>(model, _statementStore, true);
-            var executeResult = _execute.Execute(ExecuteType.UPDATE, builder.Build());
-            return (Int32)executeResult.Value > 0;
-        }
-    }
+    
 
     
 }
