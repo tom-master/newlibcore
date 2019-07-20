@@ -6,7 +6,7 @@ using NewLibCore.Data.SQL.Mapper.Extension;
 
 namespace NewLibCore.Data.SQL.Mapper.MapperExtension.MapperBehavior.Imp
 {
-    internal class ModifyMapper<TModel> : IUpdateEntityMapper<TModel> where TModel : EntityBase, new()
+    internal class ModifyMapper<TModel> : IModifyMapper<TModel> where TModel : EntityBase, new()
     {
         private ExecuteCore _execute;
         private StatementStore _statementStore;
