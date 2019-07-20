@@ -9,6 +9,9 @@ using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper
 {
+    /// <summary>
+    /// 实体参数
+    /// </summary>
     public class EntityParameter
     {
         public EntityParameter(String key, Object value)
@@ -20,9 +23,9 @@ namespace NewLibCore.Data.SQL.Mapper
             Value = ParseValueType(value);
         }
 
-        public String Key { get; private set; }
+        internal String Key { get; private set; }
 
-        public Object Value { get; private set; }
+        internal Object Value { get; private set; }
 
         public static implicit operator DbParameter(EntityParameter entityParameter)
         {
@@ -34,6 +37,11 @@ namespace NewLibCore.Data.SQL.Mapper
             return parameter;
         }
 
+        /// <summary>
+        /// 转换传入的数据类型
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         private Object ParseValueType(Object obj)
         {
             Parameter.Validate(obj);

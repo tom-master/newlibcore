@@ -9,6 +9,9 @@ using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper
 {
+    /// <summary>
+    /// 将对应的操作翻译为sql并执行
+    /// </summary>
     public sealed class EntityMapper : IDisposable
     {
         private readonly ExecuteCore _executeCore;
