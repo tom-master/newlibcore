@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using NewLibCore.Data.SQL.Mapper.Execute;
-using NewLibCore.Data.SQL.Mapper.Extension;
-using NewLibCore.Data.SQL.Mapper.MapperExtension.MapperBehavior;
-using NewLibCore.Data.SQL.Mapper.MapperExtension.MapperBehavior.Imp;
+using NewLibCore.Data.SQL.Mapper.EntityExtension;
+using NewLibCore.Data.SQL.Mapper.Execute; 
+using NewLibCore.Data.SQL.Mapper.OperationProvider;
+using NewLibCore.Data.SQL.Mapper.OperationProvider.Imp;
 using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper

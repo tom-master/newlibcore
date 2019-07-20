@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NewLibCore.Data.SQL.Mapper.Extension.PropertyExtension
+namespace NewLibCore.Data.SQL.Mapper.AttributeExtension
 {
     /// <summary>
     /// 基本的属性验证类

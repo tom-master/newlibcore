@@ -1,8 +1,8 @@
 using System;
 using System.Linq;
-using NewLibCore.Data.SQL.Mapper.Extension.PropertyExtension;
+using NewLibCore.Data.SQL.Mapper.AttributeExtension; 
 
-namespace NewLibCore.Data.SQL.Mapper.Extension
+namespace  NewLibCore.Data.SQL.Mapper.EntityExtension
 {
     public static class TypeExtension
     {

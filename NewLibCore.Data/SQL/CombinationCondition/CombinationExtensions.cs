@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq.Expressions;
-using NewLibCore.Data.SQL.Mapper.Extension;
+using NewLibCore.Data.SQL.Mapper.EntityExtension;
 
 namespace NewLibCore.Data.SQL.CombinationCondition
 {

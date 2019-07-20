@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Data.Common;
-using MySql.Data.MySqlClient;
-using NewLibCore.Data.SQL.Mapper.Extension;
+using MySql.Data.MySqlClient; 
 
 namespace NewLibCore.Data.SQL.Mapper.Config
 {

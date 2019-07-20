@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Threading;
 using NewLibCore.Data.SQL.Mapper;
+using NewLibCore.Data.SQL.Mapper.AttributeExtension;
+using NewLibCore.Data.SQL.Mapper.AttributeExtension.Association;
 using NewLibCore.Data.SQL.Mapper.Config;
-using NewLibCore.Data.SQL.Mapper.Extension;
-using NewLibCore.Data.SQL.Mapper.Extension.AssociationMapperExtension;
-using NewLibCore.Data.SQL.Mapper.Extension.PropertyExtension;
-using DefaultValueAttribute = NewLibCore.Data.SQL.Mapper.Extension.PropertyExtension.DefaultValueAttribute;
+using NewLibCore.Data.SQL.Mapper.EntityExtension;  
 
 namespace NewLibCore.Run
 {

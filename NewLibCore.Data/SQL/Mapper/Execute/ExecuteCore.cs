@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
-using NewLibCore.Data.SQL.Mapper.Config;
-using NewLibCore.Data.SQL.Mapper.Extension;
+using NewLibCore.Data.SQL.Mapper.Config; 
 using NewLibCore.Data.SQL.Mapper.Translation;
 using NewLibCore.Validate;
 

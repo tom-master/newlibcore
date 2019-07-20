@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using NewLibCore.Data.SQL.Mapper.Extension;
+using NewLibCore.Data.SQL.Mapper.EntityExtension;
 
-namespace NewLibCore.Data.SQL.Mapper.MapperExtension.MapperBehavior
+namespace NewLibCore.Data.SQL.Mapper.OperationProvider
 {
     /// <summary>
     /// 查询操作

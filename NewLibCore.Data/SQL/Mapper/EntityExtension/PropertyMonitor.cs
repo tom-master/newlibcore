@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using NewLibCore.Data.SQL.Mapper.Extension.PropertyExtension;
+using NewLibCore.Data.SQL.Mapper.AttributeExtension;
+using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Data.SQL.Mapper.Extension
+namespace  NewLibCore.Data.SQL.Mapper.EntityExtension
 {
     internal class PO
     {

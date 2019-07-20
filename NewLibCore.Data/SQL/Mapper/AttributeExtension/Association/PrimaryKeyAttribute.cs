@@ -1,7 +1,6 @@
-﻿using System;
-using NewLibCore.Data.SQL.Mapper.Extension.PropertyExtension;
+﻿using System; 
 
-namespace NewLibCore.Data.SQL.Mapper.Extension.AssociationMapperExtension
+namespace NewLibCore.Data.SQL.Mapper.AttributeExtension.Association
 {
 	/// <summary>
 	/// 主键特性

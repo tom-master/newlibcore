@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NewLibCore.Data.SQL.Mapper.Extension.AssociationMapperExtension
+namespace NewLibCore.Data.SQL.Mapper.AttributeExtension.Association
 {
     /// <summary>
     /// 关联子表特性

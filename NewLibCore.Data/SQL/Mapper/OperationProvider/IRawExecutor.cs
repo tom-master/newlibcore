@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using NewLibCore.Data.SQL.Mapper.Extension;
 
-namespace NewLibCore.Data.SQL.Mapper.MapperExtension.MapperBehavior
+namespace NewLibCore.Data.SQL.Mapper.OperationProvider
 {
     public interface IRawExecutor
     {

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using NewLibCore.Data.SQL.Mapper.Cache;
-using NewLibCore.Data.SQL.Mapper.Extension;
 
 namespace NewLibCore.Data.SQL.Mapper.Config
 {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NewLibCore.Data.SQL.Mapper.Extension.PropertyExtension
+namespace NewLibCore.Data.SQL.Mapper.AttributeExtension
 {
     /// <summary>
     /// 验证输入是否在指定范围内

@@ -2,8 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
-using NewLibCore.Data.SQL.Mapper.Extension;
+using NewLibCore.Data.SQL.Mapper;
+using NewLibCore.Data.SQL.Mapper.EntityExtension;
+using NewLibCore.Data.SQL.Mapper.ExpressionStatment; 
 using NewLibCore.Validate;
 /// <summary>
 /// 语句对象存储

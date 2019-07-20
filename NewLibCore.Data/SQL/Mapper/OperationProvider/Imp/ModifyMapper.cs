@@ -1,10 +1,10 @@
 using System;
 using System.Linq.Expressions;
 using NewLibCore.Data.SQL.Builder;
-using NewLibCore.Data.SQL.Mapper.Execute;
-using NewLibCore.Data.SQL.Mapper.Extension;
+using NewLibCore.Data.SQL.Mapper.EntityExtension;
+using NewLibCore.Data.SQL.Mapper.Execute; 
 
-namespace NewLibCore.Data.SQL.Mapper.MapperExtension.MapperBehavior.Imp
+namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
 {
     internal class ModifyMapper<TModel> : IModifyMapper<TModel> where TModel : EntityBase, new()
     {

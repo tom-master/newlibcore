@@ -1,9 +1,9 @@
 using System;
 using NewLibCore.Data.SQL.Builder;
+using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Data.SQL.Mapper.Execute;
-using NewLibCore.Data.SQL.Mapper.Extension;
 
-namespace NewLibCore.Data.SQL.Mapper.MapperExtension.MapperBehavior.Imp
+namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
 {
     internal class AddMapper<TModel> : IAddMapper<TModel> where TModel : EntityBase, new()
     {

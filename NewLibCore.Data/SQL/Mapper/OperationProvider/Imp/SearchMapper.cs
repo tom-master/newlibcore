@@ -5,12 +5,12 @@ using System.Diagnostics;
 using System.Linq.Expressions;
 using NewLibCore.Data.SQL.Builder;
 using NewLibCore.Data.SQL.Mapper.Config;
+using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Data.SQL.Mapper.Execute;
-using NewLibCore.Data.SQL.Mapper.Extension;
 using NewLibCore.Data.SQL.Mapper.Translation;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Data.SQL.Mapper.MapperExtension.MapperBehavior.Imp
+namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
 {
     internal class SearchMapper<TModel> : ISearchMapper<TModel> where TModel : EntityBase, new()
     {
