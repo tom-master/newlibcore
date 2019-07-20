@@ -13,9 +13,6 @@ using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper.MapperExtension.MapperBehavior
 {
-    /// <summary>
-    /// 直接执行sql语句
-    /// </summary>
     internal class RawExecutor : IRawExecutor
     {
         private ExecuteCore _executeCore;
