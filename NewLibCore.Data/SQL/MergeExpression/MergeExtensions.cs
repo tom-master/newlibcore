@@ -19,7 +19,7 @@ namespace NewLibCore.Data.SQL.MergeExpression
         /// <typeparam name="T"></typeparam>
         public static void And<T>(this Merge<T> left, Expression<Func<T, Boolean>> right) where T : EntityBase
         {
-            if (left.MergeExpression == default)
+            if (left.MergeExpression == null)
             {
                 left.MergeExpression = right;
                 return;
