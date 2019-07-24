@@ -38,11 +38,6 @@ namespace NewLibCore.Data.SQL.Mapper.Config
             return String.Format(RelationMapper[relationType], left, right);
         }
 
-        internal override DbTransaction GetTransactionInstance(DbConnection dbConnection)
-        {
-            return dbConnection.BeginTransaction();
-        }
-
         internal override InstanceExtension Extension
         {
             get

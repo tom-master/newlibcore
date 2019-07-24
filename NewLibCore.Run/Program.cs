@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using NewLibCore.Data.SQL.Mapper;
 using NewLibCore.Data.SQL.Mapper.AttributeExtension;
 using NewLibCore.Data.SQL.Mapper.AttributeExtension.Association;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
@@ -11,10 +12,12 @@ namespace NewLibCore.Run
     {
         private static void Main(String[] args)
         {
-            ILogger logger = new ConsoleLogger();
-            logger.Warn("error");
+            using (var mapper = new EntityMapper())
+            {
+                mapper.OpenTransaction();
 
-            Console.ReadKey();
+                mapper.Commit();
+            }
         }
     }
 

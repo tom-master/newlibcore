@@ -61,12 +61,6 @@ namespace NewLibCore.Data.SQL.Mapper.Config
         internal abstract DbConnection GetConnectionInstance();
 
         /// <summary>
-        /// 获取数据库事务实例
-        /// </summary>
-        /// <returns></returns>
-        internal abstract DbTransaction GetTransactionInstance(DbConnection dbConnection);
-
-        /// <summary>
         /// 获取SQL语句参数对象实例
         /// </summary>
         /// <returns></returns>

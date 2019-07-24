@@ -12,7 +12,7 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
     /// <summary>
     /// sql语句执行
     /// </summary>
-    internal sealed class ExecutionCore : IDisposable
+    public class ExecutionCore : IDisposable
     {
         private DbConnection _connection;
 
@@ -31,7 +31,7 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
         /// <summary>
         /// 开启一个事物
         /// </summary>
-        internal void OpenTransaction()
+        public void OpenTransaction()
         {
             MapperConfig.GetInstance().DatabaseInstance.Logger.Info("open transaction");
             _useTransaction = true;
@@ -40,7 +40,7 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
         /// <summary>
         /// 提交一个事物
         /// </summary>
-        internal void Commit()
+        public void Commit()
         {
             if (_useTransaction)
             {
@@ -57,7 +57,7 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
         /// <summary>
         /// 回滚一个事物
         /// </summary>
-        internal void Rollback()
+        public void Rollback()
         {
             if (_useTransaction)
             {

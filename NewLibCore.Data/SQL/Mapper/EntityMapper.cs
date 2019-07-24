@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using NewLibCore.Data.SQL.Mapper.Config;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
+using NewLibCore.Data.SQL.Mapper.Execute;
 using NewLibCore.Data.SQL.Mapper.OperationProvider;
 using NewLibCore.Data.SQL.Mapper.OperationProvider.Imp;
 using NewLibCore.Validate;
@@ -12,7 +12,7 @@ namespace NewLibCore.Data.SQL.Mapper
     /// <summary>
     /// 将对应的操作翻译为sql并执行
     /// </summary>
-    public sealed class EntityMapper
+    public sealed class EntityMapper : ExecutionCore
     {
         /// <summary>
         /// 添加一個TModel
