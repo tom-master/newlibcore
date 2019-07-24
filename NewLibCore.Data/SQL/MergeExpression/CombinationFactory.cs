@@ -2,7 +2,7 @@
 using System.Linq.Expressions;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 
-namespace NewLibCore.Data.SQL.CombinationCondition.ConcreteCombinationCondition
+namespace NewLibCore.Data.SQL.MergeExpression
 {
     /// <summary>
     /// 默认规约工厂

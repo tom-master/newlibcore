@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 using NewLibCore.Data.SQL.Mapper.EntityExtension; 
 using NewLibCore.Validate;
 
-namespace NewLibCore.Data.SQL.CombinationCondition
+namespace NewLibCore.Data.SQL.MergeExpression
 {
     /// <summary>
     /// 规约抽象类
