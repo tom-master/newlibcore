@@ -9,21 +9,23 @@ namespace NewLibCore.Data.SQL.Mapper.Config
     /// <summary>
     /// 数据库实例配置
     /// </summary>
-    internal abstract class DatabaseInstanceConfig
+    internal abstract class InstanceConfig
     {
-        protected static IDictionary<RelationType, String> RelationMapper = new Dictionary<RelationType, String>();
+        protected static readonly IDictionary<RelationType, String> RelationMapper = new Dictionary<RelationType, String>();
 
-        protected static IDictionary<JoinType, String> JoinTypeMapper = new Dictionary<JoinType, String>();
+        protected static readonly IDictionary<JoinType, String> JoinTypeMapper = new Dictionary<JoinType, String>();
 
-        protected static IDictionary<OrderByType, String> OrderTypeMapper = new Dictionary<OrderByType, String>();
+        protected static readonly IDictionary<OrderByType, String> OrderTypeMapper = new Dictionary<OrderByType, String>();
 
         protected String ConnectionString { get { return Host.GetHostVar("NewCrmDatabase"); } }
 
         internal ResultCache Cache { get; set; }
 
+        internal Boolean Transaction { get; set; }
+
         internal virtual String UnionPlaceHolder { get { return Guid.NewGuid().ToString().Replace("-", ""); } }
 
-        protected DatabaseInstanceConfig(ILogger logger)
+        protected InstanceConfig(ILogger logger)
         {
             Logger = logger ?? new ConsoleLogger();
 

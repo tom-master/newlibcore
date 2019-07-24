@@ -15,6 +15,8 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider
             _executionCore = new ExecutionCore();
         }
 
+
+
         /// <summary>
         /// 获取一个TModel的对象列表
         /// </summary>
@@ -60,6 +62,21 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider
         private RawExecuteResult ExecuteRawSql(ExecuteType executeType, String sql, IEnumerable<EntityParameter> parameters = null)
         {
             return _executionCore.RawExecute(executeType, sql, parameters);
+        }
+
+        public void Commit()
+        {
+            _executionCore.Commit();
+        }
+
+        public void OpenTransaction()
+        {
+            _executionCore.OpenTransaction();
+        }
+
+        public void Rollback()
+        {
+            _executionCore.Rollback();
         }
     }
 }

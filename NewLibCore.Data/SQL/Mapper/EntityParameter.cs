@@ -30,7 +30,7 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             Parameter.Validate(entityParameter);
 
-            var parameter = DatabaseConfigFactory.Instance.GetParameterInstance();
+            var parameter = MapperConfig.GetInstance().DatabaseInstance.GetParameterInstance();
             parameter.ParameterName = entityParameter.Key;
             parameter.Value = entityParameter.Value;
             return parameter;

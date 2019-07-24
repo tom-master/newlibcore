@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq.Expressions;
-using NewLibCore.Data.SQL.Mapper.EntityExtension; 
+using NewLibCore.Data.SQL.Mapper.EntityExtension;
 
 namespace NewLibCore.Data.SQL.Mapper.OperationProvider
 {
@@ -8,7 +8,7 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider
     /// 更新操作
     /// </summary>
     /// <typeparam name="TModel"></typeparam>
-    public interface IModifyMapper<TModel> where TModel : EntityBase, new()
+    public interface IModifyMapper<TModel> : ITransactionController where TModel : EntityBase, new()
     {
         /// <summary>
         /// 更新一个TModel

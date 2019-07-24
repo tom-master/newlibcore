@@ -8,7 +8,7 @@ namespace NewLibCore.Data.SQL.Mapper.Config
     /// <summary>
     /// mssql数据库实例配置
     /// </summary>
-    internal class MsSqlInstanceConfig : DatabaseInstanceConfig
+    internal class MsSqlInstanceConfig : InstanceConfig
     {
         protected internal MsSqlInstanceConfig(ILogger logger) : base(logger)
         {

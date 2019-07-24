@@ -22,5 +22,20 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
             model.Id = modelId;
             return model;
         }
+
+        public void Commit()
+        {
+            _executionCore.Commit();
+        }
+
+        public void OpenTransaction()
+        {
+            _executionCore.OpenTransaction();
+        }
+
+        public void Rollback()
+        {
+            _executionCore.Rollback();
+        }
     }
 }

@@ -37,7 +37,7 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
             var executeResult = InternalExecuteSql(ExecuteType.SELECT_SINGLE);
             Int32.TryParse(executeResult.Value.ToString(), out var count);
             sw.Stop();
-            DatabaseConfigFactory.Instance.Logger.Info($@"共花费{Math.Round(sw.Elapsed.TotalSeconds, 2)}s");
+            MapperConfig.Instance.Logger.Info($@"共花费{Math.Round(sw.Elapsed.TotalSeconds, 2)}s");
 
             return count;
         }
@@ -50,7 +50,7 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
             var dataTable = executeResult.Value as DataTable;
             var result = dataTable.ToSingle<TModel>();
             sw.Stop();
-            DatabaseConfigFactory.Instance.Logger.Info($@"共花费{Math.Round(sw.Elapsed.TotalSeconds, 2)}s");
+            MapperConfig.Instance.Logger.Info($@"共花费{Math.Round(sw.Elapsed.TotalSeconds, 2)}s");
             return result;
         }
 
@@ -62,7 +62,7 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
             var dataTable = executeResult.Value as DataTable;
             var models = dataTable.ToList<TModel>();
             sw.Stop();
-            DatabaseConfigFactory.Instance.Logger.Info($@"共花费{Math.Round(sw.Elapsed.TotalSeconds, 2)}s");
+            MapperConfig.Instance.Logger.Info($@"共花费{Math.Round(sw.Elapsed.TotalSeconds, 2)}s");
             return models;
         }
 
@@ -196,17 +196,17 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
 
         private static void SetCacheFormResult(ExecuteType executeType, TranslateResult translationResult, RawExecuteResult executeResult)
         {
-            if ((executeType == ExecuteType.SELECT || executeType == ExecuteType.SELECT_SINGLE) && DatabaseConfigFactory.Instance.Cache != null)
+            if ((executeType == ExecuteType.SELECT || executeType == ExecuteType.SELECT_SINGLE) && MapperConfig.Instance.Cache != null)
             {
-                DatabaseConfigFactory.Instance.Cache.Add(translationResult.PrepareCacheKey(), executeResult);
+                MapperConfig.Instance.Cache.Add(translationResult.PrepareCacheKey(), executeResult);
             }
         }
 
         private static RawExecuteResult GetResultFormCache(ExecuteType executeType, TranslateResult translationResult)
         {
-            if ((executeType == ExecuteType.SELECT || executeType == ExecuteType.SELECT_SINGLE) && DatabaseConfigFactory.Instance.Cache != null)
+            if ((executeType == ExecuteType.SELECT || executeType == ExecuteType.SELECT_SINGLE) && MapperConfig.Instance.Cache != null)
             {
-                var cacheResult = DatabaseConfigFactory.Instance.Cache.Get(translationResult.PrepareCacheKey());
+                var cacheResult = MapperConfig.Instance.Cache.Get(translationResult.PrepareCacheKey());
                 if (cacheResult != null)
                 {
                     return (RawExecuteResult)cacheResult;
