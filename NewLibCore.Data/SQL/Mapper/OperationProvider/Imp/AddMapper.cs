@@ -7,17 +7,17 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
 {
     internal class AddMapper<TModel> : IAddMapper<TModel> where TModel : EntityBase, new()
     {
-        private readonly ExecuteCore _executeCore;
+        private readonly ExecutionCore _executionCore;
 
-        public AddMapper(ExecuteCore executeCore)
+        public AddMapper(ExecutionCore executionCore)
         {
-            _executeCore = executeCore;
+            _executionCore = executionCore;
         }
 
         public TModel Add(TModel model)
         {
             IBuilder<TModel> builder = new AddBuilder<TModel>(model, true);
-            var executeResult = _executeCore.Execute(ExecuteType.INSERT, builder.CreateTranslateResult());
+            var executeResult = _executionCore.Execute(ExecuteType.INSERT, builder.CreateTranslateResult());
             Int32.TryParse(executeResult.Value.ToString(), out var modelId);
             model.Id = modelId;
             return model;

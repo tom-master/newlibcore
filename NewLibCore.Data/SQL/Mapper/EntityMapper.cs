@@ -14,11 +14,11 @@ namespace NewLibCore.Data.SQL.Mapper
     /// </summary>
     public sealed class EntityMapper : IDisposable
     {
-        private readonly ExecuteCore _executeCore;
+        private readonly ExecutionCore _executionCore;
 
         public EntityMapper()
         {
-            _executeCore = new ExecuteCore();
+            _executionCore = new ExecutionCore();
         }
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace NewLibCore.Data.SQL.Mapper
         public TModel Add<TModel>(TModel model) where TModel : EntityBase, new()
         {
             Parameter.Validate(model);
-            return new AddMapper<TModel>(_executeCore).Add(model);
+            return new AddMapper<TModel>(_executionCore).Add(model);
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             Parameter.Validate(model);
             Parameter.Validate(expression);
-            return new ModifyMapper<TModel>(_executeCore).Update(model, expression);
+            return new ModifyMapper<TModel>(_executionCore).Update(model, expression);
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <returns></returns>
         public ISearchMapper<TModel> Select<TModel>(Expression<Func<TModel, dynamic>> fields = null) where TModel : EntityBase, new()
         {
-            return new SearchMapper<TModel>(_executeCore).Select(fields);
+            return new SearchMapper<TModel>(_executionCore).Select(fields);
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace NewLibCore.Data.SQL.Mapper
         public ISearchMapper<TModel> Select<TModel, T>(Expression<Func<TModel, T, dynamic>> fields = null) where TModel : EntityBase, new()
         where T : EntityBase, new()
         {
-            return new SearchMapper<TModel>(_executeCore).Select(fields);
+            return new SearchMapper<TModel>(_executionCore).Select(fields);
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace NewLibCore.Data.SQL.Mapper
         public List<TModel> ExecuteToList<TModel>(String sql, IEnumerable<EntityParameter> parameters = null) where TModel : new()
         {
             Parameter.Validate(sql);
-            return new RawExecutor(_executeCore).ToList<TModel>(sql, parameters);
+            return new RawExecutor(_executionCore).ToList<TModel>(sql, parameters);
         }
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace NewLibCore.Data.SQL.Mapper
         public TModel ExecuteToSingle<TModel>(String sql, IEnumerable<EntityParameter> parameters = null) where TModel : new()
         {
             Parameter.Validate(sql);
-            return new RawExecutor(_executeCore).ToSingle<TModel>(sql, parameters);
+            return new RawExecutor(_executionCore).ToSingle<TModel>(sql, parameters);
         }
 
         /// <summary>
@@ -102,14 +102,14 @@ namespace NewLibCore.Data.SQL.Mapper
         /// </summary>
         public void OpenTransaction()
         {
-            _executeCore.OpenTransaction();
+            _executionCore.OpenTransaction();
         }
         /// <summary>
         /// 提交事物
         /// </summary>
         public void Commit()
         {
-            _executeCore.Commit();
+            _executionCore.Commit();
         }
 
         /// <summary>
@@ -117,12 +117,12 @@ namespace NewLibCore.Data.SQL.Mapper
         /// </summary>
         public void Rollback()
         {
-            _executeCore.Rollback();
+            _executionCore.Rollback();
         }
 
         public void Dispose()
         {
-            _executeCore.Dispose();
+            _executionCore.Dispose();
         }
     }
 }

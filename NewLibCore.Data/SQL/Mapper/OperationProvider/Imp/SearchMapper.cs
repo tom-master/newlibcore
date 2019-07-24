@@ -14,12 +14,12 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
 {
     internal class SearchMapper<TModel> : ISearchMapper<TModel> where TModel : EntityBase, new()
     {
-        private readonly ExecuteCore _execute;
+        private readonly ExecutionCore _executionCore;
         private StatementStore _statementStore;
 
-        public SearchMapper(ExecuteCore executeCore)
+        public SearchMapper(ExecutionCore executionCore)
         {
-            _execute = executeCore;
+            _executionCore = executionCore;
             _statementStore = new StatementStore();
         }
 
@@ -188,7 +188,7 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
             var executeResult = GetResultFormCache(executeType, translationResult);
             if (executeResult == null)
             {
-                executeResult = _execute.Execute(executeType, translationResult);
+                executeResult = _executionCore.Execute(executeType, translationResult);
                 SetCacheFormResult(executeType, translationResult, executeResult);
             }
             return executeResult;

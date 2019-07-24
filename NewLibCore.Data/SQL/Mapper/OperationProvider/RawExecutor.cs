@@ -8,11 +8,11 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider
 {
     internal class RawExecutor : IRawExecutor
     {
-        private ExecuteCore _executeCore;
+        private ExecutionCore _executionCore;
 
-        public RawExecutor(ExecuteCore executeCore)
+        public RawExecutor(ExecutionCore executionCore)
         {
-            _executeCore = executeCore;
+            _executionCore = executionCore;
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider
         }
 
         /// <summary>
-        /// 
+        /// 直接执行sql语句
         /// </summary>
         /// <param name="executeType"></param>
         /// <param name="sql"></param>
@@ -59,7 +59,7 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider
         /// <returns></returns>
         private RawExecuteResult ExecuteRawSql(ExecuteType executeType, String sql, IEnumerable<EntityParameter> parameters = null)
         {
-            return _executeCore.RawExecute(executeType, sql, parameters);
+            return _executionCore.RawExecute(executeType, sql, parameters);
         }
     }
 }

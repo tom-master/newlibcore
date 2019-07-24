@@ -12,7 +12,7 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
     /// <summary>
     /// sql语句执行
     /// </summary>
-    internal sealed class ExecuteCore : IDisposable
+    internal sealed class ExecutionCore : IDisposable
     {
         private DbConnection _connection;
 
@@ -22,7 +22,7 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
 
         private Boolean _useTransaction = false;
 
-        internal ExecuteCore()
+        internal ExecutionCore()
         {
             Parameter.Validate(DatabaseConfigFactory.Instance);
             _connection = DatabaseConfigFactory.Instance.GetConnectionInstance();
