@@ -194,7 +194,7 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
             return executeResult;
         }
 
-        private static void SetCacheFormResult(ExecuteType executeType, TranslationResult translationResult, RawExecuteResult executeResult)
+        private static void SetCacheFormResult(ExecuteType executeType, TranslateResult translationResult, RawExecuteResult executeResult)
         {
             if ((executeType == ExecuteType.SELECT || executeType == ExecuteType.SELECT_SINGLE) && DatabaseConfigFactory.Instance.Cache != null)
             {
@@ -202,7 +202,7 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
             }
         }
 
-        private static RawExecuteResult GetResultFormCache(ExecuteType executeType, TranslationResult translationResult)
+        private static RawExecuteResult GetResultFormCache(ExecuteType executeType, TranslateResult translationResult)
         {
             if ((executeType == ExecuteType.SELECT || executeType == ExecuteType.SELECT_SINGLE) && DatabaseConfigFactory.Instance.Cache != null)
             {

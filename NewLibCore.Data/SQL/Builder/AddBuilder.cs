@@ -26,10 +26,10 @@ namespace NewLibCore.Data.SQL.Builder
         }
 
         /// <summary>
-        /// 构建一个新增操作的翻译结果
+        /// 创建一个新增操作的翻译结果
         /// </summary>
         /// <returns></returns>
-        public TranslationResult Build()
+        public TranslateResult CreateTranslateResult()
         {
             _instance.OnChanged();
             if (_isVerifyModel)
@@ -38,12 +38,10 @@ namespace NewLibCore.Data.SQL.Builder
             }
 
             var propertyInfos = _instance.GetPropertys();
-            var fields = String.Join(",", propertyInfos.Select(c => c.Key));
-            var placeHolder = String.Join(",", propertyInfos.Select(key => $@"@{key.Key}"));
             var entityParameters = propertyInfos.Select(c => new EntityParameter($@"@{c.Key}", c.Value));
 
-            var translationResult = new TranslationResult();
-            translationResult.Append($@" INSERT {typeof(TModel).GetAliasName()} ({fields}) VALUES ({placeHolder}) {DatabaseConfigFactory.Instance.Extension.Identity}", entityParameters);
+            var translationResult = new TranslateResult();
+            translationResult.Append($@" INSERT {typeof(TModel).GetAliasName()} ({String.Join(",", propertyInfos.Select(c => c.Key))}) VALUES ({String.Join(",", propertyInfos.Select(key => $@"@{key.Key}"))}) {DatabaseConfigFactory.Instance.Extension.Identity}", entityParameters);
             return translationResult;
         }
     }

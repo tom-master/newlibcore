@@ -5,14 +5,14 @@ using NewLibCore.Data.SQL.Mapper.EntityExtension;
 namespace NewLibCore.Data.SQL.MergeExpression
 {
     /// <summary>
-    /// 默认规约 
+    /// 默认的合并查询表达式 
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    internal class DefaultCombination<T> : Combination<T> where T : EntityBase
+    internal class DefaultMerge<T> : Merge<T> where T : EntityBase
     {
-        internal DefaultCombination(Expression<Func<T, Boolean>> exp)
+        internal DefaultMerge(Expression<Func<T, Boolean>> exp)
         {
-            CombinationExpression = exp;
+            MergeExpression = exp;
         }
     }
 }

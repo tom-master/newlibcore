@@ -77,7 +77,7 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
         /// <param name="executeType"></param>
         /// <param name="translationCore"></param>
         /// <returns></returns>
-        internal RawExecuteResult Execute(ExecuteType executeType, TranslationResult translationCore)
+        internal RawExecuteResult Execute(ExecuteType executeType, TranslateResult translationCore)
         {
             Parameter.Validate(translationCore);
             return RawExecute(executeType, translationCore.GetSql(), translationCore.GetParameters(), CommandType.Text);

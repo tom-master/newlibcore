@@ -5,69 +5,69 @@ using NewLibCore.Data.SQL.Mapper.EntityExtension;
 namespace NewLibCore.Data.SQL.MergeExpression
 {
     /// <summary>
-    /// 规约扩展
+    /// 合并扩展
     /// </summary>
-    public static class CombinationExtensions
+    public static class MergeExtensions
     {
 
         /// <summary>
-        /// 表示一个 与 规约
+        /// 合并一个表示 与 的表达式对象
         /// </summary>
         /// <param name="left"></param>
         /// <param name="right"></param>
         /// <typeparam name="T"></typeparam>
-        public static void And<T>(this Combination<T> left, Expression<Func<T, Boolean>> right) where T : EntityBase
+        public static void And<T>(this Merge<T> left, Expression<Func<T, Boolean>> right) where T : EntityBase
         {
-            if (left.CombinationExpression == default)
+            if (left.MergeExpression == default)
             {
-                left.CombinationExpression = right;
+                left.MergeExpression = right;
                 return;
             }
 
             var type = typeof(T);
             var internalParameter = Expression.Parameter(type, type.GetAliasName());
             var parameterVister = new ParameterVisitor(internalParameter);
-            var leftBody = parameterVister.Replace(left.CombinationExpression.Body);
+            var leftBody = parameterVister.Replace(left.MergeExpression.Body);
             var rightBody = parameterVister.Replace(right.Body);
             var newExpression = Expression.AndAlso(leftBody, rightBody);
-            left.CombinationExpression = Expression.Lambda<Func<T, Boolean>>(newExpression, internalParameter);
+            left.MergeExpression = Expression.Lambda<Func<T, Boolean>>(newExpression, internalParameter);
         }
 
         /// <summary>
-        /// 表示一个 或 规约
+        /// 合并一个表示 或 的表达式对象
         /// </summary>
         /// <param name="left"></param>
         /// <param name="right"></param>
         /// <typeparam name="T"></typeparam>
-        public static void Or<T>(this Combination<T> left, Expression<Func<T, Boolean>> right) where T : EntityBase
+        public static void Or<T>(this Merge<T> left, Expression<Func<T, Boolean>> right) where T : EntityBase
         {
 
-            if (left.CombinationExpression == default)
+            if (left.MergeExpression == default)
             {
-                left.CombinationExpression = right;
+                left.MergeExpression = right;
                 return;
             }
 
             var type = typeof(T);
             var internalParameter = Expression.Parameter(type, type.GetAliasName());
             var parameterVister = new ParameterVisitor(internalParameter);
-            var leftBody = parameterVister.Replace(left.CombinationExpression.Body);
+            var leftBody = parameterVister.Replace(left.MergeExpression.Body);
             var rightBody = parameterVister.Replace(right.Body);
             var orExpression = Expression.OrElse(leftBody, rightBody);
-            left.CombinationExpression = Expression.Lambda<Func<T, Boolean>>(orExpression, internalParameter);
+            left.MergeExpression = Expression.Lambda<Func<T, Boolean>>(orExpression, internalParameter);
         }
 
         /// <summary>
-        /// 表示一个 非 规约
+        /// 合并一个表示 非 的表达式对象
         /// </summary>
         /// <param name="left"></param>
         /// <typeparam name="T"></typeparam>
-        public static void Not<T>(this Combination<T> left) where T : EntityBase
+        public static void Not<T>(this Merge<T> left) where T : EntityBase
         {
-            var lambdaExpression = (LambdaExpression)left.CombinationExpression;
+            var lambdaExpression = (LambdaExpression)left.MergeExpression;
             var internalParameter = lambdaExpression.Parameters[0];
             var newExpression = Expression.Not(lambdaExpression.Body);
-            left.CombinationExpression = Expression.Lambda<Func<T, Boolean>>(newExpression, internalParameter);
+            left.MergeExpression = Expression.Lambda<Func<T, Boolean>>(newExpression, internalParameter);
         }
 
         /// <summary>

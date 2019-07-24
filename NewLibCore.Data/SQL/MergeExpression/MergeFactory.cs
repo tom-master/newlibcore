@@ -5,19 +5,19 @@ using NewLibCore.Data.SQL.Mapper.EntityExtension;
 namespace NewLibCore.Data.SQL.MergeExpression
 {
     /// <summary>
-    /// 默认规约工厂
+    /// 合并工厂
     /// </summary>
-    public sealed class CombinationFactory
+    public sealed class MergeFactory
     {
         /// <summary>
-        /// 创建一个默认的规约对象
+        /// 创建一个默认的表达式合并对象
         /// </summary>
         /// <param name="exp"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static Combination<T> Create<T>(Expression<Func<T, Boolean>> exp = default) where T : EntityBase
+        public static Merge<T> Create<T>(Expression<Func<T, Boolean>> exp = default) where T : EntityBase
         {
-            return new DefaultCombination<T>(exp == default ? a => true : exp);
+            return new DefaultMerge<T>(exp == default ? a => true : exp);
         }
     }
 }

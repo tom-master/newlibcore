@@ -34,16 +34,16 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
             _parameterNameStack = new Stack<String>();
             _tableAliasMapper = new List<KeyValuePair<String, String>>();
 
-            Result = new TranslationResult();
+            Result = new TranslateResult();
         }
 
-        internal TranslationResult Result { get; private set; }
+        internal TranslateResult Result { get; private set; }
 
         /// <summary>
         /// 翻译
         /// </summary>
         /// <returns></returns>
-        public TranslationResult Translate()
+        public TranslateResult Translate()
         {
             //获取合并后的表别名
             _tableAliasMapper = _statementStore.MergeAliasMapper();
