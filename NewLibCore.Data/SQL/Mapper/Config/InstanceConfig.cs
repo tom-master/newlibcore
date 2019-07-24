@@ -21,8 +21,6 @@ namespace NewLibCore.Data.SQL.Mapper.Config
 
         internal ResultCache Cache { get; set; }
 
-        internal Boolean Transaction { get; set; }
-
         internal virtual String UnionPlaceHolder { get { return Guid.NewGuid().ToString().Replace("-", ""); } }
 
         protected InstanceConfig(ILogger logger)

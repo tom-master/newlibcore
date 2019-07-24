@@ -77,20 +77,6 @@ namespace NewLibCore.Data.SQL.Mapper.Config
             return this;
         }
 
-        public void UseTransaction()
-        {
-            if (DatabaseInstance.Cache == null)
-            {
-                lock (_obj)
-                {
-                    if (DatabaseInstance.Cache == null)
-                    {
-                        DatabaseInstance.Transaction = true;
-                    }
-                }
-            }
-        }
-
         /// <summary>
         /// 切换到指定数据库配置实例
         /// </summary>

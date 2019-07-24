@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using NewLibCore.Data.SQL.Mapper.Config;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Data.SQL.Mapper.OperationProvider;
 using NewLibCore.Data.SQL.Mapper.OperationProvider.Imp;
@@ -14,11 +13,6 @@ namespace NewLibCore.Data.SQL.Mapper
     /// </summary>
     public sealed class EntityMapper
     {
-        public EntityMapper()
-        {
-            MapperConfig.GetInstance();
-        }
-
         /// <summary>
         /// 添加一個TModel
         /// </summary>
