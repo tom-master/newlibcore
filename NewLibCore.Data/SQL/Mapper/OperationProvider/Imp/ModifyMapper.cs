@@ -25,20 +25,5 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
             var executeResult = _executionCore.Execute(ExecuteType.UPDATE, builder.CreateTranslateResult());
             return (Int32)executeResult.Value > 0;
         }
-
-        public void Commit()
-        {
-            _executionCore.Commit();
-        }
-
-        public void OpenTransaction()
-        {
-            _executionCore.OpenTransaction();
-        }
-
-        public void Rollback()
-        {
-            _executionCore.Rollback();
-        }
     }
 }

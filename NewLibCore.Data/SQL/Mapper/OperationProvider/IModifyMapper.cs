@@ -8,7 +8,7 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider
     /// 更新操作
     /// </summary>
     /// <typeparam name="TModel"></typeparam>
-    internal interface IModifyMapper<TModel> : ITransactionController where TModel : EntityBase, new()
+    internal interface IModifyMapper<TModel> where TModel : EntityBase, new()
     {
         /// <summary>
         /// 更新一个TModel

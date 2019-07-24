@@ -6,7 +6,7 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider
     /// 新增操作
     /// </summary>
     /// <typeparam name="TModel"></typeparam>
-    internal interface IAddMapper<TModel> : ITransactionController where TModel : EntityBase, new()
+    internal interface IAddMapper<TModel> where TModel : EntityBase, new()
     {
         /// <summary>
         /// 新增一个TModel
