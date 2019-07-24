@@ -10,9 +10,9 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider
     {
         private ExecutionCore _executionCore;
 
-        public RawExecutor(ExecutionCore executionCore)
+        public RawExecutor()
         {
-            _executionCore = executionCore;
+            _executionCore = new ExecutionCore();
         }
 
         /// <summary>

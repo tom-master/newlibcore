@@ -9,9 +9,9 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
     {
         private readonly ExecutionCore _executionCore;
 
-        public AddMapper(ExecutionCore executionCore)
+        public AddMapper()
         {
-            _executionCore = executionCore;
+            _executionCore = new ExecutionCore();
         }
 
         public TModel Add(TModel model)

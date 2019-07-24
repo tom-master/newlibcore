@@ -15,11 +15,11 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
     internal class SearchMapper<TModel> : ISearchMapper<TModel> where TModel : EntityBase, new()
     {
         private readonly ExecutionCore _executionCore;
-        private StatementStore _statementStore;
+        private readonly StatementStore _statementStore;
 
-        public SearchMapper(ExecutionCore executionCore)
+        public SearchMapper()
         {
-            _executionCore = executionCore;
+            _executionCore = new ExecutionCore();
             _statementStore = new StatementStore();
         }
 

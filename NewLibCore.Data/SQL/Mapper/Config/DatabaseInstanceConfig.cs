@@ -19,9 +19,9 @@ namespace NewLibCore.Data.SQL.Mapper.Config
 
         protected String ConnectionString { get { return Host.GetHostVar("NewCrmDatabase"); } }
 
-        public virtual String UnionPlaceHolder { get { return Guid.NewGuid().ToString().Replace("-", ""); } }
-
         internal ResultCache Cache { get; set; }
+
+        internal virtual String UnionPlaceHolder { get { return Guid.NewGuid().ToString().Replace("-", ""); } }
 
         protected DatabaseInstanceConfig(ILogger logger)
         {

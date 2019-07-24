@@ -2,18 +2,18 @@ using System;
 using System.Linq.Expressions;
 using NewLibCore.Data.SQL.Builder;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
-using NewLibCore.Data.SQL.Mapper.Execute; 
+using NewLibCore.Data.SQL.Mapper.Execute;
 
 namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
 {
     internal class ModifyMapper<TModel> : IModifyMapper<TModel> where TModel : EntityBase, new()
     {
-        private ExecutionCore _executionCore;
-        private StatementStore _statementStore;
+        private readonly ExecutionCore _executionCore;
+        private readonly StatementStore _statementStore;
 
-        public ModifyMapper(ExecutionCore executionCore)
+        public ModifyMapper()
         {
-            _executionCore = executionCore;
+            _executionCore = new ExecutionCore();
             _statementStore = new StatementStore();
         }
 
