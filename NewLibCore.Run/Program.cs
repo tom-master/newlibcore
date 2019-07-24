@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading;
-using NewLibCore.Data.SQL.Mapper;
 using NewLibCore.Data.SQL.Mapper.AttributeExtension;
 using NewLibCore.Data.SQL.Mapper.AttributeExtension.Association;
-using NewLibCore.Data.SQL.Mapper.Config;
-using NewLibCore.Data.SQL.Mapper.EntityExtension;  
+using NewLibCore.Data.SQL.Mapper.EntityExtension;
+using NewLibCore.Logger;
 
 namespace NewLibCore.Run
 {
@@ -13,15 +11,10 @@ namespace NewLibCore.Run
     {
         private static void Main(String[] args)
         {
-            DatabaseConfigFactory.Init().SwitchToMySql();
-            while (true)
-            {
-                using (var context = new EntityMapper())
-                {
-                    var a = context.Select<User>().InnerJoin<Config>((u, c) => u.ConfigId == c.Id).Where(u => u.Id == 4).ToList();
-                }
-                Thread.Sleep(1000);
-            }
+            ILogger logger = new ConsoleLogger();
+            logger.Warn("error");
+
+            Console.ReadKey();
         }
     }
 

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using NewLibCore.Data.SQL.Mapper.Config;
-using NewLibCore.InternalExtension;
 using NewLibCore.Security;
 using NewLibCore.Validate;
 
@@ -31,7 +30,7 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             Parameter.Validate(entityParameter);
 
-            var parameter = DatabaseConfigFactory.Instance.GetParameterInstance();
+            var parameter = MapperConfig.GetInstance().DatabaseInstance.GetParameterInstance();
             parameter.ParameterName = entityParameter.Key;
             parameter.Value = entityParameter.Value;
             return parameter;

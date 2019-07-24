@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace NewLibCore.Data.SQL.CombinationCondition
+namespace NewLibCore.Data.SQL.MergeExpression
 {
 
     /// <summary>

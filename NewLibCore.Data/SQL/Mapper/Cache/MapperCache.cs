@@ -30,13 +30,13 @@ namespace NewLibCore.Data.SQL.Mapper.Cache
         protected internal abstract void CacheInvalid(String key);
     }
     /// <summary>
-    /// 执行结果缓存
+    /// 缓存sql执行的结果
     /// </summary>
-    internal class StatementResultCache : ResultCache
+    internal class ExecutionResultCache : ResultCache
     {
         protected internal ObjectCache _baseCache;
 
-        protected internal StatementResultCache()
+        protected internal ExecutionResultCache()
         {
             _baseCache = MemoryCache.Default;
         }

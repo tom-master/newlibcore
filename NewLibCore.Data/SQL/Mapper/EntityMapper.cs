@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using NewLibCore.Data.SQL.Mapper.Config;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
-using NewLibCore.Data.SQL.Mapper.Execute;
 using NewLibCore.Data.SQL.Mapper.OperationProvider;
 using NewLibCore.Data.SQL.Mapper.OperationProvider.Imp;
 using NewLibCore.Validate;
@@ -12,15 +12,8 @@ namespace NewLibCore.Data.SQL.Mapper
     /// <summary>
     /// 将对应的操作翻译为sql并执行
     /// </summary>
-    public sealed class EntityMapper : IDisposable
+    public sealed class EntityMapper
     {
-        private readonly ExecuteCore _executeCore;
-
-        public EntityMapper()
-        {
-            _executeCore = new ExecuteCore();
-        }
-
         /// <summary>
         /// 添加一個TModel
         /// </summary>
@@ -30,7 +23,7 @@ namespace NewLibCore.Data.SQL.Mapper
         public TModel Add<TModel>(TModel model) where TModel : EntityBase, new()
         {
             Parameter.Validate(model);
-            return new AddMapper<TModel>(_executeCore).Add(model);
+            return new AddMapper<TModel>().Add(model);
         }
 
         /// <summary>
@@ -44,7 +37,7 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             Parameter.Validate(model);
             Parameter.Validate(expression);
-            return new ModifyMapper<TModel>(_executeCore).Update(model, expression);
+            return new ModifyMapper<TModel>().Update(model, expression);
         }
 
         /// <summary>
@@ -55,11 +48,11 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <returns></returns>
         public ISearchMapper<TModel> Select<TModel>(Expression<Func<TModel, dynamic>> fields = null) where TModel : EntityBase, new()
         {
-            return new SearchMapper<TModel>(_executeCore).Select(fields);
+            return new SearchMapper<TModel>().Select(fields);
         }
 
         /// <summary>
-        /// 查詢一個TModel
+        /// 查询一個TModel
         /// </summary>
         /// <param name="fields"></param>
         /// <typeparam name="TModel"></typeparam>
@@ -68,7 +61,7 @@ namespace NewLibCore.Data.SQL.Mapper
         public ISearchMapper<TModel> Select<TModel, T>(Expression<Func<TModel, T, dynamic>> fields = null) where TModel : EntityBase, new()
         where T : EntityBase, new()
         {
-            return new SearchMapper<TModel>(_executeCore).Select(fields);
+            return new SearchMapper<TModel>().Select(fields);
         }
 
         /// <summary>
@@ -81,7 +74,7 @@ namespace NewLibCore.Data.SQL.Mapper
         public List<TModel> ExecuteToList<TModel>(String sql, IEnumerable<EntityParameter> parameters = null) where TModel : new()
         {
             Parameter.Validate(sql);
-            return new RawExecutor(_executeCore).ToList<TModel>(sql, parameters);
+            return new RawExecutor().ToList<TModel>(sql, parameters);
         }
 
         /// <summary>
@@ -94,35 +87,8 @@ namespace NewLibCore.Data.SQL.Mapper
         public TModel ExecuteToSingle<TModel>(String sql, IEnumerable<EntityParameter> parameters = null) where TModel : new()
         {
             Parameter.Validate(sql);
-            return new RawExecutor(_executeCore).ToSingle<TModel>(sql, parameters);
+            return new RawExecutor().ToSingle<TModel>(sql, parameters);
         }
 
-        /// <summary>
-        /// 开启事物
-        /// </summary>
-        public void OpenTransaction()
-        {
-            _executeCore.OpenTransaction();
-        }
-        /// <summary>
-        /// 提交事物
-        /// </summary>
-        public void Commit()
-        {
-            _executeCore.Commit();
-        }
-
-        /// <summary>
-        /// 回滚事物
-        /// </summary>
-        public void Rollback()
-        {
-            _executeCore.Rollback();
-        }
-
-        public void Dispose()
-        {
-            _executeCore.Dispose();
-        }
     }
 }

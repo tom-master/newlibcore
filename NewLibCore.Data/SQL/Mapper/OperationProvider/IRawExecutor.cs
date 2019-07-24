@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace NewLibCore.Data.SQL.Mapper.OperationProvider
 {
-    public interface IRawExecutor
+    internal interface IRawExecutor
     {
         /// <summary>
         /// 获取一个TModel的对象列表

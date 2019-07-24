@@ -9,13 +9,12 @@ using NewLibCore.Data.SQL.Mapper.Config;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
 using NewLibCore.Data.SQL.Mapper.Translation;
-using NewLibCore.InternalExtension;
 using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Builder
 {
     /// <summary>
-    /// 查询操作builder类
+    /// 查询操作构建
     /// </summary>
     /// <typeparam name="TModel"></typeparam>
     internal class SelectBuilder<TModel> : IBuilder<TModel> where TModel : PropertyMonitor, new()
@@ -32,7 +31,7 @@ namespace NewLibCore.Data.SQL.Builder
         /// 构建一个查询操作的翻译结果
         /// </summary>
         /// <returns></returns>
-        public TranslationResult Build()
+        public TranslateResult CreateTranslateResult()
         {
             var translation = new TranslateExpression(_statementStore);
             {
@@ -50,7 +49,7 @@ namespace NewLibCore.Data.SQL.Builder
             if (_statementStore.Order != null)
             {
                 var order = StatementParse(_statementStore.Order);
-                var orderTemplate = DatabaseConfigFactory.Instance.OrderByBuilder(_statementStore.Order.OrderBy, $@"{order.tableName}.{order.fields}");
+                var orderTemplate = MapperConfig.GetInstance().DatabaseInstance.OrderByBuilder(_statementStore.Order.OrderBy, $@"{order.tableName}.{order.fields}");
                 translation.Result.Append(orderTemplate);
             }
 
@@ -58,16 +57,21 @@ namespace NewLibCore.Data.SQL.Builder
             {
                 var pageIndex = (_statementStore.Page.Size * (_statementStore.Page.Index - 1)).ToString();
                 var pageSize = _statementStore.Page.Size.ToString();
-                translation.Result.Append(DatabaseConfigFactory.Instance.Extension.Page.Replace("{value}", pageIndex).Replace("{pageSize}", pageSize));
+                translation.Result.Append(MapperConfig.GetInstance().DatabaseInstance.Extension.Page.Replace("{value}", pageIndex).Replace("{pageSize}", pageSize));
             }
 
             return translation.Result;
         }
 
+        /// <summary>
+        ///判断表达式语句类型并转换为相应的sql
+        /// </summary>
+        /// <param name="statement"></param>
+        /// <returns></returns>
         private (String fields, String tableName) StatementParse(Statement statement)
         {
             var modelAliasName = new List<String>();
-            if (statement == null)
+            if (statement == null) //如果表达式语句为空则表示需要翻译为SELECT a.xxx,a.xxx,a.xxx 类型的语句
             {
                 var modelType = typeof(TModel);
                 var f = new List<String>();

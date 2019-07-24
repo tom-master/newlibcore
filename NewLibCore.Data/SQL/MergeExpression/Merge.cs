@@ -1,28 +1,28 @@
 ﻿using System;
 using System.Linq.Expressions;
-using NewLibCore.Data.SQL.Mapper.EntityExtension; 
+using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Data.SQL.CombinationCondition
+namespace NewLibCore.Data.SQL.MergeExpression
 {
     /// <summary>
-    /// 规约抽象类
+    /// 合并作为查询条件的表达式树
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class Combination<T> where T : EntityBase
+    public abstract class Merge<T> where T : EntityBase
     {
-        public Expression<Func<T, Boolean>> CombinationExpression { get; set; }
+        public Expression<Func<T, Boolean>> MergeExpression { get; set; }
 
         /// <summary>
-        /// 追加一个规约对象
+        /// 追加一个表达式树对象
         /// </summary>
         /// <param name="right"></param>
         /// <typeparam name="T1"></typeparam>
         /// <returns></returns>
-        public Expression<Func<T, T1, Boolean>> AppendCombination<T1>(Combination<T1> right) where T1 : EntityBase
+        public Expression<Func<T, T1, Boolean>> AppendCombination<T1>(Merge<T1> right) where T1 : EntityBase
         {
             Parameter.Validate(right);
-            Parameter.Validate(right.CombinationExpression);
+            Parameter.Validate(right.MergeExpression);
 
             Expression leftBody, rightBody;
             ParameterExpression leftParameter, rightParameter;
@@ -30,14 +30,14 @@ namespace NewLibCore.Data.SQL.CombinationCondition
                 var type = typeof(T);
                 leftParameter = Expression.Parameter(type, type.GetAliasName());
                 var parameterVister = new ParameterVisitor(leftParameter);
-                leftBody = parameterVister.Replace(CombinationExpression.Body);
+                leftBody = parameterVister.Replace(MergeExpression.Body);
             }
 
             {
                 var type = typeof(T1);
                 rightParameter = Expression.Parameter(type, type.GetAliasName());
                 var parameterVister = new ParameterVisitor(rightParameter);
-                rightBody = parameterVister.Replace(right.CombinationExpression.Body);
+                rightBody = parameterVister.Replace(right.MergeExpression.Body);
             }
 
             var newExpression = Expression.AndAlso(leftBody, rightBody);
@@ -45,14 +45,14 @@ namespace NewLibCore.Data.SQL.CombinationCondition
         }
 
         /// <summary>
-        /// 隐式转换为一个表达式数
+        /// 隐式转换为一个表达式树
         /// </summary>
         /// <param name="combination"></param>
         /// <returns></returns>
-        public static implicit operator Expression<Func<T, Boolean>>(Combination<T> combination)
+        public static implicit operator Expression<Func<T, Boolean>>(Merge<T> combination)
         {
             Parameter.Validate(combination);
-            return combination.CombinationExpression;
+            return combination.MergeExpression;
         }
     }
 }

@@ -2,31 +2,30 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using NewLibCore.Data.SQL.Mapper.Cache;
+using NewLibCore.Logger;
 
 namespace NewLibCore.Data.SQL.Mapper.Config
 {
     /// <summary>
     /// 数据库实例配置
     /// </summary>
-    internal abstract class DatabaseInstanceConfig
+    internal abstract class InstanceConfig
     {
-        private readonly ILogger _logger;
+        protected static readonly IDictionary<RelationType, String> RelationMapper = new Dictionary<RelationType, String>();
 
-        protected static IDictionary<RelationType, String> RelationMapper = new Dictionary<RelationType, String>();
+        protected static readonly IDictionary<JoinType, String> JoinTypeMapper = new Dictionary<JoinType, String>();
 
-        protected static IDictionary<JoinType, String> JoinTypeMapper = new Dictionary<JoinType, String>();
-
-        protected static IDictionary<OrderByType, String> OrderTypeMapper = new Dictionary<OrderByType, String>();
+        protected static readonly IDictionary<OrderByType, String> OrderTypeMapper = new Dictionary<OrderByType, String>();
 
         protected String ConnectionString { get { return Host.GetHostVar("NewCrmDatabase"); } }
 
-        public virtual String UnionPlaceHolder { get { return Guid.NewGuid().ToString().Replace("-", ""); } }
-
         internal ResultCache Cache { get; set; }
 
-        protected DatabaseInstanceConfig(ILogger logger)
+        internal virtual String UnionPlaceHolder { get { return Guid.NewGuid().ToString().Replace("-", ""); } }
+
+        protected InstanceConfig(ILogger logger)
         {
-            _logger = logger ?? new ConsoleLogger();
+            Logger = logger ?? new ConsoleLogger();
 
             RelationMapper.Clear();
             JoinTypeMapper.Clear();
@@ -53,16 +52,19 @@ namespace NewLibCore.Data.SQL.Mapper.Config
         /// 日志
         /// </summary>
         /// <value></value>
-        internal ILogger Logger
-        {
-            get { return _logger; }
-        }
+        internal ILogger Logger { get; }
 
         /// <summary>
         /// 获取数据库连接对象实例
         /// </summary>
         /// <returns></returns>
         internal abstract DbConnection GetConnectionInstance();
+
+        /// <summary>
+        /// 获取数据库事务实例
+        /// </summary>
+        /// <returns></returns>
+        internal abstract DbTransaction GetTransactionInstance(DbConnection dbConnection);
 
         /// <summary>
         /// 获取SQL语句参数对象实例

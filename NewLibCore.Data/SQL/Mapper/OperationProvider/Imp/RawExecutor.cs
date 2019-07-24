@@ -3,17 +3,16 @@ using System.Collections.Generic;
 using System.Data;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Data.SQL.Mapper.Execute;
-using NewLibCore.InternalExtension;
 
 namespace NewLibCore.Data.SQL.Mapper.OperationProvider
 {
     internal class RawExecutor : IRawExecutor
     {
-        private ExecuteCore _executeCore;
+        private ExecutionCore _executionCore;
 
-        public RawExecutor(ExecuteCore executeCore)
+        public RawExecutor()
         {
-            _executeCore = executeCore;
+            _executionCore = new ExecutionCore();
         }
 
         /// <summary>
@@ -52,7 +51,7 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider
         }
 
         /// <summary>
-        /// 
+        /// 直接执行sql语句
         /// </summary>
         /// <param name="executeType"></param>
         /// <param name="sql"></param>
@@ -60,7 +59,7 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider
         /// <returns></returns>
         private RawExecuteResult ExecuteRawSql(ExecuteType executeType, String sql, IEnumerable<EntityParameter> parameters = null)
         {
-            return _executeCore.RawExecute(executeType, sql, parameters);
+            return _executionCore.RawExecute(executeType, sql, parameters);
         }
     }
 }

@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 
-namespace NewLibCore.InternalExtension
+namespace NewLibCore
 {
     /// <summary>
     ///     类型扩展方法类

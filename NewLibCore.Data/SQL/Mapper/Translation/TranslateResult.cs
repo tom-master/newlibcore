@@ -7,30 +7,42 @@ using NewLibCore.Validate;
 namespace NewLibCore.Data.SQL.Mapper.Translation
 {
     /// <summary>
-    /// 翻译结果管理
+    /// 存储表达式的翻译结果
     /// </summary>
-    internal class TranslationResult
+    internal class TranslateResult
     {
-        private StringBuilder _originSql;
+        private readonly StringBuilder _originSql;
 
-        private IList<EntityParameter> _parameters;
+        private readonly IList<EntityParameter> _parameters;
 
-        internal TranslationResult()
+        internal TranslateResult()
         {
             _originSql = new StringBuilder();
             _parameters = new List<EntityParameter>();
         }
 
+        /// <summary>
+        /// 获取翻译好的sql语句
+        /// </summary>
+        /// <returns></returns>
         internal String GetSql()
         {
             return ReformatSql(_originSql.ToString());
         }
 
+        /// <summary>
+        /// 获取EntityParameter列表
+        /// </summary>
+        /// <returns></returns>
         internal IList<EntityParameter> GetParameters()
         {
             return _parameters;
         }
 
+        /// <summary>
+        /// 获取作为要缓存的sql语句的key
+        /// </summary>
+        /// <param name="entityParameters"></param>
         internal String PrepareCacheKey()
         {
             Parameter.Validate(_originSql);
@@ -42,6 +54,10 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
             return MD.GetMD5(cacheKey);
         }
 
+        /// <summary>
+        /// 追加一个sql语句和一组EntityParameter对象
+        /// </summary>
+        /// <param name="entityParameters"></param>
         internal void Append(String sql, IEnumerable<EntityParameter> entityParameters = null)
         {
             Parameter.Validate(sql);
@@ -56,11 +72,19 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
             }
         }
 
+        /// <summary>
+        /// 追加一组EntityParameter对象
+        /// </summary>
+        /// <param name="entityParameters"></param>
         internal void Append(params EntityParameter[] entityParameters)
         {
             Append(entityParameters.ToList());
         }
 
+        /// <summary>
+        /// 追加一组EntityParameter对象
+        /// </summary>
+        /// <param name="entityParameters"></param>
         internal void Append(IEnumerable<EntityParameter> entityParameters)
         {
             if (entityParameters != null)
@@ -78,6 +102,11 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
             _parameters.Clear();
         }
 
+        /// <summary>
+        /// 将sql语句中多余的空格去掉
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <returns></returns>
         private String ReformatSql(String sql)
         {
             Parameter.Validate(sql);

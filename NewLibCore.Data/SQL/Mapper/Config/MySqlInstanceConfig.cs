@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Data.Common;
-using MySql.Data.MySqlClient; 
+using MySql.Data.MySqlClient;
+using NewLibCore.Logger;
 
 namespace NewLibCore.Data.SQL.Mapper.Config
 {
     /// <summary>
     /// mysql数据库实例配置
     /// </summary>
-    internal class MySqlInstanceConfig : DatabaseInstanceConfig
+    internal class MySqlInstanceConfig : InstanceConfig
     {
         protected internal MySqlInstanceConfig(ILogger logger) : base(logger)
         {
@@ -35,6 +36,11 @@ namespace NewLibCore.Data.SQL.Mapper.Config
         internal override String RelationBuilder(RelationType relationType, String left, Object right)
         {
             return String.Format(RelationMapper[relationType], left, right);
+        }
+
+        internal override DbTransaction GetTransactionInstance(DbConnection dbConnection)
+        {
+            return dbConnection.BeginTransaction();
         }
 
         internal override InstanceExtension Extension
