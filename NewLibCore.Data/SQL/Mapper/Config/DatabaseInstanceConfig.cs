@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using NewLibCore.Data.SQL.Mapper.Cache;
+using NewLibCore.Logger;
 
 namespace NewLibCore.Data.SQL.Mapper.Config
 {
@@ -10,8 +11,6 @@ namespace NewLibCore.Data.SQL.Mapper.Config
     /// </summary>
     internal abstract class DatabaseInstanceConfig
     {
-        private readonly ILogger _logger;
-
         protected static IDictionary<RelationType, String> RelationMapper = new Dictionary<RelationType, String>();
 
         protected static IDictionary<JoinType, String> JoinTypeMapper = new Dictionary<JoinType, String>();
@@ -26,7 +25,7 @@ namespace NewLibCore.Data.SQL.Mapper.Config
 
         protected DatabaseInstanceConfig(ILogger logger)
         {
-            _logger = logger ?? new ConsoleLogger();
+            Logger = logger ?? new ConsoleLogger();
 
             RelationMapper.Clear();
             JoinTypeMapper.Clear();
@@ -53,10 +52,7 @@ namespace NewLibCore.Data.SQL.Mapper.Config
         /// 日志
         /// </summary>
         /// <value></value>
-        internal ILogger Logger
-        {
-            get { return _logger; }
-        }
+        internal ILogger Logger { get; }
 
         /// <summary>
         /// 获取数据库连接对象实例

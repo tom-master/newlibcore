@@ -1,6 +1,7 @@
-﻿using StackExchange.Redis;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
+using NewLibCore.Logger;
+using StackExchange.Redis;
 
 namespace NewLibCore.Data.Redis.InternalHelper
 {
@@ -71,7 +72,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// <param name="e"></param>
         private static void MuxerConfigurationChanged(Object sender, EndPointEventArgs e)
         {
-            _consoleLogger.Write("INFO", "Configuration changed: " + e.EndPoint);
+            _consoleLogger.Info("Configuration changed: " + e.EndPoint);
         }
 
         /// <summary>
@@ -81,7 +82,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// <param name="e"></param>
         private static void MuxerErrorMessage(Object sender, RedisErrorEventArgs e)
         {
-            _consoleLogger.Write("INFO", "ErrorMessage: " + e.Message);
+            _consoleLogger.Info( "ErrorMessage: " + e.Message);
         }
 
         /// <summary>
@@ -91,7 +92,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// <param name="e"></param>
         private static void MuxerConnectionRestored(Object sender, ConnectionFailedEventArgs e)
         {
-            _consoleLogger.Write("INFO", "ConnectionRestored: " + e.EndPoint);
+            _consoleLogger.Info("ConnectionRestored: " + e.EndPoint);
         }
 
         /// <summary>
@@ -101,7 +102,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// <param name="e"></param>
         private static void MuxerConnectionFailed(Object sender, ConnectionFailedEventArgs e)
         {
-            _consoleLogger.Write("INFO", "重新连接：Endpoint failed: " + e.EndPoint + ", " + e.FailureType + (e.Exception == null ? "" : (", " + e.Exception.Message)));
+            _consoleLogger.Warn("重新连接：Endpoint failed: " + e.EndPoint + ", " + e.FailureType + (e.Exception == null ? "" : (", " + e.Exception.Message)));
         }
 
         /// <summary>
@@ -111,7 +112,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// <param name="e"></param>
         private static void MuxerHashSlotMoved(Object sender, HashSlotMovedEventArgs e)
         {
-            _consoleLogger.Write("INFO", "HashSlotMoved:NewEndPoint" + e.NewEndPoint + ", OldEndPoint" + e.OldEndPoint);
+            _consoleLogger.Info( "HashSlotMoved:NewEndPoint" + e.NewEndPoint + ", OldEndPoint" + e.OldEndPoint);
         }
 
         /// <summary>
@@ -121,7 +122,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// <param name="e"></param>
         private static void MuxerInternalError(Object sender, InternalErrorEventArgs e)
         {
-            _consoleLogger.Write("INFO", "InternalError:Message" + e.Exception.Message);
+            _consoleLogger.Error( "InternalError:Message" + e.Exception.Message);
         }
 
         #endregion 事件

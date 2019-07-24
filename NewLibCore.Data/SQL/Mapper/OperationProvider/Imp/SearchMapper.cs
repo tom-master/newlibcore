@@ -37,7 +37,7 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
             var executeResult = InternalExecuteSql(ExecuteType.SELECT_SINGLE);
             Int32.TryParse(executeResult.Value.ToString(), out var count);
             sw.Stop();
-            DatabaseConfigFactory.Instance.Logger.Write("INFO", $@"共花费{Math.Round(sw.Elapsed.TotalSeconds, 2)}s");
+            DatabaseConfigFactory.Instance.Logger.Info($@"共花费{Math.Round(sw.Elapsed.TotalSeconds, 2)}s");
 
             return count;
         }
@@ -50,7 +50,7 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
             var dataTable = executeResult.Value as DataTable;
             var result = dataTable.ToSingle<TModel>();
             sw.Stop();
-            DatabaseConfigFactory.Instance.Logger.Write("INFO", $@"共花费{Math.Round(sw.Elapsed.TotalSeconds, 2)}s");
+            DatabaseConfigFactory.Instance.Logger.Info($@"共花费{Math.Round(sw.Elapsed.TotalSeconds, 2)}s");
             return result;
         }
 
@@ -62,7 +62,7 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
             var dataTable = executeResult.Value as DataTable;
             var models = dataTable.ToList<TModel>();
             sw.Stop();
-            DatabaseConfigFactory.Instance.Logger.Write("INFO", $@"共花费{Math.Round(sw.Elapsed.TotalSeconds, 2)}s");
+            DatabaseConfigFactory.Instance.Logger.Info($@"共花费{Math.Round(sw.Elapsed.TotalSeconds, 2)}s");
             return models;
         }
 

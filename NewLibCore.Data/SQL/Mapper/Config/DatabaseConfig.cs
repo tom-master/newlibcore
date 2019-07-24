@@ -1,5 +1,6 @@
 ﻿using System;
-using NewLibCore.Data.SQL.Mapper.Cache; 
+using NewLibCore.Data.SQL.Mapper.Cache;
+using NewLibCore.Logger;
 
 namespace NewLibCore.Data.SQL.Mapper.Config
 {
@@ -92,15 +93,15 @@ namespace NewLibCore.Data.SQL.Mapper.Config
                         switch (database)
                         {
                             case DatabaseType.MSSQL:
-                                {
-                                    Instance = new MsSqlInstanceConfig(logger);
-                                    break;
-                                }
+                            {
+                                Instance = new MsSqlInstanceConfig(logger);
+                                break;
+                            }
                             case DatabaseType.MYSQL:
-                                {
-                                    Instance = new MySqlInstanceConfig(logger);
-                                    break;
-                                }
+                            {
+                                Instance = new MySqlInstanceConfig(logger);
+                                break;
+                            }
                             default:
                                 break;
                         }

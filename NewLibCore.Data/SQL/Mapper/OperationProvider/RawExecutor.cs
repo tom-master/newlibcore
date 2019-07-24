@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Data.SQL.Mapper.Execute;
-using NewLibCore.InternalExtension;
 
 namespace NewLibCore.Data.SQL.Mapper.OperationProvider
 {

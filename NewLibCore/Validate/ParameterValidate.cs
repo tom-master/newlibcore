@@ -1,5 +1,4 @@
-﻿using NewLibCore.InternalExtension;
-using System;
+﻿using System;
 
 namespace NewLibCore.Validate
 {

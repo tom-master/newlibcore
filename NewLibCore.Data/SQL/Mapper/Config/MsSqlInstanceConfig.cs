@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.Common;
-using System.Data.SqlClient; 
+using System.Data.SqlClient;
+using NewLibCore.Logger;
 
 namespace NewLibCore.Data.SQL.Mapper.Config
 {

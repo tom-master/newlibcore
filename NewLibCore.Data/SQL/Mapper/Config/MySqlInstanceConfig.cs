@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.Common;
-using MySql.Data.MySqlClient; 
+using MySql.Data.MySqlClient;
+using NewLibCore.Logger;
 
 namespace NewLibCore.Data.SQL.Mapper.Config
 {
