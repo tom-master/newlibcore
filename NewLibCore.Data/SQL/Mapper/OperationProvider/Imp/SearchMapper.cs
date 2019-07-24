@@ -184,7 +184,7 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
             IBuilder<TModel> builder = new SelectBuilder<TModel>(_statementStore);
             _statementStore.ExecuteType = executeType;
 
-            var translationResult = builder.Build();
+            var translationResult = builder.CreateTranslateResult();
             var executeResult = GetResultFormCache(executeType, translationResult);
             if (executeResult == null)
             {

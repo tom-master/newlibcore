@@ -17,7 +17,7 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
         public TModel Add(TModel model)
         {
             IBuilder<TModel> builder = new AddBuilder<TModel>(model, true);
-            var executeResult = _executeCore.Execute(ExecuteType.INSERT, builder.Build());
+            var executeResult = _executeCore.Execute(ExecuteType.INSERT, builder.CreateTranslateResult());
             Int32.TryParse(executeResult.Value.ToString(), out var modelId);
             model.Id = modelId;
             return model;

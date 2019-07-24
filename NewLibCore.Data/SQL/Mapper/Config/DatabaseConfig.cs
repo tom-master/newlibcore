@@ -70,7 +70,7 @@ namespace NewLibCore.Data.SQL.Mapper.Config
                 {
                     if (Instance.Cache == null)
                     {
-                        Instance.Cache = new StatementResultCache();
+                        Instance.Cache = new ExecutionResultCache();
                     }
                 }
             }
