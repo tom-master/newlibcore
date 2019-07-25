@@ -15,12 +15,12 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
     internal class SearchMapper<TModel> : ISearchMapper<TModel> where TModel : EntityBase, new()
     {
         private readonly ExecutionCore _executionCore;
-        private readonly StatementStore _statementStore;
+        private readonly ExpressionSegment _expressionSegment;
 
         public SearchMapper()
         {
             _executionCore = new ExecutionCore();
-            _statementStore = new StatementStore();
+            _expressionSegment = new ExpressionSegment();
         }
 
         public Boolean Exist()
@@ -70,7 +70,7 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
         {
             if (fields != null)
             {
-                _statementStore.Add(fields);
+                _expressionSegment.Add(fields);
             }
 
             return this;
@@ -80,7 +80,7 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
         {
             if (fields != null)
             {
-                _statementStore.Add(fields);
+                _expressionSegment.Add(fields);
             }
 
             return this;
@@ -95,7 +95,7 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
         {
             if (expression != null)
             {
-                _statementStore.Add(expression);
+                _expressionSegment.Add(expression);
             }
 
             return this;
@@ -105,7 +105,7 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
         {
             if (expression != null)
             {
-                _statementStore.Add(expression);
+                _expressionSegment.Add(expression);
             }
 
             return this;
@@ -113,14 +113,14 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
 
         public ISearchMapper<TModel> Page(Int32 pageIndex, Int32 pageSize)
         {
-            _statementStore.AddPage(pageIndex, pageSize);
+            _expressionSegment.AddPage(pageIndex, pageSize);
             return this;
         }
 
         public ISearchMapper<TModel> LeftJoin<TRight>(Expression<Func<TModel, TRight, Boolean>> expression) where TRight : EntityBase, new()
         {
             Parameter.Validate(expression);
-            _statementStore.Add(expression, JoinType.LEFT);
+            _expressionSegment.Add(expression, JoinType.LEFT);
 
             return this;
         }
@@ -128,7 +128,7 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
         public ISearchMapper<TModel> RightJoin<TRight>(Expression<Func<TModel, TRight, Boolean>> expression) where TRight : EntityBase, new()
         {
             Parameter.Validate(expression);
-            _statementStore.Add(expression, JoinType.RIGHT);
+            _expressionSegment.Add(expression, JoinType.RIGHT);
 
             return this;
         }
@@ -136,7 +136,7 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
         public ISearchMapper<TModel> InnerJoin<TRight>(Expression<Func<TModel, TRight, Boolean>> expression) where TRight : EntityBase, new()
         {
             Parameter.Validate(expression);
-            _statementStore.Add(expression, JoinType.INNER);
+            _expressionSegment.Add(expression, JoinType.INNER);
 
             return this;
         }
@@ -146,7 +146,7 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
           where TRight : EntityBase, new()
         {
             Parameter.Validate(expression);
-            _statementStore.Add(expression, JoinType.LEFT);
+            _expressionSegment.Add(expression, JoinType.LEFT);
 
             return this;
         }
@@ -156,7 +156,7 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
             where TRight : EntityBase, new()
         {
             Parameter.Validate(expression);
-            _statementStore.Add(expression, JoinType.RIGHT);
+            _expressionSegment.Add(expression, JoinType.RIGHT);
 
             return this;
         }
@@ -166,7 +166,7 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
             where TRight : EntityBase, new()
         {
             Parameter.Validate(expression);
-            _statementStore.Add(expression, JoinType.INNER);
+            _expressionSegment.Add(expression, JoinType.INNER);
 
             return this;
         }
@@ -174,15 +174,15 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
         public ISearchMapper<TModel> OrderBy<TOrder, TKey>(Expression<Func<TOrder, TKey>> order, OrderByType orderBy = OrderByType.DESC) where TOrder : EntityBase, new()
         {
             Parameter.Validate(order);
-            _statementStore.AddOrderBy(order, orderBy);
+            _expressionSegment.AddOrderBy(order, orderBy);
 
             return this;
         }
 
         private RawExecuteResult InternalExecuteSql(ExecuteType executeType)
         {
-            IBuilder<TModel> builder = new SelectBuilder<TModel>(_statementStore);
-            _statementStore.ExecuteType = executeType;
+            IBuilder<TModel> builder = new SelectBuilder<TModel>(_expressionSegment);
+            _expressionSegment.ExecuteType = executeType;
 
             var translationResult = builder.CreateTranslateResult();
             var executeResult = GetResultFormCache(executeType, translationResult);

@@ -10,7 +10,7 @@ using NewLibCore.Validate;
 /// <summary>
 /// 语句对象存储
 /// </summary>
-internal class StatementStore
+internal class ExpressionSegment
 {
     /// <summary>
     /// 执行类型
@@ -40,14 +40,14 @@ internal class StatementStore
     /// 分页语句对象
     /// </summary>
     /// <value></value>
-    internal PageStatement Page { get; private set; }
+    internal PageSegment Page { get; private set; }
 
     /// <summary>
     /// 连接语句对象列表
     /// </summary>
     /// <typeparam name="JoinStatement"></typeparam>
     /// <returns></returns>
-    internal IList<JoinStatement> Joins { get; private set; } = new List<JoinStatement>();
+    internal IList<JoinSegment> Joins { get; private set; } = new List<JoinSegment>();
 
     /// <summary>
     /// 将表达式拆分出相应的排序对象
@@ -78,7 +78,7 @@ internal class StatementStore
     internal void Add<TModel, TJoin>(Expression<Func<TModel, TJoin, Boolean>> expression, JoinType joinType) where TModel : PropertyMonitor, new() where TJoin : PropertyMonitor, new()
     {
         Parameter.Validate(expression);
-        Joins.Add(new JoinStatement
+        Joins.Add(new JoinSegment
         {
             Expression = expression,
             JoinType = joinType,
@@ -159,7 +159,7 @@ internal class StatementStore
     {
         Parameter.Validate(pageIndex);
         Parameter.Validate(pageSize);
-        Page = new PageStatement
+        Page = new PageSegment
         {
             Index = pageIndex,
             Size = pageSize

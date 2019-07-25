@@ -14,20 +14,20 @@ namespace NewLibCore.Data.SQL.Builder
     /// <typeparam name="TModel"></typeparam>
     internal class ModifyBuilder<TModel> : IBuilder<TModel> where TModel : PropertyMonitor, new()
     {
-        private readonly Boolean _isVerifyModel;
-
-        private readonly StatementStore _statementStore;
-
         private readonly TModel _instance;
 
-        public ModifyBuilder(TModel model, StatementStore statementStore, Boolean isVerifyModel = false)
+        private readonly Boolean _isVerifyModel;
+
+        private readonly ExpressionSegment _expressionSegment;
+
+        public ModifyBuilder(TModel model, ExpressionSegment expressionSegment, Boolean isVerifyModel = false)
         {
             Parameter.Validate(model);
-            Parameter.Validate(statementStore);
+            Parameter.Validate(expressionSegment);
 
             _instance = model;
             _isVerifyModel = isVerifyModel;
-            _statementStore = statementStore;
+            _expressionSegment = expressionSegment;
         }
 
         /// <summary>
@@ -44,9 +44,9 @@ namespace NewLibCore.Data.SQL.Builder
             }
 
             var propertys = _instance.GetPropertys(); 
-            var translation = new TranslateExpression(_statementStore);
+            var translation = new TranslateExpression(_expressionSegment);
             translation.Result.Append($@"UPDATE {typeof(TModel).GetAliasName()} SET {String.Join(",", propertys.Select(p => $@"{p.Key}=@{p.Key}"))}", propertys.Select(c => new EntityParameter($@"@{c.Key}", c.Value)));
-            if (_statementStore.Where != null)
+            if (_expressionSegment.Where != null)
             {
                 translation.Translate();
             }

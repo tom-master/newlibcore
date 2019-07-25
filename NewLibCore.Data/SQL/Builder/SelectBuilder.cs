@@ -19,12 +19,12 @@ namespace NewLibCore.Data.SQL.Builder
     /// <typeparam name="TModel"></typeparam>
     internal class SelectBuilder<TModel> : IBuilder<TModel> where TModel : PropertyMonitor, new()
     {
-        private readonly StatementStore _statementStore;
+        private readonly ExpressionSegment _expressionSegment;
 
-        internal SelectBuilder(StatementStore statementStore)
+        internal SelectBuilder(ExpressionSegment expressionSegment)
         {
-            Parameter.Validate(statementStore);
-            _statementStore = statementStore;
+            Parameter.Validate(expressionSegment);
+            _expressionSegment = expressionSegment;
         }
 
         /// <summary>
@@ -33,30 +33,30 @@ namespace NewLibCore.Data.SQL.Builder
         /// <returns></returns>
         public TranslateResult CreateTranslateResult()
         {
-            var translation = new TranslateExpression(_statementStore);
+            var translation = new TranslateExpression(_expressionSegment);
             {
-                var statement = StatementParse(_statementStore.Field);
+                var statement = StatementParse(_expressionSegment.Field);
                 translation.Result.Append($@"SELECT {statement.fields} FROM {typeof(TModel).GetAliasName()} AS {statement.tableName}");
                 translation.Translate();
 
-                var aliasMapper = _statementStore.MergeAliasMapper();
+                var aliasMapper = _expressionSegment.MergeAliasMapper();
                 foreach (var aliasItem in aliasMapper)
                 {
                     translation.Result.Append($@"AND {aliasItem.Value.ToLower()}.IsDeleted = 0");
                 }
             }
 
-            if (_statementStore.Order != null)
+            if (_expressionSegment.Order != null)
             {
-                var order = StatementParse(_statementStore.Order);
-                var orderTemplate = MapperConfig.GetInstance().DatabaseInstance.OrderByBuilder(_statementStore.Order.OrderBy, $@"{order.tableName}.{order.fields}");
+                var order = StatementParse(_expressionSegment.Order);
+                var orderTemplate = MapperConfig.GetInstance().DatabaseInstance.OrderByBuilder(_expressionSegment.Order.OrderBy, $@"{order.tableName}.{order.fields}");
                 translation.Result.Append(orderTemplate);
             }
 
-            if (_statementStore.Page != null)
+            if (_expressionSegment.Page != null)
             {
-                var pageIndex = (_statementStore.Page.Size * (_statementStore.Page.Index - 1)).ToString();
-                var pageSize = _statementStore.Page.Size.ToString();
+                var pageIndex = (_expressionSegment.Page.Size * (_expressionSegment.Page.Index - 1)).ToString();
+                var pageSize = _expressionSegment.Page.Size.ToString();
                 translation.Result.Append(MapperConfig.GetInstance().DatabaseInstance.Extension.Page.Replace("{value}", pageIndex).Replace("{pageSize}", pageSize));
             }
 

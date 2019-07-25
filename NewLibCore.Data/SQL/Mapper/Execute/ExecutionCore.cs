@@ -33,7 +33,7 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
         /// </summary>
         public void OpenTransaction()
         {
-            MapperConfig.GetInstance().DatabaseInstance.Logger.Info("open transaction");
+            MapperConfig.GetInstance().DatabaseInstance.Logger.Info("开启事务");
             _useTransaction = true;
         }
 
@@ -47,7 +47,7 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
                 if (_dataTransaction != null)
                 {
                     _dataTransaction.Commit();
-                    MapperConfig.GetInstance().DatabaseInstance.Logger.Info("commit transaction");
+                    MapperConfig.GetInstance().DatabaseInstance.Logger.Info("提交事务");
                 }
                 return;
             }
@@ -64,7 +64,7 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
                 if (_dataTransaction != null)
                 {
                     _dataTransaction.Rollback();
-                    MapperConfig.GetInstance().DatabaseInstance.Logger.Info("rollback transaction ");
+                    MapperConfig.GetInstance().DatabaseInstance.Logger.Info("事务回滚");
                 }
                 return;
             }
@@ -110,9 +110,8 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
                     {
                         cmd.Parameters.AddRange(parameters.Select(s => (DbParameter)s).ToArray());
                     }
-                    MapperConfig.GetInstance().DatabaseInstance.Logger.Info($@"ExecuteType:{executeType}");
-                    MapperConfig.GetInstance().DatabaseInstance.Logger.Info($@"SQL:{sql}");
-                    MapperConfig.GetInstance().DatabaseInstance.Logger.Info($@"PARAMETERS:{(parameters == null || !parameters.Any() ? "" : String.Join($@"{Environment.NewLine}", parameters.Select(s => $@"{s.Key}----{s.Value}")))}");
+                    MapperConfig.GetInstance().DatabaseInstance.Logger.Info($@"SQL:{sql} PARAMETERS:{(parameters == null || !parameters.Any() ? "" : String.Join($@"{Environment.NewLine}", parameters.Select(s => $@"{s.Key}----{s.Value}")))}");
+
                     var executeResult = new RawExecuteResult();
                     if (executeType == ExecuteType.SELECT)
                     {
@@ -150,7 +149,7 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
         {
             if (_connection.State == ConnectionState.Closed)
             {
-                MapperConfig.GetInstance().DatabaseInstance.Logger.Info("open connection");
+                MapperConfig.GetInstance().DatabaseInstance.Logger.Info("开启连接");
                 _connection.Open();
             }
         }

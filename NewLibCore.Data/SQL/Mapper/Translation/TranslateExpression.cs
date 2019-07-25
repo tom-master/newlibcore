@@ -18,17 +18,17 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
 
         private readonly Stack<String> _parameterNameStack;
 
-        private readonly Stack<RelationType> _relationTypesStack;
+        private readonly ExpressionSegment _expressionSegment;
 
-        private readonly StatementStore _statementStore;
+        private readonly Stack<RelationType> _relationTypesStack;
 
         private IReadOnlyList<KeyValuePair<String, String>> _tableAliasMapper;
 
-        internal TranslateExpression(StatementStore statementStore)
+        internal TranslateExpression(ExpressionSegment expressionSegment)
         {
-            Parameter.Validate(statementStore);
+            Parameter.Validate(expressionSegment);
 
-            _statementStore = statementStore;
+            _expressionSegment = expressionSegment;
 
             _relationTypesStack = new Stack<RelationType>();
             _parameterNameStack = new Stack<String>();
@@ -46,10 +46,10 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
         public TranslateResult Translate()
         {
             //获取合并后的表别名
-            _tableAliasMapper = _statementStore.MergeAliasMapper();
+            _tableAliasMapper = _expressionSegment.MergeAliasMapper();
 
             //循环翻译连接对象
-            foreach (var item in _statementStore.Joins)
+            foreach (var item in _expressionSegment.Joins)
             {
                 if (item.AliaNameMapper == null || item.JoinType == JoinType.NONE)
                 {
@@ -78,9 +78,9 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
             Result.Append("WHERE 1=1");
 
             //翻译Where条件对象
-            if (_statementStore.Where != null)
+            if (_expressionSegment.Where != null)
             {
-                var lambdaExp = (LambdaExpression)_statementStore.Where.Expression;
+                var lambdaExp = (LambdaExpression)_expressionSegment.Where.Expression;
                 if (lambdaExp.Body.NodeType == ExpressionType.Constant)
                 {
                     return Result;
@@ -229,7 +229,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
                         {
                             var parameterExp = (ParameterExpression)memberExp.Expression;
                             var internalAliasName = "";
-                            if (_statementStore.ExecuteType != ExecuteType.UPDATE)
+                            if (_expressionSegment.ExecuteType != ExecuteType.UPDATE)
                             {
                                 if (!_tableAliasMapper.Any(a => a.Key == parameterExp.Name && a.Value == parameterExp.Type.GetAliasName()))
                                 {
