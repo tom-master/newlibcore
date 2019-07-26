@@ -1,23 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
-using NewLibCore.Data.SQL.Mapper;
+using System.Timers;
 using NewLibCore.Data.SQL.Mapper.AttributeExtension;
 using NewLibCore.Data.SQL.Mapper.AttributeExtension.Association;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
-using NewLibCore.Logger;
 
 namespace NewLibCore.Run
 {
-    internal class Program
+    public class Program
     {
-        private static void Main(String[] args)
+        public static void Main(String[] args)
         {
-            using (var mapper = new EntityMapper())
+            for (var i = 0; i < 2; i++)
             {
-                mapper.OpenTransaction();
-
-                mapper.Commit();
+                var test = new TimerTest();
+                test.Init();
             }
+            Console.ReadKey();
+        }
+    }
+
+
+    internal class TimerTest
+    {
+        private static Timer _timer;
+
+        public void Init()
+        {
+            _timer = new Timer(1000 * 10);
+            _timer.Elapsed += new ElapsedEventHandler((a, b) => HandlerUnpaymentTimeoutOrder(Guid.NewGuid()));
+            _timer.AutoReset = true;
+            _timer.Enabled = true;
+        }
+
+        private void HandlerUnpaymentTimeoutOrder(Guid guid)
+        {
+            Console.WriteLine($@"[{DateTime.Now}]{guid}");
         }
     }
 
