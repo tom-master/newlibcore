@@ -52,7 +52,7 @@ namespace NewLibCore.Data.SQL.Builder
             }
             _instance.Reset();
 
-            translation.Result.Append($@"{MapperConfig.GetInstance().DatabaseInstance.Extension.RowCount}");
+            translation.Result.Append($@"{MapperConfig.DatabaseConfig.Extension.RowCount}");
             return translation.Result;
         }
     }

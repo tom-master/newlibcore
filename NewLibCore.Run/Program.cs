@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Timers;
 using NewLibCore.Data.SQL.Mapper.AttributeExtension;
 using NewLibCore.Data.SQL.Mapper.AttributeExtension.Association;
+using NewLibCore.Data.SQL.Mapper.Config;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 
 namespace NewLibCore.Run
@@ -11,31 +11,7 @@ namespace NewLibCore.Run
     {
         public static void Main(String[] args)
         {
-            for (var i = 0; i < 2; i++)
-            {
-                var test = new TimerTest();
-                test.Init();
-            }
-            Console.ReadKey();
-        }
-    }
-
-
-    internal class TimerTest
-    {
-        private static Timer _timer;
-
-        public void Init()
-        {
-            _timer = new Timer(1000 * 10);
-            _timer.Elapsed += new ElapsedEventHandler((a, b) => HandlerUnpaymentTimeoutOrder(Guid.NewGuid()));
-            _timer.AutoReset = true;
-            _timer.Enabled = true;
-        }
-
-        private void HandlerUnpaymentTimeoutOrder(Guid guid)
-        {
-            Console.WriteLine($@"[{DateTime.Now}]{guid}");
+            MapperConfig.Instance.SwitchToMsSql();
         }
     }
 

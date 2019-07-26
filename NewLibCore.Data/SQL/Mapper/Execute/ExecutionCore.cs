@@ -24,8 +24,8 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
 
         internal ExecutionCore()
         {
-            Parameter.Validate(MapperConfig.GetInstance().DatabaseInstance);
-            _connection = MapperConfig.GetInstance().DatabaseInstance.GetConnectionInstance();
+            Parameter.Validate(MapperConfig.DatabaseConfig);
+            _connection = MapperConfig.DatabaseConfig.GetConnectionInstance();
         }
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
         /// </summary>
         public void OpenTransaction()
         {
-            MapperConfig.GetInstance().DatabaseInstance.Logger.Info("开启事务");
+            MapperConfig.DatabaseConfig.Logger.Info("开启事务");
             _useTransaction = true;
         }
 
@@ -47,7 +47,7 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
                 if (_dataTransaction != null)
                 {
                     _dataTransaction.Commit();
-                    MapperConfig.GetInstance().DatabaseInstance.Logger.Info("提交事务");
+                    MapperConfig.DatabaseConfig.Logger.Info("提交事务");
                 }
                 return;
             }
@@ -64,7 +64,7 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
                 if (_dataTransaction != null)
                 {
                     _dataTransaction.Rollback();
-                    MapperConfig.GetInstance().DatabaseInstance.Logger.Info("事务回滚");
+                    MapperConfig.DatabaseConfig.Logger.Info("事务回滚");
                 }
                 return;
             }
@@ -110,7 +110,7 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
                     {
                         cmd.Parameters.AddRange(parameters.Select(s => (DbParameter)s).ToArray());
                     }
-                    MapperConfig.GetInstance().DatabaseInstance.Logger.Info($@"SQL:{sql} PARAMETERS:{(parameters == null || !parameters.Any() ? "" : String.Join($@"{Environment.NewLine}", parameters.Select(s => $@"{s.Key}----{s.Value}")))}");
+                    MapperConfig.DatabaseConfig.Logger.Info($@"SQL:{sql} PARAMETERS:{(parameters == null || !parameters.Any() ? "" : String.Join($@"{Environment.NewLine}", parameters.Select(s => $@"{s.Key}----{s.Value}")))}");
 
                     var executeResult = new RawExecuteResult();
                     if (executeType == ExecuteType.SELECT)
@@ -137,7 +137,7 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
             }
             catch (Exception ex)
             {
-                MapperConfig.GetInstance().DatabaseInstance.Logger.Error($@"{ex}");
+                MapperConfig.DatabaseConfig.Logger.Error($@"{ex}");
                 throw;
             }
         }
@@ -149,7 +149,7 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
         {
             if (_connection.State == ConnectionState.Closed)
             {
-                MapperConfig.GetInstance().DatabaseInstance.Logger.Info("开启连接");
+                MapperConfig.DatabaseConfig.Logger.Info("开启连接");
                 _connection.Open();
             }
         }
@@ -166,7 +166,7 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
                 {
                     _useTransaction = true;
                     _dataTransaction = _connection.BeginTransaction();
-                    MapperConfig.GetInstance().DatabaseInstance.Logger.Info("begin transaction");
+                    MapperConfig.DatabaseConfig.Logger.Info("begin transaction");
                 }
                 return _dataTransaction;
             }
@@ -183,7 +183,7 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
 
         private void Dispose(Boolean disposing)
         {
-            MapperConfig.GetInstance().DatabaseInstance.Logger.Warn($@"close connection {Environment.NewLine}");
+            MapperConfig.DatabaseConfig.Logger.Warn($@"close connection {Environment.NewLine}");
             if (!_disposed)
             {
                 if (!disposing)

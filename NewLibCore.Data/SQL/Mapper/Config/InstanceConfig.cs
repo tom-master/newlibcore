@@ -39,20 +39,25 @@ namespace NewLibCore.Data.SQL.Mapper.Config
         /// <summary>
         /// 追加关系类型
         /// </summary>
-
         protected abstract void AppendRelationType();
 
-        /// <summary>
-        /// 实例扩展
-        /// </summary>
-        /// <value></value>
-        internal virtual InstanceExtension Extension { get; }
+        protected internal virtual InstanceConfig UseCache()
+        {
+            Cache = new ExecutionResultCache();
+            return this;
+        }
 
         /// <summary>
         /// 日志
         /// </summary>
         /// <value></value>
         internal ILogger Logger { get; }
+
+        /// <summary>
+        /// 实例扩展
+        /// </summary>
+        /// <value></value>
+        internal virtual InstanceExtension Extension { get; }
 
         /// <summary>
         /// 获取数据库连接对象实例

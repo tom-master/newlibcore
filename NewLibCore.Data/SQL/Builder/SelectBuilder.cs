@@ -49,7 +49,7 @@ namespace NewLibCore.Data.SQL.Builder
             if (_expressionSegment.Order != null)
             {
                 var order = StatementParse(_expressionSegment.Order);
-                var orderTemplate = MapperConfig.GetInstance().DatabaseInstance.OrderByBuilder(_expressionSegment.Order.OrderBy, $@"{order.tableName}.{order.fields}");
+                var orderTemplate = MapperConfig.DatabaseConfig.OrderByBuilder(_expressionSegment.Order.OrderBy, $@"{order.tableName}.{order.fields}");
                 translation.Result.Append(orderTemplate);
             }
 
@@ -57,7 +57,7 @@ namespace NewLibCore.Data.SQL.Builder
             {
                 var pageIndex = (_expressionSegment.Page.Size * (_expressionSegment.Page.Index - 1)).ToString();
                 var pageSize = _expressionSegment.Page.Size.ToString();
-                translation.Result.Append(MapperConfig.GetInstance().DatabaseInstance.Extension.Page.Replace("{value}", pageIndex).Replace("{pageSize}", pageSize));
+                translation.Result.Append(MapperConfig.DatabaseConfig.Extension.Page.Replace("{value}", pageIndex).Replace("{pageSize}", pageSize));
             }
 
             return translation.Result;
