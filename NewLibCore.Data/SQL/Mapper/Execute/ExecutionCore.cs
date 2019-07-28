@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
+using System.Threading;
 using NewLibCore.Data.SQL.Mapper.Config;
 using NewLibCore.Data.SQL.Mapper.Translation;
 using NewLibCore.Validate;
@@ -96,7 +97,7 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
             try
             {
                 Parameter.Validate(sql);
-
+                Thread.Sleep(1);
                 Open();
                 using (var cmd = _connection.CreateCommand())
                 {

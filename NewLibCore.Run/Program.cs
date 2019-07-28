@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using NewLibCore.Data.SQL.Mapper;
 using NewLibCore.Data.SQL.Mapper.AttributeExtension;
 using NewLibCore.Data.SQL.Mapper.AttributeExtension.Association;
@@ -14,9 +15,12 @@ namespace NewLibCore.Run
         {
             MapperConfig.Instance.SwitchToMySql();
 
-            using (var mapper = new EntityMapper())
-            {
-                var user = mapper.Select<User>().Where(w => w.Id == 4).FirstOrDefault();
+            while (true)
+            { 
+                using (var mapper = new EntityMapper())
+                {
+                    var user = mapper.Select<User>().Where(w => w.Id == 4).FirstOrDefault();
+                }
             }
         }
     }

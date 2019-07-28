@@ -98,9 +98,7 @@ namespace NewLibCore.Data.SQL.Builder
                         }
                     }
                 }
-
-                
-                
+                return (String.Join(",", f), modelAliasName.FirstOrDefault());
             }
 
             var fields = (LambdaExpression)statement.Expression;
