@@ -87,7 +87,7 @@ namespace NewLibCore.Data.SQL.Builder
 
                 {
                     var subProperty = modelType.GetProperties().Where(w => w.GetCustomAttribute<SubModelAttribute>() != null);
-                    if (subProperty != null)
+                    if (subProperty != null && subProperty.Any())
                     {
                         var propertyType = subProperty.FirstOrDefault().PropertyType;
                         var typeName = propertyType.GetAliasName().ToLower();
@@ -99,7 +99,8 @@ namespace NewLibCore.Data.SQL.Builder
                     }
                 }
 
-                return (String.Join(",", f), modelAliasName.FirstOrDefault());
+                
+                
             }
 
             var fields = (LambdaExpression)statement.Expression;

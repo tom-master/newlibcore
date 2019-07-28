@@ -9,18 +9,12 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/NewLibCore.Run/bin/Debug/netcoreapp2.0/NewLibCore.Run.dll",
+            "program": "${workspaceFolder}/NewLibCore.Run/bin/Debug/netcoreapp2.2/NewLibCore.Run.dll",
             "args": [],
             "cwd": "${workspaceFolder}/NewLibCore.Run",
             "console": "internalConsole",
             "stopAtEntry": false,
             "internalConsoleOptions": "openOnSessionStart"
-        },
-        {
-            "name": ".NET Core Attach",
-            "type": "coreclr",
-            "request": "attach",
-            "processId": "${command:pickProcess}"
         }
     ]
 }

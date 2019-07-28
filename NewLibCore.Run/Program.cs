@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using NewLibCore.Data.SQL.Mapper;
 using NewLibCore.Data.SQL.Mapper.AttributeExtension;
 using NewLibCore.Data.SQL.Mapper.AttributeExtension.Association;
 using NewLibCore.Data.SQL.Mapper.Config;
@@ -11,7 +12,12 @@ namespace NewLibCore.Run
     {
         public static void Main(String[] args)
         {
-            MapperConfig.Instance.SwitchToMsSql();
+            MapperConfig.Instance.SwitchToMySql();
+
+            using (var mapper = new EntityMapper())
+            {
+                var user = mapper.Select<User>().Where(w => w.Id == 4).FirstOrDefault();
+            }
         }
     }
 
@@ -162,7 +168,7 @@ namespace NewLibCore.Run
         [Required, ForeignKey]
         public Int32 WallpaperId { get; private set; }
 
-        [SubModel]
+        //[SubModel]
         public Wallpaper Wallpaper { get; set; }
 
         /// <summary>
@@ -255,7 +261,7 @@ namespace NewLibCore.Run
         [Required, ForeignKey]
         public Int32 ConfigId { get; private set; }
 
-        [SubModel]
+        //[SubModel]
         public Config Config { get; set; }
 
         /// <summary>
@@ -772,7 +778,7 @@ namespace NewLibCore.Run
         /// <summary>
         /// 权限
         /// </summary>
-        [SubModel]
+        //[SubModel]
         public IList<RolePower> Powers { get; private set; }
 
         /// <summary>
