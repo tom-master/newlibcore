@@ -181,14 +181,14 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
 
         private RawExecuteResult InternalExecuteSql(ExecuteType executeType)
         {
-            IBuilder<TModel> builder = new SelectBuilder<TModel>(_expressionSegment);
             _expressionSegment.ExecuteType = executeType;
+            IBuilder<TModel> builder = new SelectBuilder<TModel>(_expressionSegment);
 
             var translationResult = builder.CreateTranslateResult();
             var executeResult = GetResultFormCache(executeType, translationResult);
             if (executeResult == null)
             {
-                executeResult = _executionCore.Execute(executeType, translationResult);
+                executeResult = _executionCore.Execute(translationResult);
                 SetCacheFormResult(executeType, translationResult, executeResult);
             }
             return executeResult;

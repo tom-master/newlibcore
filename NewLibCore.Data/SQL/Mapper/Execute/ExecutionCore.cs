@@ -3,23 +3,23 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
-using System.Threading;
 using NewLibCore.Data.SQL.Mapper.Config;
 using NewLibCore.Data.SQL.Mapper.Translation;
 using NewLibCore.Validate;
+using Newtonsoft.Json;
 
 namespace NewLibCore.Data.SQL.Mapper.Execute
 {
     /// <summary>
     /// sql语句执行
     /// </summary>
-    public class ExecutionCore : IDisposable
+    public class ExecutionCore
     {
         private DbConnection _connection;
 
         private DbTransaction _dataTransaction;
 
-        private Boolean _disposed = false;
+        private readonly Boolean _disposed = false;
 
         private Boolean _useTransaction = false;
 
@@ -78,10 +78,10 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
         /// <param name="executeType"></param>
         /// <param name="translationCore"></param>
         /// <returns></returns>
-        internal RawExecuteResult Execute(ExecuteType executeType, TranslateResult translationCore)
+        internal RawExecuteResult Execute(TranslateResult translationCore)
         {
             Parameter.Validate(translationCore);
-            return RawExecute(executeType, translationCore.GetSql(), translationCore.GetParameters(), CommandType.Text);
+            return RawExecute(translationCore.ExecuteType, translationCore.GetSql(), translationCore.GetParameters(), CommandType.Text);
         }
 
         /// <summary>
@@ -97,8 +97,8 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
             try
             {
                 Parameter.Validate(sql);
-                Thread.Sleep(1);
                 Open();
+                using (_connection)
                 using (var cmd = _connection.CreateCommand())
                 {
                     if (_useTransaction)
@@ -111,7 +111,7 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
                     {
                         cmd.Parameters.AddRange(parameters.Select(s => (DbParameter)s).ToArray());
                     }
-                    MapperConfig.DatabaseConfig.Logger.Info($@"SQL:{sql} PARAMETERS:{(parameters == null || !parameters.Any() ? "" : String.Join($@"{Environment.NewLine}", parameters.Select(s => $@"{s.Key}----{s.Value}")))}");
+                    MapperConfig.DatabaseConfig.Logger.Info($@"SQL语句:{sql} 占位符与参数:{(parameters == null || !parameters.Any() ? "" : String.Join($@"{Environment.NewLine}", parameters.Select(s => $@"{s.Key}----{s.Value}")))}");
 
                     var executeResult = new RawExecuteResult();
                     if (executeType == ExecuteType.SELECT)
@@ -132,7 +132,7 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
                         executeResult.Value = cmd.ExecuteScalar();
                     }
                     cmd.Parameters.Clear();
-
+                    MapperConfig.DatabaseConfig.Logger.Info($@"查询后的结果:{JsonConvert.SerializeObject(executeResult.Value)}");
                     return executeResult;
                 }
             }
@@ -173,39 +173,5 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
             }
             throw new Exception("没有启动事务");
         }
-
-        #region dispose
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        private void Dispose(Boolean disposing)
-        {
-            MapperConfig.DatabaseConfig.Logger.Warn($@"close connection {Environment.NewLine}");
-            if (!_disposed)
-            {
-                if (!disposing)
-                {
-                    return;
-                }
-
-                if (_connection != null)
-                {
-                    if (_connection.State != ConnectionState.Closed)
-                    {
-                        _connection.Close();
-                    }
-                    _connection.Dispose();
-                    _connection = null;
-                }
-                _disposed = true;
-            }
-        }
-
-        #endregion
     }
-
 }

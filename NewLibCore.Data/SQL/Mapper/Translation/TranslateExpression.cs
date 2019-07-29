@@ -93,6 +93,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
                 InternalBuildWhere(lambdaExp);
             }
 
+            Result.ExecuteType = _expressionSegment.ExecuteType;
             return Result;
         }
 

@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using NewLibCore.Data.SQL.Mapper.Config;
 
 namespace NewLibCore.Data.SQL.Mapper.EntityExtension
 {
@@ -35,31 +36,33 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
 
         private static List<T> ConvertToList<T>(DataTable dt) where T : new()
         {
-            var list = new List<T>(); 
+            var list = new List<T>();
+            var tableName = $@"{typeof(T).GetAliasName()}_";
             foreach (DataRow dr in dt.Rows)
             {
-                var mainModel = Activator.CreateInstance<T>();
-                var propertys = mainModel.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public);
+                var masterTable = Activator.CreateInstance<T>();
+                var propertys = masterTable.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public);
                 foreach (var propertyInfo in propertys)
                 {
-                    if (dt.Columns.Contains(propertyInfo.Name))
+                    var propertyName = $@"{tableName}{propertyInfo.Name}";
+                    if (dt.Columns.Contains(propertyName))
                     {
-                        var value = dr[propertyInfo.Name];
+                        var value = dr[propertyName];
                         if (value != DBNull.Value)
                         {
                             try
                             {
                                 var fast = new FastProperty(propertyInfo);
-                                fast.Set(mainModel, ConvertExtension.ChangeType(value, propertyInfo.PropertyType));
+                                fast.Set(masterTable, ConvertExtension.ChangeType(value, propertyInfo.PropertyType));
                             }
-                            catch (Exception)
+                            catch (Exception ex)
                             {
-                                throw;
+                                MapperConfig.DatabaseConfig.Logger.Error($@"{typeof(T).Name}转换失败:{ex}");
                             }
                         }
                     }
                 }
-                list.Add(mainModel);
+                list.Add(masterTable);
             }
             return list;
         }

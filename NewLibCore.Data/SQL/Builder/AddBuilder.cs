@@ -42,6 +42,7 @@ namespace NewLibCore.Data.SQL.Builder
 
             var translationResult = new TranslateResult();
             translationResult.Append($@" INSERT {typeof(TModel).GetAliasName()} ({String.Join(",", propertyInfos.Select(c => c.Key))}) VALUES ({String.Join(",", propertyInfos.Select(key => $@"@{key.Key}"))}) {MapperConfig.DatabaseConfig.Extension.Identity}", entityParameters);
+            translationResult.ExecuteType = ExecuteType.INSERT;
             return translationResult;
         }
     }

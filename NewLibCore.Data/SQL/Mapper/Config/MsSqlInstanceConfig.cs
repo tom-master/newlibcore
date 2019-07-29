@@ -10,6 +10,9 @@ namespace NewLibCore.Data.SQL.Mapper.Config
     /// </summary>
     internal class MsSqlInstanceConfig : InstanceConfig
     {
+        //private static SqlConnection _connection;
+        //private static readonly Object _sync = new Object();
+
         protected internal MsSqlInstanceConfig(ILogger logger) : base(logger)
         {
 
@@ -26,6 +29,17 @@ namespace NewLibCore.Data.SQL.Mapper.Config
         internal override DbConnection GetConnectionInstance()
         {
             return new SqlConnection(ConnectionString);
+            //if (_connection == null)
+            //{
+            //    lock (_sync)
+            //    {
+            //        if (_connection == null)
+            //        {
+            //            _connection = new SqlConnection(ConnectionString);
+            //        }
+            //    }
+            //}
+            //return _connection;
         }
 
         internal override DbParameter GetParameterInstance()

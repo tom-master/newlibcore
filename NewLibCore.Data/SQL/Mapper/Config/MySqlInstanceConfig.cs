@@ -10,9 +10,8 @@ namespace NewLibCore.Data.SQL.Mapper.Config
     /// </summary>
     internal class MySqlInstanceConfig : InstanceConfig
     {
-
-        private static MySqlConnection _connection;
-        private static readonly Object _sync = new Object();
+        //private static MySqlConnection _connection;
+        //private static readonly Object _sync = new Object();
 
         protected internal MySqlInstanceConfig(ILogger logger) : base(logger)
         {
@@ -29,18 +28,18 @@ namespace NewLibCore.Data.SQL.Mapper.Config
 
         internal override DbConnection GetConnectionInstance()
         {
-            //return new MySqlConnection(ConnectionString);
-            if (_connection == null)
-            {
-                lock (_sync)
-                {
-                    if (_connection == null)
-                    {
-                        _connection = new MySqlConnection(ConnectionString);
-                    }
-                }
-            }
-            return _connection;
+            return new MySqlConnection(ConnectionString);
+            //if (_connection == null)
+            //{
+            //    lock (_sync)
+            //    {
+            //        if (_connection == null)
+            //        {
+            //            _connection = new MySqlConnection(ConnectionString);
+            //        }
+            //    }
+            //}
+            //return _connection;
         }
 
         internal override DbParameter GetParameterInstance()

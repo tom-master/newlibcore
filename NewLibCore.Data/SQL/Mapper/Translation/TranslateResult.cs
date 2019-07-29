@@ -21,6 +21,8 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
             _parameters = new List<EntityParameter>();
         }
 
+        internal ExecuteType ExecuteType { get; set; }
+
         /// <summary>
         /// 获取翻译好的sql语句
         /// </summary>

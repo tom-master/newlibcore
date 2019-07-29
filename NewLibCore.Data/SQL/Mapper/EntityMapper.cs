@@ -14,6 +14,31 @@ namespace NewLibCore.Data.SQL.Mapper
     /// </summary>
     public sealed class EntityMapper : ExecutionCore
     {
+        private static EntityMapper _entityMapper;
+
+        private static readonly Object _sync = new Object();
+
+        private EntityMapper() { }
+
+        /// <summary>
+        /// 创建一个EntityMapper实例
+        /// </summary>
+        /// <returns></returns>
+        public static EntityMapper CreateMapper()
+        {
+            if (_entityMapper == null)
+            {
+                lock (_sync)
+                {
+                    if (_entityMapper == null)
+                    {
+                        _entityMapper = new EntityMapper();
+                    }
+                }
+            }
+            return _entityMapper;
+        }
+
         /// <summary>
         /// 添加一個TModel
         /// </summary>

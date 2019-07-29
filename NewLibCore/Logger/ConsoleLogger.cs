@@ -36,7 +36,7 @@ namespace NewLibCore.Logger
             switch (level)
             {
                 case LoggerLevel.Info:
-                    consoleColor = ConsoleColor.Blue;
+                    consoleColor = ConsoleColor.White;
                     break;
                 case LoggerLevel.Warning:
                     consoleColor = ConsoleColor.Yellow;

@@ -23,7 +23,7 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
             _expressionSegment.ExecuteType = ExecuteType.UPDATE;
 
             IBuilder<TModel> builder = new ModifyBuilder<TModel>(model, _expressionSegment, true);
-            var executeResult = _executionCore.Execute(ExecuteType.UPDATE, builder.CreateTranslateResult());
+            var executeResult = _executionCore.Execute(builder.CreateTranslateResult());
             return (Int32)executeResult.Value > 0;
         }
     }
