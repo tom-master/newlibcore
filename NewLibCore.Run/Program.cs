@@ -12,18 +12,13 @@ namespace NewLibCore.Run
     {
         public static void Main(String[] args)
         {
-            MapperConfig.Instance.SwitchToMySql();
-            //for (var i = 0; i < 5; i++)
-            //{
-            //    ThreadPool.QueueUserWorkItem((a) =>
-            //    {
-            //        while (true)
-            //        {
-            var mapper = EntityMapper.CreateMapper();
-            var user = mapper.Select<User>().Where(w => w.Id == 4).FirstOrDefault();
-            //        }
-            //    });
-            //}
+            MapperConfig.Instance.SwitchToMySql().UseCache();
+
+            while (true)
+            {
+                var mapper = EntityMapper.CreateMapper();
+                var user = mapper.Select<User>().Where(w => w.Id == 4).FirstOrDefault();
+            }
 
             Console.ReadKey();
         }

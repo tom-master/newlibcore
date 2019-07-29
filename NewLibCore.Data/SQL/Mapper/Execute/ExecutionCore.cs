@@ -131,8 +131,7 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
                     {
                         executeResult.Value = cmd.ExecuteScalar();
                     }
-                    cmd.Parameters.Clear();
-                    MapperConfig.DatabaseConfig.Logger.Info($@"查询后的结果:{JsonConvert.SerializeObject(executeResult.Value)}");
+                    cmd.Parameters.Clear(); 
                     return executeResult;
                 }
             }

@@ -10,8 +10,6 @@ namespace NewLibCore.Data.SQL.Mapper.Config
     {
         private static readonly Object _obj = new Object();
 
-        private static MapperConfig _config;
-
         private MapperConfig() { }
 
         internal static InstanceConfig DatabaseConfig { get; private set; }
@@ -20,32 +18,17 @@ namespace NewLibCore.Data.SQL.Mapper.Config
         /// 初始化数据库配置
         /// </summary>
         /// <returns></returns>
-        public static MapperConfig Instance
-        {
-            get
-            {
-                if (_config == null)
-                {
-                    lock (_obj)
-                    {
-                        if (_config == null)
-                        {
-                            _config = new MapperConfig();
-                        }
-                    }
-                }
-                return _config;
-            }
-        }
+        public static MapperConfig Instance { get; } = new MapperConfig();
 
         /// <summary>
         /// 切换为mysql
         /// </summary>
         /// <param name="logger"></param>
         /// <returns></returns>
-        public void SwitchToMySql(ILogger logger = null)
+        public MapperConfig SwitchToMySql(ILogger logger = null)
         {
             SwitchTo(DatabaseType.MYSQL, logger);
+            return this;
         }
 
         /// <summary>
@@ -53,9 +36,15 @@ namespace NewLibCore.Data.SQL.Mapper.Config
         /// </summary>
         /// <param name="logger"></param>
         /// <returns></returns>
-        public void SwitchToMsSql(ILogger logger = null)
+        public MapperConfig SwitchToMsSql(ILogger logger = null)
         {
             SwitchTo(DatabaseType.MSSQL, logger);
+            return this;
+        }
+
+        public void UseCache()
+        {
+            DatabaseConfig?.UseCache();
         }
 
         /// <summary>
@@ -65,21 +54,30 @@ namespace NewLibCore.Data.SQL.Mapper.Config
         /// <param name="logger"></param>
         private void SwitchTo(DatabaseType database, ILogger logger)
         {
-            switch (database)
+            if (DatabaseConfig == null)
             {
-                case DatabaseType.MSSQL:
+                lock (_obj)
                 {
-                    DatabaseConfig = new MsSqlInstanceConfig(logger);
-                    break;
-                }
-                case DatabaseType.MYSQL:
-                {
-                    DatabaseConfig = new MySqlInstanceConfig(logger);
-                    break;
-                }
-                default:
-                {
-                    throw new ArgumentException($@"暂不支持的数据库类型:{database}");
+                    if (DatabaseConfig == null)
+                    {
+                        switch (database)
+                        {
+                            case DatabaseType.MSSQL:
+                            {
+                                DatabaseConfig = new MsSqlInstanceConfig(logger);
+                                break;
+                            }
+                            case DatabaseType.MYSQL:
+                            {
+                                DatabaseConfig = new MySqlInstanceConfig(logger);
+                                break;
+                            }
+                            default:
+                            {
+                                throw new ArgumentException($@"暂不支持的数据库类型:{database}");
+                            }
+                        }
+                    }
                 }
             }
         }

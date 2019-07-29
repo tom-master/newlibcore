@@ -51,7 +51,6 @@ namespace NewLibCore.Logger
                 default:
                     break;
             }
-
             var stackTrace = new StackTrace();
             var stackFrame = stackTrace.GetFrame(2);
             var type = stackFrame.GetMethod().DeclaringType;

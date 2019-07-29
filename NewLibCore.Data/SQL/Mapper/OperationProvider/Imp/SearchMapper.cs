@@ -9,6 +9,7 @@ using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Data.SQL.Mapper.Execute;
 using NewLibCore.Data.SQL.Mapper.Translation;
 using NewLibCore.Validate;
+using Newtonsoft.Json;
 
 namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
 {
@@ -184,6 +185,7 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
                 executeResult = _executionCore.Execute(translationResult);
                 SetCacheFormResult(translationResult, executeResult);
             }
+            MapperConfig.DatabaseConfig.Logger.Info($@"查询后的结果:{JsonConvert.SerializeObject(executeResult.Value)}");
             return executeResult;
         }
 

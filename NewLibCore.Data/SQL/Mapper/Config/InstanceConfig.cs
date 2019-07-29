@@ -41,7 +41,7 @@ namespace NewLibCore.Data.SQL.Mapper.Config
         /// </summary>
         protected abstract void AppendRelationType();
 
-        protected internal virtual InstanceConfig UseCache()
+        protected internal InstanceConfig UseCache()
         {
             Cache = new ExecutionResultCache();
             return this;
