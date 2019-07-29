@@ -30,40 +30,33 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
 
         public Int32 Count()
         {
-            var sw = new Stopwatch();
-            sw.Start();
-
-            Select(s => "COUNT(*)");
-            var executeResult = InternalExecuteSql(ExecuteType.SELECT_SINGLE);
-            Int32.TryParse(executeResult.Value.ToString(), out var count);
-            sw.Stop();
-            MapperConfig.DatabaseConfig.Logger.Info($@"共花费{Math.Round(sw.Elapsed.TotalSeconds, 2)}s");
-
-            return count;
+            return Watch<Int32>(() =>
+            {
+                Select(s => "COUNT(*)");
+                var executeResult = InternalExecuteSql(ExecuteType.SELECT_SINGLE);
+                Int32.TryParse(executeResult.Value.ToString(), out var count);
+                return count;
+            });
         }
 
         public TModel FirstOrDefault()
         {
-            var sw = new Stopwatch();
-            sw.Start();
-            var executeResult = InternalExecuteSql(ExecuteType.SELECT);
-            var dataTable = executeResult.Value as DataTable;
-            var result = dataTable.ToSingle<TModel>();
-            sw.Stop();
-            MapperConfig.DatabaseConfig.Logger.Info($@"共花费{Math.Round(sw.Elapsed.TotalSeconds, 2)}s");
-            return result;
+            return Watch<TModel>(() =>
+            {
+                var executeResult = InternalExecuteSql(ExecuteType.SELECT);
+                var dataTable = executeResult.Value as DataTable;
+                return dataTable.ToSingle<TModel>();
+            });
         }
 
         public List<TModel> ToList()
         {
-            var sw = new Stopwatch();
-            sw.Start();
-            var executeResult = InternalExecuteSql(ExecuteType.SELECT);
-            var dataTable = executeResult.Value as DataTable;
-            var models = dataTable.ToList<TModel>();
-            sw.Stop();
-            MapperConfig.DatabaseConfig.Logger.Info($@"共花费{Math.Round(sw.Elapsed.TotalSeconds, 2)}s");
-            return models;
+            return Watch<List<TModel>>(() =>
+            {
+                var executeResult = InternalExecuteSql(ExecuteType.SELECT);
+                var dataTable = executeResult.Value as DataTable;
+                return dataTable.ToList<TModel>();
+            });
         }
 
         public ISearchMapper<TModel> Select<T>(Expression<Func<TModel, T, dynamic>> fields = null) where T : EntityBase, new()
@@ -185,26 +178,26 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
             IBuilder<TModel> builder = new SelectBuilder<TModel>(_expressionSegment);
 
             var translationResult = builder.CreateTranslateResult();
-            var executeResult = GetResultFormCache(executeType, translationResult);
+            var executeResult = GetResultFormCache(translationResult);
             if (executeResult == null)
             {
                 executeResult = _executionCore.Execute(translationResult);
-                SetCacheFormResult(executeType, translationResult, executeResult);
+                SetCacheFormResult(translationResult, executeResult);
             }
             return executeResult;
         }
 
-        private static void SetCacheFormResult(ExecuteType executeType, TranslateResult translationResult, RawExecuteResult executeResult)
+        private static void SetCacheFormResult(TranslateResult translationResult, RawExecuteResult executeResult)
         {
-            if ((executeType == ExecuteType.SELECT || executeType == ExecuteType.SELECT_SINGLE) && MapperConfig.DatabaseConfig.Cache != null)
+            if (MapperConfig.DatabaseConfig.Cache != null)
             {
                 MapperConfig.DatabaseConfig.Cache.Add(translationResult.PrepareCacheKey(), executeResult);
             }
         }
 
-        private static RawExecuteResult GetResultFormCache(ExecuteType executeType, TranslateResult translationResult)
+        private static RawExecuteResult GetResultFormCache(TranslateResult translationResult)
         {
-            if ((executeType == ExecuteType.SELECT || executeType == ExecuteType.SELECT_SINGLE) && MapperConfig.DatabaseConfig.Cache != null)
+            if (MapperConfig.DatabaseConfig.Cache != null)
             {
                 var cacheResult = MapperConfig.DatabaseConfig.Cache.Get(translationResult.PrepareCacheKey());
                 if (cacheResult != null)
@@ -213,6 +206,19 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
                 }
             }
             return default;
+        }
+
+        private T Watch<T>(Func<Object> func)
+        {
+            var sw = new Stopwatch();
+            sw.Start();
+
+            var returnValue = (T)func();
+
+            sw.Stop();
+            MapperConfig.DatabaseConfig.Logger.Info($@"共花费{Math.Round(sw.Elapsed.TotalSeconds, 2)}s");
+
+            return returnValue;
         }
     }
 }

@@ -36,35 +36,36 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
 
         private static List<T> ConvertToList<T>(DataTable dt) where T : new()
         {
-            var list = new List<T>();
-            var tableName = $@"{typeof(T).GetAliasName()}_";
-            foreach (DataRow dr in dt.Rows)
+            try
             {
-                var masterTable = Activator.CreateInstance<T>();
-                var propertys = masterTable.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public);
-                foreach (var propertyInfo in propertys)
+                var list = new List<T>();
+                var masterName = $@"{typeof(T).GetAliasName()}_";
+                foreach (DataRow dr in dt.Rows)
                 {
-                    var propertyName = $@"{tableName}{propertyInfo.Name}";
-                    if (dt.Columns.Contains(propertyName))
+                    var masterTable = Activator.CreateInstance<T>();
+                    var propertys = masterTable.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public);
+                    foreach (var propertyInfo in propertys)
                     {
-                        var value = dr[propertyName];
-                        if (value != DBNull.Value)
+                        var propertyName = $@"{masterName}{propertyInfo.Name}";
+                        if (dt.Columns.Contains(propertyName))
                         {
-                            try
+                            var value = dr[propertyName];
+                            if (value != DBNull.Value)
                             {
                                 var fast = new FastProperty(propertyInfo);
                                 fast.Set(masterTable, ConvertExtension.ChangeType(value, propertyInfo.PropertyType));
                             }
-                            catch (Exception ex)
-                            {
-                                MapperConfig.DatabaseConfig.Logger.Error($@"{typeof(T).Name}转换失败:{ex}");
-                            }
                         }
                     }
+                    list.Add(masterTable);
                 }
-                list.Add(masterTable);
+                return list;
             }
-            return list;
+            catch (Exception ex)
+            {
+                MapperConfig.DatabaseConfig.Logger.Error($@"{typeof(T).Name}转换失败:{ex}");
+                throw;
+            }
         }
     }
 
