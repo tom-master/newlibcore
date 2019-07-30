@@ -39,17 +39,15 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
             try
             {
                 var list = new List<T>();
-                var masterName = $@"{typeof(T).GetAliasName()}_";
                 foreach (DataRow dr in dt.Rows)
                 {
                     var masterTable = Activator.CreateInstance<T>();
                     var propertys = masterTable.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public);
                     foreach (var propertyInfo in propertys)
-                    {
-                        var propertyName = $@"{masterName}{propertyInfo.Name}";
-                        if (dt.Columns.Contains(propertyName))
+                    { 
+                        if (dt.Columns.Contains(propertyInfo.Name))
                         {
-                            var value = dr[propertyName];
+                            var value = dr[propertyInfo.Name];
                             if (value != DBNull.Value)
                             {
                                 var fast = new FastProperty(propertyInfo);
