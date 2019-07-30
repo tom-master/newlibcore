@@ -6,7 +6,6 @@ using System.Linq;
 using NewLibCore.Data.SQL.Mapper.Config;
 using NewLibCore.Data.SQL.Mapper.Translation;
 using NewLibCore.Validate;
-using Newtonsoft.Json;
 
 namespace NewLibCore.Data.SQL.Mapper.Execute
 {
@@ -18,8 +17,6 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
         private DbConnection _connection;
 
         private DbTransaction _dataTransaction;
-
-        private readonly Boolean _disposed = false;
 
         private Boolean _useTransaction = false;
 
@@ -131,7 +128,7 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
                     {
                         executeResult.Value = cmd.ExecuteScalar();
                     }
-                    cmd.Parameters.Clear(); 
+                    cmd.Parameters.Clear();
                     return executeResult;
                 }
             }

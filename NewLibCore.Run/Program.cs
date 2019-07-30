@@ -20,7 +20,7 @@ namespace NewLibCore.Run
                 var user = mapper.Select<User>().Where(w => w.Id == 4).FirstOrDefault();
             }
 
-            Console.ReadKey();
+          //  Console.ReadKey();
         }
     }
 
