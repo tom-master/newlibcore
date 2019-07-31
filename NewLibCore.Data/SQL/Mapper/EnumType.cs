@@ -39,7 +39,9 @@ namespace NewLibCore.Data.SQL.Mapper
         NONE = 0,
         INNER = 1,
         LEFT = 2,
-        RIGHT = 3
+        RIGHT = 3,
+        CROSS = 4,
+        SEIF = 5
     }
 
     /// <summary>

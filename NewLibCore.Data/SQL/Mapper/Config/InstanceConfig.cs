@@ -11,14 +11,29 @@ namespace NewLibCore.Data.SQL.Mapper.Config
     /// </summary>
     internal abstract class InstanceConfig
     {
+        /// <summary>
+        /// 逻辑关系映射
+        /// </summary>
         protected static readonly IDictionary<RelationType, String> RelationMapper = new Dictionary<RelationType, String>();
 
+        /// <summary>
+        /// 连接关系映射
+        /// </summary>
         protected static readonly IDictionary<JoinType, String> JoinTypeMapper = new Dictionary<JoinType, String>();
 
+        /// <summary>
+        /// 排序方式映射
+        /// </summary>
         protected static readonly IDictionary<OrderByType, String> OrderTypeMapper = new Dictionary<OrderByType, String>();
 
+        /// <summary>
+        /// 获取连接字符串
+        /// </summary>
         protected String ConnectionString { get { return Host.GetHostVar("NewCrmDatabase"); } }
 
+        /// <summary>
+        /// 获取初始化完成的查询缓存对象
+        /// </summary>
         internal ResultCache Cache { get; set; }
 
         internal virtual String UnionPlaceHolder { get { return Guid.NewGuid().ToString().Replace("-", ""); } }
@@ -41,6 +56,10 @@ namespace NewLibCore.Data.SQL.Mapper.Config
         /// </summary>
         protected abstract void AppendRelationType();
 
+        /// <summary>
+        /// 启用查询缓存
+        /// </summary>
+        /// <returns></returns>
         protected internal InstanceConfig UseCache()
         {
             Cache = new ExecutionResultCache();

@@ -19,7 +19,6 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
 
         private readonly IList<EntityParameter> _parameters;
 
-
         internal TranslateResult()
         {
             _originSql = new StringBuilder();
