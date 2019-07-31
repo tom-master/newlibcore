@@ -3,7 +3,7 @@ using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
 using NewLibCore.Data.SQL.Mapper.Translation;
 
-namespace NewLibCore.Data.SQL.Builder
+namespace NewLibCore.Data.SQL.Mapper.Builder
 {
     internal abstract class Builder<TModel> where TModel : PropertyMonitor, new()
     {
