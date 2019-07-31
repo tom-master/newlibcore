@@ -17,7 +17,7 @@ namespace NewLibCore.Data.SQL.Builder
     /// 查询操作构建
     /// </summary>
     /// <typeparam name="TModel"></typeparam>
-    internal class SelectBuilder<TModel> : IBuilder<TModel> where TModel : PropertyMonitor, new()
+    internal class SelectBuilder<TModel> : Builder<TModel> where TModel : PropertyMonitor, new()
     {
         private readonly ExpressionSegment _expressionSegment;
 
@@ -31,12 +31,12 @@ namespace NewLibCore.Data.SQL.Builder
         /// 构建一个查询操作的翻译结果
         /// </summary>
         /// <returns></returns>
-        public TranslateResult CreateTranslateResult()
+        internal override TranslateResult CreateTranslateResult()
         {
             var translation = new TranslateExpression(_expressionSegment);
             {
                 var statement = StatementParse(_expressionSegment.Field);
-                translation.Result.Append($@"SELECT {statement.fields} FROM {typeof(TModel).GetAliasName()} AS {statement.tableName}");
+                translation.Result.Append($@"SELECT {statement.fields} FROM {typeof(TModel).GetTableName()} AS {statement.tableName}");
                 translation.Translate();
 
                 var aliasMapper = _expressionSegment.MergeAliasMapper();
@@ -68,7 +68,7 @@ namespace NewLibCore.Data.SQL.Builder
         /// </summary>
         /// <param name="statement"></param>
         /// <returns></returns>
-        private (String fields, String tableName) StatementParse(Statement statement)
+        internal override (String fields, String tableName) StatementParse(Statement statement)
         {
             var modelAliasName = new List<String>();
             if (statement == null) //如果表达式语句为空则表示需要翻译为SELECT a.xxx,a.xxx,a.xxx 类型的语句
@@ -76,12 +76,13 @@ namespace NewLibCore.Data.SQL.Builder
                 var modelType = typeof(TModel);
                 var f = new List<String>();
                 {
-                    var typeName = modelType.GetAliasName().ToLower();
+                    var typeName = modelType.GetTableName().ToLower();
                     modelAliasName.Add(typeName);
                     var mainModelPropertys = modelType.GetProperties().Where(w => w.GetCustomAttributes<PropertyValidate>().Any()).ToList();
                     foreach (var item in mainModelPropertys)
                     {
-                        f.Add($@"{typeName}.{item.Name} AS {typeName}_{item.Name}");
+                        //f.Add($@"{typeName}.{item.Name} AS {typeName}_{item.Name}");
+                        f.Add($@"{typeName}.{item.Name}");
                     }
                 }
 
@@ -90,7 +91,7 @@ namespace NewLibCore.Data.SQL.Builder
                     if (subProperty != null && subProperty.Any())
                     {
                         var propertyType = subProperty.FirstOrDefault().PropertyType;
-                        var typeName = propertyType.GetAliasName().ToLower();
+                        var typeName = propertyType.GetTableName().ToLower();
                         var subModelPropertys = propertyType.GetProperties().Where(w => w.GetCustomAttributes<PropertyValidate>().Any()).ToList();
                         foreach (var item in subModelPropertys)
                         {
@@ -104,7 +105,7 @@ namespace NewLibCore.Data.SQL.Builder
             var fields = (LambdaExpression)statement.Expression;
             foreach (var item in fields.Parameters)
             {
-                modelAliasName.Add(item.Type.GetAliasName().ToLower());
+                modelAliasName.Add(item.Type.GetTableName().ToLower());
             }
 
             if (fields.Body.NodeType == ExpressionType.Constant)
@@ -127,16 +128,18 @@ namespace NewLibCore.Data.SQL.Builder
                 if (member.Type.IsComplexType() && member.Member.GetAttribute<SubModelAttribute>(true) != null)
                 {
                     var propertys = member.Type.GetProperties().Where(w => w.GetCustomAttributes<PropertyValidate>().Any());
-                    dynamicFields.AddRange(propertys.Select(s => $@"{member.Type.GetAliasName().ToLower()}.{s.Name} "));
+                    dynamicFields.AddRange(propertys.Select(s => $@"{member.Type.GetTableName().ToLower()}.{s.Name} "));
                 }
                 else
                 {
-                    var fieldName = ((ParameterExpression)member.Expression).Type.GetAliasName().ToLower();
+                    var fieldName = ((ParameterExpression)member.Expression).Type.GetTableName().ToLower();
                     dynamicFields.Add($@"{fieldName}.{member.Member.Name}");
                 }
             }
 
             return (String.Join(",", dynamicFields), modelAliasName.FirstOrDefault());
         }
+
+
     }
 }

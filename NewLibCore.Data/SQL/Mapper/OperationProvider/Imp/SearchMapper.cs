@@ -7,7 +7,7 @@ using NewLibCore.Data.SQL.Builder;
 using NewLibCore.Data.SQL.Mapper.Config;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Data.SQL.Mapper.Execute;
-using NewLibCore.Data.SQL.Mapper.Translation;
+using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
 using NewLibCore.Validate;
 using Newtonsoft.Json;
 
@@ -15,12 +15,10 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
 {
     internal class SearchMapper<TModel> : ISearchMapper<TModel> where TModel : EntityBase, new()
     {
-        private readonly ExecutionCore _executionCore;
         private readonly ExpressionSegment _expressionSegment;
 
         public SearchMapper()
         {
-            _executionCore = new ExecutionCore();
             _expressionSegment = new ExpressionSegment();
         }
 
@@ -34,7 +32,7 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
             return Watch<Int32>(() =>
             {
                 Select(s => "COUNT(*)");
-                var executeResult = InternalExecuteSql(ExecuteType.SELECT_SINGLE);
+                var executeResult = InternalExecuteSql();
                 Int32.TryParse(executeResult.Value.ToString(), out var count);
                 return count;
             });
@@ -44,7 +42,7 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
         {
             return Watch<TModel>(() =>
             {
-                var executeResult = InternalExecuteSql(ExecuteType.SELECT);
+                var executeResult = InternalExecuteSql();
                 var dataTable = executeResult.Value as DataTable;
                 return dataTable.ToSingle<TModel>();
             });
@@ -54,7 +52,7 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
         {
             return Watch<List<TModel>>(() =>
             {
-                var executeResult = InternalExecuteSql(ExecuteType.SELECT);
+                var executeResult = InternalExecuteSql();
                 var dataTable = executeResult.Value as DataTable;
                 return dataTable.ToList<TModel>();
             });
@@ -173,41 +171,13 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
             return this;
         }
 
-        private RawExecuteResult InternalExecuteSql(ExecuteType executeType)
+        private RawExecuteResult InternalExecuteSql()
         {
-            _expressionSegment.ExecuteType = executeType;
-            IBuilder<TModel> builder = new SelectBuilder<TModel>(_expressionSegment);
-
+            Builder<TModel> builder = new SelectBuilder<TModel>(_expressionSegment);
             var translationResult = builder.CreateTranslateResult();
-            var executeResult = GetResultFormCache(translationResult);
-            if (executeResult == null)
-            {
-                executeResult = _executionCore.Execute(translationResult);
-                SetCacheFormResult(translationResult, executeResult);
-            }
+            var executeResult = translationResult.Execute();
             MapperConfig.DatabaseConfig.Logger.Info($@"查询后的结果:{JsonConvert.SerializeObject(executeResult.Value)}");
             return executeResult;
-        }
-
-        private static void SetCacheFormResult(TranslateResult translationResult, RawExecuteResult executeResult)
-        {
-            if (MapperConfig.DatabaseConfig.Cache != null)
-            {
-                MapperConfig.DatabaseConfig.Cache.Add(translationResult.PrepareCacheKey(), executeResult);
-            }
-        }
-
-        private static RawExecuteResult GetResultFormCache(TranslateResult translationResult)
-        {
-            if (MapperConfig.DatabaseConfig.Cache != null)
-            {
-                var cacheResult = MapperConfig.DatabaseConfig.Cache.Get(translationResult.PrepareCacheKey());
-                if (cacheResult != null)
-                {
-                    return (RawExecuteResult)cacheResult;
-                }
-            }
-            return default;
         }
 
         private T Watch<T>(Func<Object> func)

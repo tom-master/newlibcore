@@ -13,7 +13,7 @@ namespace NewLibCore.Data.SQL.Builder
     /// 新增操作builder类
     /// </summary>
     /// <typeparam name="TModel"></typeparam>
-    internal class AddBuilder<TModel> : IBuilder<TModel> where TModel : PropertyMonitor, new()
+    internal class AddBuilder<TModel> : Builder<TModel> where TModel : PropertyMonitor, new()
     {
         private readonly Boolean _isVerifyModel;
         private readonly TModel _instance;
@@ -29,7 +29,7 @@ namespace NewLibCore.Data.SQL.Builder
         /// 创建一个新增操作的翻译结果
         /// </summary>
         /// <returns></returns>
-        public TranslateResult CreateTranslateResult()
+        internal override TranslateResult CreateTranslateResult()
         {
             _instance.OnChanged();
             if (_isVerifyModel)
@@ -41,8 +41,7 @@ namespace NewLibCore.Data.SQL.Builder
             var entityParameters = propertyInfos.Select(c => new EntityParameter($@"@{c.Key}", c.Value));
 
             var translationResult = new TranslateResult();
-            translationResult.Append($@" INSERT {typeof(TModel).GetAliasName()} ({String.Join(",", propertyInfos.Select(c => c.Key))}) VALUES ({String.Join(",", propertyInfos.Select(key => $@"@{key.Key}"))}) {MapperConfig.DatabaseConfig.Extension.Identity}", entityParameters);
-            translationResult.ExecuteType = ExecuteType.INSERT;
+            translationResult.Append($@" INSERT {typeof(TModel).GetTableName()} ({String.Join(",", propertyInfos.Select(c => c.Key))}) VALUES ({String.Join(",", propertyInfos.Select(key => $@"@{key.Key}"))}) {MapperConfig.DatabaseConfig.Extension.Identity}", entityParameters);
             return translationResult;
         }
     }

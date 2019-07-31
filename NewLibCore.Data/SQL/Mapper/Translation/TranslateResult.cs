@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using NewLibCore.Data.SQL.Mapper.Config;
+using NewLibCore.Data.SQL.Mapper.Execute;
 using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper.Translation
@@ -13,11 +15,15 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
     {
         private readonly StringBuilder _originSql;
 
+        private readonly ExecutionCore _executionCore;
+
         private readonly IList<EntityParameter> _parameters;
+
 
         internal TranslateResult()
         {
             _originSql = new StringBuilder();
+            _executionCore = new ExecutionCore();
             _parameters = new List<EntityParameter>();
         }
 
@@ -39,21 +45,6 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
         internal IList<EntityParameter> GetParameters()
         {
             return _parameters;
-        }
-
-        /// <summary>
-        /// 获取作为要缓存的sql语句的key
-        /// </summary>
-        /// <param name="entityParameters"></param>
-        internal String PrepareCacheKey()
-        {
-            Parameter.Validate(_originSql);
-            var cacheKey = GetSql();
-            foreach (var item in GetParameters())
-            {
-                cacheKey = cacheKey.Replace(item.Key, item.Value.ToString());
-            }
-            return MD.GetMD5(cacheKey);
         }
 
         /// <summary>
@@ -105,6 +96,63 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
         }
 
         /// <summary>
+        /// 获取作为要缓存的sql语句的key
+        /// </summary>
+        /// <param name="entityParameters"></param>
+        private String PrepareCacheKey()
+        {
+            Parameter.Validate(_originSql);
+            var cacheKey = GetSql();
+            foreach (var item in GetParameters())
+            {
+                cacheKey = cacheKey.Replace(item.Key, item.Value.ToString());
+            }
+            return MD.GetMD5(cacheKey);
+        }
+
+        internal RawExecuteResult Execute()
+        {
+            var rawSql = GetSql();
+            Enum.TryParse<ExecuteType>(rawSql.Substring(0, rawSql.IndexOf(" ")), out var executeType);
+            ExecuteType = executeType;
+
+            if (rawSql.Contains("COUNT(*)"))
+            {
+                ExecuteType = ExecuteType.SELECT_SINGLE;
+            }
+
+            var executeResult = GetCache();
+            if (executeResult == null)
+            {
+                executeResult = _executionCore.Execute(this);
+                SetCache(executeResult);
+            }
+
+            return executeResult;
+        }
+
+        private void SetCache(RawExecuteResult executeResult)
+        {
+            if (MapperConfig.DatabaseConfig.Cache != null)
+            {
+                MapperConfig.DatabaseConfig.Cache.Add(PrepareCacheKey(), executeResult);
+            }
+        }
+
+        private RawExecuteResult GetCache()
+        {
+            if (MapperConfig.DatabaseConfig.Cache != null)
+            {
+                var cacheResult = MapperConfig.DatabaseConfig.Cache.Get(PrepareCacheKey());
+                if (cacheResult != null)
+                {
+                    return (RawExecuteResult)cacheResult;
+                }
+            }
+            return default;
+        }
+
+        /// <summary>
         /// 将sql语句中多余的空格去掉
         /// </summary>
         /// <param name="sql"></param>
@@ -113,7 +161,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
         {
             Parameter.Validate(sql);
             sql = sql.Replace("  ", " ");
-            return sql;
+            return sql.Trim();
         }
 
         public override String ToString()

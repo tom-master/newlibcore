@@ -25,7 +25,7 @@ namespace NewLibCore.Data.SQL.MergeExpression
             }
 
             var type = typeof(T);
-            var internalParameter = Expression.Parameter(type, type.GetAliasName());
+            var internalParameter = Expression.Parameter(type, type.GetTableName());
             var parameterVister = new ParameterVisitor(internalParameter);
             var leftBody = parameterVister.Replace(left.MergeExpression.Body);
             var rightBody = parameterVister.Replace(right.Body);
@@ -49,7 +49,7 @@ namespace NewLibCore.Data.SQL.MergeExpression
             }
 
             var type = typeof(T);
-            var internalParameter = Expression.Parameter(type, type.GetAliasName());
+            var internalParameter = Expression.Parameter(type, type.GetTableName());
             var parameterVister = new ParameterVisitor(internalParameter);
             var leftBody = parameterVister.Replace(left.MergeExpression.Body);
             var rightBody = parameterVister.Replace(right.Body);

@@ -1,8 +1,8 @@
 using System;
 using System.Linq;
-using NewLibCore.Data.SQL.Mapper.AttributeExtension; 
+using NewLibCore.Data.SQL.Mapper.AttributeExtension;
 
-namespace  NewLibCore.Data.SQL.Mapper.EntityExtension
+namespace NewLibCore.Data.SQL.Mapper.EntityExtension
 {
     public static class TypeExtension
     {
@@ -11,7 +11,7 @@ namespace  NewLibCore.Data.SQL.Mapper.EntityExtension
         /// </summary>
         /// <param name="t"></param>
         /// <returns></returns>
-        public static String GetAliasName(this Type t)
+        public static String GetTableName(this Type t)
         {
             var attrubutes = t.GetCustomAttributes(typeof(TableNameAttribute), true);
             if (!attrubutes.Any())

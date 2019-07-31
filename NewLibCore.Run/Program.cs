@@ -14,13 +14,15 @@ namespace NewLibCore.Run
         {
             MapperConfig.Instance.SwitchToMySql().UseCache();
 
-            while (true)
-            {
-                var mapper = EntityMapper.CreateMapper();
-                var user = mapper.Select<User>().Where(w => w.Id == 4).FirstOrDefault();
-            }
+            var mapper = EntityMapper.CreateMapper();
 
-          //  Console.ReadKey();
+            //var user = mapper.Add(new User("a1a1a1","b1"));
+            var user = mapper.Select<User>(a => new { a.Name, a.LoginPassword }).Where(w => w.Id == 4).FirstOrDefault();
+            //var user = new User();
+            //user.ModifyLoginPassword("123456");
+            //mapper.Modify(user, a => a.Id == 4);
+
+
         }
     }
 
@@ -261,7 +263,7 @@ namespace NewLibCore.Run
         /// <summary>
         /// 配置Id
         /// </summary>
-        [Required, ForeignKey]
+        [Required]
         public Int32 ConfigId { get; private set; }
 
         //[SubModel]
