@@ -13,6 +13,7 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
         /// <returns></returns>
         public static (String TableName, String AliasName) GetTableName(this Type t)
         {
+            
             var attrubutes = t.GetCustomAttributes(typeof(TableNameAttribute), true);
             if (!attrubutes.Any())
             {
