@@ -184,9 +184,7 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
         {
             var sw = new Stopwatch();
             sw.Start();
-
             var returnValue = (T)func();
-
             sw.Stop();
             MapperConfig.DatabaseConfig.Logger.Info($@"共花费{Math.Round(sw.Elapsed.TotalSeconds, 2)}s");
 

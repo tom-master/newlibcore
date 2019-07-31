@@ -28,14 +28,14 @@ namespace NewLibCore.Data.SQL.MergeExpression
             ParameterExpression leftParameter, rightParameter;
             {
                 var type = typeof(T);
-                leftParameter = Expression.Parameter(type, type.GetTableName());
+                leftParameter = Expression.Parameter(type, type.GetTableName().AliasName);
                 var parameterVister = new ParameterVisitor(leftParameter);
                 leftBody = parameterVister.Replace(MergeExpression.Body);
             }
 
             {
                 var type = typeof(T1);
-                rightParameter = Expression.Parameter(type, type.GetTableName());
+                rightParameter = Expression.Parameter(type, type.GetTableName().AliasName);
                 var parameterVister = new ParameterVisitor(rightParameter);
                 rightBody = parameterVister.Replace(right.MergeExpression.Body);
             }

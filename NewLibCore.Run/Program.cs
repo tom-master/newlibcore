@@ -215,7 +215,7 @@ namespace NewLibCore.Run
         public UserRole() { }
     }
 
-    [TableName("newcrm_user")]
+    [TableName("newcrm_user","a")]
     public partial class User : EntityBase
     {
         /// <summary>

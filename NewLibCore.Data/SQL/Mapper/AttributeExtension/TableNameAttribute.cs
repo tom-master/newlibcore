@@ -9,17 +9,13 @@ namespace NewLibCore.Data.SQL.Mapper.AttributeExtension
     {
         public String TableName { get; private set; }
 
-        
-        public Boolean InvalidCacheThenUpdate { get; private set; }
+        public String AliasName { get; private set; }
 
-        public TableNameAttribute(String name, Boolean invalidCacheThenUpdate) : this(name)
-        {
-            InvalidCacheThenUpdate = invalidCacheThenUpdate;
-        }
-
-        public TableNameAttribute(String name)
+        public TableNameAttribute(String name, String aliasName = default)
         {
             TableName = name;
+            AliasName = aliasName == default ? name : aliasName;
         }
+
     }
 }

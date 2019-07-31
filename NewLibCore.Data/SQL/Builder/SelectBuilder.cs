@@ -35,8 +35,8 @@ namespace NewLibCore.Data.SQL.Builder
         {
             var translation = new TranslateExpression(_expressionSegment);
             {
-                var statement = StatementParse(_expressionSegment.Field);
-                translation.Result.Append($@"SELECT {statement.fields} FROM {typeof(TModel).GetTableName()} AS {statement.tableName}");
+                var (fields, tableName) = StatementParse(_expressionSegment.Field);
+                translation.Result.Append($@"SELECT {fields} FROM {typeof(TModel).GetTableName().TableName} AS {tableName}");
                 translation.Translate();
 
                 var aliasMapper = _expressionSegment.MergeAliasMapper();
@@ -48,8 +48,8 @@ namespace NewLibCore.Data.SQL.Builder
 
             if (_expressionSegment.Order != null)
             {
-                var order = StatementParse(_expressionSegment.Order);
-                var orderTemplate = MapperConfig.DatabaseConfig.OrderByBuilder(_expressionSegment.Order.OrderBy, $@"{order.tableName}.{order.fields}");
+                var (fields, tableName) = StatementParse(_expressionSegment.Order);
+                var orderTemplate = MapperConfig.DatabaseConfig.OrderByBuilder(_expressionSegment.Order.OrderBy, $@"{tableName}.{fields}");
                 translation.Result.Append(orderTemplate);
             }
 
@@ -76,28 +76,28 @@ namespace NewLibCore.Data.SQL.Builder
                 var modelType = typeof(TModel);
                 var f = new List<String>();
                 {
-                    var typeName = modelType.GetTableName().ToLower();
-                    modelAliasName.Add(typeName);
+                    var aliasName = modelType.GetTableName().AliasName;
+                    modelAliasName.Add(aliasName);
                     var mainModelPropertys = modelType.GetProperties().Where(w => w.GetCustomAttributes<PropertyValidate>().Any()).ToList();
                     foreach (var item in mainModelPropertys)
                     {
                         //f.Add($@"{typeName}.{item.Name} AS {typeName}_{item.Name}");
-                        f.Add($@"{typeName}.{item.Name}");
+                        f.Add($@"{aliasName}.{item.Name}");
                     }
                 }
 
                 {
-                    var subProperty = modelType.GetProperties().Where(w => w.GetCustomAttribute<SubModelAttribute>() != null);
-                    if (subProperty != null && subProperty.Any())
-                    {
-                        var propertyType = subProperty.FirstOrDefault().PropertyType;
-                        var typeName = propertyType.GetTableName().ToLower();
-                        var subModelPropertys = propertyType.GetProperties().Where(w => w.GetCustomAttributes<PropertyValidate>().Any()).ToList();
-                        foreach (var item in subModelPropertys)
-                        {
-                            f.Add($@"{typeName}.{item.Name} AS {typeName}_{item.Name}");
-                        }
-                    }
+                    //var subProperty = modelType.GetProperties().Where(w => w.GetCustomAttribute<SubModelAttribute>() != null);
+                    //if (subProperty != null && subProperty.Any())
+                    //{
+                    //    var propertyType = subProperty.FirstOrDefault().PropertyType;
+                    //    var typeName = propertyType.GetTableName().ToLower();
+                    //    var subModelPropertys = propertyType.GetProperties().Where(w => w.GetCustomAttributes<PropertyValidate>().Any()).ToList();
+                    //    foreach (var item in subModelPropertys)
+                    //    {
+                    //        f.Add($@"{typeName}.{item.Name} AS {typeName}_{item.Name}");
+                    //    }
+                    //}
                 }
                 return (String.Join(",", f), modelAliasName.FirstOrDefault());
             }
@@ -105,7 +105,7 @@ namespace NewLibCore.Data.SQL.Builder
             var fields = (LambdaExpression)statement.Expression;
             foreach (var item in fields.Parameters)
             {
-                modelAliasName.Add(item.Type.GetTableName().ToLower());
+                modelAliasName.Add(item.Type.GetTableName().AliasName);
             }
 
             if (fields.Body.NodeType == ExpressionType.Constant)
@@ -120,7 +120,7 @@ namespace NewLibCore.Data.SQL.Builder
                 return (members.Member.Name, modelAliasName.FirstOrDefault());
             }
 
-            var dynamicFields = new List<String>();
+            var anonymousObjFields = new List<String>();
             var bodyArguments = (fields.Body as NewExpression).Arguments;
             foreach (var item in bodyArguments)
             {
@@ -128,18 +128,15 @@ namespace NewLibCore.Data.SQL.Builder
                 if (member.Type.IsComplexType() && member.Member.GetAttribute<SubModelAttribute>(true) != null)
                 {
                     var propertys = member.Type.GetProperties().Where(w => w.GetCustomAttributes<PropertyValidate>().Any());
-                    dynamicFields.AddRange(propertys.Select(s => $@"{member.Type.GetTableName().ToLower()}.{s.Name} "));
+                    anonymousObjFields.AddRange(propertys.Select(s => $@"{member.Type.GetTableName().AliasName}.{s.Name} "));
                 }
                 else
                 {
-                    var fieldName = ((ParameterExpression)member.Expression).Type.GetTableName().ToLower();
-                    dynamicFields.Add($@"{fieldName}.{member.Member.Name}");
+                    var fieldName = ((ParameterExpression)member.Expression).Type.GetTableName().AliasName;
+                    anonymousObjFields.Add($@"{fieldName}.{member.Member.Name}");
                 }
             }
-
-            return (String.Join(",", dynamicFields), modelAliasName.FirstOrDefault());
+            return (String.Join(",", anonymousObjFields), modelAliasName.FirstOrDefault());
         }
-
-
     }
 }

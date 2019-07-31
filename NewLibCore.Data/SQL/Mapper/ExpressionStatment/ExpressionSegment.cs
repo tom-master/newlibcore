@@ -77,7 +77,7 @@ namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
                 Expression = expression,
                 JoinType = joinType,
                 AliaNameMapper = ParseToAliasNames(expression),
-                MainTable = typeof(TModel).GetTableName()
+                MainTable = typeof(TModel).GetTableName().TableName
             });
         }
 
@@ -186,7 +186,7 @@ namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
         /// <returns></returns>
         private IReadOnlyList<KeyValuePair<String, String>> ParseToAliasNames(Expression expression)
         {
-            return ((LambdaExpression)expression).Parameters.Select(s => new KeyValuePair<String, String>(s.Name, s.Type.GetTableName())).ToList();
+            return ((LambdaExpression)expression).Parameters.Select(s => new KeyValuePair<String, String>(s.Name, s.Type.GetTableName().AliasName)).ToList();
         }
     }
 }
