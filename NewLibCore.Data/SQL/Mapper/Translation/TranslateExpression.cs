@@ -139,7 +139,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
                 }
                 case ExpressionType.Call:
                 {
-                    MethodCall(expression);
+                    TranslateMethodCall(expression);
                     break;
                 }
                 case ExpressionType.Constant:
@@ -230,14 +230,11 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
                         {
                             var parameterExp = (ParameterExpression)memberExp.Expression;
                             var internalAliasName = "";
-                            //if (_expressionSegment.ExecuteType != ExecuteType.UPDATE)
+                            if (!_tableAliasMapper.Any(a => a.Key == parameterExp.Name && a.Value == parameterExp.Type.GetTableName().AliasName))
                             {
-                                if (!_tableAliasMapper.Any(a => a.Key == parameterExp.Name && a.Value == parameterExp.Type.GetTableName().AliasName))
-                                {
-                                    throw new ArgumentException($@"没有找到{parameterExp.Type.Name}所对应的形参");
-                                }
-                                internalAliasName = $@"{ _tableAliasMapper.Where(w => w.Key == parameterExp.Name && w.Value == parameterExp.Type.GetTableName().AliasName).FirstOrDefault().Value.ToLower()}.";
+                                throw new ArgumentException($@"没有找到{parameterExp.Type.Name}所对应的形参");
                             }
+                            internalAliasName = $@"{ _tableAliasMapper.Where(w => w.Key == parameterExp.Name && w.Value == parameterExp.Type.GetTableName().AliasName).FirstOrDefault().Value.ToLower()}.";
 
                             var newParameterName = $@"{Guid.NewGuid().ToString().Replace("-", "")}";
                             var relationType = _relationTypesStack.Pop();
@@ -269,7 +266,9 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
                     break;
                 }
                 default:
+                {
                     throw new NotSupportedException($@"暂不支持的表达式操作:{expression.NodeType}");
+                }
             }
         }
 
@@ -277,7 +276,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
         /// 翻译表达式中的方法调用
         /// </summary>
         /// <param name="expression"></param>
-        private void MethodCall(Expression expression)
+        private void TranslateMethodCall(Expression expression)
         {
             var methodCallExp = (MethodCallExpression)expression;
             var methodName = methodCallExp.Method.Name;
