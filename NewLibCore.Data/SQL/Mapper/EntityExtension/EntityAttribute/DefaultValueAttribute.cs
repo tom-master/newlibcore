@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NewLibCore.Data.SQL.Mapper.AttributeExtension
+namespace NewLibCore.Data.SQL.Mapper.EntityExtension.EntityAttribute
 {
     /// <summary>
     /// 提供默认值

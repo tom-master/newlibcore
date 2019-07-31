@@ -1,8 +1,8 @@
 ﻿using System;
-using NewLibCore.Data.SQL.Mapper.AttributeExtension;
-using NewLibCore.Data.SQL.Mapper.AttributeExtension.Association;
+using NewLibCore.Data.SQL.Mapper.EntityExtension.EntityAttribute;
+using NewLibCore.Data.SQL.Mapper.EntityExtension.EntityAttribute.Association;
 
-namespace  NewLibCore.Data.SQL.Mapper.EntityExtension
+namespace NewLibCore.Data.SQL.Mapper.EntityExtension
 {
     /// <summary>
     /// 实体基类

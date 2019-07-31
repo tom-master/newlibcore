@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using NewLibCore.Data.SQL.Mapper;
-using NewLibCore.Data.SQL.Mapper.AttributeExtension;
-using NewLibCore.Data.SQL.Mapper.AttributeExtension.Association;
 using NewLibCore.Data.SQL.Mapper.Config;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
+using NewLibCore.Data.SQL.Mapper.EntityExtension.EntityAttribute;
+using NewLibCore.Data.SQL.Mapper.EntityExtension.EntityAttribute.Association;
 
 namespace NewLibCore.Run
 {
@@ -215,7 +215,7 @@ namespace NewLibCore.Run
         public UserRole() { }
     }
 
-    [TableName("newcrm_user","a")]
+    [TableName("newcrm_user", "a")]
     public partial class User : EntityBase
     {
         /// <summary>
