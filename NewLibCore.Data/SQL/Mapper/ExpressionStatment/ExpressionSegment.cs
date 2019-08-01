@@ -186,7 +186,7 @@ namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
         /// <returns></returns>
         private IReadOnlyList<KeyValuePair<String, String>> ParseToAliasNames(Expression expression)
         {
-            return ((LambdaExpression)expression).Parameters.Select(s => new KeyValuePair<String, String>(s.Name, s.Type.GetTableName().AliasName)).ToList();
+            return ((LambdaExpression)expression).Parameters.Select(s => new KeyValuePair<String, String>(s.Type.GetTableName().TableName, s.Type.GetTableName().AliasName)).ToList();
         }
     }
 }

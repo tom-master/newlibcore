@@ -97,7 +97,7 @@ namespace NewLibCore.Data.SQL.Mapper.Config
         /// <param name="left"></param>
         /// <param name="right"></param>
         /// <returns></returns>
-        internal abstract String RelationBuilder(RelationType relationType, String left, Object right);
+        internal abstract String RelationBuilder(RelationType relationType, String left, String right);
 
         /// <summary>
         /// 连接语句构建

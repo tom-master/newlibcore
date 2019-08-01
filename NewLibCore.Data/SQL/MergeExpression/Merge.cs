@@ -19,7 +19,7 @@ namespace NewLibCore.Data.SQL.MergeExpression
         /// <param name="right"></param>
         /// <typeparam name="T1"></typeparam>
         /// <returns></returns>
-        public Expression<Func<T, T1, Boolean>> AppendCombination<T1>(Merge<T1> right) where T1 : EntityBase
+        public Expression<Func<T, T1, Boolean>> Append<T1>(Merge<T1> right) where T1 : EntityBase
         {
             Parameter.Validate(right);
             Parameter.Validate(right.MergeExpression);

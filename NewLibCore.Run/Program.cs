@@ -16,13 +16,7 @@ namespace NewLibCore.Run
 
             var mapper = EntityMapper.CreateMapper();
 
-            //var user = mapper.Add(new User("a1a1a1","b1"));
-            var user = mapper.Select<User>(a => new { a.Name, a.LoginPassword }).Where(w => w.Id == 4).FirstOrDefault();
-            //var user = new User();
-            //user.ModifyLoginPassword("123456");
-            //mapper.Modify(user, a => a.Id == 4);
-
-
+            mapper.Select<User>().InnerJoin<Config>((a, b) => a.ConfigId == 1).Where(a => a.Id == 4).FirstOrDefault();
         }
     }
 

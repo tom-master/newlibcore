@@ -47,7 +47,7 @@ namespace NewLibCore.Data.SQL.Mapper.Config
             return new MySqlParameter();
         }
 
-        internal override String RelationBuilder(RelationType relationType, String left, Object right)
+        internal override String RelationBuilder(RelationType relationType, String left, String right)
         {
             return String.Format(RelationMapper[relationType], left, right);
         }

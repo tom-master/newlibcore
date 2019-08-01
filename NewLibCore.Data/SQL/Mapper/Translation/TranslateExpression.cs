@@ -60,7 +60,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
                 //获取连接对象中的表别名，进行连接语句的翻译
                 foreach (var aliasItem in item.AliaNameMapper)
                 {
-                    if (aliasItem.Value.ToLower() == item.MainTable.ToLower())
+                    if (aliasItem.Key.ToLower() == item.MainTable.ToLower())
                     {
                         continue;
                     }
@@ -230,11 +230,11 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
                         {
                             var parameterExp = (ParameterExpression)memberExp.Expression;
                             var internalAliasName = "";
-                            if (!_tableAliasMapper.Any(a => a.Key == parameterExp.Name && a.Value == parameterExp.Type.GetTableName().AliasName))
+                            if (!_tableAliasMapper.Any(a => a.Key == parameterExp.Type.GetTableName().TableName && a.Value == parameterExp.Type.GetTableName().AliasName))
                             {
                                 throw new ArgumentException($@"没有找到{parameterExp.Type.Name}所对应的形参");
                             }
-                            internalAliasName = $@"{ _tableAliasMapper.Where(w => w.Key == parameterExp.Name && w.Value == parameterExp.Type.GetTableName().AliasName).FirstOrDefault().Value.ToLower()}.";
+                            internalAliasName = $@"{ _tableAliasMapper.Where(w => w.Key == parameterExp.Type.GetTableName().TableName && w.Value == parameterExp.Type.GetTableName().AliasName).FirstOrDefault().Value.ToLower()}.";
 
                             var newParameterName = $@"{Guid.NewGuid().ToString().Replace("-", "")}";
                             var relationType = _relationTypesStack.Pop();
@@ -365,38 +365,53 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
         {
             Parameter.Validate(binaryExp);
 
-            var leftMember = (MemberExpression)binaryExp.Left;
-
-            ParameterExpression leftParameterExp = null;
-            if (leftMember.Expression.NodeType == ExpressionType.Parameter)
+            //表达式左右两边都不为常量时例如 xx.Id==yy.Id
+            if (binaryExp.Left.NodeType != ExpressionType.Constant && binaryExp.Right.NodeType != ExpressionType.Constant)
             {
-                leftParameterExp = (ParameterExpression)leftMember.Expression;
-            }
-            if (!_tableAliasMapper.Any(a => a.Key == leftParameterExp.Name && a.Value == leftParameterExp.Type.GetTableName().AliasName))
-            {
-                throw new Exception($@"没有找到参数名:{leftParameterExp.Name}所对应的左表别名");
-            }
+                var (LeftMember, LeftAliasName) = GetLeftMemberAndAliasName(binaryExp);
+                var (RightMember, RightAliasName) = GetRightMemberAndAliasName(binaryExp);
 
-            var leftAliasName = _tableAliasMapper.Where(w => w.Key == leftParameterExp.Name && w.Value == leftParameterExp.Type.GetTableName().AliasName).FirstOrDefault().Value.ToLower();
-
-            if (binaryExp.Right.NodeType != ExpressionType.Constant)
-            {
-                var rightMember = (MemberExpression)binaryExp.Right;
-                var rightParameterExp = (ParameterExpression)rightMember.Expression;
-                if (!_tableAliasMapper.Any(a => a.Key == rightParameterExp.Name && a.Value == rightParameterExp.Type.GetTableName().AliasName))
-                {
-                    throw new Exception($@"没有找到参数名:{rightParameterExp.Name}所对应的右表别名");
-                }
-                var rightAliasName = _tableAliasMapper.Where(w => w.Key == rightParameterExp.Name && w.Value == rightParameterExp.Type.GetTableName().AliasName).FirstOrDefault().Value.ToLower();
-                var relationTemplate = MapperConfig.DatabaseConfig.RelationBuilder(relationType, $"{rightAliasName}.{rightMember.Member.Name}", $"{leftAliasName}.{leftMember.Member.Name}");
+                var relationTemplate = MapperConfig.DatabaseConfig.RelationBuilder(relationType, $"{RightAliasName}.{RightMember.Member.Name}", $"{LeftAliasName}.{LeftMember.Member.Name}");
                 Result.Append(relationTemplate);
             }
-            else
+            else if (binaryExp.Left.NodeType == ExpressionType.Constant) //表达式左边为常量
             {
+                var (RightMember, RightAliasName) = GetRightMemberAndAliasName(binaryExp);
+                var constant = (ConstantExpression)binaryExp.Left;
+                var value = Boolean.TryParse(constant.Value.ToString(), out var result) ? (result ? 1 : 0).ToString() : constant.Value;
+                Result.Append(MapperConfig.DatabaseConfig.RelationBuilder(relationType, value + "", $"{RightAliasName}.{RightMember.Member.Name}"));
+            }
+            else if (binaryExp.Right.NodeType == ExpressionType.Constant) //表达式的右边为常量
+            {
+                var (LeftMember, LeftAliasName) = GetLeftMemberAndAliasName(binaryExp);
                 var constant = (ConstantExpression)binaryExp.Right;
                 var value = Boolean.TryParse(constant.Value.ToString(), out var result) ? (result ? 1 : 0).ToString() : constant.Value;
-                Result.Append(MapperConfig.DatabaseConfig.RelationBuilder(relationType, $"{leftAliasName}.{leftMember.Member.Name}", value));
+                Result.Append(MapperConfig.DatabaseConfig.RelationBuilder(relationType, $"{LeftAliasName}.{LeftMember.Member.Name}", value + ""));
             }
+        }
+
+        private (MemberExpression RightMember, String RightAliasName) GetRightMemberAndAliasName(BinaryExpression binaryExp)
+        {
+            var rightMember = (MemberExpression)binaryExp.Right;
+            var rightParameterExp = (ParameterExpression)rightMember.Expression;
+            if (!_tableAliasMapper.Any(a => a.Key == rightParameterExp.Type.GetTableName().TableName && a.Value == rightParameterExp.Type.GetTableName().AliasName))
+            {
+                throw new Exception($@"没有找到参数名:{rightParameterExp.Type.Name}所对应的右表别名");
+            }
+            var rightAliasName = _tableAliasMapper.Where(w => w.Key == rightParameterExp.Type.GetTableName().TableName && w.Value == rightParameterExp.Type.GetTableName().AliasName).FirstOrDefault().Value.ToLower();
+            return (rightMember, rightAliasName);
+        }
+
+        private (MemberExpression LeftMember, String LeftAliasName) GetLeftMemberAndAliasName(BinaryExpression binaryExp)
+        {
+            var leftMember = (MemberExpression)binaryExp.Left;
+            var leftParameterExp = (ParameterExpression)leftMember.Expression;
+            if (!_tableAliasMapper.Any(a => a.Key == leftParameterExp.Type.GetTableName().TableName && a.Value == leftParameterExp.Type.GetTableName().AliasName))
+            {
+                throw new Exception($@"没有找到参数类型:{leftParameterExp.Type.Name}所对应的左表别名");
+            }
+            var leftAliasName = _tableAliasMapper.Where(w => w.Key == leftParameterExp.Type.GetTableName().TableName && w.Value == leftParameterExp.Type.GetTableName().AliasName).FirstOrDefault().Value.ToLower();
+            return (leftMember, leftAliasName);
         }
     }
 }
