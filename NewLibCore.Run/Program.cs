@@ -167,7 +167,6 @@ namespace NewLibCore.Run
         [Required, ForeignKey]
         public Int32 WallpaperId { get; private set; }
 
-        //[SubModel]
         public Wallpaper Wallpaper { get; set; }
 
         /// <summary>
@@ -257,10 +256,10 @@ namespace NewLibCore.Run
         /// <summary>
         /// 配置Id
         /// </summary>
-        [Required]
+        [Required, ForeignKey]
         public Int32 ConfigId { get; private set; }
 
-        //[SubModel]
+
         public Config Config { get; set; }
 
         /// <summary>
@@ -777,7 +776,6 @@ namespace NewLibCore.Run
         /// <summary>
         /// 权限
         /// </summary>
-        //[SubModel]
         public IList<RolePower> Powers { get; private set; }
 
         /// <summary>

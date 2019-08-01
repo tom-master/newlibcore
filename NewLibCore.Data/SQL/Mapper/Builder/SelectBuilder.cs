@@ -125,12 +125,12 @@ namespace NewLibCore.Data.SQL.Mapper.Builder
             foreach (var item in bodyArguments)
             {
                 var member = (MemberExpression)item;
-                if (member.Type.IsComplexType() && member.Member.GetAttribute<SubModelAttribute>(true) != null)
-                {
-                    var propertys = member.Type.GetProperties().Where(w => w.GetCustomAttributes<PropertyValidate>().Any());
-                    anonymousObjFields.AddRange(propertys.Select(s => $@"{member.Type.GetTableName().AliasName}.{s.Name} "));
-                }
-                else
+                //if (member.Type.IsComplexType() && member.Member.GetAttribute<SubModelAttribute>(true) != null)
+                //{
+                //    var propertys = member.Type.GetProperties().Where(w => w.GetCustomAttributes<PropertyValidate>().Any());
+                //    anonymousObjFields.AddRange(propertys.Select(s => $@"{member.Type.GetTableName().AliasName}.{s.Name} "));
+                //}
+                //else
                 {
                     var fieldName = ((ParameterExpression)member.Expression).Type.GetTableName().AliasName;
                     anonymousObjFields.Add($@"{fieldName}.{member.Member.Name}");
