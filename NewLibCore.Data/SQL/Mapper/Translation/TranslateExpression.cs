@@ -82,6 +82,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
             if (_expressionSegment.Where != null)
             {
                 var lambdaExp = (LambdaExpression)_expressionSegment.Where.Expression;
+                //当表达式主体为常量时则直接返回，不做解析
                 if (lambdaExp.Body.NodeType == ExpressionType.Constant)
                 {
                     return Result;
@@ -205,7 +206,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
                     {
                         InternalBuildWhere((MethodCallExpression)lamdbaExp.Body);
                     }
-                    else
+                    else if (lamdbaExp.Body is UnaryExpression)
                     {
                         InternalBuildWhere((UnaryExpression)lamdbaExp.Body);
                     }
@@ -236,10 +237,8 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
                             }
                             internalAliasName = $@"{ _tableAliasMapper.Where(w => w.Key == parameterExp.Type.GetTableName().TableName && w.Value == parameterExp.Type.GetTableName().AliasName).FirstOrDefault().Value.ToLower()}.";
 
-                            var newParameterName = $@"{Guid.NewGuid().ToString().Replace("-", "")}";
-                            var relationType = _relationTypesStack.Pop();
-                            var syntax = MapperConfig.DatabaseConfig.RelationBuilder(relationType, $@"{internalAliasName}{memberExp.Member.Name}", $"@{newParameterName}");
-                            Result.Append(syntax);
+                            var newParameterName = $@"{Guid.NewGuid().ToString().Replace("-", "")}"; 
+                            Result.Append(MapperConfig.DatabaseConfig.RelationBuilder(_relationTypesStack.Pop(), $@"{internalAliasName}{memberExp.Member.Name}", $"@{newParameterName}"));
                             _parameterNameStack.Push(newParameterName);
                         }
                     }
@@ -351,13 +350,23 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
             else
             {
                 _relationTypesStack.Push(relationType);
-                InternalBuildWhere(binaryExp.Left);
-                InternalBuildWhere(binaryExp.Right);
+
+                //当表达式的左边和右边同时不为常量或者只有左边为常量的话，则从左到右解析表达式，否则从右到左解析表达式
+                if ((binary.Left.NodeType != ExpressionType.Constant && binary.Right.NodeType != ExpressionType.Constant) || binary.Left.NodeType != ExpressionType.Constant)
+                {
+                    InternalBuildWhere(binaryExp.Left);
+                    InternalBuildWhere(binaryExp.Right);
+                }
+                else
+                {
+                    InternalBuildWhere(binaryExp.Right);
+                    InternalBuildWhere(binaryExp.Left);
+                }
             }
         }
 
         /// <summary>
-        /// 将表达式翻译为相应的连接语句
+        /// 将表达式翻译为相应的连接条件
         /// </summary>
         /// <param name="binaryExp"></param>
         /// <param name="relationType"></param>
@@ -390,6 +399,11 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
             }
         }
 
+        /// <summary>
+        /// 获取左表达式的成员对象和别名
+        /// </summary>
+        /// <param name="binaryExp"></param>
+        /// <returns></returns>
         private (MemberExpression RightMember, String RightAliasName) GetRightMemberAndAliasName(BinaryExpression binaryExp)
         {
             var rightMember = (MemberExpression)binaryExp.Right;
@@ -402,6 +416,11 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
             return (rightMember, rightAliasName);
         }
 
+        /// <summary>
+        /// 获取又表达式的成员对象和别名
+        /// </summary>
+        /// <param name="binaryExp"></param>
+        /// <returns></returns>
         private (MemberExpression LeftMember, String LeftAliasName) GetLeftMemberAndAliasName(BinaryExpression binaryExp)
         {
             var leftMember = (MemberExpression)binaryExp.Left;
