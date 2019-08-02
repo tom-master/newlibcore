@@ -236,7 +236,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
                             }
                             internalAliasName = $@"{ _tableAliasMapper.Where(w => w.Key == parameterExp.Type.GetTableName().TableName && w.Value == parameterExp.Type.GetTableName().AliasName).FirstOrDefault().Value.ToLower()}.";
 
-                            var newParameterName = $@"{Guid.NewGuid().ToString().Replace("-", "")}";
+                            var newParameterName = $@"{DateTime.Now:HHmmss}{DateTime.Now.Millisecond}";
                             Result.Append(MapperConfig.DatabaseConfig.RelationBuilder(_relationTypesStack.Pop(), $@"{internalAliasName}{memberExp.Member.Name}", $"@{newParameterName}"));
                             _parameterNameStack.Push(newParameterName);
                         }
