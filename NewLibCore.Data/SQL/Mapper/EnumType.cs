@@ -4,7 +4,7 @@ namespace NewLibCore.Data.SQL.Mapper
     /// <summary>
     /// 执行的类型
     /// </summary>
-    public enum ExecuteType
+    internal enum ExecuteType
     {
         SELECT = 1,
         UPDATE = 2,
@@ -15,7 +15,7 @@ namespace NewLibCore.Data.SQL.Mapper
     /// <summary>
     /// 数据库类型
     /// </summary>
-    public enum DatabaseType
+    internal enum DatabaseType
     {
         NONE = 0,
         MSSQL = 1,
@@ -34,7 +34,7 @@ namespace NewLibCore.Data.SQL.Mapper
     /// <summary>
     /// 连接类型
     /// </summary>
-    public enum JoinType
+    internal enum JoinType
     {
         NONE = 0,
         INNER = 1,

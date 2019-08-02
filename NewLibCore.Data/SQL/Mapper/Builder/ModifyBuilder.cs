@@ -54,6 +54,7 @@ namespace NewLibCore.Data.SQL.Mapper.Builder
                 translation.Translate();
             }
             _instance.Reset();
+
             translation.Result.Append($@"{MapperConfig.DatabaseConfig.Extension.RowCount}");
             return translation.Result;
         }
