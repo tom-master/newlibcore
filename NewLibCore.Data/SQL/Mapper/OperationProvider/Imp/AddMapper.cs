@@ -13,7 +13,7 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
         public TModel Add(TModel model)
         {
             Builder<TModel> builder = new AddBuilder<TModel>(model, true);
-            var executeResult = builder.CreateTranslateResult().Execute();
+            var executeResult = builder.CreateResult().Execute();
             Int32.TryParse(executeResult.Value.ToString(), out var modelId);
             model.Id = modelId;
             return model;

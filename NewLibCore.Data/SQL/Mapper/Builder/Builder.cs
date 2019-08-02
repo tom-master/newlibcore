@@ -8,17 +8,26 @@ namespace NewLibCore.Data.SQL.Mapper.Builder
     internal abstract class Builder<TModel> where TModel : PropertyMonitor, new()
     {
         /// <summary>
+        /// 创建并返回一个具体的构建对象
+        /// </summary>
+        /// <returns></returns>
+        internal TranslateResult CreateResult()
+        {
+            return CreateTranslateResult();
+        }
+
+        /// <summary>
         /// 创建一个TranslationResult对象
         /// </summary>
         /// <returns></returns>
-        internal abstract TranslateResult CreateTranslateResult();
+        protected abstract TranslateResult CreateTranslateResult();
 
         /// <summary>
         /// 字段转换
         /// </summary>
         /// <param name="statement"></param>
         /// <returns></returns>
-        internal virtual (String fields, String tableName) StatementParse(Statement statement)
+        protected virtual (String Fields, String AliasName) StatementParse(Statement statement)
         {
             throw new NotImplementedException();
         }

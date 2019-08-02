@@ -10,12 +10,30 @@ namespace NewLibCore.Data.SQL.Mapper.Config
     /// </summary>
     internal class MsSqlInstanceConfig : InstanceConfig
     {
-        //private static SqlConnection _connection;
-        //private static readonly Object _sync = new Object();
-
         protected internal MsSqlInstanceConfig(ILogger logger) : base(logger)
         {
 
+        }
+
+        internal override InstanceExtension Extension
+        {
+            get
+            {
+                return new InstanceExtension
+                {
+                    Identity = " SELECT @@IDENTITY ;",
+                    RowCount = " SELECT @@ROWCOUNT ;",
+                    Page = " OFFSET ({value}) ROWS FETCH NEXT {pageSize} ROWS ONLY ;"
+                };
+            }
+        }
+
+        internal override String UpdateTemplate
+        {
+            get
+            {
+                return "UPDATE {0} SET {1} FROM {2} AS {0} ";
+            }
         }
 
         protected override void AppendRelationType()
@@ -29,17 +47,6 @@ namespace NewLibCore.Data.SQL.Mapper.Config
         internal override DbConnection GetConnectionInstance()
         {
             return new SqlConnection(ConnectionString);
-            //if (_connection == null)
-            //{
-            //    lock (_sync)
-            //    {
-            //        if (_connection == null)
-            //        {
-            //            _connection = new SqlConnection(ConnectionString);
-            //        }
-            //    }
-            //}
-            //return _connection;
         }
 
         internal override DbParameter GetParameterInstance()
@@ -52,17 +59,6 @@ namespace NewLibCore.Data.SQL.Mapper.Config
             return String.Format(RelationMapper[relationType], left, right);
         }
 
-        internal override InstanceExtension Extension
-        {
-            get
-            {
-                return new InstanceExtension
-                {
-                    Identity = " SELECT @@IDENTITY",
-                    RowCount = " SELECT @@ROWCOUNT",
-                    Page = " OFFSET ({value}) ROWS FETCH NEXT {pageSize} ROWS ONLY"
-                };
-            }
-        }
+
     }
 }

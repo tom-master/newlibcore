@@ -18,7 +18,7 @@ namespace NewLibCore.Data.SQL.Mapper
             Parameter.Validate(key);
             Parameter.Validate(value);
 
-            Key = key;
+            Key = $"@{key}";
             Value = ParseValueType(value);
         }
 

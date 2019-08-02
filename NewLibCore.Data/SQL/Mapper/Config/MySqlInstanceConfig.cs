@@ -10,12 +10,17 @@ namespace NewLibCore.Data.SQL.Mapper.Config
     /// </summary>
     internal class MySqlInstanceConfig : InstanceConfig
     {
-        //private static MySqlConnection _connection;
-        //private static readonly Object _sync = new Object();
-
         protected internal MySqlInstanceConfig(ILogger logger) : base(logger)
         {
 
+        }
+
+        internal override String UpdateTemplate
+        {
+            get
+            {
+                return "UPDATE {0} AS {1} SET {2} ";
+            }
         }
 
         protected override void AppendRelationType()
@@ -29,17 +34,6 @@ namespace NewLibCore.Data.SQL.Mapper.Config
         internal override DbConnection GetConnectionInstance()
         {
             return new MySqlConnection(ConnectionString);
-            //if (_connection == null)
-            //{
-            //    lock (_sync)
-            //    {
-            //        if (_connection == null)
-            //        {
-            //            _connection = new MySqlConnection(ConnectionString);
-            //        }
-            //    }
-            //}
-            //return _connection;
         }
 
         internal override DbParameter GetParameterInstance()
@@ -58,9 +52,9 @@ namespace NewLibCore.Data.SQL.Mapper.Config
             {
                 return new InstanceExtension
                 {
-                    Identity = " ; SELECT CAST(@@IDENTITY AS SIGNED) AS c ",
-                    RowCount = " ; SELECT CAST(ROW_COUNT() AS SIGNED) AS c ",
-                    Page = " LIMIT {value},{pageSize}"
+                    Identity = " ; SELECT CAST(@@IDENTITY AS SIGNED) AS c ;",
+                    RowCount = " ; SELECT CAST(ROW_COUNT() AS SIGNED) AS c ;",
+                    Page = " LIMIT {value},{pageSize} ;",
                 };
             }
         }

@@ -174,7 +174,7 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
         private RawExecuteResult InternalExecuteSql()
         {
             Builder<TModel> builder = new SelectBuilder<TModel>(_expressionSegment);
-            var translationResult = builder.CreateTranslateResult();
+            var translationResult = builder.CreateResult();
             var executeResult = translationResult.Execute();
             MapperConfig.DatabaseConfig.Logger.Info($@"查询后的结果:{JsonConvert.SerializeObject(executeResult.Value)}");
             return executeResult;

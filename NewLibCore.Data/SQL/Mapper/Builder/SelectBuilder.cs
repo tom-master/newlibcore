@@ -6,7 +6,6 @@ using System.Reflection;
 using NewLibCore.Data.SQL.Mapper.Config;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Data.SQL.Mapper.EntityExtension.EntityAttribute;
-using NewLibCore.Data.SQL.Mapper.EntityExtension.EntityAttribute.Association;
 using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
 using NewLibCore.Data.SQL.Mapper.Translation;
 using NewLibCore.Validate;
@@ -31,12 +30,13 @@ namespace NewLibCore.Data.SQL.Mapper.Builder
         /// 构建一个查询操作的翻译结果
         /// </summary>
         /// <returns></returns>
-        internal override TranslateResult CreateTranslateResult()
+        protected override TranslateResult CreateTranslateResult()
         {
             var translation = new TranslateExpression(_expressionSegment);
             {
-                var (fields, tableName) = StatementParse(_expressionSegment.Field);
-                translation.Result.Append($@"SELECT {fields} FROM {typeof(TModel).GetTableName().TableName} AS {tableName}");
+                var (Fields, AliasName) = StatementParse(_expressionSegment.Field);
+
+                translation.Result.Append(String.Format(MapperConfig.DatabaseConfig.SelectTemplate, Fields, typeof(TModel).GetTableName().TableName, AliasName));
                 translation.Translate();
 
                 var aliasMapper = _expressionSegment.MergeAliasMapper();
@@ -68,7 +68,7 @@ namespace NewLibCore.Data.SQL.Mapper.Builder
         /// </summary>
         /// <param name="statement"></param>
         /// <returns></returns>
-        internal override (String fields, String tableName) StatementParse(Statement statement)
+        protected override (String Fields, String AliasName) StatementParse(Statement statement)
         {
             var modelAliasName = new List<String>();
             if (statement == null) //如果表达式语句为空则表示需要翻译为SELECT a.xxx,a.xxx,a.xxx 类型的语句

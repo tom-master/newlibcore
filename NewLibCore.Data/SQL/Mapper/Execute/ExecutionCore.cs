@@ -31,7 +31,6 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
         /// </summary>
         public void OpenTransaction()
         {
-            MapperConfig.DatabaseConfig.Logger.Info("开启事务");
             _useTransaction = true;
         }
 
@@ -163,7 +162,7 @@ namespace NewLibCore.Data.SQL.Mapper.Execute
                 {
                     _useTransaction = true;
                     _dataTransaction = _connection.BeginTransaction();
-                    MapperConfig.DatabaseConfig.Logger.Info("begin transaction");
+                    MapperConfig.DatabaseConfig.Logger.Info("开启事务");
                 }
                 return _dataTransaction;
             }

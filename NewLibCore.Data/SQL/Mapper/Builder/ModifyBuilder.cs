@@ -34,7 +34,7 @@ namespace NewLibCore.Data.SQL.Mapper.Builder
         /// 构建一个修改操作的翻译结果
         /// </summary>
         /// <returns></returns>
-        internal override TranslateResult CreateTranslateResult()
+        protected override TranslateResult CreateTranslateResult()
         {
             _instance.SetUpdateTime();
 
@@ -42,12 +42,13 @@ namespace NewLibCore.Data.SQL.Mapper.Builder
             {
                 _instance.Validate();
             }
+
+            var (TableName, AliasName) = typeof(TModel).GetTableName();
             var propertys = _instance.GetPropertys();
-            var aliasName = typeof(TModel).GetTableName();
+            var template = String.Format(MapperConfig.DatabaseConfig.UpdateTemplate, TableName, AliasName, String.Join(",", propertys.Select(p => $@"{AliasName}.{p.Key}=@{p.Key}")));
 
             var translation = new TranslateExpression(_expressionSegment);
-
-            translation.Result.Append($@"UPDATE {aliasName} AS {aliasName} SET {String.Join(",", propertys.Select(p => $@"{aliasName}.{p.Key}=@{p.Key}"))} ", propertys.Select(c => new EntityParameter($@"@{c.Key}", c.Value)));
+            translation.Result.Append(template, propertys.Select(c => new EntityParameter(c.Key, c.Value)));
             if (_expressionSegment.Where != null)
             {
                 translation.Translate();

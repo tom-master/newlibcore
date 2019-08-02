@@ -9,6 +9,6 @@
         /// 翻译
         /// </summary>
         /// <returns></returns>
-        TranslateResult Translate();
+        void Translate();
     }
 }

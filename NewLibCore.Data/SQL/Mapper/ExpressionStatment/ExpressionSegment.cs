@@ -8,7 +8,7 @@ using NewLibCore.Validate;
 namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
 {
     /// <summary>
-    /// 语句对象存储
+    /// 分解的表达式段
     /// </summary>
     internal class ExpressionSegment
     {

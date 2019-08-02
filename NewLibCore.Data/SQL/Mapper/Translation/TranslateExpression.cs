@@ -44,7 +44,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
         /// 翻译
         /// </summary>
         /// <returns></returns>
-        public TranslateResult Translate()
+        public void Translate()
         {
             //获取合并后的表别名
             _tableAliasMapper = _expressionSegment.MergeAliasMapper();
@@ -85,7 +85,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
                 //当表达式主体为常量时则直接返回，不做解析
                 if (lambdaExp.Body.NodeType == ExpressionType.Constant)
                 {
-                    return Result;
+                    return;
                 }
 
                 _joinType = JoinType.NONE;
@@ -95,7 +95,6 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
                 InternalBuildWhere(lambdaExp);
             }
 
-            return Result;
         }
 
         /// <summary>
@@ -146,7 +145,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
                 case ExpressionType.Constant:
                 {
                     var binaryExp = (ConstantExpression)expression;
-                    Result.Append(new EntityParameter($@"@{_parameterNameStack.Pop()}", binaryExp.Value));
+                    Result.Append(new EntityParameter(_parameterNameStack.Pop(), binaryExp.Value));
                     break;
                 }
                 case ExpressionType.Equal:
@@ -237,7 +236,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
                             }
                             internalAliasName = $@"{ _tableAliasMapper.Where(w => w.Key == parameterExp.Type.GetTableName().TableName && w.Value == parameterExp.Type.GetTableName().AliasName).FirstOrDefault().Value.ToLower()}.";
 
-                            var newParameterName = $@"{Guid.NewGuid().ToString().Replace("-", "")}"; 
+                            var newParameterName = $@"{Guid.NewGuid().ToString().Replace("-", "")}";
                             Result.Append(MapperConfig.DatabaseConfig.RelationBuilder(_relationTypesStack.Pop(), $@"{internalAliasName}{memberExp.Member.Name}", $"@{newParameterName}"));
                             _parameterNameStack.Push(newParameterName);
                         }
@@ -245,7 +244,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
                     else
                     {
                         var getter = Expression.Lambda(memberExp).Compile();
-                        Result.Append(new EntityParameter($@"@{_parameterNameStack.Pop()}", getter.DynamicInvoke()));
+                        Result.Append(new EntityParameter(_parameterNameStack.Pop(), getter.DynamicInvoke()));
                         break;
                     }
                     break;

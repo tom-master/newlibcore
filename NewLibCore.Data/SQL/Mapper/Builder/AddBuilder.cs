@@ -28,7 +28,7 @@ namespace NewLibCore.Data.SQL.Mapper.Builder
         /// 创建一个新增操作的翻译结果
         /// </summary>
         /// <returns></returns>
-        internal override TranslateResult CreateTranslateResult()
+        protected override TranslateResult CreateTranslateResult()
         {
             _instance.OnChanged();
             if (_isVerifyModel)
@@ -37,10 +37,12 @@ namespace NewLibCore.Data.SQL.Mapper.Builder
             }
 
             var propertyInfos = _instance.GetPropertys();
-            var entityParameters = propertyInfos.Select(c => new EntityParameter($@"@{c.Key}", c.Value));
+            var entityParameters = propertyInfos.Select(c => new EntityParameter(c.Key, c.Value));
+
+            var template = String.Format(MapperConfig.DatabaseConfig.AddTemplate, typeof(TModel).GetTableName().TableName, String.Join(",", propertyInfos.Select(c => c.Key)), String.Join(",", propertyInfos.Select(key => $@"@{key.Key}")), MapperConfig.DatabaseConfig.Extension.Identity);
 
             var translationResult = new TranslateResult();
-            translationResult.Append($@" INSERT {typeof(TModel).GetTableName()} ({String.Join(",", propertyInfos.Select(c => c.Key))}) VALUES ({String.Join(",", propertyInfos.Select(key => $@"@{key.Key}"))}) {MapperConfig.DatabaseConfig.Extension.Identity}", entityParameters);
+            translationResult.Append(template, entityParameters);
             return translationResult;
         }
     }

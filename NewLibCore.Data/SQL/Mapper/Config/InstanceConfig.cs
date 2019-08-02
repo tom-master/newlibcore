@@ -26,18 +26,6 @@ namespace NewLibCore.Data.SQL.Mapper.Config
         /// </summary>
         protected static readonly IDictionary<OrderByType, String> OrderTypeMapper = new Dictionary<OrderByType, String>();
 
-        /// <summary>
-        /// 获取连接字符串
-        /// </summary>
-        protected String ConnectionString { get { return Host.GetHostVar("NewCrmDatabase"); } }
-
-        /// <summary>
-        /// 获取初始化完成的查询缓存对象
-        /// </summary>
-        internal ResultCache Cache { get; set; }
-
-        internal virtual String UnionPlaceHolder { get { return Guid.NewGuid().ToString().Replace("-", ""); } }
-
         protected InstanceConfig(ILogger logger)
         {
             Logger = logger ?? new ConsoleLogger();
@@ -50,6 +38,49 @@ namespace NewLibCore.Data.SQL.Mapper.Config
             InitJoinType();
             InitOrderType();
         }
+
+        /// <summary>
+        /// 获取连接字符串
+        /// </summary>
+        protected String ConnectionString { get { return Host.GetHostVar("NewCrmDatabase"); } }
+
+        /// <summary>
+        /// 获取初始化完成的查询缓存对象
+        /// </summary>
+        internal ResultCache Cache { get; set; }
+
+        /// <summary>
+        /// 日志
+        /// </summary>
+        /// <value></value>
+        internal ILogger Logger { get; }
+
+        /// <summary>
+        /// 查询模板
+        /// </summary>
+        internal virtual String SelectTemplate
+        {
+            get
+            {
+                return "SELECT {0} FROM {1} AS {2} ";
+            }
+        }
+
+        /// <summary>
+        /// 添加模板
+        /// </summary>
+        internal virtual String AddTemplate
+        {
+            get
+            {
+                return "INSTER {0} ({1}) VALUES({2}) {3}";
+            }
+        }
+
+        /// <summary>
+        /// 更新模板
+        /// </summary>
+        internal abstract String UpdateTemplate { get; }
 
         /// <summary>
         /// 追加关系类型
@@ -65,12 +96,6 @@ namespace NewLibCore.Data.SQL.Mapper.Config
             Cache = new ExecutionResultCache();
             return this;
         }
-
-        /// <summary>
-        /// 日志
-        /// </summary>
-        /// <value></value>
-        internal ILogger Logger { get; }
 
         /// <summary>
         /// 实例扩展

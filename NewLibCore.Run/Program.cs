@@ -17,6 +17,7 @@ namespace NewLibCore.Run
             var mapper = EntityMapper.CreateMapper();
 
             var r = mapper.Select<User>().InnerJoin<Config>((a, b) => a.ConfigId == b.Id).Where(a => a.Id == 4).FirstOrDefault();
+            Console.ReadKey();
         }
     }
 
