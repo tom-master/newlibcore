@@ -176,7 +176,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
         private String ReformatSql(String sql)
         {
             Parameter.Validate(sql);
-            sql = sql.Replace("  ", " ");
+            sql = sql.Replace("   ", " ").Replace("  ", " ");
             return sql.Trim();
         }
 

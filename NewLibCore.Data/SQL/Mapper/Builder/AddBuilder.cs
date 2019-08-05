@@ -22,12 +22,8 @@ namespace NewLibCore.Data.SQL.Mapper.Builder
             Parameter.Validate(model);
             _isVerifyModel = isVerifyModel;
             _instance = model;
-        }
+        } 
 
-        /// <summary>
-        /// 创建一个新增操作的翻译结果
-        /// </summary>
-        /// <returns></returns>
         protected override TranslationResult ExecuteSegmentTranslate()
         {
             _instance.OnChanged();

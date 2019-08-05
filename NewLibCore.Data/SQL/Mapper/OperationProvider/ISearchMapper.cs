@@ -56,7 +56,7 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider
         /// <param name="expression"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        ISearchMapper<TModel> Where<T>(Expression<Func<TModel, T, Boolean>> expression = null) where T : EntityBase, new();
+        ISearchMapper<TModel> Where<T>(Expression<Func<TModel, T, Boolean>> expression) where T : EntityBase, new();
 
         /// <summary>
         /// 构建Where条件
@@ -64,14 +64,14 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider
         /// <param name="expression"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        ISearchMapper<TModel> Where<T>(Expression<Func<T, Boolean>> expression = null) where T : EntityBase, new();
+        ISearchMapper<TModel> Where<T>(Expression<Func<T, Boolean>> expression) where T : EntityBase, new();
 
         /// <summary>
         /// 构建Where条件
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
-        ISearchMapper<TModel> Where(Expression<Func<TModel, Boolean>> expression = null);
+        ISearchMapper<TModel> Where(Expression<Func<TModel, Boolean>> expression);
 
         /// <summary>
         /// 构建分页对象

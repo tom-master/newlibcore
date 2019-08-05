@@ -8,18 +8,13 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
 {
     internal class ModifyMapper<TModel> : IModifyMapper<TModel> where TModel : EntityBase, new()
     {
-        private readonly ExpressionSegment _expressionSegment;
-
-        public ModifyMapper()
-        {
-            _expressionSegment = new ExpressionSegment();
-        }
+        private readonly SegmentManager _segmentManager = new SegmentManager();
 
         public Boolean Update(TModel model, Expression<Func<TModel, Boolean>> expression)
         {
-            _expressionSegment.Add(expression);
+            _segmentManager.Add(expression);
 
-            Builder<TModel> builder = new ModifyBuilder<TModel>(model, _expressionSegment, true);
+            Builder<TModel> builder = new ModifyBuilder<TModel>(model, _segmentManager, true);
             var translateResult = builder.GetSegmentResult();
             return (Int32)translateResult.GetExecuteResult().Value > 0;
         }

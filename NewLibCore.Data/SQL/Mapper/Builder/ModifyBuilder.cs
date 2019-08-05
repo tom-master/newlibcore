@@ -18,22 +18,18 @@ namespace NewLibCore.Data.SQL.Mapper.Builder
 
         private readonly Boolean _isVerifyModel;
 
-        private readonly ExpressionSegment _expressionSegment;
+        private readonly SegmentManager _segmentManager;
 
-        public ModifyBuilder(TModel model, ExpressionSegment expressionSegment, Boolean isVerifyModel = false)
+        public ModifyBuilder(TModel model, SegmentManager segmentManager, Boolean isVerifyModel = false)
         {
             Parameter.Validate(model);
-            Parameter.Validate(expressionSegment);
+            Parameter.Validate(segmentManager);
 
             _instance = model;
             _isVerifyModel = isVerifyModel;
-            _expressionSegment = expressionSegment;
+            _segmentManager = segmentManager;
         }
 
-        /// <summary>
-        /// 构建一个修改操作的翻译结果
-        /// </summary>
-        /// <returns></returns>
         protected override TranslationResult ExecuteSegmentTranslate()
         {
             _instance.SetUpdateTime();
@@ -47,9 +43,9 @@ namespace NewLibCore.Data.SQL.Mapper.Builder
             var propertys = _instance.GetChangedProperty();
             var template = String.Format(MapperConfig.DatabaseConfig.UpdateTemplate, TableName, AliasName, String.Join(",", propertys.Select(p => $@"{AliasName}.{p.Key}=@{p.Key}")));
 
-            var translationSegment = new TranslationSegment(_expressionSegment);
+            var translationSegment = new TranslationSegment(_segmentManager);
             translationSegment.TranslationResult.Append(template, propertys.Select(c => new EntityParameter(c.Key, c.Value)));
-            if (_expressionSegment.Where != null)
+            if (_segmentManager.Where != null)
             {
                 translationSegment.Translate();
             }

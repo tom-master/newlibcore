@@ -10,7 +10,7 @@ namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
     /// <summary>
     /// 分解的表达式段
     /// </summary>
-    internal class ExpressionSegment
+    internal class SegmentManager
     {
         /// <summary>
         /// 排序语句对象

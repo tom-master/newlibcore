@@ -15,12 +15,7 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
 {
     internal class SearchMapper<TModel> : ISearchMapper<TModel> where TModel : EntityBase, new()
     {
-        private readonly ExpressionSegment _expressionSegment;
-
-        public SearchMapper()
-        {
-            _expressionSegment = new ExpressionSegment();
-        }
+        private readonly SegmentManager _segmentManager = new SegmentManager();
 
         public Boolean Exist()
         {
@@ -62,7 +57,7 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
         {
             if (fields != null)
             {
-                _expressionSegment.Add(fields);
+                _segmentManager.Add(fields);
             }
 
             return this;
@@ -72,47 +67,48 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
         {
             if (fields != null)
             {
-                _expressionSegment.Add(fields);
+                _segmentManager.Add(fields);
             }
 
             return this;
         }
 
-        public ISearchMapper<TModel> Where(Expression<Func<TModel, Boolean>> expression = null)
+        public ISearchMapper<TModel> Where(Expression<Func<TModel, Boolean>> expression)
         {
-            return Where<TModel>(expression);
-        }
-
-        public ISearchMapper<TModel> Where<T>(Expression<Func<T, Boolean>> expression = null) where T : EntityBase, new()
-        {
-            if (expression != null)
-            {
-                _expressionSegment.Add(expression);
-            }
+            Parameter.Validate(expression);
+            _segmentManager.Add(expression);
 
             return this;
         }
 
-        public ISearchMapper<TModel> Where<T>(Expression<Func<TModel, T, Boolean>> expression = null) where T : EntityBase, new()
+        public ISearchMapper<TModel> Where<T>(Expression<Func<T, Boolean>> expression) where T : EntityBase, new()
         {
-            if (expression != null)
-            {
-                _expressionSegment.Add(expression);
-            }
+            Parameter.Validate(expression);
+            _segmentManager.Add(expression);
+
+            return this;
+        }
+
+        public ISearchMapper<TModel> Where<T>(Expression<Func<TModel, T, Boolean>> expression) where T : EntityBase, new()
+        {
+            Parameter.Validate(expression);
+            _segmentManager.Add(expression);
 
             return this;
         }
 
         public ISearchMapper<TModel> Page(Int32 pageIndex, Int32 pageSize)
         {
-            _expressionSegment.AddPage(pageIndex, pageSize);
+            Parameter.Validate(pageIndex);
+            Parameter.Validate(pageSize);
+            _segmentManager.AddPage(pageIndex, pageSize);
             return this;
         }
 
         public ISearchMapper<TModel> LeftJoin<TRight>(Expression<Func<TModel, TRight, Boolean>> expression) where TRight : EntityBase, new()
         {
             Parameter.Validate(expression);
-            _expressionSegment.Add(expression, JoinType.LEFT);
+            _segmentManager.Add(expression, JoinType.LEFT);
 
             return this;
         }
@@ -120,7 +116,7 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
         public ISearchMapper<TModel> RightJoin<TRight>(Expression<Func<TModel, TRight, Boolean>> expression) where TRight : EntityBase, new()
         {
             Parameter.Validate(expression);
-            _expressionSegment.Add(expression, JoinType.RIGHT);
+            _segmentManager.Add(expression, JoinType.RIGHT);
 
             return this;
         }
@@ -128,7 +124,7 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
         public ISearchMapper<TModel> InnerJoin<TRight>(Expression<Func<TModel, TRight, Boolean>> expression) where TRight : EntityBase, new()
         {
             Parameter.Validate(expression);
-            _expressionSegment.Add(expression, JoinType.INNER);
+            _segmentManager.Add(expression, JoinType.INNER);
 
             return this;
         }
@@ -138,7 +134,7 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
           where TRight : EntityBase, new()
         {
             Parameter.Validate(expression);
-            _expressionSegment.Add(expression, JoinType.LEFT);
+            _segmentManager.Add(expression, JoinType.LEFT);
 
             return this;
         }
@@ -148,7 +144,7 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
             where TRight : EntityBase, new()
         {
             Parameter.Validate(expression);
-            _expressionSegment.Add(expression, JoinType.RIGHT);
+            _segmentManager.Add(expression, JoinType.RIGHT);
 
             return this;
         }
@@ -158,7 +154,7 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
             where TRight : EntityBase, new()
         {
             Parameter.Validate(expression);
-            _expressionSegment.Add(expression, JoinType.INNER);
+            _segmentManager.Add(expression, JoinType.INNER);
 
             return this;
         }
@@ -166,7 +162,7 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
         public ISearchMapper<TModel> OrderByDesc<TOrder, TKey>(Expression<Func<TOrder, TKey>> order) where TOrder : EntityBase, new()
         {
             Parameter.Validate(order);
-            _expressionSegment.AddOrderBy(order, OrderByType.DESC);
+            _segmentManager.AddOrderBy(order, OrderByType.DESC);
 
             return this;
         }
@@ -174,14 +170,14 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
         public ISearchMapper<TModel> OrderByAsc<TOrder, TKey>(Expression<Func<TOrder, TKey>> order) where TOrder : EntityBase, new()
         {
             Parameter.Validate(order);
-            _expressionSegment.AddOrderBy(order, OrderByType.ASC);
+            _segmentManager.AddOrderBy(order, OrderByType.ASC);
 
             return this;
         }
 
         private RawExecuteResult InternalExecuteSql()
         {
-            Builder<TModel> builder = new SelectBuilder<TModel>(_expressionSegment);
+            Builder<TModel> builder = new SelectBuilder<TModel>(_segmentManager);
             var segmentResult = builder.GetSegmentResult();
             var executeResult = segmentResult.GetExecuteResult();
             MapperConfig.DatabaseConfig.Logger.Info($@"查询后的结果:{JsonConvert.SerializeObject(executeResult.Value)}");

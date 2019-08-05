@@ -6,10 +6,6 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
 {
     internal class AddMapper<TModel> : IAddMapper<TModel> where TModel : EntityBase, new()
     {
-        public AddMapper()
-        {
-        }
-
         public TModel Add(TModel model)
         {
             Builder<TModel> builder = new AddBuilder<TModel>(model, true);

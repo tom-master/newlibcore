@@ -18,43 +18,39 @@ namespace NewLibCore.Data.SQL.Mapper.Builder
     /// <typeparam name="TModel"></typeparam>
     internal class SelectBuilder<TModel> : Builder<TModel> where TModel : PropertyMonitor, new()
     {
-        private readonly ExpressionSegment _expressionSegment;
+        private readonly SegmentManager _segmentManager;
 
-        internal SelectBuilder(ExpressionSegment expressionSegment)
+        internal SelectBuilder(SegmentManager segmentManager)
         {
-            Parameter.Validate(expressionSegment);
-            _expressionSegment = expressionSegment;
+            Parameter.Validate(segmentManager);
+            _segmentManager = segmentManager;
         }
 
-        /// <summary>
-        /// 构建一个查询操作的翻译结果
-        /// </summary>
-        /// <returns></returns>
         protected override TranslationResult ExecuteSegmentTranslate()
         {
-            var (Fields, AliasName) = StatementParse(_expressionSegment.Field);
+            var (Fields, AliasName) = StatementParse(_segmentManager.Field);
 
-            var translationSegment = new TranslationSegment(_expressionSegment);
+            var translationSegment = new TranslationSegment(_segmentManager);
             translationSegment.TranslationResult.Append(String.Format(MapperConfig.DatabaseConfig.SelectTemplate, Fields, typeof(TModel).GetTableName().TableName, AliasName));
             translationSegment.Translate();
 
-            var aliasMapper = _expressionSegment.MergeAliasMapper();
+            var aliasMapper = _segmentManager.MergeAliasMapper();
             foreach (var aliasItem in aliasMapper)
             {
                 translationSegment.TranslationResult.Append($@"AND {aliasItem.Value.ToLower()}.IsDeleted = 0");
             }
 
-            if (_expressionSegment.Order != null)
+            if (_segmentManager.Order != null)
             {
-                var (fields, tableName) = StatementParse(_expressionSegment.Order);
-                var orderTemplate = MapperConfig.DatabaseConfig.OrderByBuilder(_expressionSegment.Order.OrderBy, $@"{tableName}.{fields}");
+                var (fields, tableName) = StatementParse(_segmentManager.Order);
+                var orderTemplate = MapperConfig.DatabaseConfig.OrderByBuilder(_segmentManager.Order.OrderBy, $@"{tableName}.{fields}");
                 translationSegment.TranslationResult.Append(orderTemplate);
             }
 
-            if (_expressionSegment.Page != null)
+            if (_segmentManager.Page != null)
             {
-                var pageIndex = (_expressionSegment.Page.Size * (_expressionSegment.Page.Index - 1)).ToString();
-                var pageSize = _expressionSegment.Page.Size.ToString();
+                var pageIndex = (_segmentManager.Page.Size * (_segmentManager.Page.Index - 1)).ToString();
+                var pageSize = _segmentManager.Page.Size.ToString();
                 translationSegment.TranslationResult.Append(MapperConfig.DatabaseConfig.Extension.Page.Replace("{value}", pageIndex).Replace("{pageSize}", pageSize));
             }
 

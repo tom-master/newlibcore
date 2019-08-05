@@ -8,12 +8,7 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider
 {
     internal class RawExecutor : IRawExecutor
     {
-        private ExecutionCore _executionCore;
-
-        public RawExecutor()
-        {
-            _executionCore = new ExecutionCore();
-        }
+        private readonly ExecutionCore _executionCore  = new ExecutionCore();
 
         /// <summary>
         /// 获取一个TModel的对象列表

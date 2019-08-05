@@ -19,17 +19,17 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
 
         private readonly Stack<String> _parameterNameStack;
 
-        private readonly ExpressionSegment _expressionSegment;
+        private readonly SegmentManager _segmentManager;
 
         private readonly Stack<RelationType> _relationTypesStack;
 
         private IReadOnlyList<KeyValuePair<String, String>> _tableAliasMapper;
 
-        internal TranslationSegment(ExpressionSegment expressionSegment)
+        internal TranslationSegment(SegmentManager segmentManager)
         {
-            Parameter.Validate(expressionSegment);
+            Parameter.Validate(segmentManager);
 
-            _expressionSegment = expressionSegment;
+            _segmentManager = segmentManager;
 
             _relationTypesStack = new Stack<RelationType>();
             _parameterNameStack = new Stack<String>();
@@ -45,10 +45,10 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
         public void Translate()
         {
             //获取合并后的表别名
-            _tableAliasMapper = _expressionSegment.MergeAliasMapper();
+            _tableAliasMapper = _segmentManager.MergeAliasMapper();
 
             //循环翻译连接对象
-            foreach (var item in _expressionSegment.Joins)
+            foreach (var item in _segmentManager.Joins)
             {
                 if (item.AliaNameMapper == null || item.JoinType == JoinType.NONE)
                 {
@@ -77,9 +77,9 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
             TranslationResult.Append("WHERE 1=1");
 
             //翻译Where条件对象
-            if (_expressionSegment.Where != null)
+            if (_segmentManager.Where != null)
             {
-                var lambdaExp = (LambdaExpression)_expressionSegment.Where.Expression;
+                var lambdaExp = (LambdaExpression)_segmentManager.Where.Expression;
                 //当表达式主体为常量时则直接返回，不做解析
                 if (lambdaExp.Body.NodeType == ExpressionType.Constant)
                 {
