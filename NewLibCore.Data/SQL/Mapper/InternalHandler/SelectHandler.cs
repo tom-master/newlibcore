@@ -10,7 +10,7 @@ using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
 using NewLibCore.Data.SQL.Mapper.Translation;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Data.SQL.Mapper.Builder
+namespace NewLibCore.Data.SQL.Mapper.InternalHandler
 {
     /// <summary>
     /// 查询操作构建

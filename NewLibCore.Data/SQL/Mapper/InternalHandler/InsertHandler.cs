@@ -5,7 +5,7 @@ using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Data.SQL.Mapper.Translation;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Data.SQL.Mapper.Builder
+namespace NewLibCore.Data.SQL.Mapper.InternalHandler
 {
 
     /// <summary>

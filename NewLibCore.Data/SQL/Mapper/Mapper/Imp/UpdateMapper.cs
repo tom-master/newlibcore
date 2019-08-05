@@ -1,8 +1,8 @@
 using System;
 using System.Linq.Expressions;
-using NewLibCore.Data.SQL.Mapper.Builder;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
+using NewLibCore.Data.SQL.Mapper.InternalHandler;
 
 namespace NewLibCore.Data.SQL.Mapper.Mapper.Imp
 {
