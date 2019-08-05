@@ -4,7 +4,7 @@ using NewLibCore.Data.SQL.Mapper.Builder;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
 
-namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
+namespace NewLibCore.Data.SQL.Mapper.MapperStandardHandler.Imp
 {
     internal class ModifyMapper<TModel> : IModifyMapper<TModel> where TModel : EntityBase, new()
     {

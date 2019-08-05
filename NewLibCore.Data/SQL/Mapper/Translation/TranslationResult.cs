@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NewLibCore.Data.SQL.Mapper.Config;
-using NewLibCore.Data.SQL.Mapper.Execute;
+using NewLibCore.Data.SQL.Mapper.Database;
 using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper.Translation

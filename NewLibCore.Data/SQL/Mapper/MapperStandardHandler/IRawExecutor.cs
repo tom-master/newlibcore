@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace NewLibCore.Data.SQL.Mapper.OperationProvider
+namespace NewLibCore.Data.SQL.Mapper.MapperStandardHandler
 {
     internal interface IRawExecutor
     {

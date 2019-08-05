@@ -2,7 +2,7 @@
 using System.Linq.Expressions;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 
-namespace NewLibCore.Data.SQL.Mapper.OperationProvider
+namespace NewLibCore.Data.SQL.Mapper.MapperStandardHandler
 {
     /// <summary>
     /// 更新操作

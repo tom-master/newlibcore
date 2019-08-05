@@ -7,7 +7,7 @@ using NewLibCore.Data.SQL.Mapper.Config;
 using NewLibCore.Data.SQL.Mapper.Translation;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Data.SQL.Mapper.Execute
+namespace NewLibCore.Data.SQL.Mapper.Database
 {
     /// <summary>
     /// sql语句执行

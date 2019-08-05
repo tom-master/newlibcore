@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NewLibCore.Data.SQL.Mapper.Execute
+namespace NewLibCore.Data.SQL.Mapper.Database
 {
     /// <summary>
     /// 存储未包装过的sql执行结果

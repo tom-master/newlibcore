@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using NewLibCore.Data.SQL.Mapper.Database;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
-using NewLibCore.Data.SQL.Mapper.Execute;
 
-namespace NewLibCore.Data.SQL.Mapper.OperationProvider
+namespace NewLibCore.Data.SQL.Mapper.MapperStandardHandler.Imp
 {
     internal class RawExecutor : IRawExecutor
     {
-        private readonly ExecutionCore _executionCore  = new ExecutionCore();
+        private readonly ExecutionCore _executionCore = new ExecutionCore();
 
         /// <summary>
         /// 获取一个TModel的对象列表

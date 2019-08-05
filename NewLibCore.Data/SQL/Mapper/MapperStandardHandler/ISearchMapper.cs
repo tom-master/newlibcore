@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 
-namespace NewLibCore.Data.SQL.Mapper.OperationProvider
+namespace NewLibCore.Data.SQL.Mapper.MapperStandardHandler
 {
     /// <summary>
     /// 查询操作
