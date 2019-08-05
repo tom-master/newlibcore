@@ -11,7 +11,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
     /// <summary>
     /// 存储表达式的翻译结果
     /// </summary>
-    internal class TranslateResult
+    internal class TranslationResult
     {
         private readonly StringBuilder _originSql;
 
@@ -19,7 +19,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
 
         private readonly IList<EntityParameter> _parameters;
 
-        internal TranslateResult()
+        internal TranslationResult()
         {
             _originSql = new StringBuilder();
             _executionCore = new ExecutionCore();
@@ -88,28 +88,22 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
             }
         }
 
+        /// <summary>
+        /// 获取表达式段执行之后的结果
+        /// </summary>
+        /// <returns></returns>
+        internal RawExecuteResult GetExecuteResult()
+        {
+            return Execute();
+        }
+
         internal void Clear()
         {
             _originSql.Clear();
             _parameters.Clear();
         }
 
-        /// <summary>
-        /// 获取作为要缓存的sql语句的key
-        /// </summary>
-        /// <param name="entityParameters"></param>
-        private String PrepareCacheKey()
-        {
-            Parameter.Validate(_originSql);
-            var cacheKey = GetSql();
-            foreach (var item in GetParameters())
-            {
-                cacheKey = cacheKey.Replace(item.Key, item.Value.ToString());
-            }
-            return MD.GetMD5(cacheKey);
-        }
-
-        internal RawExecuteResult Execute()
+        private RawExecuteResult Execute()
         {
             var rawSql = GetSql();
             Enum.TryParse<ExecuteType>(rawSql.Substring(0, rawSql.IndexOf(" ")), out var executeType);
@@ -130,6 +124,25 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
             return executeResult;
         }
 
+        /// <summary>
+        /// 获取作为要缓存的sql语句的key
+        /// </summary>
+        /// <param name="entityParameters"></param>
+        private String PrepareCacheKey()
+        {
+            Parameter.Validate(_originSql);
+            var cacheKey = GetSql();
+            foreach (var item in GetParameters())
+            {
+                cacheKey = cacheKey.Replace(item.Key, item.Value.ToString());
+            }
+            return MD.GetMD5(cacheKey);
+        }
+
+        /// <summary>
+        /// 设置缓存
+        /// </summary>
+        /// <param name="executeResult"></param>
         private void SetCache(RawExecuteResult executeResult)
         {
             if (MapperConfig.DatabaseConfig.Cache != null)
@@ -138,6 +151,10 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
             }
         }
 
+        /// <summary>
+        /// 获取缓存
+        /// </summary>
+        /// <returns></returns>
         private RawExecuteResult GetCache()
         {
             if (MapperConfig.DatabaseConfig.Cache != null)

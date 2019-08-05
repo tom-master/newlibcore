@@ -25,7 +25,7 @@ namespace NewLibCore.Data.SQL.Mapper
     /// <summary>
     /// 排序类型
     /// </summary>
-    public enum OrderByType
+    internal enum OrderByType
     {
         ASC = 1,
         DESC = 2

@@ -8,19 +8,19 @@ namespace NewLibCore.Data.SQL.Mapper.Builder
     internal abstract class Builder<TModel> where TModel : PropertyMonitor, new()
     {
         /// <summary>
-        /// 创建并返回一个具体的构建对象
+        /// 获取表达式段翻译后的结果
         /// </summary>
         /// <returns></returns>
-        internal TranslateResult CreateResult()
+        internal TranslationResult GetSegmentResult()
         {
-            return CreateTranslateResult();
+            return ExecuteSegmentTranslate();
         }
 
         /// <summary>
-        /// 创建一个TranslationResult对象
+        /// 执行表达式段的翻译
         /// </summary>
         /// <returns></returns>
-        protected abstract TranslateResult CreateTranslateResult();
+        protected abstract TranslationResult ExecuteSegmentTranslate();
 
         /// <summary>
         /// 字段转换

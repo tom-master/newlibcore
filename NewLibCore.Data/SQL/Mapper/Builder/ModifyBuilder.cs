@@ -34,7 +34,7 @@ namespace NewLibCore.Data.SQL.Mapper.Builder
         /// 构建一个修改操作的翻译结果
         /// </summary>
         /// <returns></returns>
-        protected override TranslateResult CreateTranslateResult()
+        protected override TranslationResult ExecuteSegmentTranslate()
         {
             _instance.SetUpdateTime();
 
@@ -44,19 +44,19 @@ namespace NewLibCore.Data.SQL.Mapper.Builder
             }
 
             var (TableName, AliasName) = typeof(TModel).GetTableName();
-            var propertys = _instance.GetPropertys();
+            var propertys = _instance.GetChangedProperty();
             var template = String.Format(MapperConfig.DatabaseConfig.UpdateTemplate, TableName, AliasName, String.Join(",", propertys.Select(p => $@"{AliasName}.{p.Key}=@{p.Key}")));
 
-            var translation = new TranslateExpression(_expressionSegment);
-            translation.Result.Append(template, propertys.Select(c => new EntityParameter(c.Key, c.Value)));
+            var translationSegment = new TranslationSegment(_expressionSegment);
+            translationSegment.TranslationResult.Append(template, propertys.Select(c => new EntityParameter(c.Key, c.Value)));
             if (_expressionSegment.Where != null)
             {
-                translation.Translate();
+                translationSegment.Translate();
             }
             _instance.Reset();
 
-            translation.Result.Append($@"{MapperConfig.DatabaseConfig.Extension.RowCount}");
-            return translation.Result;
+            translationSegment.TranslationResult.Append($@"{MapperConfig.DatabaseConfig.Extension.RowCount}");
+            return translationSegment.TranslationResult;
         }
     }
 }

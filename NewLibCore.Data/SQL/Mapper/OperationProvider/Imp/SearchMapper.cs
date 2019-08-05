@@ -163,10 +163,18 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
             return this;
         }
 
-        public ISearchMapper<TModel> OrderBy<TOrder, TKey>(Expression<Func<TOrder, TKey>> order, OrderByType orderBy = OrderByType.DESC) where TOrder : EntityBase, new()
+        public ISearchMapper<TModel> OrderByDesc<TOrder, TKey>(Expression<Func<TOrder, TKey>> order) where TOrder : EntityBase, new()
         {
             Parameter.Validate(order);
-            _expressionSegment.AddOrderBy(order, orderBy);
+            _expressionSegment.AddOrderBy(order, OrderByType.DESC);
+
+            return this;
+        }
+
+        public ISearchMapper<TModel> OrderByAsc<TOrder, TKey>(Expression<Func<TOrder, TKey>> order) where TOrder : EntityBase, new()
+        {
+            Parameter.Validate(order);
+            _expressionSegment.AddOrderBy(order, OrderByType.ASC);
 
             return this;
         }
@@ -174,8 +182,8 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
         private RawExecuteResult InternalExecuteSql()
         {
             Builder<TModel> builder = new SelectBuilder<TModel>(_expressionSegment);
-            var translationResult = builder.CreateResult();
-            var executeResult = translationResult.Execute();
+            var segmentResult = builder.GetSegmentResult();
+            var executeResult = segmentResult.GetExecuteResult();
             MapperConfig.DatabaseConfig.Logger.Info($@"查询后的结果:{JsonConvert.SerializeObject(executeResult.Value)}");
             return executeResult;
         }

@@ -56,7 +56,11 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
             }
         }
 
-        internal IReadOnlyList<KeyValuePair<String, Object>> GetPropertys()
+        /// <summary>
+        /// 获取值发生变更的属性
+        /// </summary>
+        /// <returns></returns>
+        internal IReadOnlyList<KeyValuePair<String, Object>> GetChangedProperty()
         {
             return _propertys.Select(s => new KeyValuePair<String, Object>(s.PropertyName, s.Value)).ToList().AsReadOnly();
         }

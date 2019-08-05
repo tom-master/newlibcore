@@ -30,37 +30,35 @@ namespace NewLibCore.Data.SQL.Mapper.Builder
         /// 构建一个查询操作的翻译结果
         /// </summary>
         /// <returns></returns>
-        protected override TranslateResult CreateTranslateResult()
+        protected override TranslationResult ExecuteSegmentTranslate()
         {
-            var translation = new TranslateExpression(_expressionSegment);
+            var (Fields, AliasName) = StatementParse(_expressionSegment.Field);
+
+            var translationSegment = new TranslationSegment(_expressionSegment);
+            translationSegment.TranslationResult.Append(String.Format(MapperConfig.DatabaseConfig.SelectTemplate, Fields, typeof(TModel).GetTableName().TableName, AliasName));
+            translationSegment.Translate();
+
+            var aliasMapper = _expressionSegment.MergeAliasMapper();
+            foreach (var aliasItem in aliasMapper)
             {
-                var (Fields, AliasName) = StatementParse(_expressionSegment.Field);
-
-                translation.Result.Append(String.Format(MapperConfig.DatabaseConfig.SelectTemplate, Fields, typeof(TModel).GetTableName().TableName, AliasName));
-                translation.Translate();
-
-                var aliasMapper = _expressionSegment.MergeAliasMapper();
-                foreach (var aliasItem in aliasMapper)
-                {
-                    translation.Result.Append($@"AND {aliasItem.Value.ToLower()}.IsDeleted = 0");
-                }
+                translationSegment.TranslationResult.Append($@"AND {aliasItem.Value.ToLower()}.IsDeleted = 0");
             }
 
             if (_expressionSegment.Order != null)
             {
                 var (fields, tableName) = StatementParse(_expressionSegment.Order);
                 var orderTemplate = MapperConfig.DatabaseConfig.OrderByBuilder(_expressionSegment.Order.OrderBy, $@"{tableName}.{fields}");
-                translation.Result.Append(orderTemplate);
+                translationSegment.TranslationResult.Append(orderTemplate);
             }
 
             if (_expressionSegment.Page != null)
             {
                 var pageIndex = (_expressionSegment.Page.Size * (_expressionSegment.Page.Index - 1)).ToString();
                 var pageSize = _expressionSegment.Page.Size.ToString();
-                translation.Result.Append(MapperConfig.DatabaseConfig.Extension.Page.Replace("{value}", pageIndex).Replace("{pageSize}", pageSize));
+                translationSegment.TranslationResult.Append(MapperConfig.DatabaseConfig.Extension.Page.Replace("{value}", pageIndex).Replace("{pageSize}", pageSize));
             }
 
-            return translation.Result;
+            return translationSegment.TranslationResult;
         }
 
         /// <summary>

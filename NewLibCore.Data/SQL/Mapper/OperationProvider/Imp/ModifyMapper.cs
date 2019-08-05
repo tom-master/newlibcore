@@ -20,8 +20,8 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider.Imp
             _expressionSegment.Add(expression);
 
             Builder<TModel> builder = new ModifyBuilder<TModel>(model, _expressionSegment, true);
-            var translateResult = builder.CreateResult();
-            return (Int32)translateResult.Execute().Value > 0;
+            var translateResult = builder.GetSegmentResult();
+            return (Int32)translateResult.GetExecuteResult().Value > 0;
         }
     }
 }

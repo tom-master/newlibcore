@@ -3,7 +3,7 @@
     /// <summary>
     /// 翻译表达式
     /// </summary>
-    internal interface ITranslateExpression
+    internal interface ITranslationSegment
     {
         /// <summary>
         /// 翻译

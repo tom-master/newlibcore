@@ -133,13 +133,21 @@ namespace NewLibCore.Data.SQL.Mapper.OperationProvider
         ISearchMapper<TModel> InnerJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> expression) where TLeft : EntityBase, new() where TRight : EntityBase, new();
 
         /// <summary>
-        /// 构建排序对象
+        /// 构建降序排序对象
         /// </summary>
-        /// <param name="order"></param>
-        /// <param name="orderBy"></param>
         /// <typeparam name="TOrder"></typeparam>
         /// <typeparam name="TKey"></typeparam>
+        /// <param name="order"></param>
         /// <returns></returns>
-        ISearchMapper<TModel> OrderBy<TOrder, TKey>(Expression<Func<TOrder, TKey>> order, OrderByType orderBy = OrderByType.DESC) where TOrder : EntityBase, new();
+        ISearchMapper<TModel> OrderByDesc<TOrder, TKey>(Expression<Func<TOrder, TKey>> order) where TOrder : EntityBase, new();
+
+        /// <summary>
+        /// 构建升序排序对象
+        /// </summary>
+        /// <typeparam name="TOrder"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <param name="order"></param>
+        /// <returns></returns>
+        ISearchMapper<TModel> OrderByAsc<TOrder, TKey>(Expression<Func<TOrder, TKey>> order) where TOrder : EntityBase, new();
     }
 }
