@@ -2,9 +2,9 @@ using System;
 using NewLibCore.Data.SQL.Mapper.Builder;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 
-namespace NewLibCore.Data.SQL.Mapper.MapperStandardHandler.Imp
+namespace NewLibCore.Data.SQL.Mapper.MapperHandler.Imp
 {
-    internal class AddMapper<TModel> : IAddMapper<TModel> where TModel : EntityBase, new()
+    internal class AddHandler<TModel> : IAddHandler<TModel> where TModel : EntityBase, new()
     {
         public TModel Add(TModel model)
         {

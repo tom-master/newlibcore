@@ -11,9 +11,9 @@ using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
 using NewLibCore.Validate;
 using Newtonsoft.Json;
 
-namespace NewLibCore.Data.SQL.Mapper.MapperStandardHandler.Imp
+namespace NewLibCore.Data.SQL.Mapper.MapperHandler.Imp
 {
-    internal class SearchMapper<TModel> : ISearchMapper<TModel> where TModel : EntityBase, new()
+    internal class SearchHandler<TModel> : ISearchHandler<TModel> where TModel : EntityBase, new()
     {
         private readonly SegmentManager _segmentManager = new SegmentManager();
 
@@ -53,7 +53,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperStandardHandler.Imp
             });
         }
 
-        public ISearchMapper<TModel> Select<T>(Expression<Func<TModel, T, dynamic>> fields = null) where T : EntityBase, new()
+        public ISearchHandler<TModel> Select<T>(Expression<Func<TModel, T, dynamic>> fields = null) where T : EntityBase, new()
         {
             if (fields != null)
             {
@@ -63,7 +63,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperStandardHandler.Imp
             return this;
         }
 
-        public ISearchMapper<TModel> Select(Expression<Func<TModel, dynamic>> fields = null)
+        public ISearchHandler<TModel> Select(Expression<Func<TModel, dynamic>> fields = null)
         {
             if (fields != null)
             {
@@ -73,7 +73,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperStandardHandler.Imp
             return this;
         }
 
-        public ISearchMapper<TModel> Where(Expression<Func<TModel, Boolean>> expression)
+        public ISearchHandler<TModel> Where(Expression<Func<TModel, Boolean>> expression)
         {
             Parameter.Validate(expression);
             _segmentManager.Add(expression);
@@ -81,7 +81,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperStandardHandler.Imp
             return this;
         }
 
-        public ISearchMapper<TModel> Where<T>(Expression<Func<T, Boolean>> expression) where T : EntityBase, new()
+        public ISearchHandler<TModel> Where<T>(Expression<Func<T, Boolean>> expression) where T : EntityBase, new()
         {
             Parameter.Validate(expression);
             _segmentManager.Add(expression);
@@ -89,7 +89,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperStandardHandler.Imp
             return this;
         }
 
-        public ISearchMapper<TModel> Where<T>(Expression<Func<TModel, T, Boolean>> expression) where T : EntityBase, new()
+        public ISearchHandler<TModel> Where<T>(Expression<Func<TModel, T, Boolean>> expression) where T : EntityBase, new()
         {
             Parameter.Validate(expression);
             _segmentManager.Add(expression);
@@ -97,7 +97,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperStandardHandler.Imp
             return this;
         }
 
-        public ISearchMapper<TModel> Page(Int32 pageIndex, Int32 pageSize)
+        public ISearchHandler<TModel> Page(Int32 pageIndex, Int32 pageSize)
         {
             Parameter.Validate(pageIndex);
             Parameter.Validate(pageSize);
@@ -105,7 +105,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperStandardHandler.Imp
             return this;
         }
 
-        public ISearchMapper<TModel> LeftJoin<TRight>(Expression<Func<TModel, TRight, Boolean>> expression) where TRight : EntityBase, new()
+        public ISearchHandler<TModel> LeftJoin<TRight>(Expression<Func<TModel, TRight, Boolean>> expression) where TRight : EntityBase, new()
         {
             Parameter.Validate(expression);
             _segmentManager.Add(expression, JoinType.LEFT);
@@ -113,7 +113,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperStandardHandler.Imp
             return this;
         }
 
-        public ISearchMapper<TModel> RightJoin<TRight>(Expression<Func<TModel, TRight, Boolean>> expression) where TRight : EntityBase, new()
+        public ISearchHandler<TModel> RightJoin<TRight>(Expression<Func<TModel, TRight, Boolean>> expression) where TRight : EntityBase, new()
         {
             Parameter.Validate(expression);
             _segmentManager.Add(expression, JoinType.RIGHT);
@@ -121,7 +121,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperStandardHandler.Imp
             return this;
         }
 
-        public ISearchMapper<TModel> InnerJoin<TRight>(Expression<Func<TModel, TRight, Boolean>> expression) where TRight : EntityBase, new()
+        public ISearchHandler<TModel> InnerJoin<TRight>(Expression<Func<TModel, TRight, Boolean>> expression) where TRight : EntityBase, new()
         {
             Parameter.Validate(expression);
             _segmentManager.Add(expression, JoinType.INNER);
@@ -129,7 +129,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperStandardHandler.Imp
             return this;
         }
 
-        public ISearchMapper<TModel> LeftJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> expression)
+        public ISearchHandler<TModel> LeftJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> expression)
           where TLeft : EntityBase, new()
           where TRight : EntityBase, new()
         {
@@ -139,7 +139,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperStandardHandler.Imp
             return this;
         }
 
-        public ISearchMapper<TModel> RightJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> expression)
+        public ISearchHandler<TModel> RightJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> expression)
             where TLeft : EntityBase, new()
             where TRight : EntityBase, new()
         {
@@ -149,7 +149,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperStandardHandler.Imp
             return this;
         }
 
-        public ISearchMapper<TModel> InnerJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> expression)
+        public ISearchHandler<TModel> InnerJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> expression)
             where TLeft : EntityBase, new()
             where TRight : EntityBase, new()
         {
@@ -159,7 +159,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperStandardHandler.Imp
             return this;
         }
 
-        public ISearchMapper<TModel> OrderByDesc<TOrder, TKey>(Expression<Func<TOrder, TKey>> order) where TOrder : EntityBase, new()
+        public ISearchHandler<TModel> OrderByDesc<TOrder, TKey>(Expression<Func<TOrder, TKey>> order) where TOrder : EntityBase, new()
         {
             Parameter.Validate(order);
             _segmentManager.AddOrderBy(order, OrderByType.DESC);
@@ -167,7 +167,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperStandardHandler.Imp
             return this;
         }
 
-        public ISearchMapper<TModel> OrderByAsc<TOrder, TKey>(Expression<Func<TOrder, TKey>> order) where TOrder : EntityBase, new()
+        public ISearchHandler<TModel> OrderByAsc<TOrder, TKey>(Expression<Func<TOrder, TKey>> order) where TOrder : EntityBase, new()
         {
             Parameter.Validate(order);
             _segmentManager.AddOrderBy(order, OrderByType.ASC);

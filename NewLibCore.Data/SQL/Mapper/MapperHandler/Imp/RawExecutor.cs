@@ -4,7 +4,7 @@ using System.Data;
 using NewLibCore.Data.SQL.Mapper.Database;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 
-namespace NewLibCore.Data.SQL.Mapper.MapperStandardHandler.Imp
+namespace NewLibCore.Data.SQL.Mapper.MapperHandler.Imp
 {
     internal class RawExecutor : IRawExecutor
     {
@@ -19,7 +19,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperStandardHandler.Imp
         /// <returns></returns>
         public List<TModel> ToList<TModel>(String sql, IEnumerable<EntityParameter> parameters = null) where TModel : new()
         {
-            var dataTable = (DataTable)ExecuteRawSql(ExecuteType.SELECT, sql, parameters).Value;
+            var dataTable = (DataTable)RawExecute(ExecuteType.SELECT, sql, parameters).Value;
             return dataTable.ToList<TModel>();
         }
 
@@ -36,11 +36,11 @@ namespace NewLibCore.Data.SQL.Mapper.MapperStandardHandler.Imp
             RawExecuteResult executeResult;
             if (modelType.IsNumeric())
             {
-                executeResult = ExecuteRawSql(ExecuteType.SELECT_SINGLE, sql, parameters);
+                executeResult = RawExecute(ExecuteType.SELECT_SINGLE, sql, parameters);
                 return (TModel)Convert.ChangeType(executeResult.Value, modelType);
             }
 
-            executeResult = ExecuteRawSql(ExecuteType.SELECT, sql, parameters);
+            executeResult = RawExecute(ExecuteType.SELECT, sql, parameters);
             var dataTable = (DataTable)executeResult.Value;
             return dataTable.ToSingle<TModel>();
         }
@@ -52,7 +52,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperStandardHandler.Imp
         /// <param name="sql"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        private RawExecuteResult ExecuteRawSql(ExecuteType executeType, String sql, IEnumerable<EntityParameter> parameters = null)
+        private RawExecuteResult RawExecute(ExecuteType executeType, String sql, IEnumerable<EntityParameter> parameters = null)
         {
             return _executionCore.RawExecute(executeType, sql, parameters);
         }

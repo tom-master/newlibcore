@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using NewLibCore.Data.SQL.Mapper.Database;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
-using NewLibCore.Data.SQL.Mapper.MapperStandardHandler;
-using NewLibCore.Data.SQL.Mapper.MapperStandardHandler.Imp;
+using NewLibCore.Data.SQL.Mapper.MapperHandler;
+using NewLibCore.Data.SQL.Mapper.MapperHandler.Imp;
 using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper
@@ -48,7 +48,7 @@ namespace NewLibCore.Data.SQL.Mapper
         public TModel Add<TModel>(TModel model) where TModel : EntityBase, new()
         {
             Parameter.Validate(model);
-            return new AddMapper<TModel>().Add(model);
+            return new AddHandler<TModel>().Add(model);
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             Parameter.Validate(model);
             Parameter.Validate(expression);
-            return new ModifyMapper<TModel>().Update(model, expression);
+            return new UpdateHandler<TModel>().Update(model, expression);
         }
 
         /// <summary>
@@ -71,9 +71,9 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <param name="fields"></param>
         /// <typeparam name="TModel"></typeparam>
         /// <returns></returns>
-        public ISearchMapper<TModel> Select<TModel>(Expression<Func<TModel, dynamic>> fields = null) where TModel : EntityBase, new()
+        public ISearchHandler<TModel> Select<TModel>(Expression<Func<TModel, dynamic>> fields = null) where TModel : EntityBase, new()
         {
-            return new SearchMapper<TModel>().Select(fields);
+            return new SearchHandler<TModel>().Select(fields);
         }
 
         /// <summary>
@@ -83,10 +83,10 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <typeparam name="TModel"></typeparam>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public ISearchMapper<TModel> Select<TModel, T>(Expression<Func<TModel, T, dynamic>> fields = null) where TModel : EntityBase, new()
+        public ISearchHandler<TModel> Select<TModel, T>(Expression<Func<TModel, T, dynamic>> fields = null) where TModel : EntityBase, new()
         where T : EntityBase, new()
         {
-            return new SearchMapper<TModel>().Select(fields);
+            return new SearchHandler<TModel>().Select(fields);
         }
 
         /// <summary>

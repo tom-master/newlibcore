@@ -4,9 +4,9 @@ using NewLibCore.Data.SQL.Mapper.Builder;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
 
-namespace NewLibCore.Data.SQL.Mapper.MapperStandardHandler.Imp
+namespace NewLibCore.Data.SQL.Mapper.MapperHandler.Imp
 {
-    internal class ModifyMapper<TModel> : IModifyMapper<TModel> where TModel : EntityBase, new()
+    internal class UpdateHandler<TModel> : IUpdateHandler<TModel> where TModel : EntityBase, new()
     {
         private readonly SegmentManager _segmentManager = new SegmentManager();
 
