@@ -15,14 +15,11 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
     {
         private readonly StringBuilder _originSql;
 
-        private readonly ExecutionCore _executionCore;
-
         private readonly IList<EntityParameter> _parameters;
 
         internal TranslationResult()
         {
             _originSql = new StringBuilder();
-            _executionCore = new ExecutionCore();
             _parameters = new List<EntityParameter>();
         }
 
@@ -117,7 +114,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
             var executeResult = GetCache();
             if (executeResult == null)
             {
-                executeResult = _executionCore.Execute(this);
+                executeResult = MapperConfig.DatabaseConfig.ExecutionCore.Execute(this);
                 SetCache(executeResult);
             }
 

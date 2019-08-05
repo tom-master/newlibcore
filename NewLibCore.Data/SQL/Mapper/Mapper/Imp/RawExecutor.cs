@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using NewLibCore.Data.SQL.Mapper.Config;
 using NewLibCore.Data.SQL.Mapper.Database;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 
@@ -8,8 +9,6 @@ namespace NewLibCore.Data.SQL.Mapper.Mapper.Imp
 {
     internal class RawExecutor : IRawExecutor
     {
-        private readonly ExecutionCore _executionCore = new ExecutionCore();
-
         /// <summary>
         /// 获取一个TModel的对象列表
         /// </summary>
@@ -54,7 +53,7 @@ namespace NewLibCore.Data.SQL.Mapper.Mapper.Imp
         /// <returns></returns>
         private RawExecuteResult RawExecute(ExecuteType executeType, String sql, IEnumerable<EntityParameter> parameters = null)
         {
-            return _executionCore.RawExecute(executeType, sql, parameters);
+            return MapperConfig.DatabaseConfig.ExecutionCore.RawExecute(executeType, sql, parameters);
         }
     }
 }

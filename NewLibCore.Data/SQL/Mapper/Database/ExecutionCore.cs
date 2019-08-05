@@ -12,7 +12,7 @@ namespace NewLibCore.Data.SQL.Mapper.Database
     /// <summary>
     /// sql语句执行
     /// </summary>
-    public class ExecutionCore
+    internal class ExecutionCore
     {
         private DbConnection _connection;
 
@@ -24,48 +24,10 @@ namespace NewLibCore.Data.SQL.Mapper.Database
         {
             Parameter.Validate(MapperConfig.DatabaseConfig);
             _connection = MapperConfig.DatabaseConfig.GetConnectionInstance();
-        }
 
-        /// <summary>
-        /// 开启一个事物
-        /// </summary>
-        public void OpenTransaction()
-        {
-            _useTransaction = true;
-        }
-
-        /// <summary>
-        /// 提交一个事物
-        /// </summary>
-        public void Commit()
-        {
-            if (_useTransaction)
-            {
-                if (_dataTransaction != null)
-                {
-                    _dataTransaction.Commit();
-                    MapperConfig.DatabaseConfig.Logger.Info("提交事务");
-                }
-                return;
-            }
-            throw new Exception("没有启动事务，无法执行事务提交");
-        }
-
-        /// <summary>
-        /// 回滚一个事物
-        /// </summary>
-        public void Rollback()
-        {
-            if (_useTransaction)
-            {
-                if (_dataTransaction != null)
-                {
-                    _dataTransaction.Rollback();
-                    MapperConfig.DatabaseConfig.Logger.Info("事务回滚");
-                }
-                return;
-            }
-            throw new Exception("没有启动事务，无法执行事务回滚");
+            MapperConfig.Instance.OpenTransaction = OpenTransaction;
+            MapperConfig.Instance.Commit = Commit;
+            MapperConfig.Instance.Rollback = Rollback;
         }
 
         /// <summary>
@@ -94,7 +56,6 @@ namespace NewLibCore.Data.SQL.Mapper.Database
             {
                 Parameter.Validate(sql);
                 Open();
-                using (_connection)
                 using (var cmd = _connection.CreateCommand())
                 {
                     if (_useTransaction)
@@ -136,6 +97,13 @@ namespace NewLibCore.Data.SQL.Mapper.Database
                 MapperConfig.DatabaseConfig.Logger.Error($@"{ex}");
                 throw;
             }
+            finally
+            {
+                if (!_useTransaction)
+                {
+                    _connection.Close();
+                }
+            }
         }
 
         /// <summary>
@@ -167,6 +135,50 @@ namespace NewLibCore.Data.SQL.Mapper.Database
                 return _dataTransaction;
             }
             throw new Exception("没有启动事务");
+        }
+
+
+        /// <summary>
+        /// 开启一个事物
+        /// </summary>
+        private void OpenTransaction()
+        {
+            _useTransaction = true;
+        }
+
+        /// <summary>
+        /// 提交一个事物
+        /// </summary>
+        private void Commit()
+        {
+            if (_useTransaction)
+            {
+                if (_dataTransaction != null)
+                {
+                    _dataTransaction.Commit();
+                    _connection.Close();
+                    MapperConfig.DatabaseConfig.Logger.Info("提交事务");
+                }
+                return;
+            }
+            throw new Exception("没有启动事务，无法执行事务提交");
+        }
+
+        /// <summary>
+        /// 回滚一个事物
+        /// </summary>
+        private void Rollback()
+        {
+            if (_useTransaction)
+            {
+                if (_dataTransaction != null)
+                {
+                    _dataTransaction.Rollback();
+                    MapperConfig.DatabaseConfig.Logger.Info("事务回滚");
+                }
+                return;
+            }
+            throw new Exception("没有启动事务，无法执行事务回滚");
         }
     }
 }

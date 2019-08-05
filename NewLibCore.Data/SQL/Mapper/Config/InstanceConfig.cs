@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using NewLibCore.Data.SQL.Mapper.Cache;
+using NewLibCore.Data.SQL.Mapper.Database;
 using NewLibCore.Logger;
 
 namespace NewLibCore.Data.SQL.Mapper.Config
@@ -11,6 +12,7 @@ namespace NewLibCore.Data.SQL.Mapper.Config
     /// </summary>
     internal abstract class InstanceConfig
     {
+
         /// <summary>
         /// 逻辑关系映射
         /// </summary>
@@ -47,7 +49,9 @@ namespace NewLibCore.Data.SQL.Mapper.Config
         /// <summary>
         /// 获取初始化完成的查询缓存对象
         /// </summary>
-        internal ResultCache Cache { get; set; }
+        internal ResultCache Cache { get; private set; }
+
+        internal ExecutionCore ExecutionCore { get; private set; }
 
         /// <summary>
         /// 日志
@@ -95,6 +99,11 @@ namespace NewLibCore.Data.SQL.Mapper.Config
         {
             Cache = new ExecutionResultCache();
             return this;
+        }
+
+        internal void InitExecutionCore()
+        {
+            ExecutionCore = new ExecutionCore();
         }
 
         /// <summary>
