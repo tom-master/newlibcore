@@ -73,7 +73,7 @@ namespace NewLibCore.Data.SQL.Mapper.Config
         {
             get
             {
-                return "INSTER {0} ({1}) VALUES({2}) {3}";
+                return "INSERT {0} ({1}) VALUES({2}) {3}";
             }
         }
 
