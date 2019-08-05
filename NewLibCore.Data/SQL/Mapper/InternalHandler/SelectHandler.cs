@@ -26,7 +26,7 @@ namespace NewLibCore.Data.SQL.Mapper.Builder
             _segmentManager = segmentManager;
         }
 
-        protected override TranslationResult ExecuteSegmentTranslate()
+        protected override TranslationResult ExecuteTranslate()
         {
             var (Fields, AliasName) = StatementParse(_segmentManager.Field);
 

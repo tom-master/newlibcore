@@ -24,7 +24,7 @@ namespace NewLibCore.Data.SQL.Mapper.Builder
             _instance = model;
         }
 
-        protected override TranslationResult ExecuteSegmentTranslate()
+        protected override TranslationResult ExecuteTranslate()
         {
             _instance.OnChanged();
             if (_isVerifyModel)

@@ -30,7 +30,7 @@ namespace NewLibCore.Data.SQL.Mapper.Builder
             _segmentManager = segmentManager;
         }
 
-        protected override TranslationResult ExecuteSegmentTranslate()
+        protected override TranslationResult ExecuteTranslate()
         {
             _instance.SetUpdateTime();
 
@@ -40,11 +40,10 @@ namespace NewLibCore.Data.SQL.Mapper.Builder
             }
 
             var (TableName, AliasName) = typeof(TModel).GetTableName();
-            var propertys = _instance.GetChangedProperty();
-            var template = String.Format(MapperConfig.DatabaseConfig.UpdateTemplate, TableName, AliasName, String.Join(",", propertys.Select(p => $@"{AliasName}.{p.Key}=@{p.Key}")));
 
+            var propertys = _instance.GetChangedProperty();
             var translationSegment = new TranslationSegment(_segmentManager);
-            translationSegment.TranslationResult.Append(template, propertys.Select(c => new EntityParameter(c.Key, c.Value)));
+            translationSegment.TranslationResult.Append(String.Format(MapperConfig.DatabaseConfig.UpdateTemplate, TableName, AliasName, String.Join(",", propertys.Select(p => $@"{AliasName}.{p.Key}=@{p.Key}"))), propertys.Select(c => new EntityParameter(c.Key, c.Value)));
             if (_segmentManager.Where != null)
             {
                 translationSegment.Translate();

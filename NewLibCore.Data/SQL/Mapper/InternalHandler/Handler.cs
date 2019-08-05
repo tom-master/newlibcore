@@ -13,14 +13,14 @@ namespace NewLibCore.Data.SQL.Mapper.Builder
         /// <returns></returns>
         internal TranslationResult GetSegmentResult()
         {
-            return ExecuteSegmentTranslate();
+            return ExecuteTranslate();
         }
 
         /// <summary>
         /// 执行表达式段的翻译
         /// </summary>
         /// <returns></returns>
-        protected abstract TranslationResult ExecuteSegmentTranslate();
+        protected abstract TranslationResult ExecuteTranslate();
 
         /// <summary>
         /// 字段转换
