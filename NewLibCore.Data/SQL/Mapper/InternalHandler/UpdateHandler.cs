@@ -12,7 +12,7 @@ namespace NewLibCore.Data.SQL.Mapper.Builder
     /// 更新操作builder类
     /// </summary>
     /// <typeparam name="TModel"></typeparam>
-    internal class ModifyBuilder<TModel> : Builder<TModel> where TModel : PropertyMonitor, new()
+    internal class UpdateHandler<TModel> : Handler<TModel> where TModel : PropertyMonitor, new()
     {
         private readonly TModel _instance;
 
@@ -20,7 +20,7 @@ namespace NewLibCore.Data.SQL.Mapper.Builder
 
         private readonly SegmentManager _segmentManager;
 
-        public ModifyBuilder(TModel model, SegmentManager segmentManager, Boolean isVerifyModel = false)
+        public UpdateHandler(TModel model, SegmentManager segmentManager, Boolean isVerifyModel = false)
         {
             Parameter.Validate(model);
             Parameter.Validate(segmentManager);

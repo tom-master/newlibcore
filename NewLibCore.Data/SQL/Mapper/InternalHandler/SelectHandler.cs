@@ -16,11 +16,11 @@ namespace NewLibCore.Data.SQL.Mapper.Builder
     /// 查询操作构建
     /// </summary>
     /// <typeparam name="TModel"></typeparam>
-    internal class SelectBuilder<TModel> : Builder<TModel> where TModel : PropertyMonitor, new()
+    internal class SelectHandler<TModel> : Handler<TModel> where TModel : PropertyMonitor, new()
     {
         private readonly SegmentManager _segmentManager;
 
-        internal SelectBuilder(SegmentManager segmentManager)
+        internal SelectHandler(SegmentManager segmentManager)
         {
             Parameter.Validate(segmentManager);
             _segmentManager = segmentManager;

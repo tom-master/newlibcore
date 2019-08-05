@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 
-namespace NewLibCore.Data.SQL.Mapper.MapperHandler
+namespace NewLibCore.Data.SQL.Mapper.Mapper
 {
     /// <summary>
     /// 查询操作
     /// </summary>
     /// <typeparam name="TModel"></typeparam>
-    public interface ISearchHandler<TModel> where TModel : EntityBase, new()
+    public interface ISearchMapper<TModel> where TModel : EntityBase, new()
     {
         /// <summary>
         /// 返回一个TModel对象
@@ -40,7 +40,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperHandler
         /// </summary>
         /// <param name="fields"></param>
         /// <returns></returns>
-        ISearchHandler<TModel> Select(Expression<Func<TModel, dynamic>> fields = null);
+        ISearchMapper<TModel> Select(Expression<Func<TModel, dynamic>> fields = null);
 
         /// <summary>
         /// 构建Select表达式
@@ -48,7 +48,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperHandler
         /// <param name="fields"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        ISearchHandler<TModel> Select<T>(Expression<Func<TModel, T, dynamic>> fields = null) where T : EntityBase, new();
+        ISearchMapper<TModel> Select<T>(Expression<Func<TModel, T, dynamic>> fields = null) where T : EntityBase, new();
 
         /// <summary>
         /// 构建Where条件
@@ -56,7 +56,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperHandler
         /// <param name="expression"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        ISearchHandler<TModel> Where<T>(Expression<Func<TModel, T, Boolean>> expression) where T : EntityBase, new();
+        ISearchMapper<TModel> Where<T>(Expression<Func<TModel, T, Boolean>> expression) where T : EntityBase, new();
 
         /// <summary>
         /// 构建Where条件
@@ -64,14 +64,14 @@ namespace NewLibCore.Data.SQL.Mapper.MapperHandler
         /// <param name="expression"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        ISearchHandler<TModel> Where<T>(Expression<Func<T, Boolean>> expression) where T : EntityBase, new();
+        ISearchMapper<TModel> Where<T>(Expression<Func<T, Boolean>> expression) where T : EntityBase, new();
 
         /// <summary>
         /// 构建Where条件
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
-        ISearchHandler<TModel> Where(Expression<Func<TModel, Boolean>> expression);
+        ISearchMapper<TModel> Where(Expression<Func<TModel, Boolean>> expression);
 
         /// <summary>
         /// 构建分页对象
@@ -79,7 +79,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperHandler
         /// <param name="pageIndex"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        ISearchHandler<TModel> Page(Int32 pageIndex, Int32 pageSize);
+        ISearchMapper<TModel> Page(Int32 pageIndex, Int32 pageSize);
 
         /// <summary>
         /// 构建左连接对象
@@ -87,7 +87,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperHandler
         /// <param name="expression"></param>
         /// <typeparam name="TRight"></typeparam>
         /// <returns></returns>
-        ISearchHandler<TModel> LeftJoin<TRight>(Expression<Func<TModel, TRight, Boolean>> expression) where TRight : EntityBase, new();
+        ISearchMapper<TModel> LeftJoin<TRight>(Expression<Func<TModel, TRight, Boolean>> expression) where TRight : EntityBase, new();
 
         /// <summary>
         /// 构建右连接对象
@@ -95,7 +95,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperHandler
         /// <param name="expression"></param>
         /// <typeparam name="TRight"></typeparam>
         /// <returns></returns>
-        ISearchHandler<TModel> RightJoin<TRight>(Expression<Func<TModel, TRight, Boolean>> expression) where TRight : EntityBase, new();
+        ISearchMapper<TModel> RightJoin<TRight>(Expression<Func<TModel, TRight, Boolean>> expression) where TRight : EntityBase, new();
 
         /// <summary>
         /// 构建内连接对象
@@ -103,7 +103,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperHandler
         /// <param name="expression"></param>
         /// <typeparam name="TRight"></typeparam>
         /// <returns></returns>
-        ISearchHandler<TModel> InnerJoin<TRight>(Expression<Func<TModel, TRight, Boolean>> expression) where TRight : EntityBase, new();
+        ISearchMapper<TModel> InnerJoin<TRight>(Expression<Func<TModel, TRight, Boolean>> expression) where TRight : EntityBase, new();
 
         /// <summary>
         /// 构建左连接对象
@@ -112,7 +112,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperHandler
         /// <typeparam name="TLeft"></typeparam>
         /// <typeparam name="TRight"></typeparam>
         /// <returns></returns>
-        ISearchHandler<TModel> LeftJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> expression) where TLeft : EntityBase, new() where TRight : EntityBase, new();
+        ISearchMapper<TModel> LeftJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> expression) where TLeft : EntityBase, new() where TRight : EntityBase, new();
 
         /// <summary>
         /// 构建右连接对象
@@ -121,7 +121,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperHandler
         /// <typeparam name="TLeft"></typeparam>
         /// <typeparam name="TRight"></typeparam>
         /// <returns></returns>
-        ISearchHandler<TModel> RightJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> expression) where TLeft : EntityBase, new() where TRight : EntityBase, new();
+        ISearchMapper<TModel> RightJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> expression) where TLeft : EntityBase, new() where TRight : EntityBase, new();
 
         /// <summary>
         /// 构建内连接对象
@@ -130,7 +130,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperHandler
         /// <typeparam name="TLeft"></typeparam>
         /// <typeparam name="TRight"></typeparam>
         /// <returns></returns>
-        ISearchHandler<TModel> InnerJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> expression) where TLeft : EntityBase, new() where TRight : EntityBase, new();
+        ISearchMapper<TModel> InnerJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> expression) where TLeft : EntityBase, new() where TRight : EntityBase, new();
 
         /// <summary>
         /// 构建降序排序对象
@@ -139,7 +139,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperHandler
         /// <typeparam name="TKey"></typeparam>
         /// <param name="order"></param>
         /// <returns></returns>
-        ISearchHandler<TModel> OrderByDesc<TOrder, TKey>(Expression<Func<TOrder, TKey>> order) where TOrder : EntityBase, new();
+        ISearchMapper<TModel> OrderByDesc<TOrder, TKey>(Expression<Func<TOrder, TKey>> order) where TOrder : EntityBase, new();
 
         /// <summary>
         /// 构建升序排序对象
@@ -148,6 +148,6 @@ namespace NewLibCore.Data.SQL.Mapper.MapperHandler
         /// <typeparam name="TKey"></typeparam>
         /// <param name="order"></param>
         /// <returns></returns>
-        ISearchHandler<TModel> OrderByAsc<TOrder, TKey>(Expression<Func<TOrder, TKey>> order) where TOrder : EntityBase, new();
+        ISearchMapper<TModel> OrderByAsc<TOrder, TKey>(Expression<Func<TOrder, TKey>> order) where TOrder : EntityBase, new();
     }
 }

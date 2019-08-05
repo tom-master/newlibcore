@@ -5,7 +5,7 @@ using NewLibCore.Data.SQL.Mapper.Translation;
 
 namespace NewLibCore.Data.SQL.Mapper.Builder
 {
-    internal abstract class Builder<TModel> where TModel : PropertyMonitor, new()
+    internal abstract class Handler<TModel> where TModel : PropertyMonitor, new()
     {
         /// <summary>
         /// 获取表达式段翻译后的结果

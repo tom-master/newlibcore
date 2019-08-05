@@ -12,17 +12,17 @@ namespace NewLibCore.Data.SQL.Mapper.Builder
     /// 新增操作builder类
     /// </summary>
     /// <typeparam name="TModel"></typeparam>
-    internal class AddBuilder<TModel> : Builder<TModel> where TModel : PropertyMonitor, new()
+    internal class InsertHandler<TModel> : Handler<TModel> where TModel : PropertyMonitor, new()
     {
         private readonly Boolean _isVerifyModel;
         private readonly TModel _instance;
 
-        internal AddBuilder(TModel model, Boolean isVerifyModel = false)
+        internal InsertHandler(TModel model, Boolean isVerifyModel = false)
         {
             Parameter.Validate(model);
             _isVerifyModel = isVerifyModel;
             _instance = model;
-        } 
+        }
 
         protected override TranslationResult ExecuteSegmentTranslate()
         {

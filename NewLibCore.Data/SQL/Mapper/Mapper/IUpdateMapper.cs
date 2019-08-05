@@ -2,13 +2,13 @@
 using System.Linq.Expressions;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 
-namespace NewLibCore.Data.SQL.Mapper.MapperHandler
+namespace NewLibCore.Data.SQL.Mapper.Mapper
 {
     /// <summary>
     /// 更新操作
     /// </summary>
     /// <typeparam name="TModel"></typeparam>
-    internal interface IUpdateHandler<TModel> where TModel : EntityBase, new()
+    internal interface IUpdateMapper<TModel> where TModel : EntityBase, new()
     {
         /// <summary>
         /// 更新一个TModel

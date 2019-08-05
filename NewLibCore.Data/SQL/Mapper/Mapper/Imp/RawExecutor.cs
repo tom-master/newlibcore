@@ -4,7 +4,7 @@ using System.Data;
 using NewLibCore.Data.SQL.Mapper.Database;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 
-namespace NewLibCore.Data.SQL.Mapper.MapperHandler.Imp
+namespace NewLibCore.Data.SQL.Mapper.Mapper.Imp
 {
     internal class RawExecutor : IRawExecutor
     {

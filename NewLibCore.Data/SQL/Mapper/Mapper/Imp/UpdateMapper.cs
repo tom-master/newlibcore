@@ -4,9 +4,9 @@ using NewLibCore.Data.SQL.Mapper.Builder;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
 
-namespace NewLibCore.Data.SQL.Mapper.MapperHandler.Imp
+namespace NewLibCore.Data.SQL.Mapper.Mapper.Imp
 {
-    internal class UpdateHandler<TModel> : IUpdateHandler<TModel> where TModel : EntityBase, new()
+    internal class UpdateMapper<TModel> : IUpdateMapper<TModel> where TModel : EntityBase, new()
     {
         private readonly SegmentManager _segmentManager = new SegmentManager();
 
@@ -14,7 +14,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperHandler.Imp
         {
             _segmentManager.Add(expression);
 
-            Builder<TModel> builder = new ModifyBuilder<TModel>(model, _segmentManager, true);
+            Handler<TModel> builder = new UpdateHandler<TModel>(model, _segmentManager, true);
             var translateResult = builder.GetSegmentResult();
             return (Int32)translateResult.GetExecuteResult().Value > 0;
         }
