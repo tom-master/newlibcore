@@ -174,6 +174,7 @@ namespace NewLibCore.Data.SQL.Mapper.Database
                 if (_dataTransaction != null)
                 {
                     _dataTransaction.Rollback();
+                    _connection.Close();
                     MapperConfig.DatabaseConfig.Logger.Info("事务回滚");
                 }
                 return;
