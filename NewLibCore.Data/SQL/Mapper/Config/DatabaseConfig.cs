@@ -22,11 +22,13 @@ namespace NewLibCore.Data.SQL.Mapper.Config
         /// <returns></returns>
         public static MapperConfig Instance { get; } = new MapperConfig();
 
-        public Action OpenTransaction { get; internal set; }
+        internal Action OpenTransaction { get; set; }
 
-        public Action Commit { get; internal set; }
+        internal Action Commit { get; set; }
 
-        public Action Rollback { get; internal set; }
+        internal Action Rollback { get; set; }
+
+        internal Action Dispose { get; set; }
 
         /// <summary>
         /// 设置日志
@@ -77,19 +79,19 @@ namespace NewLibCore.Data.SQL.Mapper.Config
                         switch (database)
                         {
                             case DatabaseType.MSSQL:
-                            {
-                                DatabaseConfig = new MsSqlInstanceConfig(_logger);
-                                break;
-                            }
+                                {
+                                    DatabaseConfig = new MsSqlInstanceConfig(_logger);
+                                    break;
+                                }
                             case DatabaseType.MYSQL:
-                            {
-                                DatabaseConfig = new MySqlInstanceConfig(_logger);
-                                break;
-                            }
+                                {
+                                    DatabaseConfig = new MySqlInstanceConfig(_logger);
+                                    break;
+                                }
                             default:
-                            {
-                                throw new ArgumentException($@"暂不支持的数据库类型:{database}");
-                            }
+                                {
+                                    throw new ArgumentException($@"暂不支持的数据库类型:{database}");
+                                }
                         }
                         DatabaseConfig.InitExecutionCore();
                         if (cache)

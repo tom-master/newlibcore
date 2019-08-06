@@ -12,11 +12,13 @@ namespace NewLibCore.Data.SQL.Mapper.Database
     /// <summary>
     /// sql语句执行
     /// </summary>
-    internal class ExecutionCore
+    internal class ExecutionCore : IDisposable
     {
         private DbConnection _connection;
 
         private DbTransaction _dataTransaction;
+
+        private Boolean _disposed = false;
 
         private Boolean _useTransaction = false;
 
@@ -97,13 +99,6 @@ namespace NewLibCore.Data.SQL.Mapper.Database
                 MapperConfig.DatabaseConfig.Logger.Error($@"{ex}");
                 throw;
             }
-            finally
-            {
-                if (!_useTransaction)
-                {
-                    _connection.Close();
-                }
-            }
         }
 
         /// <summary>
@@ -156,7 +151,6 @@ namespace NewLibCore.Data.SQL.Mapper.Database
                 if (_dataTransaction != null)
                 {
                     _dataTransaction.Commit();
-                    _connection.Close();
                     MapperConfig.DatabaseConfig.Logger.Info("提交事务");
                 }
                 return;
@@ -174,12 +168,41 @@ namespace NewLibCore.Data.SQL.Mapper.Database
                 if (_dataTransaction != null)
                 {
                     _dataTransaction.Rollback();
-                    _connection.Close();
                     MapperConfig.DatabaseConfig.Logger.Info("事务回滚");
                 }
                 return;
             }
             throw new Exception("没有启动事务，无法执行事务回滚");
         }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private void Dispose(Boolean disposing)
+        {
+            MapperConfig.DatabaseConfig.Logger.Info($@"close connection {Environment.NewLine}");
+            if (!_disposed)
+            {
+                if (!disposing)
+                {
+                    return;
+                }
+
+                if (_connection != null)
+                {
+                    if (_connection.State != ConnectionState.Closed)
+                    {
+                        _connection.Close();
+                    }
+                    _connection.Dispose();
+                    _connection = null;
+                }
+                _disposed = true;
+            }
+        }
+
     }
 }
