@@ -22,14 +22,6 @@ namespace NewLibCore.Data.SQL.Mapper.Config
         /// <returns></returns>
         public static MapperConfig Instance { get; } = new MapperConfig();
 
-        internal Action OpenTransaction { get; set; }
-
-        internal Action Commit { get; set; }
-
-        internal Action Rollback { get; set; }
-
-        internal Action Dispose { get; set; }
-
         /// <summary>
         /// 设置日志
         /// </summary>

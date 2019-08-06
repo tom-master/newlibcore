@@ -12,7 +12,7 @@ namespace NewLibCore.Data.SQL.Mapper
     /// <summary>
     /// 将对应的操作翻译为sql并执行
     /// </summary>
-    public sealed class EntityMapper : IDisposable
+    public sealed class EntityMapper
     {
         private static EntityMapper _entityMapper;
 
@@ -113,26 +113,6 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             Parameter.Validate(sql);
             return new RawExecutor().ToSingle<TModel>(sql, parameters);
-        }
-
-        public void OpenTransaction()
-        {
-            MapperConfig.Instance.OpenTransaction();
-        }
-
-        public void Commit()
-        {
-            MapperConfig.Instance.Commit();
-        }
-
-        public void Rollback()
-        {
-            MapperConfig.Instance.Rollback();
-        }
-
-        public void Dispose()
-        {
-            MapperConfig.Instance.Dispose();
         }
     }
 }

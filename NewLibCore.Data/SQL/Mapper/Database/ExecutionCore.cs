@@ -25,11 +25,7 @@ namespace NewLibCore.Data.SQL.Mapper.Database
         internal ExecutionCore()
         {
             Parameter.Validate(MapperConfig.DatabaseConfig);
-
-            MapperConfig.Instance.OpenTransaction = OpenTransaction;
-            MapperConfig.Instance.Commit = Commit;
-            MapperConfig.Instance.Rollback = Rollback;
-            MapperConfig.Instance.Dispose = Dispose;
+            _connection = MapperConfig.DatabaseConfig.GetConnectionInstance();
         }
 
         /// <summary>
@@ -106,11 +102,6 @@ namespace NewLibCore.Data.SQL.Mapper.Database
         /// </summary>
         private void Open()
         {
-            if (_connection == null)
-            {
-                _connection = MapperConfig.DatabaseConfig.GetConnectionInstance();
-            }
-
             if (_connection.State == ConnectionState.Closed)
             {
                 MapperConfig.DatabaseConfig.Logger.Info("开启连接");
@@ -203,7 +194,6 @@ namespace NewLibCore.Data.SQL.Mapper.Database
                         _connection.Close();
                     }
                     _connection.Dispose();
-                    _connection = null;
                 }
                 _disposed = true;
             }
