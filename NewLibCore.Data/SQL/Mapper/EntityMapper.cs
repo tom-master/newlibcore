@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using NewLibCore.Data.SQL.Mapper.Config;
+using NewLibCore.Data.SQL.Mapper.Database;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Data.SQL.Mapper.Mapper;
 using NewLibCore.Data.SQL.Mapper.Mapper.Imp;
@@ -12,7 +13,7 @@ namespace NewLibCore.Data.SQL.Mapper
     /// <summary>
     /// 将对应的操作翻译为sql并执行
     /// </summary>
-    public sealed class EntityMapper
+    public sealed class EntityMapper : IDisposable
     {
         private static EntityMapper _entityMapper;
 
@@ -36,6 +37,7 @@ namespace NewLibCore.Data.SQL.Mapper
                     }
                 }
             }
+            MapperConfig.DatabaseConfig.InitExecutionCore();
             return _entityMapper;
         }
 
@@ -113,6 +115,23 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             Parameter.Validate(sql);
             return new RawExecutor().ToSingle<TModel>(sql, parameters);
+        }
+
+        public void OpenTransaction()
+        {
+            MapperConfig.DatabaseConfig.ExecutionCore.OpenTransaction();
+        }
+        public void Commit()
+        {
+            MapperConfig.DatabaseConfig.ExecutionCore.Commit();
+        }
+        public void Rollback()
+        {
+            MapperConfig.DatabaseConfig.ExecutionCore.Rollback();
+        }
+        public void Dispose()
+        {
+            MapperConfig.DatabaseConfig.ExecutionCore.Dispose();
         }
     }
 }

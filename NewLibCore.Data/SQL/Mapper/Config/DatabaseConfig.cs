@@ -84,8 +84,7 @@ namespace NewLibCore.Data.SQL.Mapper.Config
                                 {
                                     throw new ArgumentException($@"暂不支持的数据库类型:{database}");
                                 }
-                        }
-                        DatabaseConfig.InitExecutionCore();
+                        } 
                         if (cache)
                         {
                             DatabaseConfig.UseCache();

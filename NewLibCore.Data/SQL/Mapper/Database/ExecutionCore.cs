@@ -12,7 +12,7 @@ namespace NewLibCore.Data.SQL.Mapper.Database
     /// <summary>
     /// sql语句执行
     /// </summary>
-    internal class ExecutionCore : IDisposable
+    public class ExecutionCore : IDisposable
     {
         private DbConnection _connection;
 
@@ -132,7 +132,7 @@ namespace NewLibCore.Data.SQL.Mapper.Database
         /// <summary>
         /// 开启一个事物
         /// </summary>
-        private void OpenTransaction()
+        internal void OpenTransaction()
         {
             _useTransaction = true;
         }
@@ -140,7 +140,7 @@ namespace NewLibCore.Data.SQL.Mapper.Database
         /// <summary>
         /// 提交一个事物
         /// </summary>
-        private void Commit()
+        internal void Commit()
         {
             if (_useTransaction)
             {
@@ -157,7 +157,7 @@ namespace NewLibCore.Data.SQL.Mapper.Database
         /// <summary>
         /// 回滚一个事物
         /// </summary>
-        private void Rollback()
+        internal void Rollback()
         {
             if (_useTransaction)
             {
@@ -194,6 +194,7 @@ namespace NewLibCore.Data.SQL.Mapper.Database
                         _connection.Close();
                     }
                     _connection.Dispose();
+                    _connection = null;
                 }
                 _disposed = true;
             }
