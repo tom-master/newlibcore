@@ -70,18 +70,5 @@ namespace NewLibCore.Data.SQL.MergeExpression
             var newExpression = Expression.Not(lambdaExpression.Body);
             left.MergeExpression = Expression.Lambda<Func<T, Boolean>>(newExpression, internalParameter);
         }
-
-        /// <summary>
-        /// 逻辑倒序排序
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="left"></param>
-        /// <param name="right"></param>
-        /// <returns></returns>
-        // public static Combination<T> OrderByDescending<T>(this Combination<T> left, Expression<Func<T, Object>> right) where T : EntityBase
-        // {
-        //     left.AddOrderByExpression(right);
-        //     return left;
-        // }
     }
 }
