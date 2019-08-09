@@ -11,31 +11,18 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
     /// <summary>
     /// 存储表达式的翻译后的sql语句
     /// </summary>
-    internal class SqlResult
+    internal sealed class SqlResult
     {
         private readonly StringBuilder _originSql;
-
-        private readonly ExecutionCore _executionCore;
-
         private readonly IList<EntityParameter> _parameters;
 
         internal SqlResult()
         {
             _originSql = new StringBuilder();
             _parameters = new List<EntityParameter>();
-            _executionCore = new ExecutionCore();
         }
 
         internal ExecuteType ExecuteType { get; set; }
-
-        /// <summary>
-        /// 获取翻译好的sql语句
-        /// </summary>
-        /// <returns></returns>
-        internal String GetSql()
-        {
-            return ReformatSql(_originSql.ToString());
-        }
 
         /// <summary>
         /// 获取EntityParameter列表
@@ -105,19 +92,22 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
 
         private RawExecuteResult Execute()
         {
-            var rawSql = GetSql();
-            Enum.TryParse<ExecuteType>(rawSql.Substring(0, rawSql.IndexOf(" ")).ToUpper(), out var executeType);
-            ExecuteType = executeType;
-
-            if (rawSql.Contains("COUNT(*)"))
+            if (ExecuteType == default)
             {
-                ExecuteType = ExecuteType.SELECT_SINGLE;
+                var rawSql = ToString();
+                Enum.TryParse<ExecuteType>(rawSql.Substring(0, rawSql.IndexOf(" ")).ToUpper(), out var executeType);
+                ExecuteType = executeType;
+
+                if (rawSql.Contains("COUNT(*)"))
+                {
+                    ExecuteType = ExecuteType.SELECT_SINGLE;
+                }
             }
 
             var executeResult = GetCache();
             if (executeResult == null)
             {
-                executeResult = _executionCore.Execute(this);
+                executeResult = ExecutionCore.CreateExecutionCore().Execute(this);
                 SetCache(executeResult);
             }
 
@@ -131,7 +121,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
         private String PrepareCacheKey()
         {
             Parameter.Validate(_originSql);
-            var cacheKey = GetSql();
+            var cacheKey = ToString();
             foreach (var item in GetParameters())
             {
                 cacheKey = cacheKey.Replace(item.Key, item.Value.ToString());

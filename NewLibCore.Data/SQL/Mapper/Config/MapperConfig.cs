@@ -1,4 +1,5 @@
 ﻿using System;
+using NewLibCore.Data.SQL.Mapper.Database;
 using NewLibCore.Logger;
 
 namespace NewLibCore.Data.SQL.Mapper.Config
@@ -75,7 +76,7 @@ namespace NewLibCore.Data.SQL.Mapper.Config
                             {
                                 throw new ArgumentException($@"暂不支持的数据库类型:{database}");
                             }
-                        }
+                        } 
                         if (cache)
                         {
                             Instance.UseCache();

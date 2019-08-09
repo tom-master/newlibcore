@@ -12,7 +12,7 @@ namespace NewLibCore.Data.SQL.Mapper.Database
     /// <summary>
     /// sql语句执行
     /// </summary>
-    public class ExecutionCore : IDisposable
+    internal class ExecutionCore : IDisposable
     {
         private DbConnection _connection;
 
@@ -22,10 +22,57 @@ namespace NewLibCore.Data.SQL.Mapper.Database
 
         private Boolean _useTransaction = false;
 
-        internal ExecutionCore()
+        private ExecutionCore()
         {
             Parameter.Validate(MapperConfig.Instance);
             _connection = MapperConfig.Instance.GetConnectionInstance();
+        }
+
+        internal static ExecutionCore CreateExecutionCore()
+        {
+            return new ExecutionCore();
+        }
+
+        /// <summary>
+        /// 开启一个事物
+        /// </summary>
+        internal void OpenTransaction()
+        {
+            _useTransaction = true;
+        }
+
+        /// <summary>
+        /// 提交一个事物
+        /// </summary>
+        internal void Commit()
+        {
+            if (_useTransaction)
+            {
+                if (_dataTransaction != null)
+                {
+                    _dataTransaction.Commit();
+                    MapperConfig.Instance.Logger.Info("提交事务");
+                }
+                return;
+            }
+            throw new Exception("没有启动事务，无法执行事务提交");
+        }
+
+        /// <summary>
+        /// 回滚一个事物
+        /// </summary>
+        internal void Rollback()
+        {
+            if (_useTransaction)
+            {
+                if (_dataTransaction != null)
+                {
+                    _dataTransaction.Rollback();
+                    MapperConfig.Instance.Logger.Info("事务回滚");
+                }
+                return;
+            }
+            throw new Exception("没有启动事务，无法执行事务回滚");
         }
 
         /// <summary>
@@ -37,7 +84,7 @@ namespace NewLibCore.Data.SQL.Mapper.Database
         internal RawExecuteResult Execute(SqlResult sqlResult)
         {
             Parameter.Validate(sqlResult);
-            return RawExecute(sqlResult.ExecuteType, sqlResult.GetSql(), sqlResult.GetParameters(), CommandType.Text);
+            return RawExecute(sqlResult.ExecuteType, sqlResult.ToString(), sqlResult.GetParameters(), CommandType.Text);
         }
 
         /// <summary>
@@ -128,55 +175,6 @@ namespace NewLibCore.Data.SQL.Mapper.Database
             throw new Exception("没有启动事务");
         }
 
-
-        /// <summary>
-        /// 开启一个事物
-        /// </summary>
-        internal void OpenTransaction()
-        {
-            _useTransaction = true;
-        }
-
-        /// <summary>
-        /// 提交一个事物
-        /// </summary>
-        internal void Commit()
-        {
-            if (_useTransaction)
-            {
-                if (_dataTransaction != null)
-                {
-                    _dataTransaction.Commit();
-                    MapperConfig.Instance.Logger.Info("提交事务");
-                }
-                return;
-            }
-            throw new Exception("没有启动事务，无法执行事务提交");
-        }
-
-        /// <summary>
-        /// 回滚一个事物
-        /// </summary>
-        internal void Rollback()
-        {
-            if (_useTransaction)
-            {
-                if (_dataTransaction != null)
-                {
-                    _dataTransaction.Rollback();
-                    MapperConfig.Instance.Logger.Info("事务回滚");
-                }
-                return;
-            }
-            throw new Exception("没有启动事务，无法执行事务回滚");
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
         private void Dispose(Boolean disposing)
         {
             MapperConfig.Instance.Logger.Info($@"关闭连接{Environment.NewLine}");
@@ -198,6 +196,12 @@ namespace NewLibCore.Data.SQL.Mapper.Database
                 }
                 _disposed = true;
             }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }
