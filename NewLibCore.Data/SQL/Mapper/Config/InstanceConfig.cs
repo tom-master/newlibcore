@@ -10,7 +10,7 @@ namespace NewLibCore.Data.SQL.Mapper.Config
     /// 数据库实例配置
     /// </summary>
     internal abstract class InstanceConfig
-    { 
+    {
         /// <summary>
         /// 逻辑关系映射
         /// </summary>
