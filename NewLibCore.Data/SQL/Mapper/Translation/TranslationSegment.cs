@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using NewLibCore.Data.SQL.Mapper.Config;
+using NewLibCore.Data.SQL.Mapper.Database;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
 using NewLibCore.Validate;
@@ -17,6 +18,8 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
     {
         private JoinType _joinType;
 
+        private readonly SqlResult _sqlResult;
+
         private readonly Stack<String> _parameterNameStack;
 
         private readonly SegmentManager _segmentManager;
@@ -25,18 +28,46 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
 
         private IReadOnlyList<KeyValuePair<String, String>> _tableAliasMapper;
 
-        internal TranslationSegment(SegmentManager segmentManager)
+        private TranslationSegment(SegmentManager segmentManager)
         {
             Parameter.Validate(segmentManager);
 
             _segmentManager = segmentManager;
 
+            _sqlResult = new SqlResult();
             _relationTypesStack = new Stack<RelationType>();
             _parameterNameStack = new Stack<String>();
             _tableAliasMapper = new List<KeyValuePair<String, String>>();
         }
 
-        internal TranslationResult TranslationResult { get; private set; } = new TranslationResult();
+        /// <summary>
+        /// 创建一个翻译表达式的对象
+        /// </summary>
+        /// <param name="segmentManager"></param>
+        /// <returns></returns>
+        internal static TranslationSegment CreateTranslation(SegmentManager segmentManager)
+        {
+            return new TranslationSegment(segmentManager);
+        }
+
+        /// <summary>
+        /// 追加sql结果
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="entityParameters"></param>
+        internal void AppendSqlResult(String sql, IEnumerable<EntityParameter> entityParameters = null)
+        {
+            _sqlResult.Append(sql, entityParameters);
+        }
+
+        /// <summary>
+        /// 执行翻译后的sql语句
+        /// </summary>
+        /// <returns></returns>
+        internal RawExecuteResult Execute()
+        {
+            return _sqlResult.GetExecuteResult();
+        }
 
         /// <summary>
         /// 翻译
@@ -65,7 +96,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
 
                     //获取连接语句的模板
                     var joinTemplate = MapperConfig.DatabaseConfig.JoinBuilder(item.JoinType, aliasItem.Value, aliasItem.Value.ToLower());
-                    TranslationResult.Append(joinTemplate);
+                    _sqlResult.Append(joinTemplate);
 
                     //设置相应的连接类型
                     _joinType = item.JoinType;
@@ -74,7 +105,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
                     InternalBuildWhere(item.Expression);
                 }
             }
-            TranslationResult.Append("WHERE 1=1");
+            _sqlResult.Append("WHERE 1=1");
 
             //翻译Where条件对象
             if (_segmentManager.Where != null)
@@ -87,7 +118,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
                 }
 
                 _joinType = JoinType.NONE;
-                TranslationResult.Append(RelationType.AND.ToString());
+                _sqlResult.Append(RelationType.AND.ToString());
 
                 //获取Where类型中的存储的表达式对象进行翻译
                 InternalBuildWhere(lambdaExp);
@@ -110,7 +141,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
                     if (binaryExp.Left.NodeType != ExpressionType.Constant && binaryExp.Right.NodeType != ExpressionType.Constant)
                     {
                         InternalBuildWhere(binaryExp.Left);
-                        TranslationResult.Append(RelationType.AND.ToString());
+                        _sqlResult.Append(RelationType.AND.ToString());
                         InternalBuildWhere(binaryExp.Right);
                     }
                     else
@@ -131,7 +162,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
                 {
                     var binaryExp = (BinaryExpression)expression;
                     InternalBuildWhere(binaryExp.Left);
-                    TranslationResult.Append(RelationType.OR.ToString());
+                    _sqlResult.Append(RelationType.OR.ToString());
                     InternalBuildWhere(binaryExp.Right);
                     break;
                 }
@@ -143,7 +174,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
                 case ExpressionType.Constant:
                 {
                     var binaryExp = (ConstantExpression)expression;
-                    TranslationResult.Append(new EntityParameter(_parameterNameStack.Pop(), binaryExp.Value));
+                    _sqlResult.Append(new EntityParameter(_parameterNameStack.Pop(), binaryExp.Value));
                     break;
                 }
                 case ExpressionType.Equal:
@@ -235,14 +266,14 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
                             internalAliasName = $@"{ _tableAliasMapper.Where(w => w.Key == parameterExp.Type.GetTableName().TableName && w.Value == parameterExp.Type.GetTableName().AliasName).FirstOrDefault().Value.ToLower()}.";
 
                             var newParameterName = Guid.NewGuid().ToString().Replace("-", "");
-                            TranslationResult.Append(MapperConfig.DatabaseConfig.RelationBuilder(_relationTypesStack.Pop(), $@"{internalAliasName}{memberExp.Member.Name}", $"@{newParameterName}"));
+                            _sqlResult.Append(MapperConfig.DatabaseConfig.RelationBuilder(_relationTypesStack.Pop(), $@"{internalAliasName}{memberExp.Member.Name}", $"@{newParameterName}"));
                             _parameterNameStack.Push(newParameterName);
                         }
                     }
                     else
                     {
                         var getter = Expression.Lambda(memberExp).Compile();
-                        TranslationResult.Append(new EntityParameter(_parameterNameStack.Pop(), getter.DynamicInvoke()));
+                        _sqlResult.Append(new EntityParameter(_parameterNameStack.Pop(), getter.DynamicInvoke()));
                         break;
                     }
                     break;
@@ -378,21 +409,21 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
                 var (RightMember, RightAliasName) = GetRightMemberAndAliasName(binaryExp);
 
                 var relationTemplate = MapperConfig.DatabaseConfig.RelationBuilder(relationType, $"{RightAliasName}.{RightMember.Member.Name}", $"{LeftAliasName}.{LeftMember.Member.Name}");
-                TranslationResult.Append(relationTemplate);
+                _sqlResult.Append(relationTemplate);
             }
             else if (binaryExp.Left.NodeType == ExpressionType.Constant) //表达式左边为常量
             {
                 var (RightMember, RightAliasName) = GetRightMemberAndAliasName(binaryExp);
                 var constant = (ConstantExpression)binaryExp.Left;
                 var value = Boolean.TryParse(constant.Value.ToString(), out var result) ? (result ? 1 : 0).ToString() : constant.Value;
-                TranslationResult.Append(MapperConfig.DatabaseConfig.RelationBuilder(relationType, value + "", $"{RightAliasName}.{RightMember.Member.Name}"));
+                _sqlResult.Append(MapperConfig.DatabaseConfig.RelationBuilder(relationType, value + "", $"{RightAliasName}.{RightMember.Member.Name}"));
             }
             else if (binaryExp.Right.NodeType == ExpressionType.Constant) //表达式的右边为常量
             {
                 var (LeftMember, LeftAliasName) = GetLeftMemberAndAliasName(binaryExp);
                 var constant = (ConstantExpression)binaryExp.Right;
                 var value = Boolean.TryParse(constant.Value.ToString(), out var result) ? (result ? 1 : 0).ToString() : constant.Value;
-                TranslationResult.Append(MapperConfig.DatabaseConfig.RelationBuilder(relationType, $"{LeftAliasName}.{LeftMember.Member.Name}", value + ""));
+                _sqlResult.Append(MapperConfig.DatabaseConfig.RelationBuilder(relationType, $"{LeftAliasName}.{LeftMember.Member.Name}", value + ""));
             }
         }
 

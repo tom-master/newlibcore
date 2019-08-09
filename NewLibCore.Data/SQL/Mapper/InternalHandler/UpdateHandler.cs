@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using NewLibCore.Data.SQL.Mapper.Config;
+using NewLibCore.Data.SQL.Mapper.Database;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
 using NewLibCore.Data.SQL.Mapper.Translation;
@@ -30,7 +31,7 @@ namespace NewLibCore.Data.SQL.Mapper.InternalHandler
             _segmentManager = segmentManager;
         }
 
-        protected override TranslationResult ExecuteTranslate()
+        protected override RawExecuteResult ExecuteTranslate()
         {
             _instance.SetUpdateTime();
 
@@ -42,16 +43,16 @@ namespace NewLibCore.Data.SQL.Mapper.InternalHandler
             var (TableName, AliasName) = typeof(TModel).GetTableName();
 
             var propertys = _instance.GetChangedProperty();
-            var translationSegment = new TranslationSegment(_segmentManager);
-            translationSegment.TranslationResult.Append(String.Format(MapperConfig.DatabaseConfig.UpdateTemplate, TableName, AliasName, String.Join(",", propertys.Select(p => $@"{AliasName}.{p.Key}=@{p.Key}"))), propertys.Select(c => new EntityParameter(c.Key, c.Value)));
+            var translationSegment = TranslationSegment.CreateTranslation(_segmentManager);
+            translationSegment.AppendSqlResult(String.Format(MapperConfig.DatabaseConfig.UpdateTemplate, TableName, AliasName, String.Join(",", propertys.Select(p => $@"{AliasName}.{p.Key}=@{p.Key}"))), propertys.Select(c => new EntityParameter(c.Key, c.Value)));
             if (_segmentManager.Where != null)
             {
                 translationSegment.Translate();
             }
             _instance.Reset();
 
-            translationSegment.TranslationResult.Append($@"{MapperConfig.DatabaseConfig.Extension.RowCount}");
-            return translationSegment.TranslationResult;
+            translationSegment.AppendSqlResult($@"{MapperConfig.DatabaseConfig.Extension.RowCount}");
+            return translationSegment.Execute();
         }
     }
 }

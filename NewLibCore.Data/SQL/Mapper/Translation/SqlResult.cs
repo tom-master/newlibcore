@@ -9,18 +9,21 @@ using NewLibCore.Validate;
 namespace NewLibCore.Data.SQL.Mapper.Translation
 {
     /// <summary>
-    /// 存储表达式的翻译结果
+    /// 存储表达式的翻译后的sql语句
     /// </summary>
-    internal class TranslationResult
+    internal class SqlResult
     {
         private readonly StringBuilder _originSql;
 
+        private readonly ExecutionCore _executionCore;
+
         private readonly IList<EntityParameter> _parameters;
 
-        internal TranslationResult()
+        internal SqlResult()
         {
             _originSql = new StringBuilder();
             _parameters = new List<EntityParameter>();
+            _executionCore = new ExecutionCore();
         }
 
         internal ExecuteType ExecuteType { get; set; }
@@ -103,7 +106,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
         private RawExecuteResult Execute()
         {
             var rawSql = GetSql();
-            Enum.TryParse<ExecuteType>(rawSql.Substring(0, rawSql.IndexOf(" ")), out var executeType);
+            Enum.TryParse<ExecuteType>(rawSql.Substring(0, rawSql.IndexOf(" ")).ToUpper(), out var executeType);
             ExecuteType = executeType;
 
             if (rawSql.Contains("COUNT(*)"))
@@ -114,7 +117,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
             var executeResult = GetCache();
             if (executeResult == null)
             {
-                executeResult = MapperConfig.DatabaseConfig.ExecutionCore.Execute(this);
+                executeResult = _executionCore.Execute(this);
                 SetCache(executeResult);
             }
 

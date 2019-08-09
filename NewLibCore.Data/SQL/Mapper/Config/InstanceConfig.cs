@@ -51,8 +51,6 @@ namespace NewLibCore.Data.SQL.Mapper.Config
         /// </summary>
         internal ResultCache Cache { get; private set; }
 
-        internal ExecutionCore ExecutionCore { get; private set; }
-
         /// <summary>
         /// 日志
         /// </summary>
@@ -99,11 +97,6 @@ namespace NewLibCore.Data.SQL.Mapper.Config
         {
             Cache = new ExecutionResultCache();
             return this;
-        }
-
-        internal void InitExecutionCore()
-        {
-            ExecutionCore = new ExecutionCore();
         }
 
         /// <summary>

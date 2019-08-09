@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using NewLibCore.Data.SQL.Mapper;
 using NewLibCore.Data.SQL.Mapper.Config;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
@@ -15,11 +16,7 @@ namespace NewLibCore.Run
             MapperConfig.Instance.SwitchToMySql(true);
 
             var mapper = EntityMapper.CreateMapper();
-
-            //MapperConfig.Instance.OpenTransaction();
             var r = mapper.Select<User>().InnerJoin<Config>((a, b) => a.ConfigId == b.Id).Where(a => a.Id == 4).FirstOrDefault();
-            //MapperConfig.Instance.Commit();
-
             Console.ReadKey();
         }
     }

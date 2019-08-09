@@ -34,10 +34,10 @@ namespace NewLibCore.Data.SQL.Mapper.Database
         /// <param name="executeType"></param>
         /// <param name="translationCore"></param>
         /// <returns></returns>
-        internal RawExecuteResult Execute(TranslationResult translationCore)
+        internal RawExecuteResult Execute(SqlResult sqlResult)
         {
-            Parameter.Validate(translationCore);
-            return RawExecute(translationCore.ExecuteType, translationCore.GetSql(), translationCore.GetParameters(), CommandType.Text);
+            Parameter.Validate(sqlResult);
+            return RawExecute(sqlResult.ExecuteType, sqlResult.GetSql(), sqlResult.GetParameters(), CommandType.Text);
         }
 
         /// <summary>
@@ -179,7 +179,7 @@ namespace NewLibCore.Data.SQL.Mapper.Database
 
         private void Dispose(Boolean disposing)
         {
-            MapperConfig.DatabaseConfig.Logger.Info($@"close connection {Environment.NewLine}");
+            MapperConfig.DatabaseConfig.Logger.Info($@"关闭连接{Environment.NewLine}");
             if (!_disposed)
             {
                 if (!disposing)
@@ -199,6 +199,5 @@ namespace NewLibCore.Data.SQL.Mapper.Database
                 _disposed = true;
             }
         }
-
     }
 }

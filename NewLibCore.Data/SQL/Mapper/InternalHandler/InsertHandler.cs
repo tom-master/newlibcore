@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using NewLibCore.Data.SQL.Mapper.Config;
+using NewLibCore.Data.SQL.Mapper.Database;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Data.SQL.Mapper.Translation;
 using NewLibCore.Validate;
@@ -24,7 +25,7 @@ namespace NewLibCore.Data.SQL.Mapper.InternalHandler
             _instance = model;
         }
 
-        protected override TranslationResult ExecuteTranslate()
+        protected override RawExecuteResult ExecuteTranslate()
         {
             _instance.OnChanged();
             if (_isVerifyModel)
@@ -33,11 +34,11 @@ namespace NewLibCore.Data.SQL.Mapper.InternalHandler
             }
 
             var propertyInfos = _instance.GetChangedProperty();
-            var template = String.Format(MapperConfig.DatabaseConfig.AddTemplate, typeof(TModel).GetTableName().TableName, String.Join(",", propertyInfos.Select(c => c.Key)), String.Join(",", propertyInfos.Select(key => $@"@{key.Key}")), MapperConfig.DatabaseConfig.Extension.Identity);
-            var translationResult = new TranslationResult();
-            translationResult.Append(template, propertyInfos.Select(c => new EntityParameter(c.Key, c.Value)));
             _instance.Reset();
-            return translationResult;
+            var template = String.Format(MapperConfig.DatabaseConfig.AddTemplate, typeof(TModel).GetTableName().TableName, String.Join(",", propertyInfos.Select(c => c.Key)), String.Join(",", propertyInfos.Select(key => $@"@{key.Key}")), MapperConfig.DatabaseConfig.Extension.Identity);
+            var sqlResult = new SqlResult();
+            sqlResult.Append(template, propertyInfos.Select(c => new EntityParameter(c.Key, c.Value)));
+            return sqlResult.GetExecuteResult();
         }
     }
 }

@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq.Expressions;
-using NewLibCore.Data.SQL.Mapper.Config;
 using NewLibCore.Data.SQL.Mapper.Database;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
-using NewLibCore.Data.SQL.Mapper.Mapper;
-using NewLibCore.Data.SQL.Mapper.Mapper.Imp;
+using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
+using NewLibCore.Data.SQL.Mapper.InternalHandler;
+using NewLibCore.Data.SQL.Mapper.InternalMapper;
+using NewLibCore.Data.SQL.Mapper.Translation;
 using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper
@@ -13,12 +15,8 @@ namespace NewLibCore.Data.SQL.Mapper
     /// <summary>
     /// 将对应的操作翻译为sql并执行
     /// </summary>
-    public sealed class EntityMapper : IDisposable
+    public sealed class EntityMapper
     {
-        private static EntityMapper _entityMapper;
-
-        private static readonly Object _sync = new Object();
-
         private EntityMapper() { }
 
         /// <summary>
@@ -27,18 +25,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <returns></returns>
         public static EntityMapper CreateMapper()
         {
-            if (_entityMapper == null)
-            {
-                lock (_sync)
-                {
-                    if (_entityMapper == null)
-                    {
-                        _entityMapper = new EntityMapper();
-                    }
-                }
-            }
-            MapperConfig.DatabaseConfig.InitExecutionCore();
-            return _entityMapper;
+            return new EntityMapper();
         }
 
         /// <summary>
@@ -50,7 +37,12 @@ namespace NewLibCore.Data.SQL.Mapper
         public TModel Add<TModel>(TModel model) where TModel : EntityBase, new()
         {
             Parameter.Validate(model);
-            return new AddMapper<TModel>().Add(model);
+
+            Handler<TModel> builder = new InsertHandler<TModel>(model, true);
+            var executeResult = builder.GetExecuteResult();
+            Int32.TryParse(executeResult.Value.ToString(), out var modelId);
+            model.Id = modelId;
+            return model;
         }
 
         /// <summary>
@@ -60,11 +52,16 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <param name="expression"></param>
         /// <typeparam name="TModel"></typeparam>
         /// <returns></returns>
-        public Boolean Modify<TModel>(TModel model, Expression<Func<TModel, Boolean>> expression) where TModel : EntityBase, new()
+        public Boolean Update<TModel>(TModel model, Expression<Func<TModel, Boolean>> expression) where TModel : EntityBase, new()
         {
             Parameter.Validate(model);
             Parameter.Validate(expression);
-            return new UpdateMapper<TModel>().Update(model, expression);
+
+            var segmentManager = new SegmentManager();
+            segmentManager.Add(expression);
+            Handler<TModel> builder = new UpdateHandler<TModel>(model, segmentManager, true);
+            var translateResult = builder.GetExecuteResult();
+            return (Int32)translateResult.Value > 0;
         }
 
         /// <summary>
@@ -73,7 +70,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <param name="fields"></param>
         /// <typeparam name="TModel"></typeparam>
         /// <returns></returns>
-        public ISearchMapper<TModel> Select<TModel>(Expression<Func<TModel, dynamic>> fields = null) where TModel : EntityBase, new()
+        public SearchMapper<TModel> Select<TModel>(Expression<Func<TModel, dynamic>> fields = null) where TModel : EntityBase, new()
         {
             return new SearchMapper<TModel>().Select(fields);
         }
@@ -85,7 +82,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <typeparam name="TModel"></typeparam>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public ISearchMapper<TModel> Select<TModel, T>(Expression<Func<TModel, T, dynamic>> fields = null) where TModel : EntityBase, new()
+        public SearchMapper<TModel> Select<TModel, T>(Expression<Func<TModel, T, dynamic>> fields = null) where TModel : EntityBase, new()
         where T : EntityBase, new()
         {
             return new SearchMapper<TModel>().Select(fields);
@@ -101,7 +98,8 @@ namespace NewLibCore.Data.SQL.Mapper
         public List<TModel> ExecuteToList<TModel>(String sql, IEnumerable<EntityParameter> parameters = null) where TModel : new()
         {
             Parameter.Validate(sql);
-            return new RawExecutor().ToList<TModel>(sql, parameters);
+            var dataTable = (DataTable)RawExecute(ExecuteType.SELECT, sql, parameters).Value;
+            return dataTable.ToList<TModel>();
         }
 
         /// <summary>
@@ -114,24 +112,35 @@ namespace NewLibCore.Data.SQL.Mapper
         public TModel ExecuteToSingle<TModel>(String sql, IEnumerable<EntityParameter> parameters = null) where TModel : new()
         {
             Parameter.Validate(sql);
-            return new RawExecutor().ToSingle<TModel>(sql, parameters);
+
+            var modelType = typeof(TModel);
+            RawExecuteResult executeResult;
+            if (modelType.IsNumeric())
+            {
+                executeResult = RawExecute(ExecuteType.SELECT_SINGLE, sql, parameters);
+                return (TModel)Convert.ChangeType(executeResult.Value, modelType);
+            }
+
+            executeResult = RawExecute(ExecuteType.SELECT, sql, parameters);
+            var dataTable = (DataTable)executeResult.Value;
+            return dataTable.ToSingle<TModel>();
         }
 
-        public void OpenTransaction()
+        /// <summary>
+        /// 直接执行sql语句
+        /// </summary>
+        /// <param name="executeType"></param>
+        /// <param name="sql"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        private RawExecuteResult RawExecute(ExecuteType executeType, String sql, IEnumerable<EntityParameter> parameters = null)
         {
-            MapperConfig.DatabaseConfig.ExecutionCore.OpenTransaction();
-        }
-        public void Commit()
-        {
-            MapperConfig.DatabaseConfig.ExecutionCore.Commit();
-        }
-        public void Rollback()
-        {
-            MapperConfig.DatabaseConfig.ExecutionCore.Rollback();
-        }
-        public void Dispose()
-        {
-            MapperConfig.DatabaseConfig.ExecutionCore.Dispose();
+            var sqlResult = new SqlResult
+            {
+                ExecuteType = executeType
+            };
+            sqlResult.Append(sql, parameters);
+            return sqlResult.GetExecuteResult();
         }
     }
 }
