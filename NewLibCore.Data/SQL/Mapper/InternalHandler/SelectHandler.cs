@@ -32,7 +32,7 @@ namespace NewLibCore.Data.SQL.Mapper.InternalHandler
             var (Fields, AliasName) = StatementParse(_segmentManager.Field);
 
             var translationSegment = TranslationSegment.CreateTranslation(_segmentManager);
-            translationSegment.AppendSqlResult(String.Format(MapperConfig.DatabaseConfig.SelectTemplate, Fields, typeof(TModel).GetTableName().TableName, AliasName));
+            translationSegment.AppendSqlResult(String.Format(MapperConfig.Instance.SelectTemplate, Fields, typeof(TModel).GetTableName().TableName, AliasName));
             translationSegment.Translate();
 
             var aliasMapper = _segmentManager.MergeAliasMapper();
@@ -44,7 +44,7 @@ namespace NewLibCore.Data.SQL.Mapper.InternalHandler
             if (_segmentManager.Order != null)
             {
                 var (fields, tableName) = StatementParse(_segmentManager.Order);
-                var orderTemplate = MapperConfig.DatabaseConfig.OrderByBuilder(_segmentManager.Order.OrderBy, $@"{tableName}.{fields}");
+                var orderTemplate = MapperConfig.Instance.OrderByBuilder(_segmentManager.Order.OrderBy, $@"{tableName}.{fields}");
                 translationSegment.AppendSqlResult(orderTemplate);
             }
 
@@ -52,7 +52,7 @@ namespace NewLibCore.Data.SQL.Mapper.InternalHandler
             {
                 var pageIndex = (_segmentManager.Page.Size * (_segmentManager.Page.Index - 1)).ToString();
                 var pageSize = _segmentManager.Page.Size.ToString();
-                translationSegment.AppendSqlResult(MapperConfig.DatabaseConfig.Extension.Page.Replace("{value}", pageIndex).Replace("{pageSize}", pageSize));
+                translationSegment.AppendSqlResult(MapperConfig.Instance.Extension.Page.Replace("{value}", pageIndex).Replace("{pageSize}", pageSize));
             }
 
             return translationSegment.Execute();

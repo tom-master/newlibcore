@@ -24,8 +24,8 @@ namespace NewLibCore.Data.SQL.Mapper.Database
 
         internal ExecutionCore()
         {
-            Parameter.Validate(MapperConfig.DatabaseConfig);
-            _connection = MapperConfig.DatabaseConfig.GetConnectionInstance();
+            Parameter.Validate(MapperConfig.Instance);
+            _connection = MapperConfig.Instance.GetConnectionInstance();
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace NewLibCore.Data.SQL.Mapper.Database
                     {
                         cmd.Parameters.AddRange(parameters.Select(s => (DbParameter)s).ToArray());
                     }
-                    MapperConfig.DatabaseConfig.Logger.Info($@"SQL语句:{sql} 占位符与参数:{(parameters == null || !parameters.Any() ? "" : String.Join($@"{Environment.NewLine}", parameters.Select(s => $@"{s.Key}----{s.Value}")))}");
+                    MapperConfig.Instance.Logger.Info($@"SQL语句:{sql} 占位符与参数:{(parameters == null || !parameters.Any() ? "" : String.Join($@"{Environment.NewLine}", parameters.Select(s => $@"{s.Key}----{s.Value}")))}");
 
                     var executeResult = new RawExecuteResult();
                     if (executeType == ExecuteType.SELECT)
@@ -92,7 +92,7 @@ namespace NewLibCore.Data.SQL.Mapper.Database
             }
             catch (Exception ex)
             {
-                MapperConfig.DatabaseConfig.Logger.Error($@"{ex}");
+                MapperConfig.Instance.Logger.Error($@"{ex}");
                 throw;
             }
         }
@@ -104,7 +104,7 @@ namespace NewLibCore.Data.SQL.Mapper.Database
         {
             if (_connection.State == ConnectionState.Closed)
             {
-                MapperConfig.DatabaseConfig.Logger.Info("开启连接");
+                MapperConfig.Instance.Logger.Info("开启连接");
                 _connection.Open();
             }
         }
@@ -121,7 +121,7 @@ namespace NewLibCore.Data.SQL.Mapper.Database
                 {
                     _useTransaction = true;
                     _dataTransaction = _connection.BeginTransaction();
-                    MapperConfig.DatabaseConfig.Logger.Info("开启事务");
+                    MapperConfig.Instance.Logger.Info("开启事务");
                 }
                 return _dataTransaction;
             }
@@ -147,7 +147,7 @@ namespace NewLibCore.Data.SQL.Mapper.Database
                 if (_dataTransaction != null)
                 {
                     _dataTransaction.Commit();
-                    MapperConfig.DatabaseConfig.Logger.Info("提交事务");
+                    MapperConfig.Instance.Logger.Info("提交事务");
                 }
                 return;
             }
@@ -164,7 +164,7 @@ namespace NewLibCore.Data.SQL.Mapper.Database
                 if (_dataTransaction != null)
                 {
                     _dataTransaction.Rollback();
-                    MapperConfig.DatabaseConfig.Logger.Info("事务回滚");
+                    MapperConfig.Instance.Logger.Info("事务回滚");
                 }
                 return;
             }
@@ -179,7 +179,7 @@ namespace NewLibCore.Data.SQL.Mapper.Database
 
         private void Dispose(Boolean disposing)
         {
-            MapperConfig.DatabaseConfig.Logger.Info($@"关闭连接{Environment.NewLine}");
+            MapperConfig.Instance.Logger.Info($@"关闭连接{Environment.NewLine}");
             if (!_disposed)
             {
                 if (!disposing)

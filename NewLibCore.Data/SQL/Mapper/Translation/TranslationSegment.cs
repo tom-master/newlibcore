@@ -95,7 +95,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
                     }
 
                     //获取连接语句的模板
-                    var joinTemplate = MapperConfig.DatabaseConfig.JoinBuilder(item.JoinType, aliasItem.Value, aliasItem.Value.ToLower());
+                    var joinTemplate = MapperConfig.Instance.JoinBuilder(item.JoinType, aliasItem.Value, aliasItem.Value.ToLower());
                     _sqlResult.Append(joinTemplate);
 
                     //设置相应的连接类型
@@ -266,7 +266,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
                             internalAliasName = $@"{ _tableAliasMapper.Where(w => w.Key == parameterExp.Type.GetTableName().TableName && w.Value == parameterExp.Type.GetTableName().AliasName).FirstOrDefault().Value.ToLower()}.";
 
                             var newParameterName = Guid.NewGuid().ToString().Replace("-", "");
-                            _sqlResult.Append(MapperConfig.DatabaseConfig.RelationBuilder(_relationTypesStack.Pop(), $@"{internalAliasName}{memberExp.Member.Name}", $"@{newParameterName}"));
+                            _sqlResult.Append(MapperConfig.Instance.RelationBuilder(_relationTypesStack.Pop(), $@"{internalAliasName}{memberExp.Member.Name}", $"@{newParameterName}"));
                             _parameterNameStack.Push(newParameterName);
                         }
                     }
@@ -408,7 +408,7 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
                 var (LeftMember, LeftAliasName) = GetLeftMemberAndAliasName(binaryExp);
                 var (RightMember, RightAliasName) = GetRightMemberAndAliasName(binaryExp);
 
-                var relationTemplate = MapperConfig.DatabaseConfig.RelationBuilder(relationType, $"{RightAliasName}.{RightMember.Member.Name}", $"{LeftAliasName}.{LeftMember.Member.Name}");
+                var relationTemplate = MapperConfig.Instance.RelationBuilder(relationType, $"{RightAliasName}.{RightMember.Member.Name}", $"{LeftAliasName}.{LeftMember.Member.Name}");
                 _sqlResult.Append(relationTemplate);
             }
             else if (binaryExp.Left.NodeType == ExpressionType.Constant) //表达式左边为常量
@@ -416,14 +416,14 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
                 var (RightMember, RightAliasName) = GetRightMemberAndAliasName(binaryExp);
                 var constant = (ConstantExpression)binaryExp.Left;
                 var value = Boolean.TryParse(constant.Value.ToString(), out var result) ? (result ? 1 : 0).ToString() : constant.Value;
-                _sqlResult.Append(MapperConfig.DatabaseConfig.RelationBuilder(relationType, value + "", $"{RightAliasName}.{RightMember.Member.Name}"));
+                _sqlResult.Append(MapperConfig.Instance.RelationBuilder(relationType, value + "", $"{RightAliasName}.{RightMember.Member.Name}"));
             }
             else if (binaryExp.Right.NodeType == ExpressionType.Constant) //表达式的右边为常量
             {
                 var (LeftMember, LeftAliasName) = GetLeftMemberAndAliasName(binaryExp);
                 var constant = (ConstantExpression)binaryExp.Right;
                 var value = Boolean.TryParse(constant.Value.ToString(), out var result) ? (result ? 1 : 0).ToString() : constant.Value;
-                _sqlResult.Append(MapperConfig.DatabaseConfig.RelationBuilder(relationType, $"{LeftAliasName}.{LeftMember.Member.Name}", value + ""));
+                _sqlResult.Append(MapperConfig.Instance.RelationBuilder(relationType, $"{LeftAliasName}.{LeftMember.Member.Name}", value + ""));
             }
         }
 

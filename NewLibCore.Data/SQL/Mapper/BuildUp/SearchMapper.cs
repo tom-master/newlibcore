@@ -179,7 +179,7 @@ namespace NewLibCore.Data.SQL.Mapper.InternalMapper
         {
             Handler<TModel> builder = new SelectHandler<TModel>(_segmentManager);
             var executeResult = builder.GetExecuteResult();
-            MapperConfig.DatabaseConfig.Logger.Info($@"查询后的结果:{JsonConvert.SerializeObject(executeResult.Value)}");
+            MapperConfig.Instance.Logger.Info($@"查询后的结果:{JsonConvert.SerializeObject(executeResult.Value)}");
             return executeResult;
         }
 
@@ -189,7 +189,7 @@ namespace NewLibCore.Data.SQL.Mapper.InternalMapper
             sw.Start();
             var returnValue = (T)func();
             sw.Stop();
-            MapperConfig.DatabaseConfig.Logger.Info($@"共花费{Math.Round(sw.Elapsed.TotalSeconds, 2)}s");
+            MapperConfig.Instance.Logger.Info($@"共花费{Math.Round(sw.Elapsed.TotalSeconds, 2)}s");
 
             return returnValue;
         }

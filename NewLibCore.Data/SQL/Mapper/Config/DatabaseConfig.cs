@@ -8,29 +8,22 @@ namespace NewLibCore.Data.SQL.Mapper.Config
     /// </summary>
     public class MapperConfig
     {
-        private ILogger _logger;
+        private static ILogger _logger;
 
         private static readonly Object _obj = new Object();
 
         private MapperConfig() { }
 
-        internal static InstanceConfig DatabaseConfig { get; private set; }
-
-        /// <summary>
-        /// 初始化数据库配置
-        /// </summary>
-        /// <returns></returns>
-        public static MapperConfig Instance { get; } = new MapperConfig();
+        internal static InstanceConfig Instance { get; private set; }
 
         /// <summary>
         /// 设置日志
         /// </summary>
         /// <param name="logger"></param>
         /// <returns></returns>
-        public MapperConfig SetLogger(ILogger logger)
+        public static void SetLogger(ILogger logger)
         {
             _logger = logger;
-            return this;
         }
 
         /// <summary>
@@ -38,10 +31,9 @@ namespace NewLibCore.Data.SQL.Mapper.Config
         /// </summary>
         /// <param name="logger"></param>
         /// <returns></returns>
-        public MapperConfig SwitchToMySql(Boolean cache = false)
+        public static void SwitchToMySql(Boolean cache = false)
         {
             SwitchTo(DatabaseType.MYSQL, cache);
-            return this;
         }
 
         /// <summary>
@@ -49,10 +41,9 @@ namespace NewLibCore.Data.SQL.Mapper.Config
         /// </summary>
         /// <param name="logger"></param>
         /// <returns></returns>
-        public MapperConfig SwitchToMsSql(Boolean cache = false)
+        public static void SwitchToMsSql(Boolean cache = false)
         {
             SwitchTo(DatabaseType.MSSQL, cache);
-            return this;
         }
 
         /// <summary>
@@ -60,34 +51,34 @@ namespace NewLibCore.Data.SQL.Mapper.Config
         /// </summary>
         /// <param name="database"></param>
         /// <param name="logger"></param>
-        private void SwitchTo(DatabaseType database, Boolean cache)
+        private static void SwitchTo(DatabaseType database, Boolean cache)
         {
-            if (DatabaseConfig == null)
+            if (Instance == null)
             {
                 lock (_obj)
                 {
-                    if (DatabaseConfig == null)
+                    if (Instance == null)
                     {
                         switch (database)
                         {
                             case DatabaseType.MSSQL:
-                                {
-                                    DatabaseConfig = new MsSqlInstanceConfig(_logger);
-                                    break;
-                                }
+                            {
+                                Instance = new MsSqlInstanceConfig(_logger);
+                                break;
+                            }
                             case DatabaseType.MYSQL:
-                                {
-                                    DatabaseConfig = new MySqlInstanceConfig(_logger);
-                                    break;
-                                }
+                            {
+                                Instance = new MySqlInstanceConfig(_logger);
+                                break;
+                            }
                             default:
-                                {
-                                    throw new ArgumentException($@"暂不支持的数据库类型:{database}");
-                                }
-                        } 
+                            {
+                                throw new ArgumentException($@"暂不支持的数据库类型:{database}");
+                            }
+                        }
                         if (cache)
                         {
-                            DatabaseConfig.UseCache();
+                            Instance.UseCache();
                         }
                     }
                 }

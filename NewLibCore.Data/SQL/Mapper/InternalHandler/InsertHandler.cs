@@ -35,7 +35,7 @@ namespace NewLibCore.Data.SQL.Mapper.InternalHandler
 
             var propertyInfos = _instance.GetChangedProperty();
             _instance.Reset();
-            var template = String.Format(MapperConfig.DatabaseConfig.AddTemplate, typeof(TModel).GetTableName().TableName, String.Join(",", propertyInfos.Select(c => c.Key)), String.Join(",", propertyInfos.Select(key => $@"@{key.Key}")), MapperConfig.DatabaseConfig.Extension.Identity);
+            var template = String.Format(MapperConfig.Instance.AddTemplate, typeof(TModel).GetTableName().TableName, String.Join(",", propertyInfos.Select(c => c.Key)), String.Join(",", propertyInfos.Select(key => $@"@{key.Key}")), MapperConfig.Instance.Extension.Identity);
             var sqlResult = new SqlResult();
             sqlResult.Append(template, propertyInfos.Select(c => new EntityParameter(c.Key, c.Value)));
             return sqlResult.GetExecuteResult();

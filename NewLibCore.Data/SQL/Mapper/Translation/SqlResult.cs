@@ -145,9 +145,9 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
         /// <param name="executeResult"></param>
         private void SetCache(RawExecuteResult executeResult)
         {
-            if (MapperConfig.DatabaseConfig.Cache != null)
+            if (MapperConfig.Instance.Cache != null)
             {
-                MapperConfig.DatabaseConfig.Cache.Add(PrepareCacheKey(), executeResult);
+                MapperConfig.Instance.Cache.Add(PrepareCacheKey(), executeResult);
             }
         }
 
@@ -157,9 +157,9 @@ namespace NewLibCore.Data.SQL.Mapper.Translation
         /// <returns></returns>
         private RawExecuteResult GetCache()
         {
-            if (MapperConfig.DatabaseConfig.Cache != null)
+            if (MapperConfig.Instance.Cache != null)
             {
-                var cacheResult = MapperConfig.DatabaseConfig.Cache.Get(PrepareCacheKey());
+                var cacheResult = MapperConfig.Instance.Cache.Get(PrepareCacheKey());
                 if (cacheResult != null)
                 {
                     return (RawExecuteResult)cacheResult;

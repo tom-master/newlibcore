@@ -44,14 +44,14 @@ namespace NewLibCore.Data.SQL.Mapper.InternalHandler
 
             var propertys = _instance.GetChangedProperty();
             var translationSegment = TranslationSegment.CreateTranslation(_segmentManager);
-            translationSegment.AppendSqlResult(String.Format(MapperConfig.DatabaseConfig.UpdateTemplate, TableName, AliasName, String.Join(",", propertys.Select(p => $@"{AliasName}.{p.Key}=@{p.Key}"))), propertys.Select(c => new EntityParameter(c.Key, c.Value)));
+            translationSegment.AppendSqlResult(String.Format(MapperConfig.Instance.UpdateTemplate, TableName, AliasName, String.Join(",", propertys.Select(p => $@"{AliasName}.{p.Key}=@{p.Key}"))), propertys.Select(c => new EntityParameter(c.Key, c.Value)));
             if (_segmentManager.Where != null)
             {
                 translationSegment.Translate();
             }
             _instance.Reset();
 
-            translationSegment.AppendSqlResult($@"{MapperConfig.DatabaseConfig.Extension.RowCount}");
+            translationSegment.AppendSqlResult($@"{MapperConfig.Instance.Extension.RowCount}");
             return translationSegment.Execute();
         }
     }
