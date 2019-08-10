@@ -27,9 +27,11 @@ namespace NewLibCore.Data.SQL.Mapper
         private readonly StatementStore _statementStore;
 
         private readonly Stack<String> _parameterNameStack;
+
         private readonly Stack<RelationType> _relationTypesStack;
 
         private JoinRelation _joinRelation;
+
         private IReadOnlyList<KeyValuePair<String, String>> _tableAliasMapper;
 
         /// <summary>
