@@ -1,5 +1,4 @@
 ﻿using System;
-using NewLibCore.Data.SQL.Mapper.Database;
 using NewLibCore.Logger;
 
 namespace NewLibCore.Data.SQL.Mapper.Config

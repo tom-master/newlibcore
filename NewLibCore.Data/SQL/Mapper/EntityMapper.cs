@@ -40,7 +40,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
             Handler<TModel> builder = new InsertHandler<TModel>(model, true);
             var executeResult = builder.GetExecuteResult();
-            Int32.TryParse(executeResult.Value.ToString(), out var modelId);
+            Int32.TryParse(executeResult.Result.ToString(), out var modelId);
             model.Id = modelId;
             return model;
         }
@@ -61,7 +61,7 @@ namespace NewLibCore.Data.SQL.Mapper
             segmentManager.Add(expression);
             Handler<TModel> builder = new UpdateHandler<TModel>(model, segmentManager, true);
             var translateResult = builder.GetExecuteResult();
-            return (Int32)translateResult.Value > 0;
+            return (Int32)translateResult.Result > 0;
         }
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace NewLibCore.Data.SQL.Mapper
         public List<TModel> ExecuteToList<TModel>(String sql, IEnumerable<EntityParameter> parameters = null) where TModel : new()
         {
             Parameter.Validate(sql);
-            var dataTable = (DataTable)RawExecute(ExecuteType.SELECT, sql, parameters).Value;
+            var dataTable = (DataTable)RawExecute(ExecuteType.SELECT, sql, parameters).Result;
             return dataTable.ToList<TModel>();
         }
 
@@ -118,11 +118,11 @@ namespace NewLibCore.Data.SQL.Mapper
             if (modelType.IsNumeric())
             {
                 executeResult = RawExecute(ExecuteType.SELECT_SINGLE, sql, parameters);
-                return (TModel)Convert.ChangeType(executeResult.Value, modelType);
+                return (TModel)Convert.ChangeType(executeResult.Result, modelType);
             }
 
             executeResult = RawExecute(ExecuteType.SELECT, sql, parameters);
-            var dataTable = (DataTable)executeResult.Value;
+            var dataTable = (DataTable)executeResult.Result;
             return dataTable.ToSingle<TModel>();
         }
 
@@ -165,7 +165,7 @@ namespace NewLibCore.Data.SQL.Mapper
             {
                 Select(s => "COUNT(*)");
                 var executeResult = InternalExecuteSql();
-                Int32.TryParse(executeResult.Value.ToString(), out var count);
+                Int32.TryParse(executeResult.Result.ToString(), out var count);
                 return count;
             });
         }
@@ -175,7 +175,7 @@ namespace NewLibCore.Data.SQL.Mapper
             return Watch<TModel>(() =>
             {
                 var executeResult = InternalExecuteSql();
-                var dataTable = executeResult.Value as DataTable;
+                var dataTable = executeResult.Result as DataTable;
                 return dataTable.ToSingle<TModel>();
             });
         }
@@ -185,7 +185,7 @@ namespace NewLibCore.Data.SQL.Mapper
             return Watch<List<TModel>>(() =>
             {
                 var executeResult = InternalExecuteSql();
-                var dataTable = executeResult.Value as DataTable;
+                var dataTable = executeResult.Result as DataTable;
                 return dataTable.ToList<TModel>();
             });
         }
@@ -316,7 +316,7 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             Handler<TModel> builder = new SelectHandler<TModel>(_segmentManager);
             var executeResult = builder.GetExecuteResult();
-            MapperConfig.Instance.Logger.Info($@"查询后的结果:{JsonConvert.SerializeObject(executeResult.Value)}");
+            MapperConfig.Instance.Logger.Info($@"查询后的结果:{JsonConvert.SerializeObject(executeResult.Result)}");
             return executeResult;
         }
 

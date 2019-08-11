@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 
 namespace NewLibCore.Data.SQL.Mapper.Database
 {
@@ -7,7 +8,19 @@ namespace NewLibCore.Data.SQL.Mapper.Database
     /// </summary>
     internal class RawExecuteResult
     {
-        internal Object Value { get; set; }
+        private Object _result;
+
+        internal Object Result
+        {
+            get
+            {
+                return _result;
+            }
+            set
+            {
+                _result = value;
+            }
+        }
 
         internal RawExecuteResult()
         {
