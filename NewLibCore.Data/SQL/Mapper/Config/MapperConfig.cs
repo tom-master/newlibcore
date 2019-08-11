@@ -8,11 +8,12 @@ namespace NewLibCore.Data.SQL.Mapper.Config
     /// </summary>
     public class MapperConfig
     {
-        private static ILogger _logger;
 
         private static readonly Object _obj = new Object();
 
         private MapperConfig() { }
+
+        public static ILogger Logger { get; private set; }
 
         internal static InstanceConfig Instance { get; private set; }
 
@@ -23,7 +24,7 @@ namespace NewLibCore.Data.SQL.Mapper.Config
         /// <returns></returns>
         public static void SetLogger(ILogger logger)
         {
-            _logger = logger;
+            Logger = logger;
         }
 
         /// <summary>
@@ -62,20 +63,20 @@ namespace NewLibCore.Data.SQL.Mapper.Config
                         switch (database)
                         {
                             case DatabaseType.MSSQL:
-                            {
-                                Instance = new MsSqlInstanceConfig(_logger);
-                                break;
-                            }
+                                {
+                                    Instance = new MsSqlInstanceConfig();
+                                    break;
+                                }
                             case DatabaseType.MYSQL:
-                            {
-                                Instance = new MySqlInstanceConfig(_logger);
-                                break;
-                            }
+                                {
+                                    Instance = new MySqlInstanceConfig();
+                                    break;
+                                }
                             default:
-                            {
-                                throw new ArgumentException($@"暂不支持的数据库类型:{database}");
-                            }
-                        } 
+                                {
+                                    throw new ArgumentException($@"暂不支持的数据库类型:{database}");
+                                }
+                        }
                         if (cache)
                         {
                             Instance.UseCache();

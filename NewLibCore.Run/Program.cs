@@ -25,8 +25,9 @@ namespace NewLibCore.Run
                 {
                     mapper.Select<User>().Where(w => w.Id == 4).FirstOrDefault();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
+                    throw;
                 }
             }
             //     });

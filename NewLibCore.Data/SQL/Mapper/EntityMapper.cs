@@ -39,10 +39,13 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             Parameter.Validate(model);
 
-            Handler<TModel> builder = new InsertHandler<TModel>(model, true);
-            var executeResult = builder.GetExecuteResult();
-            model.Id = executeResult.ToPrimitive<Int32>();
-            return model;
+            return RunDiagnosis.Watch(() =>
+             {
+                 Handler<TModel> builder = new InsertHandler<TModel>(model, true);
+                 var executeResult = builder.GetExecuteResult();
+                 model.Id = executeResult.ToPrimitive<Int32>();
+                 return model;
+             });
         }
 
         /// <summary>
@@ -57,10 +60,13 @@ namespace NewLibCore.Data.SQL.Mapper
             Parameter.Validate(model);
             Parameter.Validate(expression);
 
-            var segmentManager = new SegmentManager();
-            segmentManager.Add(expression);
-            Handler<TModel> builder = new UpdateHandler<TModel>(model, segmentManager, true);
-            return builder.GetExecuteResult().ToPrimitive<Int32>() > 0;
+            return RunDiagnosis.Watch(() =>
+             {
+                 var segmentManager = new SegmentManager();
+                 segmentManager.Add(expression);
+                 Handler<TModel> builder = new UpdateHandler<TModel>(model, segmentManager, true);
+                 return builder.GetExecuteResult().ToPrimitive<Int32>() > 0;
+             });
         }
 
         /// <summary>
@@ -159,7 +165,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
         public Int32 Count()
         {
-            return Watch<Int32>(() =>
+            return RunDiagnosis.Watch(() =>
             {
                 Select(s => "COUNT(*)");
                 var executeResult = InternalExecuteSql();
@@ -169,7 +175,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
         public TModel FirstOrDefault()
         {
-            return Watch<TModel>(() =>
+            return RunDiagnosis.Watch(() =>
             {
                 var executeResult = InternalExecuteSql();
                 return executeResult.ToSingle<TModel>();
@@ -178,7 +184,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
         public List<TModel> ToList()
         {
-            return Watch<List<TModel>>(() =>
+            return RunDiagnosis.Watch(() =>
             {
                 var executeResult = InternalExecuteSql();
                 return executeResult.ToList<TModel>();
@@ -311,19 +317,9 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             Handler<TModel> builder = new SelectHandler<TModel>(_segmentManager);
             var executeResult = builder.GetExecuteResult();
-            MapperConfig.Instance.Logger.Info($@"查询后的结果:{JsonConvert.SerializeObject(executeResult)}");
+            RunDiagnosis.Info($@"查询后的结果:{JsonConvert.SerializeObject(executeResult)}");
             return executeResult;
         }
 
-        private T Watch<T>(Func<Object> func)
-        {
-            var sw = new Stopwatch();
-            sw.Start();
-            var returnValue = (T)func();
-            sw.Stop();
-            MapperConfig.Instance.Logger.Info($@"共花费{Math.Round(sw.Elapsed.TotalSeconds, 2)}s");
-
-            return returnValue;
-        }
     }
 }

@@ -61,7 +61,7 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
             }
             catch (Exception ex)
             {
-                MapperConfig.Instance.Logger.Error($@"{typeof(T).Name}转换失败:{ex}");
+                RunDiagnosis.Error($@"{typeof(T).Name}转换失败:{ex}");
                 throw;
             }
         }

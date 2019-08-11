@@ -26,10 +26,8 @@ namespace NewLibCore.Data.SQL.Mapper.Config
         /// </summary>
         protected static readonly IDictionary<OrderByType, String> OrderTypeMapper = new Dictionary<OrderByType, String>();
 
-        protected InstanceConfig(ILogger logger)
+        protected InstanceConfig()
         {
-            Logger = logger ?? new ConsoleLogger();
-
             RelationMapper.Clear();
             JoinTypeMapper.Clear();
             OrderTypeMapper.Clear();
@@ -48,12 +46,6 @@ namespace NewLibCore.Data.SQL.Mapper.Config
         /// 获取初始化完成的查询缓存对象
         /// </summary>
         internal ResultCache Cache { get; private set; }
-
-        /// <summary>
-        /// 日志
-        /// </summary>
-        /// <value></value>
-        internal ILogger Logger { get; }
 
         /// <summary>
         /// 查询模板

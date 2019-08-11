@@ -10,7 +10,7 @@ namespace NewLibCore.Data.SQL.Mapper.Config
     /// </summary>
     internal class MySqlInstanceConfig : InstanceConfig
     {
-        protected internal MySqlInstanceConfig(ILogger logger) : base(logger)
+        protected internal MySqlInstanceConfig() 
         {
 
         }
