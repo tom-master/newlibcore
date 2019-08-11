@@ -16,7 +16,7 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
         /// <summary>
         /// 获取列表
         /// </summary>
-        internal static List<T> ToList<T>(this DataTable dataTable) where T : new()
+        internal static List<T> ToList<T>(this DataTable dataTable) where T : EntityBase
         {
             if (dataTable == null || dataTable.Rows.Count == 0)
             {
@@ -29,12 +29,12 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
         /// <summary>
         /// 获取单值
         /// </summary>
-        internal static T ToSingle<T>(this DataTable dataTable) where T : new()
+        internal static T ToSingle<T>(this DataTable dataTable) where T : EntityBase
         {
             return ToList<T>(dataTable).FirstOrDefault();
         }
 
-        private static List<T> ConvertToList<T>(DataTable dt) where T : new()
+        private static List<T> ConvertToList<T>(DataTable dt) where T : EntityBase
         {
             try
             {
@@ -44,7 +44,7 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
                     var masterTable = Activator.CreateInstance<T>();
                     var propertys = masterTable.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public);
                     foreach (var propertyInfo in propertys)
-                    { 
+                    {
                         if (dt.Columns.Contains(propertyInfo.Name))
                         {
                             var value = dr[propertyInfo.Name];

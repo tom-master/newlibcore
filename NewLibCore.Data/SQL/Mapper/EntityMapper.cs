@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
+using System.Linq;
 using System.Linq.Expressions;
 using NewLibCore.Data.SQL.Mapper.Config;
 using NewLibCore.Data.SQL.Mapper.Database;
@@ -40,8 +41,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
             Handler<TModel> builder = new InsertHandler<TModel>(model, true);
             var executeResult = builder.GetExecuteResult();
-            Int32.TryParse(executeResult.Result.ToString(), out var modelId);
-            model.Id = modelId;
+            model.Id = executeResult.ToPrimitive<Int32>();
             return model;
         }
 
@@ -60,8 +60,7 @@ namespace NewLibCore.Data.SQL.Mapper
             var segmentManager = new SegmentManager();
             segmentManager.Add(expression);
             Handler<TModel> builder = new UpdateHandler<TModel>(model, segmentManager, true);
-            var translateResult = builder.GetExecuteResult();
-            return (Int32)translateResult.Result > 0;
+            return builder.GetExecuteResult().ToPrimitive<Int32>() > 0;
         }
 
         /// <summary>
@@ -95,11 +94,10 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <param name="parameters"></param>
         /// <typeparam name="TModel"></typeparam>
         /// <returns></returns>
-        public List<TModel> ExecuteToList<TModel>(String sql, IEnumerable<EntityParameter> parameters = null) where TModel : new()
+        public List<TModel> ExecuteToList<TModel>(String sql, IEnumerable<EntityParameter> parameters = null) where TModel : EntityBase
         {
             Parameter.Validate(sql);
-            var dataTable = (DataTable)RawExecute(ExecuteType.SELECT, sql, parameters).Result;
-            return dataTable.ToList<TModel>();
+            return RawExecute(ExecuteType.SELECT, sql, parameters).ToList<TModel>();
         }
 
         /// <summary>
@@ -109,7 +107,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <param name="parameters"></param>
         /// <typeparam name="TModel"></typeparam>
         /// <returns></returns>
-        public TModel ExecuteToSingle<TModel>(String sql, IEnumerable<EntityParameter> parameters = null) where TModel : new()
+        public TModel ExecuteToSingle<TModel>(String sql, IEnumerable<EntityParameter> parameters = null) where TModel : EntityBase
         {
             Parameter.Validate(sql);
 
@@ -118,12 +116,12 @@ namespace NewLibCore.Data.SQL.Mapper
             if (modelType.IsNumeric())
             {
                 executeResult = RawExecute(ExecuteType.SELECT_SINGLE, sql, parameters);
-                return (TModel)Convert.ChangeType(executeResult.Result, modelType);
+                return executeResult.ToPrimitive<TModel>();
             }
 
             executeResult = RawExecute(ExecuteType.SELECT, sql, parameters);
-            var dataTable = (DataTable)executeResult.Result;
-            return dataTable.ToSingle<TModel>();
+            return executeResult.ToSingle<TModel>();
+
         }
 
         /// <summary>
@@ -165,8 +163,7 @@ namespace NewLibCore.Data.SQL.Mapper
             {
                 Select(s => "COUNT(*)");
                 var executeResult = InternalExecuteSql();
-                Int32.TryParse(executeResult.Result.ToString(), out var count);
-                return count;
+                return executeResult.ToPrimitive<Int32>();
             });
         }
 
@@ -175,8 +172,7 @@ namespace NewLibCore.Data.SQL.Mapper
             return Watch<TModel>(() =>
             {
                 var executeResult = InternalExecuteSql();
-                var dataTable = executeResult.Result as DataTable;
-                return dataTable.ToSingle<TModel>();
+                return executeResult.ToSingle<TModel>();
             });
         }
 
@@ -185,8 +181,7 @@ namespace NewLibCore.Data.SQL.Mapper
             return Watch<List<TModel>>(() =>
             {
                 var executeResult = InternalExecuteSql();
-                var dataTable = executeResult.Result as DataTable;
-                return dataTable.ToList<TModel>();
+                return executeResult.ToList<TModel>();
             });
         }
 
@@ -316,7 +311,7 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             Handler<TModel> builder = new SelectHandler<TModel>(_segmentManager);
             var executeResult = builder.GetExecuteResult();
-            MapperConfig.Instance.Logger.Info($@"查询后的结果:{JsonConvert.SerializeObject(executeResult.Result)}");
+            MapperConfig.Instance.Logger.Info($@"查询后的结果:{JsonConvert.SerializeObject(executeResult)}");
             return executeResult;
         }
 

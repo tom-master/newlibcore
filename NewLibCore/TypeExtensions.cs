@@ -10,6 +10,11 @@ namespace NewLibCore
     /// </summary>
     public static class TypeExtensions
     {
+        /// <summary>
+        /// 判断指定类型是否为值类型
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
         public static Boolean IsNumeric(this Type type)
         {
             return type == typeof(Byte)
@@ -69,11 +74,11 @@ namespace NewLibCore
             return IsAssignableToGenericType(baseType, genericType);
         }
 
-        public static Boolean IsComplexType(this Object obj)
-        {
-            return IsComplexType(obj.GetType());
-        }
-
+        /// <summary>
+        /// 判断是否为复杂类型
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
         public static Boolean IsComplexType(this Type type)
         {
             return !TypeDescriptor.GetConverter(type).CanConvertFrom(typeof(String));

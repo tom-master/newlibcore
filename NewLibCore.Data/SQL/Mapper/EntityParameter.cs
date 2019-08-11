@@ -55,7 +55,7 @@ namespace NewLibCore.Data.SQL.Mapper
                 return (Boolean)obj ? 1 : 0;
             }
 
-            if (obj.IsComplexType())
+            if (obj.GetType().IsComplexType())
             {
                 var objType = obj.GetType();
                 if (objType.IsArray || objType.GetGenericTypeDefinition() == typeof(List<>))

@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Linq;
+using NewLibCore.Data.SQL.Mapper.EntityExtension;
+using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper.Database
 {
@@ -10,20 +14,59 @@ namespace NewLibCore.Data.SQL.Mapper.Database
     {
         private Object _result;
 
-        internal Object Result
-        {
-            get
-            {
-                return _result;
-            }
-            set
-            {
-                _result = value;
-            }
-        }
-
         internal RawExecuteResult()
         {
+        }
+
+        internal void SetRawResult(Object rawResult)
+        {
+            Parameter.Validate(rawResult);
+            _result = rawResult;
+        }
+
+        /// <summary>
+        /// 返回.net的原生类型
+        /// </summary>
+        /// <typeparam name="TResult"></typeparam>
+        /// <returns></returns>
+        internal TResult ToPrimitive<TResult>()
+        {
+            var modelType = typeof(TResult);
+            if (modelType.IsComplexType())
+            {
+                throw new InvalidCastException($@"当返回.net的原生类型时需要调用ToPrimitive方法");
+            }
+            return (TResult)Convert.ChangeType(_result, typeof(TResult));
+        }
+
+        /// <summary>
+        /// 返回继承于EntityBase的集合对象
+        /// </summary>
+        /// <typeparam name="TResult"></typeparam>
+        /// <returns></returns>
+        internal List<TResult> ToList<TResult>() where TResult : EntityBase
+        {
+            var modelType = typeof(TResult);
+            if (!modelType.IsComplexType())
+            {
+                throw new InvalidCastException($@"当返回继承于EntityBase的集合对象时需要调用ToList方法");
+            }
+            return ((DataTable)_result).ToList<TResult>();
+        }
+
+        /// <summary>
+        /// 返回继承于EntityBase的单个对象
+        /// </summary>
+        /// <typeparam name="TResult"></typeparam>
+        /// <returns></returns>
+        internal TResult ToSingle<TResult>() where TResult : EntityBase
+        {
+            var modelType = typeof(TResult);
+            if (!modelType.IsComplexType())
+            {
+                throw new InvalidCastException($@"当返回继承于EntityBase的单个对象时需要调用ToSingle方法");
+            }
+            return ((DataTable)_result).ToSingle<TResult>();
         }
     }
 }

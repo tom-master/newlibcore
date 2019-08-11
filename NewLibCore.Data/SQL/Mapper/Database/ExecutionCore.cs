@@ -95,7 +95,7 @@ namespace NewLibCore.Data.SQL.Mapper.Database
         /// <param name="parameters"></param>
         /// <param name="commandType"></param>
         /// <returns></returns>
-        internal RawExecuteResult RawExecute(ExecuteType executeType, String sql, IEnumerable<EntityParameter> parameters = null, CommandType commandType = CommandType.Text) 
+        internal RawExecuteResult RawExecute(ExecuteType executeType, String sql, IEnumerable<EntityParameter> parameters = null, CommandType commandType = CommandType.Text)
         {
             try
             {
@@ -122,16 +122,16 @@ namespace NewLibCore.Data.SQL.Mapper.Database
                         {
                             var dataTable = new DataTable("tmpDt");
                             dataTable.Load(dr, LoadOption.Upsert);
-                            executeResult.Result = dataTable;
+                            executeResult.SetRawResult(dataTable);
                         }
                     }
                     else if (executeType == ExecuteType.UPDATE)
                     {
-                        executeResult.Result = cmd.ExecuteNonQuery();
+                        executeResult.SetRawResult(cmd.ExecuteNonQuery());
                     }
                     else if (executeType == ExecuteType.INSERT || executeType == ExecuteType.SELECT_SINGLE)
                     {
-                        executeResult.Result = cmd.ExecuteScalar();
+                        executeResult.SetRawResult(cmd.ExecuteScalar());
                     }
 
                     cmd.Parameters.Clear();

@@ -42,6 +42,7 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
         [DateTimeDefaultValue]
         public DateTime LastModifyTime { get; internal set; }
 
+
         /// <summary>
         /// 删除一个对象
         /// </summary>
