@@ -140,6 +140,12 @@ namespace NewLibCore.Data.SQL.Mapper
             return sqlResult.GetExecuteResult();
         }
 
+        public void OpenTransaction() { }
+
+        public void Commit() { }
+
+        public void Rollback() { }
+
         public void Dispose()
         {
         }
