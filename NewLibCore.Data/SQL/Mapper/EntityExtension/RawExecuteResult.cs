@@ -42,7 +42,7 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
         /// </summary>
         /// <typeparam name="TResult"></typeparam>
         /// <returns></returns>
-        internal List<TResult> ToList<TResult>() where TResult : EntityBase
+        internal List<TResult> ToList<TResult>() where TResult : new()
         {
             var modelType = typeof(TResult);
             if (!modelType.IsComplexType())
@@ -57,7 +57,7 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
         /// </summary>
         /// <typeparam name="TResult"></typeparam>
         /// <returns></returns>
-        internal TResult ToSingle<TResult>() where TResult : EntityBase
+        internal TResult ToSingle<TResult>() where TResult : new()
         {
             var modelType = typeof(TResult);
             if (!modelType.IsComplexType())

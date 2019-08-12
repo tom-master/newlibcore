@@ -15,7 +15,7 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
         /// <summary>
         /// 获取列表
         /// </summary>
-        internal static List<T> ToList<T>(this DataTable dataTable) where T : EntityBase
+        internal static List<T> ToList<T>(this DataTable dataTable) where T : new()
         {
             if (dataTable == null || dataTable.Rows.Count == 0)
             {
@@ -28,12 +28,12 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
         /// <summary>
         /// 获取单值
         /// </summary>
-        internal static T ToSingle<T>(this DataTable dataTable) where T : EntityBase
+        internal static T ToSingle<T>(this DataTable dataTable) where T : new()
         {
             return ToList<T>(dataTable).FirstOrDefault();
         }
 
-        private static List<T> ConvertToList<T>(DataTable dt) where T : EntityBase
+        private static List<T> ConvertToList<T>(DataTable dt) where T : new()
         {
             try
             {

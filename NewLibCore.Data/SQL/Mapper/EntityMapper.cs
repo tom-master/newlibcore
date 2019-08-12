@@ -93,7 +93,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <param name="parameters"></param>
         /// <typeparam name="TModel"></typeparam>
         /// <returns></returns>
-        public List<TModel> ExecuteToList<TModel>(String sql, IEnumerable<EntityParameter> parameters = null) where TModel : EntityBase
+        public List<TModel> ExecuteToList<TModel>(String sql, IEnumerable<EntityParameter> parameters = null) where TModel : new()
         {
             Parameter.Validate(sql);
             return RawExecute(ExecuteType.SELECT, sql, parameters).ToList<TModel>();
@@ -106,7 +106,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <param name="parameters"></param>
         /// <typeparam name="TModel"></typeparam>
         /// <returns></returns>
-        public TModel ExecuteToSingle<TModel>(String sql, IEnumerable<EntityParameter> parameters = null) where TModel : EntityBase
+        public TModel ExecuteToSingle<TModel>(String sql, IEnumerable<EntityParameter> parameters = null) where TModel : new()
         {
             Parameter.Validate(sql);
 
