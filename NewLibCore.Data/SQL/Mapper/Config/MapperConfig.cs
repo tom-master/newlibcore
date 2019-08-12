@@ -13,7 +13,7 @@ namespace NewLibCore.Data.SQL.Mapper.Config
 
         private MapperConfig() { }
 
-        public static ILogger Logger { get; private set; }
+        internal static ILogger Logger { get; private set; }
 
         internal static InstanceConfig Instance { get; private set; }
 
