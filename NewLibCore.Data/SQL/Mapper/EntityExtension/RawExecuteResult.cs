@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Data.SQL.Mapper.Database
+namespace NewLibCore.Data.SQL.Mapper.EntityExtension
 {
     /// <summary>
     /// 存储未包装过的sql执行结果

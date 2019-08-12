@@ -9,7 +9,7 @@ using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Data.SQL.Mapper.Translation
+namespace NewLibCore.Data.SQL.Mapper
 {
     /// <summary>
     /// 翻译表达式

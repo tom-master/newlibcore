@@ -4,7 +4,6 @@ using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using NewLibCore.Data.SQL.Mapper.Config;
 
 namespace NewLibCore.Data.SQL.Mapper.EntityExtension
 {

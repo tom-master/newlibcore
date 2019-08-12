@@ -1,6 +1,4 @@
 ﻿using System;
-using NewLibCore.Data.SQL.Mapper.EntityExtension.EntityAttribute;
-using NewLibCore.Data.SQL.Mapper.EntityExtension.EntityAttribute.Association;
 
 namespace NewLibCore.Data.SQL.Mapper.EntityExtension
 {

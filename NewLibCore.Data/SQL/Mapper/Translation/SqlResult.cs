@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using NewLibCore.Data.SQL.Mapper.Config;
 using NewLibCore.Data.SQL.Mapper.Database;
+using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Data.SQL.Mapper.Translation
+namespace NewLibCore.Data.SQL.Mapper
 {
     /// <summary>
     /// 存储表达式的翻译后的sql语句

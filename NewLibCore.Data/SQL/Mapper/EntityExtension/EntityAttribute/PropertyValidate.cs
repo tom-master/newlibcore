@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NewLibCore.Data.SQL.Mapper.EntityExtension.EntityAttribute
+namespace NewLibCore.Data.SQL.Mapper.EntityExtension
 {
     /// <summary>
     /// 基本的属性验证类

@@ -4,14 +4,11 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using NewLibCore.Data.SQL.Mapper.Config;
-using NewLibCore.Data.SQL.Mapper.Database;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
-using NewLibCore.Data.SQL.Mapper.EntityExtension.EntityAttribute;
 using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
-using NewLibCore.Data.SQL.Mapper.Translation;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Data.SQL.Mapper.InternalHandler
+namespace NewLibCore.Data.SQL.Mapper
 {
     /// <summary>
     /// 查询操作构建

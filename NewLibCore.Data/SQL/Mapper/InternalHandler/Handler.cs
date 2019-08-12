@@ -1,9 +1,8 @@
 ﻿using System;
-using NewLibCore.Data.SQL.Mapper.Database;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
 
-namespace NewLibCore.Data.SQL.Mapper.InternalHandler
+namespace NewLibCore.Data.SQL.Mapper
 {
     internal abstract class Handler<TModel> where TModel : PropertyMonitor, new()
     {

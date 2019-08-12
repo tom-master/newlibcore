@@ -1,4 +1,4 @@
-﻿namespace NewLibCore.Data.SQL.Mapper.Translation
+﻿namespace NewLibCore.Data.SQL.Mapper
 {
     /// <summary>
     /// 翻译表达式

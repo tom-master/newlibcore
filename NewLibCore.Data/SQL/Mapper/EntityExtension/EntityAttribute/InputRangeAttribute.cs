@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NewLibCore.Data.SQL.Mapper.EntityExtension.EntityAttribute
+namespace NewLibCore.Data.SQL.Mapper.EntityExtension
 {
     /// <summary>
     /// 验证输入是否在指定范围内

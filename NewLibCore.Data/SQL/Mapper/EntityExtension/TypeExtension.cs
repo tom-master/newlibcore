@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using NewLibCore.Data.SQL.Mapper.EntityExtension.EntityAttribute;
 
 namespace NewLibCore.Data.SQL.Mapper.EntityExtension
 {

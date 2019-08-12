@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NewLibCore.Data.SQL.Mapper.EntityExtension.EntityAttribute.Association
+namespace NewLibCore.Data.SQL.Mapper.EntityExtension
 {
     /// <summary>
     /// 外键特性

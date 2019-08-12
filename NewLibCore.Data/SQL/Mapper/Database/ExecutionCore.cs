@@ -5,7 +5,6 @@ using System.Data.Common;
 using System.Linq;
 using NewLibCore.Data.SQL.Mapper.Config;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
-using NewLibCore.Data.SQL.Mapper.Translation;
 using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper.Database
