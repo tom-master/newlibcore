@@ -19,7 +19,7 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
         {
             var sw = new Stopwatch();
             sw.Start();
-            var returnValue = (TModel)func();
+            var returnValue = func();
             sw.Stop();
             _logger.Info($@"共花费{Math.Round(sw.Elapsed.TotalSeconds, 2)}s");
             return returnValue;

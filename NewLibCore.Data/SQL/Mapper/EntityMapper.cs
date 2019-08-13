@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using NewLibCore.Data.SQL.Mapper.Database;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
 using NewLibCore.Validate;
-using Newtonsoft.Json;
 
 namespace NewLibCore.Data.SQL.Mapper
 {
@@ -13,6 +13,13 @@ namespace NewLibCore.Data.SQL.Mapper
     /// </summary>
     public sealed class EntityMapper : IDisposable
     {
+        private readonly ExecutionCore _executionCore;
+
+        private EntityMapper()
+        {
+            _executionCore = new ExecutionCore();
+        }
+
         /// <summary>
         /// 创建一个EntityMapper实例
         /// </summary>
@@ -35,7 +42,7 @@ namespace NewLibCore.Data.SQL.Mapper
             return RunDiagnosis.Watch(() =>
              {
                  Handler<TModel> builder = new InsertHandler<TModel>(model, true);
-                 var executeResult = builder.GetExecuteResult();
+                 var executeResult = builder.GetExecuteResult(_executionCore);
                  model.Id = executeResult.ToPrimitive<Int32>();
                  return model;
              });
@@ -58,7 +65,7 @@ namespace NewLibCore.Data.SQL.Mapper
                  var segmentManager = new SegmentManager();
                  segmentManager.Add(expression);
                  Handler<TModel> builder = new UpdateHandler<TModel>(model, segmentManager, true);
-                 return builder.GetExecuteResult().ToPrimitive<Int32>() > 0;
+                 return builder.GetExecuteResult(_executionCore).ToPrimitive<Int32>() > 0;
              });
         }
 
@@ -70,7 +77,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <returns></returns>
         public SelectMapper<TModel> Select<TModel>(Expression<Func<TModel, dynamic>> fields = null) where TModel : EntityBase, new()
         {
-            return new SelectMapper<TModel>().Select(fields);
+            return new SelectMapper<TModel>(_executionCore).Select(fields);
         }
 
         /// <summary>
@@ -83,7 +90,7 @@ namespace NewLibCore.Data.SQL.Mapper
         public SelectMapper<TModel> Select<TModel, T>(Expression<Func<TModel, T, dynamic>> fields = null) where TModel : EntityBase, new()
         where T : EntityBase, new()
         {
-            return new SelectMapper<TModel>().Select(fields);
+            return new SelectMapper<TModel>(_executionCore).Select(fields);
         }
 
         /// <summary>
@@ -111,15 +118,12 @@ namespace NewLibCore.Data.SQL.Mapper
             Parameter.Validate(sql);
 
             var modelType = typeof(TModel);
-            RawExecuteResult executeResult;
             if (modelType.IsNumeric())
             {
-                executeResult = RawExecute(ExecuteType.SELECT_SINGLE, sql, parameters);
-                return executeResult.ToPrimitive<TModel>();
+                return RawExecute(ExecuteType.SELECT_SINGLE, sql, parameters).ToPrimitive<TModel>();
             }
 
-            executeResult = RawExecute(ExecuteType.SELECT, sql, parameters);
-            return executeResult.ToSingle<TModel>();
+            return RawExecute(ExecuteType.SELECT, sql, parameters).ToSingle<TModel>();
 
         }
 
@@ -135,25 +139,40 @@ namespace NewLibCore.Data.SQL.Mapper
             var sqlResult = SqlResult.CreateSqlResult();
             sqlResult.ExecuteType = executeType;
             sqlResult.Append(sql, parameters);
-            return sqlResult.GetExecuteResult();
+            return sqlResult.GetExecuteResult(_executionCore);
         }
 
-        public void OpenTransaction() { }
+        public void OpenTransaction()
+        {
+            _executionCore.OpenTransaction();
+        }
 
-        public void Commit() { }
+        public void Commit()
+        {
+            _executionCore.Commit();
+        }
 
-        public void Rollback() { }
+        public void Rollback()
+        {
+            _executionCore.Rollback();
+        }
 
         public void Dispose()
         {
+            _executionCore.Dispose();
         }
+
     }
 
     public sealed class SelectMapper<TModel> where TModel : EntityBase, new()
     {
         private readonly SegmentManager _segmentManager = new SegmentManager();
 
-        internal SelectMapper() { }
+        private readonly ExecutionCore _execution;
+        internal SelectMapper(ExecutionCore execution)
+        {
+            _execution = execution;
+        }
 
         public Boolean Exist()
         {
@@ -313,10 +332,9 @@ namespace NewLibCore.Data.SQL.Mapper
         private RawExecuteResult InternalExecuteSql()
         {
             Handler<TModel> builder = new SelectHandler<TModel>(_segmentManager);
-            var executeResult = builder.GetExecuteResult();
-            RunDiagnosis.Info($@"查询后的结果:{JsonConvert.SerializeObject(executeResult)}");
+            var executeResult = builder.GetExecuteResult(_execution);
+            RunDiagnosis.Info($@"查询后的结果:{executeResult}");
             return executeResult;
         }
-
     }
 }

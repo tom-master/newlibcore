@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using NewLibCore.Validate;
+using Newtonsoft.Json;
 
 namespace NewLibCore.Data.SQL.Mapper.EntityExtension
 {
@@ -65,6 +66,11 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
                 throw new InvalidCastException($@"当返回继承于EntityBase的单个对象时需要调用ToSingle方法");
             }
             return ((DataTable)_result).ToSingle<TResult>();
+        }
+
+        public override String ToString()
+        {
+            return JsonConvert.SerializeObject(_result);
         }
     }
 }

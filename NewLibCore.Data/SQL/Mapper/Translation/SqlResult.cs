@@ -87,9 +87,9 @@ namespace NewLibCore.Data.SQL.Mapper
         /// 获取表达式段执行之后的结果
         /// </summary>
         /// <returns></returns>
-        internal RawExecuteResult GetExecuteResult()
+        internal RawExecuteResult GetExecuteResult(ExecutionCore executionCore)
         {
-            return Execute();
+            return Execute(executionCore);
         }
 
         internal void Clear()
@@ -98,7 +98,7 @@ namespace NewLibCore.Data.SQL.Mapper
             _parameters.Clear();
         }
 
-        private RawExecuteResult Execute()
+        private RawExecuteResult Execute(ExecutionCore executionCore)
         {
             if (ExecuteType == default)
             {
@@ -115,7 +115,8 @@ namespace NewLibCore.Data.SQL.Mapper
             var executeResult = GetCache();
             if (executeResult == null)
             {
-                executeResult = ExecutionCore.CreateExecutionCore().Execute(this);
+
+                executeResult = executionCore.Execute(this);
                 SetCache(executeResult);
             }
 

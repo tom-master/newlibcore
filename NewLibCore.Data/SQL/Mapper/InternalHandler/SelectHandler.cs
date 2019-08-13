@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using NewLibCore.Data.SQL.Mapper.Config;
+using NewLibCore.Data.SQL.Mapper.Database;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
 using NewLibCore.Validate;
@@ -24,7 +25,7 @@ namespace NewLibCore.Data.SQL.Mapper
             _segmentManager = segmentManager;
         }
 
-        protected override RawExecuteResult ExecuteTranslate()
+        protected override RawExecuteResult ExecuteTranslate(ExecutionCore executionCore)
         {
             var (Fields, AliasName) = StatementParse(_segmentManager.Field);
 
@@ -52,7 +53,7 @@ namespace NewLibCore.Data.SQL.Mapper
                 translationSegment.SqlResult.Append(MapperConfig.Instance.Extension.Page.Replace("{value}", pageIndex).Replace("{pageSize}", pageSize));
             }
 
-            return translationSegment.Execute();
+            return translationSegment.SqlResult.GetExecuteResult(executionCore);
         }
 
         /// <summary>

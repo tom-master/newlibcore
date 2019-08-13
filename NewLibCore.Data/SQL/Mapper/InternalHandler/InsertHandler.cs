@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using NewLibCore.Data.SQL.Mapper.Config;
+using NewLibCore.Data.SQL.Mapper.Database;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Validate;
 
@@ -23,7 +24,7 @@ namespace NewLibCore.Data.SQL.Mapper
             _instance = model;
         }
 
-        protected override RawExecuteResult ExecuteTranslate()
+        protected override RawExecuteResult ExecuteTranslate(ExecutionCore executionCore)
         {
             _instance.OnChanged();
             if (_isVerifyModel)
@@ -33,7 +34,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
             var propertyInfos = _instance.GetChangedProperty();
             var template = BuildTemplate();
-            return SqlResult.CreateSqlResult().Append(template, propertyInfos.Select(c => new EntityParameter(c.Key, c.Value))).GetExecuteResult();
+            return SqlResult.CreateSqlResult().Append(template, propertyInfos.Select(c => new EntityParameter(c.Key, c.Value))).GetExecuteResult(executionCore);
         }
 
         private String BuildTemplate()

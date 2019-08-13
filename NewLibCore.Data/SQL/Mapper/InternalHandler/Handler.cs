@@ -1,4 +1,5 @@
 ﻿using System;
+using NewLibCore.Data.SQL.Mapper.Database;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
 
@@ -10,16 +11,16 @@ namespace NewLibCore.Data.SQL.Mapper
         /// 获取表达式段翻译后的结果
         /// </summary>
         /// <returns></returns>
-        internal RawExecuteResult GetExecuteResult()
+        internal RawExecuteResult GetExecuteResult(ExecutionCore execution)
         {
-            return ExecuteTranslate();
+            return ExecuteTranslate(execution);
         }
 
         /// <summary>
         /// 执行表达式段的翻译
         /// </summary>
         /// <returns></returns>
-        protected abstract RawExecuteResult ExecuteTranslate();
+        protected abstract RawExecuteResult ExecuteTranslate(ExecutionCore execution);
 
         /// <summary>
         /// 字段转换

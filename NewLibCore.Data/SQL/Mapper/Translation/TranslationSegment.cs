@@ -52,15 +52,6 @@ namespace NewLibCore.Data.SQL.Mapper
 
 
         /// <summary>
-        /// 执行翻译后的sql语句
-        /// </summary>
-        /// <returns></returns>
-        internal RawExecuteResult Execute()
-        {
-            return SqlResult.GetExecuteResult();
-        }
-
-        /// <summary>
         /// 翻译
         /// </summary>
         /// <returns></returns>

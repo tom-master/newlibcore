@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.Extensions.DependencyInjection;
 using NewLibCore.Logger;
 
 namespace NewLibCore.Data.SQL.Mapper.Config
@@ -8,10 +9,17 @@ namespace NewLibCore.Data.SQL.Mapper.Config
     /// </summary>
     public class MapperConfig
     {
-
         private static readonly Object _obj = new Object();
 
-        private MapperConfig() { }
+        private MapperConfig()
+        {
+
+        }
+
+        public static MapperConfig CreateMapperConfig()
+        {
+            return new MapperConfig();
+        }
 
         internal static ILogger Logger { get; private set; }
 
@@ -32,7 +40,7 @@ namespace NewLibCore.Data.SQL.Mapper.Config
         /// </summary>
         /// <param name="logger"></param>
         /// <returns></returns>
-        public static void SwitchToMySql(Boolean cache = false)
+        public void SwitchToMySql(Boolean cache = false)
         {
             SwitchTo(DatabaseType.MYSQL, cache);
         }
@@ -42,7 +50,7 @@ namespace NewLibCore.Data.SQL.Mapper.Config
         /// </summary>
         /// <param name="logger"></param>
         /// <returns></returns>
-        public static void SwitchToMsSql(Boolean cache = false)
+        public void SwitchToMsSql(Boolean cache = false)
         {
             SwitchTo(DatabaseType.MSSQL, cache);
         }
@@ -54,35 +62,26 @@ namespace NewLibCore.Data.SQL.Mapper.Config
         /// <param name="logger"></param>
         private static void SwitchTo(DatabaseType database, Boolean cache)
         {
-            if (Instance == null)
+            switch (database)
             {
-                lock (_obj)
+                case DatabaseType.MSSQL:
                 {
-                    if (Instance == null)
-                    {
-                        switch (database)
-                        {
-                            case DatabaseType.MSSQL:
-                                {
-                                    Instance = new MsSqlInstanceConfig();
-                                    break;
-                                }
-                            case DatabaseType.MYSQL:
-                                {
-                                    Instance = new MySqlInstanceConfig();
-                                    break;
-                                }
-                            default:
-                                {
-                                    throw new ArgumentException($@"暂不支持的数据库类型:{database}");
-                                }
-                        }
-                        if (cache)
-                        {
-                            Instance.UseCache();
-                        }
-                    }
+                    Instance = new MsSqlInstanceConfig();
+                    break;
                 }
+                case DatabaseType.MYSQL:
+                {
+                    Instance = new MySqlInstanceConfig();
+                    break;
+                }
+                default:
+                {
+                    throw new ArgumentException($@"暂不支持的数据库类型:{database}");
+                }
+            }
+            if (cache)
+            {
+                Instance.UseCache();
             }
         }
     }

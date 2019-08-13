@@ -22,15 +22,10 @@ namespace NewLibCore.Data.SQL.Mapper.Database
 
         private Boolean _useTransaction = false;
 
-        private ExecutionCore()
+        public ExecutionCore()
         {
             Parameter.Validate(MapperConfig.Instance);
             _connection = MapperConfig.Instance.GetConnectionInstance();
-        }
-
-        internal static ExecutionCore CreateExecutionCore()
-        {
-            return new ExecutionCore();
         }
 
         /// <summary>

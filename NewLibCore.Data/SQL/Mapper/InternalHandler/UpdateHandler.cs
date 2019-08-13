@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using NewLibCore.Data.SQL.Mapper.Config;
+using NewLibCore.Data.SQL.Mapper.Database;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
 using NewLibCore.Validate;
@@ -29,7 +30,7 @@ namespace NewLibCore.Data.SQL.Mapper
             _segmentManager = segmentManager;
         }
 
-        protected override RawExecuteResult ExecuteTranslate()
+        protected override RawExecuteResult ExecuteTranslate(ExecutionCore executionCore)
         {
             _instance.SetUpdateTime();
 
@@ -50,7 +51,7 @@ namespace NewLibCore.Data.SQL.Mapper
             _instance.Reset();
 
             translationSegment.SqlResult.Append($@"{MapperConfig.Instance.Extension.RowCount}");
-            return translationSegment.Execute();
+            return translationSegment.SqlResult.GetExecuteResult(executionCore);
         }
     }
 }
