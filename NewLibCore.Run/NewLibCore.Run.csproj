@@ -8,12 +8,4 @@
     <ProjectReference Include="..\NewLibCore.Data\NewLibCore.Data.csproj" />
         <ProjectReference Include="..\NewLibCore\NewLibCore.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Reference Include="Microsoft.Extensions.DependencyInjection">
-      <HintPath>..\..\..\..\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.extensions.dependencyinjection\2.2.0\lib\netcoreapp2.0\Microsoft.Extensions.DependencyInjection.dll</HintPath>
-    </Reference>
-    <Reference Include="System">
-      <HintPath>System</HintPath>
-    </Reference>
-  </ItemGroup>
 </Project>
