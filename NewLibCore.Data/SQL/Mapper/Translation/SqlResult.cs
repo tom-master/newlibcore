@@ -17,10 +17,15 @@ namespace NewLibCore.Data.SQL.Mapper
         private readonly StringBuilder _originSql;
         private readonly IList<EntityParameter> _parameters;
 
-        internal SqlResult()
+        private SqlResult()
         {
             _originSql = new StringBuilder();
             _parameters = new List<EntityParameter>();
+        }
+
+        internal static SqlResult CreateSqlResult()
+        {
+            return new SqlResult();
         }
 
         internal ExecuteType ExecuteType { get; set; }
@@ -38,7 +43,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// 追加一个sql语句和一组EntityParameter对象
         /// </summary>
         /// <param name="entityParameters"></param>
-        internal void Append(String sql, IEnumerable<EntityParameter> entityParameters = null)
+        internal SqlResult Append(String sql, IEnumerable<EntityParameter> entityParameters = null)
         {
             Parameter.Validate(sql);
 
@@ -50,6 +55,8 @@ namespace NewLibCore.Data.SQL.Mapper
                     _parameters.Add(item);
                 }
             }
+
+            return this;
         }
 
         /// <summary>

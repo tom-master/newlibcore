@@ -132,10 +132,8 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <returns></returns>
         private RawExecuteResult RawExecute(ExecuteType executeType, String sql, IEnumerable<EntityParameter> parameters = null)
         {
-            var sqlResult = new SqlResult
-            {
-                ExecuteType = executeType
-            };
+            var sqlResult = SqlResult.CreateSqlResult();
+            sqlResult.ExecuteType = executeType;
             sqlResult.Append(sql, parameters);
             return sqlResult.GetExecuteResult();
         }

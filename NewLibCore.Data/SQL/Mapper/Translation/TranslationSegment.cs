@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using NewLibCore.Data.SQL.Mapper.Config;
-using NewLibCore.Data.SQL.Mapper.Database;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
 using NewLibCore.Validate;
@@ -16,9 +15,7 @@ namespace NewLibCore.Data.SQL.Mapper
     /// </summary>
     internal class TranslationSegment : ITranslationSegment
     {
-        private JoinType _joinType;
-
-        private readonly SqlResult _sqlResult;
+        private JoinType _joinType; 
 
         private readonly Stack<String> _parameterNameStack;
 
@@ -34,11 +31,14 @@ namespace NewLibCore.Data.SQL.Mapper
 
             _segmentManager = segmentManager;
 
-            _sqlResult = new SqlResult();
+            SqlResult = SqlResult.CreateSqlResult();
             _relationTypesStack = new Stack<RelationType>();
             _parameterNameStack = new Stack<String>();
             _tableAliasMapper = new List<KeyValuePair<String, String>>();
         }
+
+        internal SqlResult SqlResult { get; private set; }
+
 
         /// <summary>
         /// 创建一个翻译表达式的对象
@@ -50,15 +50,6 @@ namespace NewLibCore.Data.SQL.Mapper
             return new TranslationSegment(segmentManager);
         }
 
-        /// <summary>
-        /// 追加sql结果
-        /// </summary>
-        /// <param name="sql"></param>
-        /// <param name="entityParameters"></param>
-        internal void AppendSqlResult(String sql, IEnumerable<EntityParameter> entityParameters = null)
-        {
-            _sqlResult.Append(sql, entityParameters);
-        }
 
         /// <summary>
         /// 执行翻译后的sql语句
@@ -66,7 +57,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <returns></returns>
         internal RawExecuteResult Execute()
         {
-            return _sqlResult.GetExecuteResult();
+            return SqlResult.GetExecuteResult();
         }
 
         /// <summary>
@@ -96,7 +87,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
                     //获取连接语句的模板
                     var joinTemplate = MapperConfig.Instance.JoinBuilder(item.JoinType, aliasItem.Value, aliasItem.Value.ToLower());
-                    _sqlResult.Append(joinTemplate);
+                    SqlResult.Append(joinTemplate);
 
                     //设置相应的连接类型
                     _joinType = item.JoinType;
@@ -105,7 +96,7 @@ namespace NewLibCore.Data.SQL.Mapper
                     InternalBuildWhere(item.Expression);
                 }
             }
-            _sqlResult.Append("WHERE 1=1");
+            SqlResult.Append("WHERE 1=1");
 
             //翻译Where条件对象
             if (_segmentManager.Where != null)
@@ -118,7 +109,7 @@ namespace NewLibCore.Data.SQL.Mapper
                 }
 
                 _joinType = JoinType.NONE;
-                _sqlResult.Append(RelationType.AND.ToString());
+                SqlResult.Append(RelationType.AND.ToString());
 
                 //获取Where类型中的存储的表达式对象进行翻译
                 InternalBuildWhere(lambdaExp);
@@ -141,7 +132,7 @@ namespace NewLibCore.Data.SQL.Mapper
                     if (binaryExp.Left.NodeType != ExpressionType.Constant && binaryExp.Right.NodeType != ExpressionType.Constant)
                     {
                         InternalBuildWhere(binaryExp.Left);
-                        _sqlResult.Append(RelationType.AND.ToString());
+                        SqlResult.Append(RelationType.AND.ToString());
                         InternalBuildWhere(binaryExp.Right);
                     }
                     else
@@ -162,7 +153,7 @@ namespace NewLibCore.Data.SQL.Mapper
                 {
                     var binaryExp = (BinaryExpression)expression;
                     InternalBuildWhere(binaryExp.Left);
-                    _sqlResult.Append(RelationType.OR.ToString());
+                    SqlResult.Append(RelationType.OR.ToString());
                     InternalBuildWhere(binaryExp.Right);
                     break;
                 }
@@ -174,7 +165,7 @@ namespace NewLibCore.Data.SQL.Mapper
                 case ExpressionType.Constant:
                 {
                     var binaryExp = (ConstantExpression)expression;
-                    _sqlResult.Append(new EntityParameter(_parameterNameStack.Pop(), binaryExp.Value));
+                    SqlResult.Append(new EntityParameter(_parameterNameStack.Pop(), binaryExp.Value));
                     break;
                 }
                 case ExpressionType.Equal:
@@ -266,14 +257,14 @@ namespace NewLibCore.Data.SQL.Mapper
                             internalAliasName = $@"{ _tableAliasMapper.Where(w => w.Key == parameterExp.Type.GetTableName().TableName && w.Value == parameterExp.Type.GetTableName().AliasName).FirstOrDefault().Value.ToLower()}.";
 
                             var newParameterName = Guid.NewGuid().ToString().Replace("-", "");
-                            _sqlResult.Append(MapperConfig.Instance.RelationBuilder(_relationTypesStack.Pop(), $@"{internalAliasName}{memberExp.Member.Name}", $"@{newParameterName}"));
+                            SqlResult.Append(MapperConfig.Instance.RelationBuilder(_relationTypesStack.Pop(), $@"{internalAliasName}{memberExp.Member.Name}", $"@{newParameterName}"));
                             _parameterNameStack.Push(newParameterName);
                         }
                     }
                     else
                     {
                         var getter = Expression.Lambda(memberExp).Compile();
-                        _sqlResult.Append(new EntityParameter(_parameterNameStack.Pop(), getter.DynamicInvoke()));
+                        SqlResult.Append(new EntityParameter(_parameterNameStack.Pop(), getter.DynamicInvoke()));
                         break;
                     }
                     break;
@@ -409,21 +400,21 @@ namespace NewLibCore.Data.SQL.Mapper
                 var (RightMember, RightAliasName) = GetRightMemberAndAliasName(binaryExp);
 
                 var relationTemplate = MapperConfig.Instance.RelationBuilder(relationType, $"{RightAliasName}.{RightMember.Member.Name}", $"{LeftAliasName}.{LeftMember.Member.Name}");
-                _sqlResult.Append(relationTemplate);
+                SqlResult.Append(relationTemplate);
             }
             else if (binaryExp.Left.NodeType == ExpressionType.Constant) //表达式左边为常量
             {
                 var (RightMember, RightAliasName) = GetRightMemberAndAliasName(binaryExp);
                 var constant = (ConstantExpression)binaryExp.Left;
                 var value = Boolean.TryParse(constant.Value.ToString(), out var result) ? (result ? 1 : 0).ToString() : constant.Value;
-                _sqlResult.Append(MapperConfig.Instance.RelationBuilder(relationType, value + "", $"{RightAliasName}.{RightMember.Member.Name}"));
+                SqlResult.Append(MapperConfig.Instance.RelationBuilder(relationType, value + "", $"{RightAliasName}.{RightMember.Member.Name}"));
             }
             else if (binaryExp.Right.NodeType == ExpressionType.Constant) //表达式的右边为常量
             {
                 var (LeftMember, LeftAliasName) = GetLeftMemberAndAliasName(binaryExp);
                 var constant = (ConstantExpression)binaryExp.Right;
                 var value = Boolean.TryParse(constant.Value.ToString(), out var result) ? (result ? 1 : 0).ToString() : constant.Value;
-                _sqlResult.Append(MapperConfig.Instance.RelationBuilder(relationType, $"{LeftAliasName}.{LeftMember.Member.Name}", value + ""));
+                SqlResult.Append(MapperConfig.Instance.RelationBuilder(relationType, $"{LeftAliasName}.{LeftMember.Member.Name}", value + ""));
             }
         }
 
