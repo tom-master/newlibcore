@@ -32,11 +32,15 @@ namespace NewLibCore.Data.SQL.Mapper
             }
 
             var propertyInfos = _instance.GetChangedProperty();
-            _instance.Reset();
-            var template = String.Format(MapperConfig.Instance.AddTemplate, typeof(TModel).GetTableName().TableName, String.Join(",", propertyInfos.Select(c => c.Key)), String.Join(",", propertyInfos.Select(key => $@"@{key.Key}")), MapperConfig.Instance.Extension.Identity);
-
+            var template = BuildTemplate();
             return SqlResult.CreateSqlResult().Append(template, propertyInfos.Select(c => new EntityParameter(c.Key, c.Value))).GetExecuteResult();
+        }
 
+        private String BuildTemplate()
+        {
+            var propertyInfos = _instance.GetChangedProperty();
+            var tableName = typeof(TModel).GetTableName().TableName;
+            return String.Format(MapperConfig.Instance.AddTemplate, tableName, String.Join(",", propertyInfos.Select(c => c.Key)), String.Join(",", propertyInfos.Select(key => $@"@{key.Key}")), MapperConfig.Instance.Extension.Identity);
         }
     }
 }
