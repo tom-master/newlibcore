@@ -49,7 +49,6 @@ namespace NewLibCore.Data.SQL.Mapper
             _parameterNameStack = new Stack<String>();
             _tableAliasMapper = new List<KeyValuePair<String, String>>();
 
-
             Result = TranslateResult.CreateResult(null);
         }
 
