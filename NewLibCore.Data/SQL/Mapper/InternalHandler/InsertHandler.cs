@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using NewLibCore.Data.SQL.Mapper.Config;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Validate;
 
@@ -40,7 +39,7 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             var propertyInfos = _instance.GetChangedProperty();
             var tableName = typeof(TModel).GetTableName().TableName;
-            return String.Format(MapperConfig.Instance.AddTemplate, tableName, String.Join(",", propertyInfos.Select(c => c.Key)), String.Join(",", propertyInfos.Select(key => $@"@{key.Key}")), MapperConfig.Instance.Extension.Identity);
+            return String.Format(Instance.AddTemplate, tableName, String.Join(",", propertyInfos.Select(c => c.Key)), String.Join(",", propertyInfos.Select(key => $@"@{key.Key}")), Instance.Extension.Identity);
         }
     }
 }

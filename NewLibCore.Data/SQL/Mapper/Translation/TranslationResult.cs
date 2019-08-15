@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Extensions.DependencyInjection;
+using NewLibCore.Data.SQL.Mapper.Cache;
 using NewLibCore.Data.SQL.Mapper.Config;
 using NewLibCore.Data.SQL.Mapper.Database;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
@@ -16,11 +18,13 @@ namespace NewLibCore.Data.SQL.Mapper
     {
         private readonly StringBuilder _originSql;
         private readonly IList<EntityParameter> _parameters;
+        private readonly ResultCache _cache;
 
         private TranslationResult()
         {
             _originSql = new StringBuilder();
             _parameters = new List<EntityParameter>();
+            _cache = MapperConfig.ServiceProvider.GetService<ResultCache>();
         }
 
         internal static TranslationResult CreateTranslationResult()
@@ -144,9 +148,9 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <param name="executeResult"></param>
         private void SetCache(RawExecuteResult executeResult)
         {
-            if (MapperConfig.Instance.Cache != null)
+            if (_cache != null)
             {
-                MapperConfig.Instance.Cache.Add(PrepareCacheKey(), executeResult);
+                _cache.Add(PrepareCacheKey(), executeResult);
             }
         }
 
@@ -156,9 +160,9 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <returns></returns>
         private RawExecuteResult GetCache()
         {
-            if (MapperConfig.Instance.Cache != null)
+            if (_cache != null)
             {
-                var cacheResult = MapperConfig.Instance.Cache.Get(PrepareCacheKey());
+                var cacheResult = _cache.Get(PrepareCacheKey());
                 if (cacheResult != null)
                 {
                     return (RawExecuteResult)cacheResult;

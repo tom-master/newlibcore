@@ -11,7 +11,8 @@ namespace NewLibCore.Run
     {
         public static void Main(String[] args)
         {
-            MapperConfig.CreateMapperConfig().SwitchToMySql(true);
+            MapperConfig.InitMapper();
+
             for (var i = 0; i < Environment.ProcessorCount; i++)
             {
                 ThreadPool.QueueUserWorkItem((a1) =>

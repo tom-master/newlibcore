@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using Microsoft.Extensions.DependencyInjection;
 using NewLibCore.Data.SQL.Mapper.Config;
 using NewLibCore.Logger;
 
@@ -7,10 +8,11 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
 {
     internal sealed class RunDiagnosis
     {
-        private static ILogger _logger = MapperConfig.Logger ?? new ConsoleLogger();
+        private static ILogger _logger;
 
         static RunDiagnosis()
         {
+            _logger = MapperConfig.ServiceProvider.GetService<ILogger>();
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
         }
 

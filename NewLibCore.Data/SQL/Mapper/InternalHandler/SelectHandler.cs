@@ -29,7 +29,7 @@ namespace NewLibCore.Data.SQL.Mapper
             var (Fields, AliasName) = StatementParse(_segmentManager.Field);
 
             var segment = TranslationSegment.CreateTranslation(_segmentManager);
-            segment.Result.Append(String.Format(MapperConfig.Instance.SelectTemplate, Fields, typeof(TModel).GetTableName().TableName, AliasName));
+            segment.Result.Append(String.Format(Instance.SelectTemplate, Fields, typeof(TModel).GetTableName().TableName, AliasName));
             segment.Translate();
 
             var aliasMapper = _segmentManager.MergeAliasMapper();
@@ -41,7 +41,7 @@ namespace NewLibCore.Data.SQL.Mapper
             if (_segmentManager.Order != null)
             {
                 var (fields, tableName) = StatementParse(_segmentManager.Order);
-                var orderTemplate = MapperConfig.Instance.OrderByBuilder(_segmentManager.Order.OrderBy, $@"{tableName}.{fields}");
+                var orderTemplate = Instance.OrderByBuilder(_segmentManager.Order.OrderBy, $@"{tableName}.{fields}");
                 segment.Result.Append(orderTemplate);
             }
 
@@ -49,7 +49,7 @@ namespace NewLibCore.Data.SQL.Mapper
             {
                 var pageIndex = (_segmentManager.Page.Size * (_segmentManager.Page.Index - 1)).ToString();
                 var pageSize = _segmentManager.Page.Size.ToString();
-                segment.Result.Append(MapperConfig.Instance.Extension.Page.Replace("{value}", pageIndex).Replace("{pageSize}", pageSize));
+                segment.Result.Append(Instance.Extension.Page.Replace("{value}", pageIndex).Replace("{pageSize}", pageSize));
             }
 
             return segment.Result;

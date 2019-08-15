@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
+using NewLibCore.Data.SQL.Mapper.Cache;
 using NewLibCore.Data.SQL.Mapper.Database;
 using NewLibCore.Logger;
 
@@ -12,84 +13,28 @@ namespace NewLibCore.Data.SQL.Mapper.Config
     {
         private static readonly Object _obj = new Object();
 
-        private MapperConfig()
+        private MapperConfig(MapperType mapperType)
         {
-            ServiceProvider = new ServiceCollection()
-                .AddTransient<ExecutionCore>()
-                .AddSingleton<InstanceConfig, MsSqlInstanceConfig>()
-                .AddSingleton<InstanceConfig, MySqlInstanceConfig>()
+            var services = new ServiceCollection().AddTransient<ExecutionCore>();
+            if (mapperType == MapperType.MSSQL)
+            {
+                services = services.AddSingleton<InstanceConfig, MsSqlInstanceConfig>();
+            }
+            else if (mapperType == MapperType.MYSQL)
+            {
+                services = services.AddSingleton<InstanceConfig, MySqlInstanceConfig>();
+            }
+            ServiceProvider = services
+                .AddSingleton<ResultCache, ExecutionResultCache>()
+                .AddSingleton<ILogger, ConsoleLogger>()
                 .BuildServiceProvider();
         }
 
-        public static MapperConfig CreateMapperConfig()
+        public static void InitMapper(MapperType mapperType = MapperType.MYSQL)
         {
-            return new MapperConfig();
+            new MapperConfig(mapperType);
         }
 
         internal static IServiceProvider ServiceProvider { get; private set; }
-
-        internal static ILogger Logger { get; private set; }
-
-        internal static InstanceConfig Instance { get; private set; }
-
-        /// <summary>
-        /// 设置日志
-        /// </summary>
-        /// <param name="logger"></param>
-        /// <returns></returns>
-        public static void SetLogger(ILogger logger)
-        {
-            Logger = logger;
-        }
-
-        /// <summary>
-        /// 切换为mysql
-        /// </summary>
-        /// <param name="logger"></param>
-        /// <returns></returns>
-        public void SwitchToMySql(Boolean cache = false)
-        {
-            SwitchTo(DatabaseType.MYSQL, cache);
-        }
-
-        /// <summary>
-        /// 切换为mssql
-        /// </summary>
-        /// <param name="logger"></param>
-        /// <returns></returns>
-        public void SwitchToMsSql(Boolean cache = false)
-        {
-            SwitchTo(DatabaseType.MSSQL, cache);
-        }
-
-        /// <summary>
-        /// 切换到指定数据库配置实例
-        /// </summary>
-        /// <param name="database"></param>
-        /// <param name="logger"></param>
-        private static void SwitchTo(DatabaseType database, Boolean cache)
-        {
-            switch (database)
-            {
-                case DatabaseType.MSSQL:
-                {
-                    Instance = new MsSqlInstanceConfig();
-                    break;
-                }
-                case DatabaseType.MYSQL:
-                {
-                    Instance = new MySqlInstanceConfig();
-                    break;
-                }
-                default:
-                {
-                    throw new ArgumentException($@"暂不支持的数据库类型:{database}");
-                }
-            }
-            if (cache)
-            {
-                Instance.UseCache();
-            }
-        }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using NewLibCore.Data.SQL.Mapper.Config;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
 using NewLibCore.Validate;
@@ -13,7 +12,7 @@ namespace NewLibCore.Data.SQL.Mapper
     /// <typeparam name="TModel"></typeparam>
     internal class UpdateHandler<TModel> : Handler<TModel> where TModel : PropertyMonitor, new()
     {
-        private readonly TModel _instance;
+        private readonly TModel _modelInstance;
 
         private readonly Boolean _isVerifyModel;
 
@@ -24,31 +23,31 @@ namespace NewLibCore.Data.SQL.Mapper
             Parameter.Validate(model);
             Parameter.Validate(segmentManager);
 
-            _instance = model;
+            _modelInstance = model;
             _isVerifyModel = isVerifyModel;
             _segmentManager = segmentManager;
         }
 
         protected override TranslationResult ExecuteTranslate()
         {
-            _instance.SetUpdateTime();
+            _modelInstance.SetUpdateTime();
 
             if (_isVerifyModel)
             {
-                _instance.Validate();
+                _modelInstance.Validate();
             }
 
             var (TableName, AliasName) = typeof(TModel).GetTableName();
 
-            var propertys = _instance.GetChangedProperty();
+            var propertys = _modelInstance.GetChangedProperty();
             var segment = TranslationSegment.CreateTranslation(_segmentManager);
-            segment.Result.Append(String.Format(MapperConfig.Instance.UpdateTemplate, TableName, AliasName, String.Join(",", propertys.Select(p => $@"{AliasName}.{p.Key}=@{p.Key}"))), propertys.Select(c => new EntityParameter(c.Key, c.Value)));
+            segment.Result.Append(String.Format(Instance.UpdateTemplate, TableName, AliasName, String.Join(",", propertys.Select(p => $@"{AliasName}.{p.Key}=@{p.Key}"))), propertys.Select(c => new EntityParameter(c.Key, c.Value)));
             if (_segmentManager.Where != null)
             {
                 segment.Translate();
             }
-            _instance.Reset();
-            return segment.Result.Append($@"{MapperConfig.Instance.Extension.RowCount}");
+            _modelInstance.Reset();
+            return segment.Result.Append($@"{Instance.Extension.RowCount}");
         }
     }
 }

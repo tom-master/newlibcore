@@ -1,4 +1,6 @@
 ﻿using System;
+using Microsoft.Extensions.DependencyInjection;
+using NewLibCore.Data.SQL.Mapper.Config;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
 
@@ -6,6 +8,13 @@ namespace NewLibCore.Data.SQL.Mapper
 {
     internal abstract class Handler<TModel> where TModel : PropertyMonitor, new()
     {
+        internal Handler()
+        {
+            Instance = MapperConfig.ServiceProvider.GetService<InstanceConfig>();
+        }
+
+        protected InstanceConfig Instance { get; private set; }
+
         /// <summary>
         /// 获取表达式段翻译后的结果
         /// </summary>

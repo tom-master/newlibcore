@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
 using NewLibCore.Data.SQL.Mapper.Config;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Validate;
@@ -24,8 +25,9 @@ namespace NewLibCore.Data.SQL.Mapper.Database
 
         public ExecutionCore()
         {
-            Parameter.Validate(MapperConfig.Instance);
-            _connection = MapperConfig.Instance.GetConnectionInstance();
+            var instanceConfig = MapperConfig.ServiceProvider.GetService<InstanceConfig>();
+            Parameter.Validate(instanceConfig);
+            _connection = instanceConfig.GetConnectionInstance();
         }
 
         /// <summary>
