@@ -8,6 +8,8 @@ namespace NewLibCore.Data.SQL.Mapper.Cache
     /// </summary>
     internal abstract class ResultCache
     {
+        public ResultCache() { }
+
         /// <summary>
         /// 添加一个执行结果缓存
         /// </summary>
@@ -36,7 +38,7 @@ namespace NewLibCore.Data.SQL.Mapper.Cache
     {
         protected internal ObjectCache _baseCache;
 
-        protected internal ExecutionResultCache()
+        public ExecutionResultCache()
         {
             _baseCache = MemoryCache.Default;
         }

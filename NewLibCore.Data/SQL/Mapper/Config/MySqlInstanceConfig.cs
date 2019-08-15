@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Data.Common;
 using MySql.Data.MySqlClient;
-using NewLibCore.Logger;
 
 namespace NewLibCore.Data.SQL.Mapper.Config
 {
@@ -10,7 +9,7 @@ namespace NewLibCore.Data.SQL.Mapper.Config
     /// </summary>
     internal class MySqlInstanceConfig : InstanceConfig
     {
-        protected internal MySqlInstanceConfig() 
+        public MySqlInstanceConfig()
         {
 
         }

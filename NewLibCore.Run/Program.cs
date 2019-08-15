@@ -19,9 +19,11 @@ namespace NewLibCore.Run
                 {
                     using (var mapper = EntityMapper.CreateMapper())
                     {
+                        mapper.OpenTransaction();
                         try
                         {
                             mapper.Select<User>().Where(w => w.Id == 4).FirstOrDefault();
+                            mapper.Commit();
                         }
                         catch (Exception)
                         {
