@@ -91,7 +91,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
             //翻译Where条件对象
             if (_segmentManager.Where != null)
-            {
+            { 
                 var lambdaExp = (LambdaExpression)_segmentManager.Where.Expression;
                 //当表达式主体为常量时则直接返回，不做解析
                 if (lambdaExp.Body.NodeType == ExpressionType.Constant)
