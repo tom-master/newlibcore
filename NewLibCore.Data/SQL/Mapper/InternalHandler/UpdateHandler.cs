@@ -30,7 +30,7 @@ namespace NewLibCore.Data.SQL.Mapper
             _segmentManager = segmentManager;
         }
 
-        protected override RawExecuteResult ExecuteTranslate(ExecutionCore executionCore)
+        protected override TranslationResult ExecuteTranslate()
         {
             _instance.SetUpdateTime();
 
@@ -43,15 +43,15 @@ namespace NewLibCore.Data.SQL.Mapper
 
             var propertys = _instance.GetChangedProperty();
             var translationSegment = TranslationSegment.CreateTranslation(_segmentManager);
-            translationSegment.SqlResult.Append(String.Format(MapperConfig.Instance.UpdateTemplate, TableName, AliasName, String.Join(",", propertys.Select(p => $@"{AliasName}.{p.Key}=@{p.Key}"))), propertys.Select(c => new EntityParameter(c.Key, c.Value)));
+            translationSegment.TranslationResult.Append(String.Format(MapperConfig.Instance.UpdateTemplate, TableName, AliasName, String.Join(",", propertys.Select(p => $@"{AliasName}.{p.Key}=@{p.Key}"))), propertys.Select(c => new EntityParameter(c.Key, c.Value)));
             if (_segmentManager.Where != null)
             {
                 translationSegment.Translate();
             }
             _instance.Reset();
 
-            translationSegment.SqlResult.Append($@"{MapperConfig.Instance.Extension.RowCount}");
-            return translationSegment.SqlResult.GetExecuteResult(executionCore);
+            translationSegment.TranslationResult.Append($@"{MapperConfig.Instance.Extension.RowCount}");
+            return translationSegment.TranslationResult;
         }
     }
 }

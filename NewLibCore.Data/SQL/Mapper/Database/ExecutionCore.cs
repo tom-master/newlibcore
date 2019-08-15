@@ -76,10 +76,10 @@ namespace NewLibCore.Data.SQL.Mapper.Database
         /// <param name="executeType"></param>
         /// <param name="translationCore"></param>
         /// <returns></returns>
-        internal RawExecuteResult Execute(SqlResult sqlResult)
+        internal RawExecuteResult Execute(TranslationResult tanslationResult)
         {
-            Parameter.Validate(sqlResult);
-            return RawExecute(sqlResult.ExecuteType, sqlResult.ToString(), sqlResult.GetParameters(), CommandType.Text);
+            Parameter.Validate(tanslationResult);
+            return RawExecute(tanslationResult.ExecuteType, tanslationResult.ToString(), tanslationResult.GetParameters(), CommandType.Text);
         }
 
         /// <summary>

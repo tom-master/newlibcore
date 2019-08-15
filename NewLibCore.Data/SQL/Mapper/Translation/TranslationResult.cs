@@ -12,20 +12,20 @@ namespace NewLibCore.Data.SQL.Mapper
     /// <summary>
     /// 存储表达式的翻译后的sql语句
     /// </summary>
-    internal sealed class SqlResult
+    internal sealed class TranslationResult
     {
         private readonly StringBuilder _originSql;
         private readonly IList<EntityParameter> _parameters;
 
-        private SqlResult()
+        private TranslationResult()
         {
             _originSql = new StringBuilder();
             _parameters = new List<EntityParameter>();
         }
 
-        internal static SqlResult CreateSqlResult()
+        internal static TranslationResult CreateTranslationResult()
         {
-            return new SqlResult();
+            return new TranslationResult();
         }
 
         internal ExecuteType ExecuteType { get; set; }
@@ -43,7 +43,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// 追加一个sql语句和一组EntityParameter对象
         /// </summary>
         /// <param name="entityParameters"></param>
-        internal SqlResult Append(String sql, IEnumerable<EntityParameter> entityParameters = null)
+        internal TranslationResult Append(String sql, IEnumerable<EntityParameter> entityParameters = null)
         {
             Parameter.Validate(sql);
 

@@ -25,35 +25,35 @@ namespace NewLibCore.Data.SQL.Mapper
             _segmentManager = segmentManager;
         }
 
-        protected override RawExecuteResult ExecuteTranslate(ExecutionCore executionCore)
+        protected override TranslationResult ExecuteTranslate()
         {
             var (Fields, AliasName) = StatementParse(_segmentManager.Field);
 
             var translationSegment = TranslationSegment.CreateTranslation(_segmentManager);
-            translationSegment.SqlResult.Append(String.Format(MapperConfig.Instance.SelectTemplate, Fields, typeof(TModel).GetTableName().TableName, AliasName));
+            translationSegment.TranslationResult.Append(String.Format(MapperConfig.Instance.SelectTemplate, Fields, typeof(TModel).GetTableName().TableName, AliasName));
             translationSegment.Translate();
 
             var aliasMapper = _segmentManager.MergeAliasMapper();
             foreach (var aliasItem in aliasMapper)
             {
-                translationSegment.SqlResult.Append($@"AND {aliasItem.Value.ToLower()}.IsDeleted = 0");
+                translationSegment.TranslationResult.Append($@"AND {aliasItem.Value.ToLower()}.IsDeleted = 0");
             }
 
             if (_segmentManager.Order != null)
             {
                 var (fields, tableName) = StatementParse(_segmentManager.Order);
                 var orderTemplate = MapperConfig.Instance.OrderByBuilder(_segmentManager.Order.OrderBy, $@"{tableName}.{fields}");
-                translationSegment.SqlResult.Append(orderTemplate);
+                translationSegment.TranslationResult.Append(orderTemplate);
             }
 
             if (_segmentManager.Page != null)
             {
                 var pageIndex = (_segmentManager.Page.Size * (_segmentManager.Page.Index - 1)).ToString();
                 var pageSize = _segmentManager.Page.Size.ToString();
-                translationSegment.SqlResult.Append(MapperConfig.Instance.Extension.Page.Replace("{value}", pageIndex).Replace("{pageSize}", pageSize));
+                translationSegment.TranslationResult.Append(MapperConfig.Instance.Extension.Page.Replace("{value}", pageIndex).Replace("{pageSize}", pageSize));
             }
 
-            return translationSegment.SqlResult.GetExecuteResult(executionCore);
+            return translationSegment.TranslationResult;
         }
 
         /// <summary>

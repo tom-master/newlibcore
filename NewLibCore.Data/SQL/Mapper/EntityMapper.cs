@@ -42,8 +42,8 @@ namespace NewLibCore.Data.SQL.Mapper
             return RunDiagnosis.Watch(() =>
              {
                  Handler<TModel> builder = new InsertHandler<TModel>(model, true);
-                 var executeResult = builder.GetExecuteResult(_executionCore);
-                 model.Id = executeResult.ToPrimitive<Int32>();
+                 var translationResult = builder.GetTranslationResult();
+                 model.Id = translationResult.GetExecuteResult(_executionCore).ToPrimitive<Int32>();
                  return model;
              });
         }
@@ -65,7 +65,7 @@ namespace NewLibCore.Data.SQL.Mapper
                  var segmentManager = new SegmentManager();
                  segmentManager.Add(expression);
                  Handler<TModel> builder = new UpdateHandler<TModel>(model, segmentManager, true);
-                 return builder.GetExecuteResult(_executionCore).ToPrimitive<Int32>() > 0;
+                 return builder.GetTranslationResult().GetExecuteResult(_executionCore).ToPrimitive<Int32>() > 0;
              });
         }
 
@@ -136,7 +136,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <returns></returns>
         private RawExecuteResult RawExecute(ExecuteType executeType, String sql, IEnumerable<EntityParameter> parameters = null)
         {
-            var sqlResult = SqlResult.CreateSqlResult();
+            var sqlResult = TranslationResult.CreateTranslationResult();
             sqlResult.ExecuteType = executeType;
             sqlResult.Append(sql, parameters);
             return sqlResult.GetExecuteResult(_executionCore);
@@ -168,10 +168,10 @@ namespace NewLibCore.Data.SQL.Mapper
     {
         private readonly SegmentManager _segmentManager = new SegmentManager();
 
-        private readonly ExecutionCore _execution;
-        internal SelectMapper(ExecutionCore execution)
+        private readonly ExecutionCore _executionCore;
+        internal SelectMapper(ExecutionCore executionCore)
         {
-            _execution = execution;
+            _executionCore = executionCore;
         }
 
         public Boolean Exist()
@@ -332,9 +332,8 @@ namespace NewLibCore.Data.SQL.Mapper
         private RawExecuteResult InternalExecuteSql()
         {
             Handler<TModel> builder = new SelectHandler<TModel>(_segmentManager);
-            var executeResult = builder.GetExecuteResult(_execution);
-            RunDiagnosis.Info($@"查询后的结果:{executeResult}");
-            return executeResult;
+            var translationResult = builder.GetTranslationResult();
+            return translationResult.GetExecuteResult(_executionCore);
         }
     }
 }

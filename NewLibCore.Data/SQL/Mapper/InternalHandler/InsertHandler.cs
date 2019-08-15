@@ -24,7 +24,7 @@ namespace NewLibCore.Data.SQL.Mapper
             _instance = model;
         }
 
-        protected override RawExecuteResult ExecuteTranslate(ExecutionCore executionCore)
+        protected override TranslationResult ExecuteTranslate()
         {
             _instance.OnChanged();
             if (_isVerifyModel)
@@ -34,7 +34,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
             var propertyInfos = _instance.GetChangedProperty();
             var template = BuildTemplate();
-            return SqlResult.CreateSqlResult().Append(template, propertyInfos.Select(c => new EntityParameter(c.Key, c.Value))).GetExecuteResult(executionCore);
+            return TranslationResult.CreateTranslationResult().Append(template, propertyInfos.Select(c => new EntityParameter(c.Key, c.Value)));
         }
 
         private String BuildTemplate()
