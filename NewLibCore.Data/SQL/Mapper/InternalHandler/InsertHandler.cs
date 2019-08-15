@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using NewLibCore.Data.SQL.Mapper.Config;
-using NewLibCore.Data.SQL.Mapper.Database;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Validate;
 

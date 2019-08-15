@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using NewLibCore.Data.SQL.Mapper.Config;
-using NewLibCore.Data.SQL.Mapper.Database;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
 using NewLibCore.Validate;
@@ -42,16 +41,14 @@ namespace NewLibCore.Data.SQL.Mapper
             var (TableName, AliasName) = typeof(TModel).GetTableName();
 
             var propertys = _instance.GetChangedProperty();
-            var translationSegment = TranslationSegment.CreateTranslation(_segmentManager);
-            translationSegment.TranslationResult.Append(String.Format(MapperConfig.Instance.UpdateTemplate, TableName, AliasName, String.Join(",", propertys.Select(p => $@"{AliasName}.{p.Key}=@{p.Key}"))), propertys.Select(c => new EntityParameter(c.Key, c.Value)));
+            var segment = TranslationSegment.CreateTranslation(_segmentManager);
+            segment.Result.Append(String.Format(MapperConfig.Instance.UpdateTemplate, TableName, AliasName, String.Join(",", propertys.Select(p => $@"{AliasName}.{p.Key}=@{p.Key}"))), propertys.Select(c => new EntityParameter(c.Key, c.Value)));
             if (_segmentManager.Where != null)
             {
-                translationSegment.Translate();
+                segment.Translate();
             }
             _instance.Reset();
-
-            translationSegment.TranslationResult.Append($@"{MapperConfig.Instance.Extension.RowCount}");
-            return translationSegment.TranslationResult;
+            return segment.Result.Append($@"{MapperConfig.Instance.Extension.RowCount}");
         }
     }
 }

@@ -31,13 +31,13 @@ namespace NewLibCore.Data.SQL.Mapper
 
             _segmentManager = segmentManager;
 
-            TranslationResult = TranslationResult.CreateTranslationResult();
+            Result = TranslationResult.CreateTranslationResult();
             _relationTypesStack = new Stack<RelationType>();
             _parameterNameStack = new Stack<String>();
             _tableAliasMapper = new List<KeyValuePair<String, String>>();
         }
 
-        internal TranslationResult TranslationResult { get; private set; }
+        internal TranslationResult Result { get; private set; }
 
         /// <summary>
         /// 创建一个翻译表达式的对象
@@ -77,7 +77,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
                     //获取连接语句的模板
                     var joinTemplate = MapperConfig.Instance.JoinBuilder(item.JoinType, aliasItem.Value, aliasItem.Value.ToLower());
-                    TranslationResult.Append(joinTemplate);
+                    Result.Append(joinTemplate);
 
                     //设置相应的连接类型
                     _joinType = item.JoinType;
@@ -86,7 +86,7 @@ namespace NewLibCore.Data.SQL.Mapper
                     InternalBuildWhere(item.Expression);
                 }
             }
-            TranslationResult.Append("WHERE 1=1");
+            Result.Append("WHERE 1=1");
 
             //翻译Where条件对象
             if (_segmentManager.Where != null)
@@ -99,7 +99,7 @@ namespace NewLibCore.Data.SQL.Mapper
                 }
 
                 _joinType = JoinType.NONE;
-                TranslationResult.Append(RelationType.AND.ToString());
+                Result.Append(RelationType.AND.ToString());
 
                 //获取Where类型中的存储的表达式对象进行翻译
                 InternalBuildWhere(lambdaExp);
@@ -122,7 +122,7 @@ namespace NewLibCore.Data.SQL.Mapper
                     if (binaryExp.Left.NodeType != ExpressionType.Constant && binaryExp.Right.NodeType != ExpressionType.Constant)
                     {
                         InternalBuildWhere(binaryExp.Left);
-                        TranslationResult.Append(RelationType.AND.ToString());
+                        Result.Append(RelationType.AND.ToString());
                         InternalBuildWhere(binaryExp.Right);
                     }
                     else
@@ -143,7 +143,7 @@ namespace NewLibCore.Data.SQL.Mapper
                 {
                     var binaryExp = (BinaryExpression)expression;
                     InternalBuildWhere(binaryExp.Left);
-                    TranslationResult.Append(RelationType.OR.ToString());
+                    Result.Append(RelationType.OR.ToString());
                     InternalBuildWhere(binaryExp.Right);
                     break;
                 }
@@ -155,7 +155,7 @@ namespace NewLibCore.Data.SQL.Mapper
                 case ExpressionType.Constant:
                 {
                     var binaryExp = (ConstantExpression)expression;
-                    TranslationResult.Append(new EntityParameter(_parameterNameStack.Pop(), binaryExp.Value));
+                    Result.Append(new EntityParameter(_parameterNameStack.Pop(), binaryExp.Value));
                     break;
                 }
                 case ExpressionType.Equal:
@@ -247,14 +247,14 @@ namespace NewLibCore.Data.SQL.Mapper
                             internalAliasName = $@"{ _tableAliasMapper.Where(w => w.Key == parameterExp.Type.GetTableName().TableName && w.Value == parameterExp.Type.GetTableName().AliasName).FirstOrDefault().Value.ToLower()}.";
 
                             var newParameterName = Guid.NewGuid().ToString().Replace("-", "");
-                            TranslationResult.Append(MapperConfig.Instance.RelationBuilder(_relationTypesStack.Pop(), $@"{internalAliasName}{memberExp.Member.Name}", $"@{newParameterName}"));
+                            Result.Append(MapperConfig.Instance.RelationBuilder(_relationTypesStack.Pop(), $@"{internalAliasName}{memberExp.Member.Name}", $"@{newParameterName}"));
                             _parameterNameStack.Push(newParameterName);
                         }
                     }
                     else
                     {
                         var getter = Expression.Lambda(memberExp).Compile();
-                        TranslationResult.Append(new EntityParameter(_parameterNameStack.Pop(), getter.DynamicInvoke()));
+                        Result.Append(new EntityParameter(_parameterNameStack.Pop(), getter.DynamicInvoke()));
                         break;
                     }
                     break;
@@ -390,21 +390,21 @@ namespace NewLibCore.Data.SQL.Mapper
                 var (RightMember, RightAliasName) = GetRightMemberAndAliasName(binaryExp);
 
                 var relationTemplate = MapperConfig.Instance.RelationBuilder(relationType, $"{RightAliasName}.{RightMember.Member.Name}", $"{LeftAliasName}.{LeftMember.Member.Name}");
-                TranslationResult.Append(relationTemplate);
+                Result.Append(relationTemplate);
             }
             else if (binaryExp.Left.NodeType == ExpressionType.Constant) //表达式左边为常量
             {
                 var (RightMember, RightAliasName) = GetRightMemberAndAliasName(binaryExp);
                 var constant = (ConstantExpression)binaryExp.Left;
                 var value = Boolean.TryParse(constant.Value.ToString(), out var result) ? (result ? 1 : 0).ToString() : constant.Value;
-                TranslationResult.Append(MapperConfig.Instance.RelationBuilder(relationType, value + "", $"{RightAliasName}.{RightMember.Member.Name}"));
+                Result.Append(MapperConfig.Instance.RelationBuilder(relationType, value + "", $"{RightAliasName}.{RightMember.Member.Name}"));
             }
             else if (binaryExp.Right.NodeType == ExpressionType.Constant) //表达式的右边为常量
             {
                 var (LeftMember, LeftAliasName) = GetLeftMemberAndAliasName(binaryExp);
                 var constant = (ConstantExpression)binaryExp.Right;
                 var value = Boolean.TryParse(constant.Value.ToString(), out var result) ? (result ? 1 : 0).ToString() : constant.Value;
-                TranslationResult.Append(MapperConfig.Instance.RelationBuilder(relationType, $"{LeftAliasName}.{LeftMember.Member.Name}", value + ""));
+                Result.Append(MapperConfig.Instance.RelationBuilder(relationType, $"{LeftAliasName}.{LeftMember.Member.Name}", value + ""));
             }
         }
 

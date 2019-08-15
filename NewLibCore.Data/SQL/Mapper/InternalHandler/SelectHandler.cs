@@ -4,7 +4,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using NewLibCore.Data.SQL.Mapper.Config;
-using NewLibCore.Data.SQL.Mapper.Database;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
 using NewLibCore.Validate;
@@ -29,31 +28,31 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             var (Fields, AliasName) = StatementParse(_segmentManager.Field);
 
-            var translationSegment = TranslationSegment.CreateTranslation(_segmentManager);
-            translationSegment.TranslationResult.Append(String.Format(MapperConfig.Instance.SelectTemplate, Fields, typeof(TModel).GetTableName().TableName, AliasName));
-            translationSegment.Translate();
+            var segment = TranslationSegment.CreateTranslation(_segmentManager);
+            segment.Result.Append(String.Format(MapperConfig.Instance.SelectTemplate, Fields, typeof(TModel).GetTableName().TableName, AliasName));
+            segment.Translate();
 
             var aliasMapper = _segmentManager.MergeAliasMapper();
             foreach (var aliasItem in aliasMapper)
             {
-                translationSegment.TranslationResult.Append($@"AND {aliasItem.Value.ToLower()}.IsDeleted = 0");
+                segment.Result.Append($@"AND {aliasItem.Value.ToLower()}.IsDeleted = 0");
             }
 
             if (_segmentManager.Order != null)
             {
                 var (fields, tableName) = StatementParse(_segmentManager.Order);
                 var orderTemplate = MapperConfig.Instance.OrderByBuilder(_segmentManager.Order.OrderBy, $@"{tableName}.{fields}");
-                translationSegment.TranslationResult.Append(orderTemplate);
+                segment.Result.Append(orderTemplate);
             }
 
             if (_segmentManager.Page != null)
             {
                 var pageIndex = (_segmentManager.Page.Size * (_segmentManager.Page.Index - 1)).ToString();
                 var pageSize = _segmentManager.Page.Size.ToString();
-                translationSegment.TranslationResult.Append(MapperConfig.Instance.Extension.Page.Replace("{value}", pageIndex).Replace("{pageSize}", pageSize));
+                segment.Result.Append(MapperConfig.Instance.Extension.Page.Replace("{value}", pageIndex).Replace("{pageSize}", pageSize));
             }
 
-            return translationSegment.TranslationResult;
+            return segment.Result;
         }
 
         /// <summary>
