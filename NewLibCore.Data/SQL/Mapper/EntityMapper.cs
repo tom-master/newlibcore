@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using Microsoft.Extensions.DependencyInjection;
+using NewLibCore.Data.SQL.Mapper.Config;
 using NewLibCore.Data.SQL.Mapper.Database;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
@@ -14,10 +16,9 @@ namespace NewLibCore.Data.SQL.Mapper
     public sealed class EntityMapper : IDisposable
     {
         private readonly ExecutionCore _executionCore;
-
         private EntityMapper()
         {
-            _executionCore = new ExecutionCore();
+            _executionCore = MapperConfig.ServiceProvider.GetService<ExecutionCore>();
         }
 
         /// <summary>
@@ -103,7 +104,11 @@ namespace NewLibCore.Data.SQL.Mapper
         public List<TModel> ExecuteToList<TModel>(String sql, IEnumerable<EntityParameter> parameters = null) where TModel : new()
         {
             Parameter.Validate(sql);
-            return RawExecute(ExecuteType.SELECT, sql, parameters).ToList<TModel>();
+
+            return RunDiagnosis.Watch(() =>
+            {
+                return RawExecute(ExecuteType.SELECT, sql, parameters).ToList<TModel>();
+            });
         }
 
         /// <summary>
@@ -117,14 +122,16 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             Parameter.Validate(sql);
 
-            var modelType = typeof(TModel);
-            if (modelType.IsNumeric())
+            return RunDiagnosis.Watch(() =>
             {
-                return RawExecute(ExecuteType.SELECT_SINGLE, sql, parameters).ToPrimitive<TModel>();
-            }
+                var modelType = typeof(TModel);
+                if (modelType.IsNumeric())
+                {
+                    return RawExecute(ExecuteType.SELECT_SINGLE, sql, parameters).ToPrimitive<TModel>();
+                }
 
-            return RawExecute(ExecuteType.SELECT, sql, parameters).ToSingle<TModel>();
-
+                return RawExecute(ExecuteType.SELECT, sql, parameters).ToSingle<TModel>();
+            });
         }
 
         /// <summary>

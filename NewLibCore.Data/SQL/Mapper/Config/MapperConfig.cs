@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
+using NewLibCore.Data.SQL.Mapper.Database;
 using NewLibCore.Logger;
 
 namespace NewLibCore.Data.SQL.Mapper.Config
@@ -13,13 +14,19 @@ namespace NewLibCore.Data.SQL.Mapper.Config
 
         private MapperConfig()
         {
-
+            ServiceProvider = new ServiceCollection()
+                .AddTransient<ExecutionCore>()
+                .AddSingleton<InstanceConfig, MsSqlInstanceConfig>()
+                .AddSingleton<InstanceConfig, MySqlInstanceConfig>()
+                .BuildServiceProvider();
         }
 
         public static MapperConfig CreateMapperConfig()
         {
             return new MapperConfig();
         }
+
+        internal static IServiceProvider ServiceProvider { get; private set; }
 
         internal static ILogger Logger { get; private set; }
 

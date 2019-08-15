@@ -9,6 +9,16 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
     {
         private static ILogger _logger = MapperConfig.Logger ?? new ConsoleLogger();
 
+        static RunDiagnosis()
+        {
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+        }
+
+        private static void CurrentDomain_UnhandledException(Object sender, UnhandledExceptionEventArgs e)
+        {
+            _logger.Error(((Exception)e.ExceptionObject).Message);
+        }
+
         /// <summary>
         /// 输出从表达式解析到sql语句执行完成的时间
         /// </summary>
