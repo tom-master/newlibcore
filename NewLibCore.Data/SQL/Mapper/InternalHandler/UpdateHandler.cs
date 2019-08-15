@@ -14,17 +14,17 @@ namespace NewLibCore.Data.SQL.Mapper
     {
         private readonly TModel _modelInstance;
 
-        private readonly Boolean _isVerifyModel;
+        private readonly Boolean _verifyModel;
 
         private readonly SegmentManager _segmentManager;
 
-        public UpdateHandler(TModel model, SegmentManager segmentManager, Boolean isVerifyModel = false)
+        public UpdateHandler(TModel model, SegmentManager segmentManager, Boolean verifyModel = false)
         {
             Parameter.Validate(model);
             Parameter.Validate(segmentManager);
 
             _modelInstance = model;
-            _isVerifyModel = isVerifyModel;
+            _verifyModel = verifyModel;
             _segmentManager = segmentManager;
         }
 
@@ -32,7 +32,7 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             _modelInstance.SetUpdateTime();
 
-            if (_isVerifyModel)
+            if (_verifyModel)
             {
                 _modelInstance.Validate();
             }
