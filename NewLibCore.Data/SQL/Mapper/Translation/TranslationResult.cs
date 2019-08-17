@@ -24,7 +24,7 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             _originSql = new StringBuilder();
             _parameters = new List<EntityParameter>();
-            _cache = MapperConfig.ServiceProvider.GetService<ResultCache>();
+            //_cache = MapperConfig.ServiceProvider.GetService<ResultCache>();
         }
 
         internal static TranslationResult CreateTranslationResult()
