@@ -18,7 +18,7 @@ namespace NewLibCore.Data.SQL.Mapper
     {
         private readonly StringBuilder _originSql;
         private readonly IList<EntityParameter> _parameters;
-        private readonly ResultCache _cache;
+        private readonly ResultCache _cache = null;
 
         private TranslationResult()
         {
