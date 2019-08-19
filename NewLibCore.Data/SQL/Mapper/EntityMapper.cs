@@ -44,7 +44,7 @@ namespace NewLibCore.Data.SQL.Mapper
              {
                  Handler<TModel> builder = new InsertHandler<TModel>(model, true);
                  var translationResult = builder.GetTranslationResult();
-                 model.Id = translationResult.GetExecuteResult(_executionCore).ToPrimitive<Int32>();
+                 model.Id = translationResult.ExecuteTranslateResult(_executionCore).ToPrimitive<Int32>();
                  return model;
              });
         }
@@ -66,7 +66,7 @@ namespace NewLibCore.Data.SQL.Mapper
                  var segmentManager = new SegmentManager();
                  segmentManager.Add(expression);
                  Handler<TModel> builder = new UpdateHandler<TModel>(model, segmentManager, true);
-                 return builder.GetTranslationResult().GetExecuteResult(_executionCore).ToPrimitive<Int32>() > 0;
+                 return builder.GetTranslationResult().ExecuteTranslateResult(_executionCore).ToPrimitive<Int32>() > 0;
              });
         }
 
@@ -144,9 +144,8 @@ namespace NewLibCore.Data.SQL.Mapper
         private RawExecuteResult RawExecute(ExecuteType executeType, String sql, IEnumerable<EntityParameter> parameters = null)
         {
             var sqlResult = TranslationResult.CreateTranslationResult();
-            sqlResult.ExecuteType = executeType;
             sqlResult.Append(sql, parameters);
-            return sqlResult.GetExecuteResult(_executionCore);
+            return sqlResult.ExecuteTranslateResult(_executionCore);
         }
 
         public void OpenTransaction()
@@ -340,7 +339,7 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             Handler<TModel> builder = new SelectHandler<TModel>(_segmentManager);
             var translationResult = builder.GetTranslationResult();
-            return translationResult.GetExecuteResult(_executionCore);
+            return translationResult.ExecuteTranslateResult(_executionCore);
         }
     }
 }

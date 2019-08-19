@@ -81,7 +81,7 @@ namespace NewLibCore.Data.SQL.Mapper.Database
         internal RawExecuteResult Execute(TranslationResult tanslationResult)
         {
             Parameter.Validate(tanslationResult);
-            return RawExecute(tanslationResult.ExecuteType, tanslationResult.ToString(), tanslationResult.GetParameters(), CommandType.Text);
+            return RawExecute(0, tanslationResult.ToString(), tanslationResult.GetParameters(), CommandType.Text);
         }
 
         /// <summary>

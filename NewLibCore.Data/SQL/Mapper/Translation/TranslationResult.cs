@@ -32,8 +32,6 @@ namespace NewLibCore.Data.SQL.Mapper
             return new TranslationResult();
         }
 
-        internal ExecuteType ExecuteType { get; set; }
-
         /// <summary>
         /// 获取EntityParameter列表
         /// </summary>
@@ -88,10 +86,10 @@ namespace NewLibCore.Data.SQL.Mapper
         }
 
         /// <summary>
-        /// 获取表达式段执行之后的结果
+        /// 执行表达式翻译出的sql语句
         /// </summary>
         /// <returns></returns>
-        internal RawExecuteResult GetExecuteResult(ExecutionCore executionCore)
+        internal RawExecuteResult ExecuteTranslateResult(ExecutionCore executionCore)
         {
             return Execute(executionCore);
         }
@@ -104,22 +102,9 @@ namespace NewLibCore.Data.SQL.Mapper
 
         private RawExecuteResult Execute(ExecutionCore executionCore)
         {
-            if (ExecuteType == default)
-            {
-                var rawSql = ToString();
-                Enum.TryParse<ExecuteType>(rawSql.Substring(0, rawSql.IndexOf(" ")).ToUpper(), out var executeType);
-                ExecuteType = executeType;
-
-                if (rawSql.Contains("COUNT(*)"))
-                {
-                    ExecuteType = ExecuteType.SELECT_SINGLE;
-                }
-            }
-
             var executeResult = GetCache();
             if (executeResult == null)
             {
-
                 executeResult = executionCore.Execute(this);
                 SetCache(executeResult);
             }
@@ -148,10 +133,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <param name="executeResult"></param>
         private void SetCache(RawExecuteResult executeResult)
         {
-            if (_cache != null)
-            {
-                _cache.Add(PrepareCacheKey(), executeResult);
-            }
+            _cache.Add(PrepareCacheKey(), executeResult);
         }
 
         /// <summary>
@@ -160,14 +142,12 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <returns></returns>
         private RawExecuteResult GetCache()
         {
-            if (_cache != null)
+            var cacheResult = _cache.Get(PrepareCacheKey());
+            if (cacheResult != null)
             {
-                var cacheResult = _cache.Get(PrepareCacheKey());
-                if (cacheResult != null)
-                {
-                    return (RawExecuteResult)cacheResult;
-                }
+                return (RawExecuteResult)cacheResult;
             }
+
             return default;
         }
 
