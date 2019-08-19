@@ -4,6 +4,7 @@ using System.Data.Common;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using NewLibCore.Data.SQL.Mapper.Config;
+using NewLibCore.Logger;
 using NewLibCore.Security;
 using NewLibCore.Validate;
 
@@ -12,7 +13,7 @@ namespace NewLibCore.Data.SQL.Mapper
     /// <summary>
     /// 实体参数
     /// </summary>
-    public class EntityParameter
+    public sealed class EntityParameter
     {
         public EntityParameter(String key, Object value)
         {
@@ -46,32 +47,42 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <returns></returns>
         private Object ParseValueType(Object obj)
         {
-            Parameter.Validate(obj);
-            var objType = obj.GetType();
-            if (objType == typeof(String))
+            try
             {
-                return UnlegalChatDetection.FilterBadChat(obj.ToString());
-            }
-
-            if (objType == typeof(Boolean))
-            {
-                return (Boolean)obj ? 1 : 0;
-            }
-
-            if (objType.IsComplexType())
-            {
-                if (objType.IsArray || objType.IsCollections())
+                Parameter.Validate(obj);
+                var objType = obj.GetType();
+                if (objType == typeof(String))
                 {
-                    var argument = objType.GetGenericArguments();
-                    if (argument.Any() && argument[0] == typeof(String))
-                    {
-                        return String.Join(",", ((IList<String>)obj).Select(s => $@"'{s}'"));
-                    }
-                    return String.Join(",", (IList<Int32>)obj);
+                    return UnlegalChatDetection.FilterBadChat(obj.ToString());
                 }
-            }
 
-            return obj;
+                if (objType == typeof(Boolean))
+                {
+                    return (Boolean)obj ? 1 : 0;
+                }
+
+                if (objType.IsComplexType())
+                {
+                    if (objType.IsArray || objType.IsCollections())
+                    {
+                        var argument = objType.GetGenericArguments();
+                        if (argument.Any() && argument[0] == typeof(String))
+                        {
+                            return String.Join(",", ((IList<String>)obj).Select(s => $@"'{s}'"));
+                        }
+                        return String.Join(",", (IList<Int32>)obj);
+                    }
+                    var ex = $@"无法转换的类型{objType.Name}";
+                    MapperConfig.ServiceProvider.GetService<ILogger>().Error(ex);
+                    throw new Exception(ex);
+                }
+                return obj;
+            }
+            catch (Exception ex)
+            {
+                MapperConfig.ServiceProvider.GetService<ILogger>().Error(ex.ToString());
+                throw;
+            }
         }
     }
 }

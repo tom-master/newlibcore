@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
@@ -86,8 +86,9 @@ namespace NewLibCore
         }
 
         public static Boolean IsCollections(this Type type)
-        { 
-            return type.GetInterfaces().FirstOrDefault(w => w == typeof(IEnumerable<>)) != null;
+        {
+            var interfaces = type.GetInterfaces(); 
+            return interfaces.Any(w => w == typeof(IEnumerable)) || interfaces.Any(w => w == typeof(ICollection)) || interfaces.Any(w => w == typeof(IList));
         }
     }
 
