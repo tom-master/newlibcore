@@ -18,13 +18,13 @@ namespace NewLibCore.Data.SQL.Mapper
     {
         private readonly StringBuilder _originSql;
         private readonly IList<EntityParameter> _parameters;
-        private readonly ResultCache _cache;
+        private readonly ResultCache _cache = null;
 
         private TranslationResult()
         {
             _originSql = new StringBuilder();
             _parameters = new List<EntityParameter>();
-            _cache = MapperConfig.ServiceProvider.GetService<ResultCache>();
+            //_cache = MapperConfig.ServiceProvider.GetService<ResultCache>();
         }
 
         internal static TranslationResult CreateTranslationResult()
