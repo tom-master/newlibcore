@@ -47,23 +47,23 @@ namespace NewLibCore.Data.SQL.Mapper
         private Object ParseValueType(Object obj)
         {
             Parameter.Validate(obj);
-
-            if (obj.GetType() == typeof(String))
+            var objType = obj.GetType();
+            if (objType == typeof(String))
             {
                 return UnlegalChatDetection.FilterBadChat(obj.ToString());
             }
 
-            if (obj.GetType() == typeof(Boolean))
+            if (objType == typeof(Boolean))
             {
                 return (Boolean)obj ? 1 : 0;
             }
 
-            if (obj.GetType().IsComplexType())
+            if (objType.IsComplexType())
             {
-                var objType = obj.GetType();
-                if (objType.IsArray || objType.GetGenericTypeDefinition() == typeof(List<>))
+                if (objType.IsArray || objType.IsCollections())
                 {
-                    if (objType.GetGenericArguments().Any() && objType.GetGenericArguments()[0] == typeof(String))
+                    var argument = objType.GetGenericArguments();
+                    if (argument.Any() && argument[0] == typeof(String))
                     {
                         return String.Join(",", ((IList<String>)obj).Select(s => $@"'{s}'"));
                     }

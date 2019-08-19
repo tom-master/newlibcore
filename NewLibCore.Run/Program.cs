@@ -13,6 +13,8 @@ namespace NewLibCore.Run
         {
             MapperConfig.InitMapper();
 
+            var parameters = new EntityParameter("@id", new List<Int32> { 1, 2, 3, 4, 5 });
+
             for (var i = 0; i < Environment.ProcessorCount; i++)
             {
                 ThreadPool.QueueUserWorkItem((a1) =>

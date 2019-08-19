@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -50,7 +49,6 @@ namespace NewLibCore.Data.SQL.Mapper
             return new TranslationSegment(segmentManager);
         }
 
-
         /// <summary>
         /// 翻译
         /// </summary>
@@ -91,7 +89,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
             //翻译Where条件对象
             if (_segmentManager.Where != null)
-            { 
+            {
                 var lambdaExp = (LambdaExpression)_segmentManager.Where.Expression;
                 //当表达式主体为常量时则直接返回，不做解析
                 if (lambdaExp.Body.NodeType == ExpressionType.Constant)
@@ -321,7 +319,7 @@ namespace NewLibCore.Data.SQL.Mapper
                 {
                     relationType = RelationType.FULL_LIKE;
                 }
-                else if (argumentType.GetInterfaces().Any(a => a == typeof(IEnumerable)))
+                else if (argumentType.IsCollections())
                 {
                     relationType = RelationType.IN;
                 }
@@ -338,7 +336,7 @@ namespace NewLibCore.Data.SQL.Mapper
                 InternalBuildWhere(obj);
                 InternalBuildWhere(argument);
             }
-            else if (argumentType.GetInterfaces().Any(a => a == typeof(IEnumerable)))
+            else if (argumentType.IsCollections())
             {
                 InternalBuildWhere(argument);
                 InternalBuildWhere(obj);

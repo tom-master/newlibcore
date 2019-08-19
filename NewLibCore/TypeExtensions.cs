@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
@@ -82,6 +83,11 @@ namespace NewLibCore
         public static Boolean IsComplexType(this Type type)
         {
             return !TypeDescriptor.GetConverter(type).CanConvertFrom(typeof(String));
+        }
+
+        public static Boolean IsCollections(this Type type)
+        { 
+            return type.GetInterfaces().FirstOrDefault(w => w == typeof(IEnumerable<>)) != null;
         }
     }
 

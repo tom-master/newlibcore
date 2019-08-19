@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.Extensions.DependencyInjection;
 using NewLibCore.Data.SQL.Mapper.Cache;
-using NewLibCore.Data.SQL.Mapper.Config;
 using NewLibCore.Data.SQL.Mapper.Database;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Validate;
@@ -133,7 +131,10 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <param name="executeResult"></param>
         private void SetCache(RawExecuteResult executeResult)
         {
-            _cache.Add(PrepareCacheKey(), executeResult);
+            if (_cache != null)
+            {
+                _cache.Add(PrepareCacheKey(), executeResult);
+            }
         }
 
         /// <summary>
@@ -142,10 +143,13 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <returns></returns>
         private RawExecuteResult GetCache()
         {
-            var cacheResult = _cache.Get(PrepareCacheKey());
-            if (cacheResult != null)
+            if (_cache != null)
             {
-                return (RawExecuteResult)cacheResult;
+                var cacheResult = _cache.Get(PrepareCacheKey());
+                if (cacheResult != null)
+                {
+                    return (RawExecuteResult)cacheResult;
+                }
             }
 
             return default;
