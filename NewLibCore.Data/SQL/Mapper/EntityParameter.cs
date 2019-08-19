@@ -70,7 +70,14 @@ namespace NewLibCore.Data.SQL.Mapper
                         {
                             return String.Join(",", ((IList<String>)obj).Select(s => $@"'{s}'"));
                         }
-                        return String.Join(",", (IList<Int32>)obj);
+                        if (argument.Any() && argument[0].IsNumeric())
+                        {
+                            return String.Join(",", (IList<Int32>)obj);
+                        }
+                        if (argument.Any() && argument[0] == typeof(DateTime))
+                        {
+                            return String.Join(",", (IList<DateTime>)obj);
+                        }
                     }
                     var ex = $@"无法转换的类型{objType.Name}";
                     MapperConfig.ServiceProvider.GetService<ILogger>().Error(ex);
