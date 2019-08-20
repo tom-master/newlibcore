@@ -40,7 +40,6 @@ namespace NewLibCore.Data.SQL.Mapper
             return TranslateResult.CreateResult(null).Append(template, propertyInfos.Select(c => new EntityParameter(c.Key, c.Value))).Execute();
         }
 
-
         private String ReplacePlaceholder(IReadOnlyList<KeyValuePair<String, Object>> propertyInfos, String tableName)
         {
             return String.Format(MapperConfig.Instance.AddTemplate, tableName, String.Join(",", propertyInfos.Select(c => c.Key)), String.Join(",", propertyInfos.Select(key => $@"@{key.Key}")), MapperConfig.Instance.Extension.Identity);
