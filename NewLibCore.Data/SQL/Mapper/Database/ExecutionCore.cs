@@ -81,7 +81,7 @@ namespace NewLibCore.Data.SQL.Mapper.Database
         internal RawExecuteResult Execute(TranslationResult tanslationResult)
         {
             Parameter.Validate(tanslationResult);
-            return RawExecute(0, tanslationResult.ToString(), tanslationResult.GetParameters(), CommandType.Text);
+            return RawExecute(tanslationResult.ToString(), tanslationResult.GetParameters(), CommandType.Text);
         }
 
         /// <summary>
@@ -92,7 +92,7 @@ namespace NewLibCore.Data.SQL.Mapper.Database
         /// <param name="parameters"></param>
         /// <param name="commandType"></param>
         /// <returns></returns>
-        internal RawExecuteResult RawExecute(ExecuteType executeType, String sql, IEnumerable<EntityParameter> parameters = null, CommandType commandType = CommandType.Text)
+        internal RawExecuteResult RawExecute(String sql, IEnumerable<EntityParameter> parameters = null, CommandType commandType = CommandType.Text)
         {
             try
             {
@@ -112,6 +112,7 @@ namespace NewLibCore.Data.SQL.Mapper.Database
                     }
                     RunDiagnosis.Info($@"SQL语句:{sql} 占位符与参数:{(parameters == null || !parameters.Any() ? "" : String.Join($@"{Environment.NewLine}", parameters.Select(s => $@"{s.Key}----{s.Value}")))}");
 
+                    var executeType = GetExecuteType(sql);
                     var executeResult = new RawExecuteResult();
                     if (executeType == ExecuteType.SELECT)
                     {
@@ -126,7 +127,7 @@ namespace NewLibCore.Data.SQL.Mapper.Database
                     {
                         executeResult.SetRawResult(cmd.ExecuteNonQuery());
                     }
-                    else if (executeType == ExecuteType.INSERT || executeType == ExecuteType.SELECT_SINGLE)
+                    else if (executeType == ExecuteType.INSERT)
                     {
                         executeResult.SetRawResult(cmd.ExecuteScalar());
                     }
@@ -173,6 +174,10 @@ namespace NewLibCore.Data.SQL.Mapper.Database
             throw new Exception("没有启动事务");
         }
 
+        /// <summary>
+        /// 释放资源
+        /// </summary>
+        /// <param name="disposing"></param>
         private void Dispose(Boolean disposing)
         {
             RunDiagnosis.Info($@"关闭连接{Environment.NewLine}");
@@ -194,6 +199,18 @@ namespace NewLibCore.Data.SQL.Mapper.Database
                 }
                 _disposed = true;
             }
+        }
+
+        private ExecuteType GetExecuteType(String sql)
+        {
+            Parameter.Validate(sql);
+
+            var operationType = sql.Substring(0, sql.IndexOf(" "));
+            if (Enum.TryParse<ExecuteType>(operationType, out var executeType))
+            {
+                return executeType;
+            }
+            throw new Exception($@"SQL语句执行类型解析失败:{operationType}");
         }
 
         public void Dispose()

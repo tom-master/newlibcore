@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading;
 using NewLibCore.Data.SQL.Mapper;
 using NewLibCore.Data.SQL.Mapper.Config;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
@@ -12,28 +11,40 @@ namespace NewLibCore.Run
         public static void Main(String[] args)
         {
             MapperConfig.InitMapper();
-
-            var parameters = new EntityParameter("@id", new List<Int32> { 1, 2, 3, 4, 5 });
-
-            for (var i = 0; i < Environment.ProcessorCount; i++)
+            using (var mapper = EntityMapper.CreateMapper())
             {
-                ThreadPool.QueueUserWorkItem((a1) =>
+                mapper.OpenTransaction();
+                try
                 {
-                    using (var mapper = EntityMapper.CreateMapper())
-                    {
-                        mapper.OpenTransaction();
-                        try
-                        {
-                            mapper.Select<User>().Where(w => w.Id == 4).FirstOrDefault();
-                            mapper.Commit();
-                        }
-                        catch (Exception)
-                        {
-                            throw;
-                        }
-                    }
-                });
+                    mapper.Select<User>().Where(w => w.Id == 4).Count();
+                    mapper.Commit();
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
             }
+            // var parameters = new EntityParameter("@id", new List<Int32> { 1, 2, 3, 4, 5 });
+
+            //for (var i = 0; i < Environment.ProcessorCount; i++)
+            //{
+            //    ThreadPool.QueueUserWorkItem((a1) =>
+            //    {
+            //        using (var mapper = EntityMapper.CreateMapper())
+            //        {
+            //            mapper.OpenTransaction();
+            //            try
+            //            {
+            //                mapper.Select<User>().Where(w => w.Id == 4).FirstOrDefault();
+            //                mapper.Commit();
+            //            }
+            //            catch (Exception)
+            //            {
+            //                throw;
+            //            }
+            //        }
+            //    });
+            //}
             Console.ReadKey();
         }
     }

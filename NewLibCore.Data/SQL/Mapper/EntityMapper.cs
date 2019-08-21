@@ -107,7 +107,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
             return RunDiagnosis.Watch(() =>
             {
-                return RawExecute(ExecuteType.SELECT, sql, parameters).ToList<TModel>();
+                return RawExecute(sql, parameters).ToList<TModel>();
             });
         }
 
@@ -127,21 +127,20 @@ namespace NewLibCore.Data.SQL.Mapper
                 var modelType = typeof(TModel);
                 if (modelType.IsNumeric())
                 {
-                    return RawExecute(ExecuteType.SELECT_SINGLE, sql, parameters).ToPrimitive<TModel>();
+                    return RawExecute(sql, parameters).ToPrimitive<TModel>();
                 }
 
-                return RawExecute(ExecuteType.SELECT, sql, parameters).ToSingle<TModel>();
+                return RawExecute(sql, parameters).ToSingle<TModel>();
             });
         }
 
         /// <summary>
         /// 直接执行sql语句
         /// </summary>
-        /// <param name="executeType"></param>
         /// <param name="sql"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        private RawExecuteResult RawExecute(ExecuteType executeType, String sql, IEnumerable<EntityParameter> parameters = null)
+        private RawExecuteResult RawExecute(String sql, IEnumerable<EntityParameter> parameters = null)
         {
             var sqlResult = TranslationResult.CreateTranslationResult();
             sqlResult.Append(sql, parameters);
