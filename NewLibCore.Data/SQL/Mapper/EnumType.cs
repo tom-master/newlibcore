@@ -7,9 +7,10 @@ namespace NewLibCore.Data.SQL.Mapper
     internal enum ExecuteType
     {
         SELECT = 1,
+
         UPDATE = 2,
+
         INSERT = 3,
-        SELECT_SINGLE = 4
     }
 
     /// <summary>

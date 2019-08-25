@@ -40,21 +40,30 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
                 var list = new List<T>();
                 foreach (DataRow dr in dt.Rows)
                 {
-                    var masterTable = Activator.CreateInstance<T>();
-                    var propertys = masterTable.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public);
-                    foreach (var propertyInfo in propertys)
+                    var obj = Activator.CreateInstance<T>();
+                    var type = obj.GetType();
+                    var propertys = type.GetProperties(BindingFlags.Instance | BindingFlags.Public);
+                    if (propertys.Any())
                     {
-                        if (dt.Columns.Contains(propertyInfo.Name))
+                        foreach (var propertyInfo in propertys)
                         {
-                            var value = dr[propertyInfo.Name];
-                            if (value != DBNull.Value)
+                            if (dt.Columns.Contains(propertyInfo.Name))
                             {
-                                var fast = new FastProperty(propertyInfo);
-                                fast.Set(masterTable, ConvertExtension.ChangeType(value, propertyInfo.PropertyType));
+                                var value = dr[propertyInfo.Name];
+                                if (value != DBNull.Value)
+                                {
+                                    var fast = new FastProperty(propertyInfo);
+                                    fast.Set(obj, ConvertExtension.ChangeType(value, propertyInfo.PropertyType));
+                                }
                             }
                         }
+                        list.Add(obj);
                     }
-                    list.Add(masterTable);
+                    else
+                    {
+                        var valueTuple = CreateValueTuple(dr.ItemArray);
+                        list.Add((T)valueTuple);
+                    }
                 }
                 return list;
             }
@@ -64,12 +73,35 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
                 throw;
             }
         }
+
+
+        internal static object CreateValueTuple(Object[] dr)
+        {
+            Type[] parameterTypes = new Type[dr.Length];
+            for (int i = 0; i < dr.Length; i++)
+            {
+                parameterTypes[i] = dr[i].GetType();
+            }
+
+            var createMethod = typeof(ValueTuple)
+            .GetMethods()
+            .Where(m => m.Name == "Create" && m.GetParameters().Length == dr.Length)
+            .SingleOrDefault() ?? throw new NotSupportedException("ValueTuple.Create method not found.");
+            var createGenericMethod = createMethod.MakeGenericMethod(parameterTypes);
+            var valueTuple = createGenericMethod.Invoke(null, dr);
+            return valueTuple;
+        }
     }
 
     internal static class ConvertExtension
     {
         internal static Object ChangeType(Object value, Type type)
         {
+            if (value == null)
+            {
+                return null;
+            }
+
             if (typeof(Enum).IsAssignableFrom(type))
             {
                 return Enum.Parse(type, value.ToString());
@@ -119,5 +151,7 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
         {
             SetDelegate(instance, value);
         }
+
+
     }
 }

@@ -201,7 +201,7 @@ namespace NewLibCore.Data.SQL.Mapper.Database
             }
         }
 
-        private ExecuteType GetExecuteType(String sql)
+        internal ExecuteType GetExecuteType(String sql)
         {
             Parameter.Validate(sql);
 

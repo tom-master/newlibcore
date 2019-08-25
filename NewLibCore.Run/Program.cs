@@ -13,16 +13,7 @@ namespace NewLibCore.Run
             MapperConfig.InitMapper();
             using (var mapper = EntityMapper.CreateMapper())
             {
-                mapper.OpenTransaction();
-                try
-                {
-                    mapper.Select<User>().Where(w => w.Id == 4).Count();
-                    mapper.Commit();
-                }
-                catch (Exception)
-                {
-                    throw;
-                }
+                var r = mapper.ExecuteToList<(String Title, Int32 Id)>(@"SELECT a.Title,a.Id FROM newcrm_wallpaper AS a ORDER BY a.IsDeleted=0 LIMIT 0,100");
             }
             // var parameters = new EntityParameter("@id", new List<Int32> { 1, 2, 3, 4, 5 });
 

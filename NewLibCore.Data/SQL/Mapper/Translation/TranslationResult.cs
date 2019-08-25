@@ -101,7 +101,8 @@ namespace NewLibCore.Data.SQL.Mapper
         private RawExecuteResult Execute(ExecutionCore executionCore)
         {
             var executeResult = GetCache();
-            if (executeResult == null)
+            var executeType = executionCore.GetExecuteType(this.ToString());
+            if (executeType == ExecuteType.SELECT && executeResult == null)
             {
                 executeResult = executionCore.Execute(this);
                 SetCache(executeResult);

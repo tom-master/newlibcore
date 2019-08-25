@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using NewLibCore.Validate;
 using Newtonsoft.Json;
 
@@ -45,11 +46,6 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
         /// <returns></returns>
         internal List<TResult> ToList<TResult>() where TResult : new()
         {
-            var modelType = typeof(TResult);
-            if (!modelType.IsComplexType())
-            {
-                throw new InvalidCastException($@"当返回继承于EntityBase的集合对象时需要调用ToList方法");
-            }
             return ((DataTable)_result).ToList<TResult>();
         }
 
@@ -60,12 +56,7 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
         /// <returns></returns>
         internal TResult ToSingle<TResult>() where TResult : new()
         {
-            var modelType = typeof(TResult);
-            if (!modelType.IsComplexType())
-            {
-                throw new InvalidCastException($@"当返回继承于EntityBase的单个对象时需要调用ToSingle方法");
-            }
-            return ((DataTable)_result).ToSingle<TResult>();
+            return ToList<TResult>().FirstOrDefault();
         }
 
         public override String ToString()
