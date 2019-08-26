@@ -9,6 +9,9 @@ namespace NewLibCore.Data.SQL.Mapper.Config
     /// </summary>
     internal class MsSqlInstanceConfig : InstanceConfig
     {
+        /// <summary>
+        /// 初始化一个MsSqlInstanceConfig类的实例
+        /// </summary>
         public MsSqlInstanceConfig()
         {
 
@@ -57,7 +60,5 @@ namespace NewLibCore.Data.SQL.Mapper.Config
         {
             return String.Format(RelationMapper[relationType], left, right);
         }
-
-
     }
 }

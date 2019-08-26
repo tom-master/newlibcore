@@ -13,7 +13,7 @@ namespace NewLibCore.Data.SQL.Mapper.Database
     /// <summary>
     /// sql语句执行
     /// </summary>
-    internal class ExecutionCore : IDisposable
+    internal sealed class ExecutionCore : IDisposable
     {
         private DbConnection _connection;
 
@@ -23,6 +23,9 @@ namespace NewLibCore.Data.SQL.Mapper.Database
 
         private Boolean _useTransaction = false;
 
+        /// <summary>
+        /// 初始化一个ExecutionCore类的实例
+        /// </summary>
         public ExecutionCore()
         {
             var instanceConfig = MapperConfig.ServiceProvider.GetService<InstanceConfig>();
@@ -75,8 +78,8 @@ namespace NewLibCore.Data.SQL.Mapper.Database
         /// <summary>
         /// 将表达式翻译结果执行
         /// </summary>
-        /// <param name="executeType"></param>
-        /// <param name="translationCore"></param>
+        /// <param name="executeType">执行的类型</param>
+        /// <param name="translationCore">表达式翻译sql语句</param>
         /// <returns></returns>
         internal RawExecuteResult Execute(TranslationResult tanslationResult)
         {
@@ -87,9 +90,9 @@ namespace NewLibCore.Data.SQL.Mapper.Database
         /// <summary>
         /// 执行原生sql语句
         /// </summary>
-        /// <param name="executeType"></param>
-        /// <param name="sql"></param>
-        /// <param name="parameters"></param>
+        /// <param name="executeType">执行的类型</param>
+        /// <param name="sql">语句</param>
+        /// <param name="parameters">参数</param>
         /// <param name="commandType"></param>
         /// <returns></returns>
         internal RawExecuteResult RawExecute(String sql, IEnumerable<EntityParameter> parameters = null, CommandType commandType = CommandType.Text)
@@ -201,6 +204,11 @@ namespace NewLibCore.Data.SQL.Mapper.Database
             }
         }
 
+        /// <summary>
+        /// 获取语句的执行类型
+        /// </summary>
+        /// <param name="sql">语句</param>
+        /// <returns></returns>
         internal ExecuteType GetExecuteType(String sql)
         {
             Parameter.Validate(sql);

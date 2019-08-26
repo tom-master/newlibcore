@@ -7,6 +7,9 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
     /// </summary>
     public abstract class EntityBase : PropertyMonitor
     {
+        /// <summary>
+        /// 初始化一个EntityBase类的对象
+        /// </summary>
         protected EntityBase()
         {
             IsDeleted = false;

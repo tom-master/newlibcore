@@ -15,6 +15,9 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
         /// <summary>
         /// 获取列表
         /// </summary>
+        /// <typeparam name="T">期望的类型</typeparam>
+        /// <param name="dataTable">sql执行后的原始结果</param>
+        /// <returns></returns>
         internal static List<T> ToList<T>(this DataTable dataTable) where T : new()
         {
             if (dataTable == null || dataTable.Rows.Count == 0)
@@ -28,6 +31,9 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
         /// <summary>
         /// 获取单值
         /// </summary>
+        /// <typeparam name="T">期望的类型</typeparam>
+        /// <param name="dataTable">sql执行后的原始结果</param>
+        /// <returns></returns>
         internal static T ToSingle<T>(this DataTable dataTable) where T : new()
         {
             return ToList<T>(dataTable).FirstOrDefault();
@@ -74,31 +80,38 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
             }
         }
 
-
-        internal static Object CreateValueTuple(Object[] dr)
+        /// <summary>
+        /// 创建一个值元组
+        /// </summary>
+        /// <param name="dr">原始查询结果中的行</param>
+        /// <returns></returns>
+        private static Object CreateValueTuple(Object[] rowValues)
         {
-            if (dr.Length > 8)
+            if (rowValues.Length > 8)
             {
                 throw new NotSupportedException($@"当已{nameof(ValueTuple)}为返回类型时,{nameof(ValueTuple)}中的项的个数与查询出的列的个数都不能大于8个");
             }
 
-            var parameterTypes = new Type[dr.Length];
-            for (var i = 0; i < dr.Length; i++)
+            var parameterTypes = new Type[rowValues.Length];
+            for (var i = 0; i < rowValues.Length; i++)
             {
-                parameterTypes[i] = dr[i].GetType();
+                parameterTypes[i] = rowValues[i].GetType();
             }
 
             var createMethod = typeof(ValueTuple)
-            .GetMethods().Where(m => m.Name == "Create" && m.GetParameters().Length == dr.Length).SingleOrDefault();
+            .GetMethods().Where(m => m.Name == "Create" && m.GetParameters().Length == rowValues.Length).SingleOrDefault();
             var createGenericMethod = createMethod.MakeGenericMethod(parameterTypes);
-            var valueTuple = createGenericMethod.Invoke(null, dr);
+            var valueTuple = createGenericMethod.Invoke(null, rowValues);
             return valueTuple;
         }
-    }
 
-    internal static class ConvertExtension
-    {
-        internal static Object ChangeType(Object value, Type type)
+        /// <summary>
+        /// 修改目标值的类型
+        /// </summary>
+        /// <param name="value">目标值</param>
+        /// <param name="type">转换类型</param>
+        /// <returns></returns>
+        private static Object ChangeType(Object value, Type type)
         {
             if (value == null)
             {
@@ -154,7 +167,5 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
         {
             SetDelegate(instance, value);
         }
-
-
     }
 }
