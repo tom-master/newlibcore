@@ -14,7 +14,7 @@ namespace NewLibCore.Run
             using (var mapper = EntityMapper.CreateMapper())
             {
 
-                var r = mapper.Select<User>(w => new { w.Id, w.Name }).Where(w => w.Id == 4).ToList<(Int32 Id, String Name)>();
+                var r = mapper.Select<Member>(w => new { w.Id, w.Name }).ToList<(Int32 Id, String Name)>();
 
                 // //添加一个对象到数据库
                 // var user = mapper.Add(new User());
