@@ -59,7 +59,7 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
                                 if (value != DBNull.Value)
                                 {
                                     var fast = new FastProperty(propertyInfo);
-                                    fast.Set(obj, ConvertExtension.ChangeType(value, propertyInfo.PropertyType));
+                                    fast.Set(obj, ChangeType(value, propertyInfo.PropertyType));
                                 }
                             }
                         }

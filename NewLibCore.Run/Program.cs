@@ -20,7 +20,7 @@ namespace NewLibCore.Run
                 user.ModifyLockScreenPassword("123");
                 mapper.Update(user, u => u.Id == 4);
             }
-            //var parameters = new EntityParameter("@id", new List<Int32> { 1, 2, 3, 4, 5 });
+            var parameters = new EntityParameter("@id", new List<Int32> { 1, 2, 3, 4, 5 });
 
             //for (var i = 0; i < Environment.ProcessorCount; i++)
             //{
@@ -43,6 +43,7 @@ namespace NewLibCore.Run
             //}
             Console.ReadKey();
         }
+
     }
 
     public enum WallpaperSource

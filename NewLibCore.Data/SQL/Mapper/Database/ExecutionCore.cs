@@ -123,16 +123,16 @@ namespace NewLibCore.Data.SQL.Mapper.Database
                         {
                             var dataTable = new DataTable("tmpDt");
                             dataTable.Load(dr, LoadOption.Upsert);
-                            executeResult.SetRawResult(dataTable);
+                            executeResult.SaveRawResult(dataTable);
                         }
                     }
                     else if (executeType == ExecuteType.UPDATE)
                     {
-                        executeResult.SetRawResult(cmd.ExecuteNonQuery());
+                        executeResult.SaveRawResult(cmd.ExecuteNonQuery());
                     }
                     else if (executeType == ExecuteType.INSERT)
                     {
-                        executeResult.SetRawResult(cmd.ExecuteScalar());
+                        executeResult.SaveRawResult(cmd.ExecuteScalar());
                     }
 
                     cmd.Parameters.Clear();
