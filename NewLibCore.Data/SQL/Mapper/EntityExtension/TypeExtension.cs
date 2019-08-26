@@ -8,11 +8,10 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
         /// <summary>
         /// 获取设置在实体的指定表名
         /// </summary>
-        /// <param name="t"></param>
+        /// <param name="t">对象类型</param>
         /// <returns></returns>
         internal static (String TableName, String AliasName) GetTableName(this Type t)
         {
-
             var attrubutes = t.GetCustomAttributes(typeof(TableNameAttribute), true);
             if (!attrubutes.Any())
             {

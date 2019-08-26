@@ -7,7 +7,7 @@ using NewLibCore.Validate;
 namespace NewLibCore.Data.SQL.Mapper
 {
     /// <summary>
-    /// 更新操作builder类
+    /// 更新处理类
     /// </summary>
     /// <typeparam name="TModel"></typeparam>
     internal class UpdateHandler<TModel> : Handler<TModel> where TModel : EntityBase, new()
@@ -18,6 +18,12 @@ namespace NewLibCore.Data.SQL.Mapper
 
         private readonly SegmentManager _segmentManager;
 
+        /// <summary>
+        /// 初始化一个UpdateHandler类的实例
+        /// </summary>
+        /// <param name="model">要更新的模型</param>
+        /// <param name="segmentManager">表达式分解后的对象</param>
+        /// <param name="verifyModel">是否验证模型</param>
         public UpdateHandler(TModel model, SegmentManager segmentManager, Boolean verifyModel = false)
         {
             Parameter.Validate(model);

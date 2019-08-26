@@ -25,6 +25,10 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
     {
         private readonly IList<PO> _propertys = new List<PO>();
 
+        /// <summary>
+        /// 属性值变更
+        /// </summary>
+        /// <param name="propertyName">属性名称</param>
         protected void OnChanged(String propertyName)
         {
             Parameter.Validate(propertyName);
@@ -44,6 +48,9 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
             });
         }
 
+        /// <summary>
+        /// 属性值变更
+        /// </summary>
         internal void OnChanged()
         {
             var propertys = GetType().GetProperties().Where(w => w.GetCustomAttributes<PropertyValidate>().Any() && w.Name != "AddTime" && w.Name != "LastModifyTime");
@@ -138,9 +145,9 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
         /// <summary>
         /// 如果属性值为空并且用默认值特性进行了修饰则设置属性默认值
         /// </summary>
-        /// <param name="defaultValueAttribute"></param>
-        /// <param name="propertyItem"></param>
-        /// <param name="rawPropertyValue"></param>
+        /// <param name="defaultValueAttribute">默认值</param>
+        /// <param name="propertyItem">属性项</param>
+        /// <param name="rawPropertyValue">原始的属性值</param>
         private void SetPropertyDefaultValue(DefaultValueAttribute defaultValueAttribute, PO propertyItem, Object rawPropertyValue)
         {
             Parameter.Validate(defaultValueAttribute);
@@ -154,10 +161,10 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
         }
 
         /// <summary>
-        /// 抛出异常
+        /// 抛出验证失败的异常
         /// </summary>
-        /// <param name="validateBase"></param>
-        /// <param name="po"></param>
+        /// <param name="validateBase">特性验证基类</param>
+        /// <param name="po">属性项</param>
         private void ThrowValidateException(PropertyValidate validateBase, PO po)
         {
             Parameter.Validate(po);
@@ -168,8 +175,8 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
         /// <summary>
         /// 将属性上同时应用的多个特性进行排序
         /// </summary>
-        /// <param name="propertyName"></param>
-        /// <param name="validates"></param>
+        /// <param name="propertyName">属性名</param>
+        /// <param name="validates">属性验证列表</param>
         /// <returns></returns>
         private IList<PropertyValidate> ValidateAttributeOrder(String propertyName, PropertyValidate[] validates)
         {

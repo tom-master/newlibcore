@@ -23,6 +23,11 @@ namespace NewLibCore.Data.SQL.Mapper
         private JoinType _joinType;
         private IReadOnlyList<KeyValuePair<String, String>> _tableAliasMapper;
 
+        /// <summary>
+        /// 初始化一个TranslationSegment类的实例
+        /// </summary>
+        /// <param name="segmentManager">表达式分解后的对象</param>
+        /// <returns></returns>
         private TranslationSegment(SegmentManager segmentManager)
         {
             Parameter.Validate(segmentManager);
@@ -40,9 +45,9 @@ namespace NewLibCore.Data.SQL.Mapper
         internal TranslationResult Result { get; private set; }
 
         /// <summary>
-        /// 创建一个翻译表达式的对象
+        /// 初始化一个TranslationSegment类的实例
         /// </summary>
-        /// <param name="segmentManager"></param>
+        /// <param name="segmentManager">表达式分解后的对象</param>
         /// <returns></returns>
         internal static TranslationSegment CreateTranslation(SegmentManager segmentManager)
         {
@@ -109,7 +114,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <summary>
         /// 根据表达式构建出相应结果
         /// </summary>
-        /// <param name="expression"></param>
+        /// <param name="expression">表达式</param>
         private void InternalBuildWhere(Expression expression)
         {
             switch (expression.NodeType)
@@ -282,7 +287,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <summary>
         /// 翻译表达式中的方法调用
         /// </summary>
-        /// <param name="expression"></param>
+        /// <param name="expression">表达式</param>
         private void TranslateMethodCall(Expression expression)
         {
             var methodCallExp = (MethodCallExpression)expression;
@@ -346,8 +351,8 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <summary>
         /// 逻辑语句构建
         /// </summary>
-        /// <param name="binary"></param>
-        /// <param name="relationType"></param>
+        /// <param name="binary">表达式</param>
+        /// <param name="relationType">关系类型</param>
         private void LogicStatementBuilder(BinaryExpression binary, RelationType relationType)
         {
             var binaryExp = binary;
@@ -376,32 +381,32 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <summary>
         /// 将表达式翻译为相应的连接条件
         /// </summary>
-        /// <param name="binaryExp"></param>
-        /// <param name="relationType"></param>
-        private void GetJoin(BinaryExpression binaryExp, RelationType relationType)
+        /// <param name="binary">表达式</param>
+        /// <param name="relationType">关系类型</param>
+        private void GetJoin(BinaryExpression binary, RelationType relationType)
         {
-            Parameter.Validate(binaryExp);
+            Parameter.Validate(binary);
 
             //表达式左右两边都不为常量时例如 xx.Id==yy.Id
-            if (binaryExp.Left.NodeType != ExpressionType.Constant && binaryExp.Right.NodeType != ExpressionType.Constant)
+            if (binary.Left.NodeType != ExpressionType.Constant && binary.Right.NodeType != ExpressionType.Constant)
             {
-                var (LeftMember, LeftAliasName) = GetLeftMemberAndAliasName(binaryExp);
-                var (RightMember, RightAliasName) = GetRightMemberAndAliasName(binaryExp);
+                var (LeftMember, LeftAliasName) = GetLeftMemberAndAliasName(binary);
+                var (RightMember, RightAliasName) = GetRightMemberAndAliasName(binary);
 
                 var relationTemplate = _instance.RelationBuilder(relationType, $"{RightAliasName}.{RightMember.Member.Name}", $"{LeftAliasName}.{LeftMember.Member.Name}");
                 Result.Append(relationTemplate);
             }
-            else if (binaryExp.Left.NodeType == ExpressionType.Constant) //表达式左边为常量
+            else if (binary.Left.NodeType == ExpressionType.Constant) //表达式左边为常量
             {
-                var (RightMember, RightAliasName) = GetRightMemberAndAliasName(binaryExp);
-                var constant = (ConstantExpression)binaryExp.Left;
+                var (RightMember, RightAliasName) = GetRightMemberAndAliasName(binary);
+                var constant = (ConstantExpression)binary.Left;
                 var value = Boolean.TryParse(constant.Value.ToString(), out var result) ? (result ? 1 : 0).ToString() : constant.Value;
                 Result.Append(_instance.RelationBuilder(relationType, value + "", $"{RightAliasName}.{RightMember.Member.Name}"));
             }
-            else if (binaryExp.Right.NodeType == ExpressionType.Constant) //表达式的右边为常量
+            else if (binary.Right.NodeType == ExpressionType.Constant) //表达式的右边为常量
             {
-                var (LeftMember, LeftAliasName) = GetLeftMemberAndAliasName(binaryExp);
-                var constant = (ConstantExpression)binaryExp.Right;
+                var (LeftMember, LeftAliasName) = GetLeftMemberAndAliasName(binary);
+                var constant = (ConstantExpression)binary.Right;
                 var value = Boolean.TryParse(constant.Value.ToString(), out var result) ? (result ? 1 : 0).ToString() : constant.Value;
                 Result.Append(_instance.RelationBuilder(relationType, $"{LeftAliasName}.{LeftMember.Member.Name}", value + ""));
             }
@@ -410,7 +415,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <summary>
         /// 获取左表达式的成员对象和别名
         /// </summary>
-        /// <param name="binaryExp"></param>
+        /// <param name="binaryExp">表达式</param>
         /// <returns></returns>
         private (MemberExpression RightMember, String RightAliasName) GetRightMemberAndAliasName(BinaryExpression binaryExp)
         {
@@ -427,7 +432,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <summary>
         /// 获取又表达式的成员对象和别名
         /// </summary>
-        /// <param name="binaryExp"></param>
+        /// <param name="binaryExp">表达式</param>
         /// <returns></returns>
         private (MemberExpression LeftMember, String LeftAliasName) GetLeftMemberAndAliasName(BinaryExpression binaryExp)
         {

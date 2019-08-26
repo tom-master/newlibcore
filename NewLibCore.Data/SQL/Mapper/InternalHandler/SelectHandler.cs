@@ -10,13 +10,17 @@ using NewLibCore.Validate;
 namespace NewLibCore.Data.SQL.Mapper
 {
     /// <summary>
-    /// 查询操作构建
+    /// 查询处理类
     /// </summary>
     /// <typeparam name="TModel"></typeparam>
     internal class SelectHandler<TModel> : Handler<TModel> where TModel : EntityBase, new()
     {
         private readonly SegmentManager _segmentManager;
 
+        /// <summary>
+        /// 初始化一个SelectHandler类的实例
+        /// </summary>
+        /// <param name="segmentManager">表达式分解后的对象</param>
         internal SelectHandler(SegmentManager segmentManager)
         {
             Parameter.Validate(segmentManager);
@@ -57,7 +61,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <summary>
         ///判断表达式语句类型并转换为相应的sql
         /// </summary>
-        /// <param name="statement"></param>
+        /// <param name="statement">表达式分解后的对象</param>
         /// <returns></returns>
         protected override (String Fields, String AliasName) StatementParse(Statement statement)
         {

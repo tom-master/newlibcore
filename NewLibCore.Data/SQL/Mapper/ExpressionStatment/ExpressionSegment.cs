@@ -39,17 +39,15 @@ namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
         /// <summary>
         /// 连接语句对象列表
         /// </summary>
-        /// <typeparam name="JoinStatement"></typeparam>
-        /// <returns></returns>
         internal IList<JoinSegment> Joins { get; private set; } = new List<JoinSegment>();
 
         /// <summary>
         /// 将表达式拆分出相应的排序对象
         /// </summary>
-        /// <param name="order"></param>
-        /// <param name="orderByType"></param>
-        /// <typeparam name="TModel"></typeparam>
-        /// <typeparam name="TKey"></typeparam>
+        /// <param name="order">排序条件</param>
+        /// <param name="orderByType">排序方向</param>
+        /// <typeparam name="TModel">表</typeparam>
+        /// <typeparam name="TKey">排序键</typeparam>
         /// <returns></returns>
         internal void AddOrderBy<TModel, TKey>(Expression<Func<TModel, TKey>> order, OrderByType orderByType)
         {
@@ -64,10 +62,10 @@ namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
         /// <summary>
         /// 将表达式拆分出相应的连接对象
         /// </summary>
-        /// <param name="expression"></param>
-        /// <param name="joinType"></param>
-        /// <typeparam name="TModel"></typeparam>
-        /// <typeparam name="TJoin"></typeparam>
+        /// <param name="expression">连接表达式</param>
+        /// <param name="joinType">连接类型</param>
+        /// <typeparam name="TModel">主表</typeparam>
+        /// <typeparam name="TJoin">子表</typeparam>
         /// <returns></returns>
         internal void Add<TModel, TJoin>(Expression<Func<TModel, TJoin, Boolean>> expression, JoinType joinType) where TModel : EntityBase, new()
             where TJoin : EntityBase, new()
@@ -85,9 +83,9 @@ namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
         /// <summary>
         /// 将表达式拆分出相应的Where对象
         /// </summary>
-        /// <param name="expression"></param>
-        /// <typeparam name="TModel"></typeparam>
-        /// <typeparam name="TJoin"></typeparam>
+        /// <param name="expression">连接表达式</param>
+        /// <typeparam name="TModel">主表</typeparam>
+        /// <typeparam name="TJoin">连接类型</typeparam>
         /// <returns></returns>
         internal void Add<TModel, TJoin>(Expression<Func<TModel, TJoin, Boolean>> expression) where TModel : EntityBase, new()
         {
@@ -102,8 +100,8 @@ namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
         /// <summary>
         /// 将表达式拆分出相应的Where对象
         /// </summary>
-        /// <param name="expression"></param>
-        /// <typeparam name="TModel"></typeparam>
+        /// <param name="expression">表达式</param>
+        /// <typeparam name="TModel">主表</typeparam>
         internal void Add<TModel>(Expression<Func<TModel, Boolean>> expression) where TModel : EntityBase, new()
         {
             Parameter.Validate(expression);
@@ -117,8 +115,8 @@ namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
         /// <summary>
         /// 将表达式拆分出相应的字段对象
         /// </summary>
-        /// <param name="expression"></param>
-        /// <typeparam name="TModel"></typeparam>
+        /// <param name="expression">表达式</param>
+        /// <typeparam name="TModel">主表</typeparam>
         internal void Add<TModel>(Expression<Func<TModel, dynamic>> expression) where TModel : EntityBase, new()
         {
             Parameter.Validate(expression);
@@ -131,9 +129,9 @@ namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
         /// <summary>
         /// 将表达式拆分出相应的字段对象
         /// </summary>
-        /// <param name="expression"></param>
-        /// <typeparam name="TModel"></typeparam>
-        /// <typeparam name="T"></typeparam>
+        /// <param name="expression">表达式</param>
+        /// <typeparam name="TModel">主表</typeparam>
+        /// <typeparam name="T">子表</typeparam>
         /// <returns></returns>
         internal void Add<TModel, T>(Expression<Func<TModel, T, dynamic>> expression) where TModel : EntityBase, new()
         where T : EntityBase, new()
@@ -148,8 +146,8 @@ namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
         /// <summary>
         /// 将表达式拆分出相应的分页对象
         /// </summary>
-        /// <param name="pageIndex"></param>
-        /// <param name="pageSize"></param>
+        /// <param name="pageIndex">页索引</param>
+        /// <param name="pageSize">页大小</param>
         internal void AddPage(Int32 pageIndex, Int32 pageSize)
         {
             Parameter.Validate(pageIndex);
@@ -183,7 +181,7 @@ namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
         /// <summary>
         /// 将表达式对象转换为表别名列表
         /// </summary>
-        /// <param name="expression"></param>
+        /// <param name="expression">表达式</param>
         /// <returns></returns>
         private IReadOnlyList<KeyValuePair<String, String>> ParseToAliasNames(Expression expression)
         {

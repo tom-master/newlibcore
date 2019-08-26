@@ -6,13 +6,23 @@ using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
 
 namespace NewLibCore.Data.SQL.Mapper
 {
+    /// <summary>
+    /// 表达式处理基类
+    /// </summary>
+    /// <typeparam name="TModel"></typeparam>
     internal abstract class Handler<TModel> where TModel : EntityBase, new()
     {
+        /// <summary>
+        /// 初始化一个Handler类的实例
+        /// </summary>
         internal Handler()
         {
             Instance = MapperConfig.ServiceProvider.GetService<InstanceConfig>();
         }
 
+        /// <summary>
+        /// 数据库配置实例
+        /// </summary>
         protected InstanceConfig Instance { get; private set; }
 
         /// <summary>
@@ -33,7 +43,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <summary>
         /// 字段转换
         /// </summary>
-        /// <param name="statement"></param>
+        /// <param name="statement">表达式拆分后的语句对象</param>
         /// <returns></returns>
         protected virtual (String Fields, String AliasName) StatementParse(Statement statement)
         {

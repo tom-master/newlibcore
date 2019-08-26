@@ -18,13 +18,20 @@ namespace NewLibCore.Data.SQL.Mapper
         private readonly IList<EntityParameter> _parameters;
         private readonly ResultCache _cache = null;
 
+        /// <summary>
+        /// 初始化一个TranslationResult类的实例
+        /// </summary>
         private TranslationResult()
         {
             _originSql = new StringBuilder();
             _parameters = new List<EntityParameter>();
-            //_cache = MapperConfig.ServiceProvider.GetService<ResultCache>();
+            _cache = MapperConfig.ServiceProvider.GetService<ResultCache>();
         }
 
+        /// <summary>
+        /// 创建一个TranslationResult类的实例
+        /// </summary>
+        /// <returns></returns>
         internal static TranslationResult CreateTranslationResult()
         {
             return new TranslationResult();
@@ -42,7 +49,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <summary>
         /// 追加一个sql语句和一组EntityParameter对象
         /// </summary>
-        /// <param name="entityParameters"></param>
+        /// <param name="entityParameters">参数列表</param>
         internal TranslationResult Append(String sql, IEnumerable<EntityParameter> entityParameters = null)
         {
             Parameter.Validate(sql);
@@ -62,7 +69,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <summary>
         /// 追加一组EntityParameter对象
         /// </summary>
-        /// <param name="entityParameters"></param>
+        /// <param name="entityParameters">参数列表</param>
         internal void Append(params EntityParameter[] entityParameters)
         {
             Append(entityParameters.ToList());
@@ -71,7 +78,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <summary>
         /// 追加一组EntityParameter对象
         /// </summary>
-        /// <param name="entityParameters"></param>
+        /// <param name="entityParameters">参数列表</param>
         internal void Append(IEnumerable<EntityParameter> entityParameters)
         {
             if (entityParameters != null)
@@ -86,6 +93,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <summary>
         /// 执行表达式翻译出的sql语句
         /// </summary>
+        /// <param name="executionCore">执行翻译结果的对象</param>
         /// <returns></returns>
         internal RawExecuteResult ExecuteTranslateResult(ExecutionCore executionCore)
         {
@@ -114,7 +122,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <summary>
         /// 获取作为要缓存的sql语句的key
         /// </summary>
-        /// <param name="entityParameters"></param>
+        /// <returns></returns>
         private String PrepareCacheKey()
         {
             Parameter.Validate(_originSql);
@@ -129,7 +137,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <summary>
         /// 设置缓存
         /// </summary>
-        /// <param name="executeResult"></param>
+        /// <param name="executeResult">sql执行后原始的执行结果</param>
         private void SetCache(RawExecuteResult executeResult)
         {
             if (_cache != null)
@@ -159,7 +167,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <summary>
         /// 将sql语句中多余的空格去掉
         /// </summary>
-        /// <param name="sql"></param>
+        /// <param name="sql">语句</param>
         /// <returns></returns>
         private String ReformatSql(String sql)
         {
