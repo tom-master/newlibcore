@@ -30,6 +30,10 @@ namespace NewLibCore.Data.SQL.Mapper.Config
                 .BuildServiceProvider();
         }
 
+        /// <summary>
+        /// 初始化映射配置
+        /// </summary>
+        /// <param name="mapperType"></param>
         public static void InitMapper(MapperType mapperType = MapperType.MYSQL)
         {
             new MapperConfig(mapperType);

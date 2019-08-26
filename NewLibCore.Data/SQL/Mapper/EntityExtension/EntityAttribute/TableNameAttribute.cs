@@ -11,6 +11,11 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
 
         public String AliasName { get; private set; }
 
+        /// <summary>
+        /// 初始化一个TableName的实例
+        /// </summary>
+        /// <param name="name">表名</param>
+        /// <param name="aliasName">表别名</param>
         public TableNameAttribute(String name, String aliasName = default)
         {
             TableName = name;

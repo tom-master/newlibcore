@@ -6,7 +6,7 @@ using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
 
 namespace NewLibCore.Data.SQL.Mapper
 {
-    internal abstract class Handler<TModel> where TModel : PropertyMonitor, new()
+    internal abstract class Handler<TModel> where TModel : EntityBase, new()
     {
         internal Handler()
         {

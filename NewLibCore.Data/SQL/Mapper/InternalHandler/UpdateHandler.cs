@@ -10,7 +10,7 @@ namespace NewLibCore.Data.SQL.Mapper
     /// 更新操作builder类
     /// </summary>
     /// <typeparam name="TModel"></typeparam>
-    internal class UpdateHandler<TModel> : Handler<TModel> where TModel : PropertyMonitor, new()
+    internal class UpdateHandler<TModel> : Handler<TModel> where TModel : EntityBase, new()
     {
         private readonly TModel _modelInstance;
 

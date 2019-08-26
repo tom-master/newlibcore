@@ -75,7 +75,7 @@ namespace NewLibCore.Data.SQL.Mapper
                     }
 
                     //获取连接语句的模板
-                    var joinTemplate = _instance.JoinBuilder(item.JoinType, aliasItem.Value, aliasItem.Value.ToLower());
+                    var joinTemplate = _instance.JoinBuilder(item.JoinType, aliasItem.Key, aliasItem.Value.ToLower());
                     Result.Append(joinTemplate);
 
                     //设置相应的连接类型

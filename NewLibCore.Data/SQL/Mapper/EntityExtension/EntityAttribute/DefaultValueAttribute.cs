@@ -3,15 +3,24 @@
 namespace NewLibCore.Data.SQL.Mapper.EntityExtension
 {
     /// <summary>
-    /// 提供默认值
+    /// 标记被修饰的属性有默认值
     /// </summary>
     public class DefaultValueAttribute : PropertyValidate
     {
+        /// <summary>
+        /// 初始化一个DefaultValueAttribute对象实例
+        /// </summary>
+        /// <param name="value">默认值</param>
         public DefaultValueAttribute(Object value) : this(value.GetType(), value)
         {
 
         }
 
+        /// <summary>
+        /// 初始化一个DefaultValueAttribute对象实例
+        /// </summary>
+        /// <param name="type">默认值类型</param>
+        /// <param name="value">默认值</param>
         public DefaultValueAttribute(Type type, Object value)
         {
 
@@ -22,13 +31,13 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
 
             if (type.BaseType == typeof(Enum))
             {
-                if (value == default(Object))
+                if (value == default)
                 {
                     throw new ArgumentException($@"枚举类型 {type.ToString()} 的默认值必须被手动指定");
                 }
             }
 
-            if (value != default(Object))
+            if (value != default)
             {
                 Object internalValue;
                 try
@@ -80,14 +89,14 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
 
 
         public override Int32 Order => 2;
-         
+
 
         public override String FailReason(String fieldName)
         {
             return $@"{fieldName} 的默认值类型转换失败";
         }
 
-        public override bool IsValidate(object value)
+        public override Boolean IsValidate(Object value)
         {
             if (value == null)
             {

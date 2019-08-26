@@ -69,7 +69,8 @@ namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
         /// <typeparam name="TModel"></typeparam>
         /// <typeparam name="TJoin"></typeparam>
         /// <returns></returns>
-        internal void Add<TModel, TJoin>(Expression<Func<TModel, TJoin, Boolean>> expression, JoinType joinType) where TModel : PropertyMonitor, new() where TJoin : PropertyMonitor, new()
+        internal void Add<TModel, TJoin>(Expression<Func<TModel, TJoin, Boolean>> expression, JoinType joinType) where TModel : EntityBase, new()
+            where TJoin : EntityBase, new()
         {
             Parameter.Validate(expression);
             Joins.Add(new JoinSegment
@@ -88,7 +89,7 @@ namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
         /// <typeparam name="TModel"></typeparam>
         /// <typeparam name="TJoin"></typeparam>
         /// <returns></returns>
-        internal void Add<TModel, TJoin>(Expression<Func<TModel, TJoin, Boolean>> expression) where TModel : PropertyMonitor, new()
+        internal void Add<TModel, TJoin>(Expression<Func<TModel, TJoin, Boolean>> expression) where TModel : EntityBase, new()
         {
             Parameter.Validate(expression);
             Where = new SimpleStatement
@@ -103,7 +104,7 @@ namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
         /// </summary>
         /// <param name="expression"></param>
         /// <typeparam name="TModel"></typeparam>
-        internal void Add<TModel>(Expression<Func<TModel, Boolean>> expression) where TModel : PropertyMonitor, new()
+        internal void Add<TModel>(Expression<Func<TModel, Boolean>> expression) where TModel : EntityBase, new()
         {
             Parameter.Validate(expression);
             Where = new SimpleStatement
@@ -118,7 +119,7 @@ namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
         /// </summary>
         /// <param name="expression"></param>
         /// <typeparam name="TModel"></typeparam>
-        internal void Add<TModel>(Expression<Func<TModel, dynamic>> expression) where TModel : PropertyMonitor, new()
+        internal void Add<TModel>(Expression<Func<TModel, dynamic>> expression) where TModel : EntityBase, new()
         {
             Parameter.Validate(expression);
             Field = new SimpleStatement
@@ -134,8 +135,8 @@ namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
         /// <typeparam name="TModel"></typeparam>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        internal void Add<TModel, T>(Expression<Func<TModel, T, dynamic>> expression) where TModel : PropertyMonitor, new()
-        where T : PropertyMonitor, new()
+        internal void Add<TModel, T>(Expression<Func<TModel, T, dynamic>> expression) where TModel : EntityBase, new()
+        where T : EntityBase, new()
         {
             Parameter.Validate(expression);
             Field = new SimpleStatement

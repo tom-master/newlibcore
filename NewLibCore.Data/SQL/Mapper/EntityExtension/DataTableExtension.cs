@@ -75,18 +75,21 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
         }
 
 
-        internal static object CreateValueTuple(Object[] dr)
+        internal static Object CreateValueTuple(Object[] dr)
         {
-            Type[] parameterTypes = new Type[dr.Length];
-            for (int i = 0; i < dr.Length; i++)
+            if (dr.Length > 8)
+            {
+                throw new NotSupportedException($@"当已{nameof(ValueTuple)}为返回类型时,{nameof(ValueTuple)}中的项的个数与查询出的列的个数都不能大于8个");
+            }
+
+            var parameterTypes = new Type[dr.Length];
+            for (var i = 0; i < dr.Length; i++)
             {
                 parameterTypes[i] = dr[i].GetType();
             }
 
             var createMethod = typeof(ValueTuple)
-            .GetMethods()
-            .Where(m => m.Name == "Create" && m.GetParameters().Length == dr.Length)
-            .SingleOrDefault() ?? throw new NotSupportedException("ValueTuple.Create method not found.");
+            .GetMethods().Where(m => m.Name == "Create" && m.GetParameters().Length == dr.Length).SingleOrDefault();
             var createGenericMethod = createMethod.MakeGenericMethod(parameterTypes);
             var valueTuple = createGenericMethod.Invoke(null, dr);
             return valueTuple;

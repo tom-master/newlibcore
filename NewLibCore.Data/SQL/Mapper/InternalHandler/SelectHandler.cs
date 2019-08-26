@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using NewLibCore.Data.SQL.Mapper.Config;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
 using NewLibCore.Validate;
@@ -14,7 +13,7 @@ namespace NewLibCore.Data.SQL.Mapper
     /// 查询操作构建
     /// </summary>
     /// <typeparam name="TModel"></typeparam>
-    internal class SelectHandler<TModel> : Handler<TModel> where TModel : PropertyMonitor, new()
+    internal class SelectHandler<TModel> : Handler<TModel> where TModel : EntityBase, new()
     {
         private readonly SegmentManager _segmentManager;
 

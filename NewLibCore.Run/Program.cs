@@ -13,9 +13,14 @@ namespace NewLibCore.Run
             MapperConfig.InitMapper();
             using (var mapper = EntityMapper.CreateMapper())
             {
-                var r = mapper.ExecuteToList<(String Title, Int32 Id)>(@"SELECT a.Title,a.Id FROM newcrm_wallpaper AS a ORDER BY a.IsDeleted=0 LIMIT 0,100");
+                //添加一个对象到数据库
+                var user = mapper.Add(new User());
+
+                //更新指定对象字段
+                user.ModifyLockScreenPassword("123");
+                mapper.Update(user, u => u.Id == 4);
             }
-            // var parameters = new EntityParameter("@id", new List<Int32> { 1, 2, 3, 4, 5 });
+            //var parameters = new EntityParameter("@id", new List<Int32> { 1, 2, 3, 4, 5 });
 
             //for (var i = 0; i < Environment.ProcessorCount; i++)
             //{
@@ -51,7 +56,7 @@ namespace NewLibCore.Run
         Bing = 4
     }
 
-    [TableName("newcrm_wallpaper")]
+    [TableName("newcrm_wallpaper", "wallpaper")]
     public partial class Wallpaper : EntityBase
     {
         /// <summary>
@@ -130,7 +135,7 @@ namespace NewLibCore.Run
 
     }
 
-    [TableName("newcrm_user_config")]
+    [TableName("newcrm_user_config", "config")]
     public partial class Config : EntityBase
     {
         /// <summary> 

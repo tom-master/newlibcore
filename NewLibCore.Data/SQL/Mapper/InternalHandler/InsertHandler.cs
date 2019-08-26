@@ -10,7 +10,7 @@ namespace NewLibCore.Data.SQL.Mapper
     /// 新增操作builder类
     /// </summary>
     /// <typeparam name="TModel"></typeparam>
-    internal class InsertHandler<TModel> : Handler<TModel> where TModel : PropertyMonitor, new()
+    internal class InsertHandler<TModel> : Handler<TModel> where TModel : EntityBase, new()
     {
         private readonly Boolean _isVerifyModel;
         private readonly TModel _instance;
