@@ -83,7 +83,7 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
         /// <summary>
         /// 创建一个值元组
         /// </summary>
-        /// <param name="dr">原始查询结果中的行</param>
+        /// <param name="rowValues">原始查询结果中的行</param>
         /// <returns></returns>
         private static Object CreateValueTuple(Object[] rowValues)
         {
