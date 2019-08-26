@@ -16,13 +16,17 @@ namespace NewLibCore.Data.SQL.Mapper
     public sealed class EntityMapper : IDisposable
     {
         private readonly ExecutionCore _executionCore;
+
+        /// <summary>
+        /// 初始化一个EntityMapper类的实例
+        /// </summary>
         private EntityMapper()
         {
             _executionCore = MapperConfig.ServiceProvider.GetService<ExecutionCore>();
         }
 
         /// <summary>
-        /// 创建一个EntityMapper实例
+        /// 初始化一个EntityMapper类的实例
         /// </summary>
         /// <returns></returns>
         public static EntityMapper CreateMapper()
@@ -33,7 +37,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <summary>
         /// 添加一個TModel
         /// </summary>
-        /// <param name="model"></param>
+        /// <param name="model">要新增的对象</param>
         /// <typeparam name="TModel"></typeparam>
         /// <returns></returns>
         public TModel Add<TModel>(TModel model) where TModel : EntityBase, new()
@@ -52,8 +56,8 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <summary>
         /// 修改一個TModel
         /// </summary>
-        /// <param name="model"></param>
-        /// <param name="expression"></param>
+        /// <param name="model">要修改的对象</param>
+        /// <param name="expression">查询条件</param>
         /// <typeparam name="TModel"></typeparam>
         /// <returns></returns>
         public Boolean Update<TModel>(TModel model, Expression<Func<TModel, Boolean>> expression) where TModel : EntityBase, new()
@@ -73,7 +77,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <summary>
         /// 查询一個TModel
         /// </summary>
-        /// <param name="fields"></param>
+        /// <param name="fields">字段</param>
         /// <typeparam name="TModel"></typeparam>
         /// <returns></returns>
         public SelectMapper<TModel> Select<TModel>(Expression<Func<TModel, dynamic>> fields = null) where TModel : EntityBase, new()
@@ -84,7 +88,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <summary>
         /// 查询一個TModel
         /// </summary>
-        /// <param name="fields"></param>
+        /// <param name="fields">字段</param>
         /// <typeparam name="TModel"></typeparam>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
@@ -97,8 +101,8 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <summary>
         /// 执行一個返回列表的sql语句
         /// </summary>
-        /// <param name="sql"></param>
-        /// <param name="parameters"></param>
+        /// <param name="sql">sql语句</param>
+        /// <param name="parameters">实体参数</param>
         /// <typeparam name="TModel"></typeparam>
         /// <returns></returns>
         public List<TModel> ExecuteToList<TModel>(String sql, IEnumerable<EntityParameter> parameters = null) where TModel : new()
@@ -114,8 +118,8 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <summary>
         /// 执行一个返回单个TModel的sql语句
         /// </summary>
-        /// <param name="sql"></param>
-        /// <param name="parameters"></param>
+        /// <param name="sql">sql语句</param>
+        /// <param name="parameters">实体参数</param>
         /// <typeparam name="TModel"></typeparam>
         /// <returns></returns>
         public TModel ExecuteToSingle<TModel>(String sql, IEnumerable<EntityParameter> parameters = null) where TModel : new()
@@ -137,8 +141,8 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <summary>
         /// 直接执行sql语句
         /// </summary>
-        /// <param name="sql"></param>
-        /// <param name="parameters"></param>
+        /// <param name="sql">sql语句</param>
+        /// <param name="parameters">实体参数</param>
         /// <returns></returns>
         private RawExecuteResult RawExecute(String sql, IEnumerable<EntityParameter> parameters = null)
         {
@@ -165,8 +169,7 @@ namespace NewLibCore.Data.SQL.Mapper
         public void Dispose()
         {
             _executionCore.Dispose();
-        }
-
+        } 
     }
 
     public sealed class SelectMapper<TModel> where TModel : EntityBase, new()
