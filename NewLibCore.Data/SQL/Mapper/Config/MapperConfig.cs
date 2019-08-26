@@ -13,6 +13,10 @@ namespace NewLibCore.Data.SQL.Mapper.Config
     {
         private static readonly Object _obj = new Object();
 
+        /// <summary>
+        /// 初始化一个MapperConfig类的实例
+        /// </summary>
+        /// <param name="mapperType">映射类型</param>
         private MapperConfig(MapperType mapperType)
         {
             var services = new ServiceCollection().AddTransient<ExecutionCore>();
@@ -33,12 +37,15 @@ namespace NewLibCore.Data.SQL.Mapper.Config
         /// <summary>
         /// 初始化映射配置
         /// </summary>
-        /// <param name="mapperType"></param>
+        /// <param name="mapperType">映射类型</param>
         public static void InitMapper(MapperType mapperType = MapperType.MYSQL)
         {
             new MapperConfig(mapperType);
         }
 
+        /// <summary>
+        /// 提供依赖注入的对象
+        /// </summary>
         internal static IServiceProvider ServiceProvider { get; private set; }
     }
 }
