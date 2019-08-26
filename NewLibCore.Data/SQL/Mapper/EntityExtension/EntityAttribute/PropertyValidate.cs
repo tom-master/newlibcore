@@ -16,7 +16,7 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
         public virtual Boolean IsValidate(Object value) { return false; }
 
         /// <summary>
-        /// 排序
+        /// 特性生效的优先级
         /// </summary>
         /// <value></value>
         public virtual Int32 Order { get { return -1; } }

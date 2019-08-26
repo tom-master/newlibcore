@@ -7,6 +7,9 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
     /// </summary>
     public class DateTimeDefaultValueAttribute : DefaultValueAttribute
     {
+        /// <summary>
+        /// 初始化DateTimeDefaultValueAttribute类的实例
+        /// </summary>
         public DateTimeDefaultValueAttribute() : base(typeof(DateTime), DateTime.Now)
         {
 

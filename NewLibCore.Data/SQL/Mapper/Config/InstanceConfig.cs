@@ -26,6 +26,9 @@ namespace NewLibCore.Data.SQL.Mapper.Config
         /// </summary>
         protected static readonly IDictionary<OrderByType, String> OrderTypeMapper = new Dictionary<OrderByType, String>();
 
+        /// <summary>
+        /// 初始化一个InstanceConfig类的实例
+        /// </summary>
         protected InstanceConfig()
         {
             RelationMapper.Clear();
@@ -110,18 +113,18 @@ namespace NewLibCore.Data.SQL.Mapper.Config
         /// <summary>
         /// 逻辑关系构建
         /// </summary>
-        /// <param name="relationType"></param>
-        /// <param name="left"></param>
-        /// <param name="right"></param>
+        /// <param name="relationType">关系的类型</param>
+        /// <param name="left">左语句</param>
+        /// <param name="right">右语句</param>
         /// <returns></returns>
         internal abstract String RelationBuilder(RelationType relationType, String left, String right);
 
         /// <summary>
         /// 连接语句构建
         /// </summary>
-        /// <param name="joinType"></param>
-        /// <param name="left"></param>
-        /// <param name="right"></param>
+        /// <param name="joinType">连接类型</param>
+        /// <param name="left">左语句</param>
+        /// <param name="right">右语句</param>
         /// <returns></returns>
         internal String JoinBuilder(JoinType joinType, String left, String right)
         {
@@ -131,8 +134,8 @@ namespace NewLibCore.Data.SQL.Mapper.Config
         /// <summary>
         /// 排序语句构建
         /// </summary>
-        /// <param name="orderByType"></param>
-        /// <param name="left"></param>
+        /// <param name="orderByType">排序方向</param>
+        /// <param name="left">左语句</param>
         /// <returns></returns>
         internal String OrderByBuilder(OrderByType orderByType, String left)
         {

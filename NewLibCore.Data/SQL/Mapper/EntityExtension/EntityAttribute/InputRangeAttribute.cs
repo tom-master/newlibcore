@@ -3,7 +3,7 @@
 namespace NewLibCore.Data.SQL.Mapper.EntityExtension
 {
     /// <summary>
-    /// 验证输入是否在指定范围内
+    /// 标记被修饰的属性有输入范围
     /// </summary>
     public class InputRangeAttribute : PropertyValidate
     {
@@ -11,23 +11,29 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
 
         private readonly Int32 _max;
 
-
-        public override Int32 Order
-        {
-            get { return 1; }
-        }
-
-
+        /// <summary>
+        /// 初始化一个InputRangeAttribute类的实例
+        /// </summary>
+        /// <param name="min">最短长度</param>
+        /// <param name="max">最大长度</param>
         public InputRangeAttribute(Int32 min, Int32 max)
         {
             _min = min;
             _max = max;
         }
 
-        public InputRangeAttribute(Int32 max, Boolean canbeEmpty = false) : this(0, max)
+        /// <summary>
+        /// 初始化一个InputRangeAttribute类的实例
+        /// </summary>
+        /// <param name="max">最大长度</param> 
+        public InputRangeAttribute(Int32 max) : this(0, max)
         {
         }
 
+        public override Int32 Order
+        {
+            get { return 1; }
+        }
 
         public override Boolean IsValidate(Object value)
         {

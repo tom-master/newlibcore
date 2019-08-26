@@ -78,19 +78,27 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
             Type = type;
         }
 
+        /// <summary>
+        /// 初始化一个DefaultValueAttribute类的实例
+        /// </summary>
+        /// <param name="type">默认值类型</param>
         public DefaultValueAttribute(Type type) : this(type, default(Object))
         {
 
         }
 
+        /// <summary>
+        /// 默认值类型
+        /// </summary>
         public Type Type { get; private set; }
 
+        /// <summary>
+        /// 默认值
+        /// </summary>
         public Object Value { get; private set; }
-
-
+         
         public override Int32 Order => 2;
-
-
+         
         public override String FailReason(String fieldName)
         {
             return $@"{fieldName} 的默认值类型转换失败";

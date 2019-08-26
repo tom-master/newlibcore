@@ -2,10 +2,10 @@
 
 namespace NewLibCore.Data.SQL.Mapper.EntityExtension
 {
-	/// <summary>
-	/// 非空验证
-	/// </summary>
-	public class RequiredAttribute : PropertyValidate
+    /// <summary>
+    /// 标记被修饰的属性不能为空
+    /// </summary>
+    public class RequiredAttribute : PropertyValidate
 	{
 		public override Int32 Order
 		{
