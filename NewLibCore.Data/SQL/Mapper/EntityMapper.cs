@@ -85,18 +85,6 @@ namespace NewLibCore.Data.SQL.Mapper
             return new SelectMapper<TModel>(_executionCore).Select(fields);
         }
 
-        /// <summary>
-        /// 查询一個TModel
-        /// </summary>
-        /// <param name="fields">字段</param>
-        /// <typeparam name="TModel"></typeparam>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public SelectMapper<TModel> Select<TModel, T>(Expression<Func<TModel, T, dynamic>> fields = null) where TModel : EntityBase, new()
-        where T : EntityBase, new()
-        {
-            return new SelectMapper<TModel>(_executionCore).Select(fields);
-        }
 
         /// <summary>
         /// 执行一個返回列表的sql语句
@@ -169,7 +157,7 @@ namespace NewLibCore.Data.SQL.Mapper
         public void Dispose()
         {
             _executionCore.Dispose();
-        } 
+        }
     }
 
     public sealed class SelectMapper<TModel> where TModel : EntityBase, new()
@@ -212,6 +200,15 @@ namespace NewLibCore.Data.SQL.Mapper
             {
                 var executeResult = InternalExecuteSql();
                 return executeResult.ToList<TModel>();
+            });
+        }
+
+        public List<T> ToList<T>() where T : new()
+        {
+            return RunDiagnosis.Watch(() =>
+            {
+                var executeResult = InternalExecuteSql();
+                return executeResult.ToList<T>();
             });
         }
 

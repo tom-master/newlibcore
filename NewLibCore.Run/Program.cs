@@ -13,38 +13,39 @@ namespace NewLibCore.Run
             MapperConfig.InitMapper();
             using (var mapper = EntityMapper.CreateMapper())
             {
-                //添加一个对象到数据库
-                var user = mapper.Add(new User());
 
-                //更新指定对象字段
-                user.ModifyLockScreenPassword("123");
-                mapper.Update(user, user => user.Id == 4);
+                var r = mapper.Select<User>(w => new { w.Id, w.Name }).Where(w => w.Id == 4).ToList<(Int32 Id, String Name)>();
 
-                //不限条件查询User表
-                //SELECT user.* FROM User AS user;
-                mapper.Select<User>().ToList();
+                // //添加一个对象到数据库
+                // var user = mapper.Add(new User());
 
-                //不限条件查询的指定列
-                //SELECT user.Id,user.Name,user.AddTime FROM User AS user;
-                mapper.Select<User>(user => new { user.Id, user.Name, user.AddTime }).ToList();
+                // //更新指定对象字段
+                // user.ModifyLockScreenPassword("123");
+                // mapper.Update(user, user => user.Id == 4);
 
-                //根据条件查询User表
-                //SELECT user.* FROM User AS user WHERE user.Id==4 AND user.IsDeleted=0;
-                mapper.Select<User>().Where(user => user.Id == 4).ToList();
+                // //不限条件查询User表
+                // //SELECT user.* FROM User AS user;
+                // mapper.Select<User>().ToList();
 
-                //根据条件查询指定列
-                //SELECT user.Id,user.Name,user.AddTime FROM User AS user WHERE user.Id==4 AND user.IsDeleted=0
-                mapper.Select<User>(user => new { user.Id, user.Name, user.AddTime }).Where(user => user.Id == 4).ToList();
+                // //不限条件查询的指定列
+                // //SELECT user.Id,user.Name,user.AddTime FROM User AS user;
+                // mapper.Select<User>(user => new { user.Id, user.Name, user.AddTime }).ToList();
 
-                //使用内连接查询User与Config表中都存在的数据
-                //SELECT * FROM User AS user INNER JOIN Config AS config ON config.Id=user.Id WHERE user.Id=4 AND user.IsDeleted=0 AND config.IsDeleted=0
-                mapper.Select<User>().InnerJoin<Config>((user, config) => user.ConfigId == config.Id).Where(user => user.Id == 4).ToList();
+                // //根据条件查询User表
+                // //SELECT user.* FROM User AS user WHERE user.Id==4 AND user.IsDeleted=0;
+                // mapper.Select<User>().Where(user => user.Id == 4).ToList();
 
-                //使用内连接查询User与Config表中都存在的数据
-                //SELECT * FROM User AS user INNER JOIN Config AS config ON config.Id=user.Id WHERE config.Id==1 AND user.IsDeleted= 0 AND config.IsDeleted=0
-                mapper.Select<User>().InnerJoin<Config>((user, config) => user.ConfigId == config.Id).Where<Config>(config => config.Id == 1).ToList();
+                // //根据条件查询指定列
+                // //SELECT user.Id,user.Name,user.AddTime FROM User AS user WHERE user.Id==4 AND user.IsDeleted=0
+                // mapper.Select<User>(user => new { user.Id, user.Name, user.AddTime }).Where(user => user.Id == 4).ToList();
 
-                //
+                // //使用内连接查询User与Config表中都存在的数据
+                // //SELECT * FROM User AS user INNER JOIN Config AS config ON config.Id=user.Id WHERE user.Id=4 AND user.IsDeleted=0 AND config.IsDeleted=0
+                // mapper.Select<User>().InnerJoin<Config>((user, config) => user.ConfigId == config.Id).Where(user => user.Id == 4).ToList();
+
+                // //使用内连接查询User与Config表中都存在的数据
+                // //SELECT * FROM User AS user INNER JOIN Config AS config ON config.Id=user.Id WHERE config.Id==1 AND user.IsDeleted= 0 AND config.IsDeleted=0
+                // mapper.Select<User>().InnerJoin<Config>((user, config) => user.ConfigId == config.Id).Where<Config>(config => config.Id == 1).ToList();
 
             }
             var parameters = new EntityParameter("@id", new List<Int32> { 1, 2, 3, 4, 5 });
@@ -69,6 +70,11 @@ namespace NewLibCore.Run
             //    });
             //}
             Console.ReadKey();
+        }
+
+        private static void Test(ValueTuple valueTuple)
+        {
+
         }
 
     }

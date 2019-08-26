@@ -36,11 +36,19 @@ namespace NewLibCore.Data.SQL.Mapper
             segment.Translate();
 
             var aliasMapper = _segmentManager.MergeAliasMapper();
-            foreach (var aliasItem in aliasMapper)
-            {
-                segment.Result.Append($@"AND {aliasItem.Value.ToLower()}.IsDeleted = 0");
-            }
 
+            //当出现查询但张表不加Where条件时，则强制将IsDeleted=0添加到后面
+            if (_segmentManager.Where == null)
+            {
+                segment.Result.Append($@"{RelationType.AND.ToString()} {AliasName}.IsDeleted = 0");
+            }
+            else
+            {
+                foreach (var aliasItem in aliasMapper)
+                {
+                    segment.Result.Append($@"{RelationType.AND} {aliasItem.Value.ToLower()}.IsDeleted = 0");
+                }
+            }
             if (_segmentManager.Order != null)
             {
                 var (fields, tableName) = StatementParse(_segmentManager.Order);
