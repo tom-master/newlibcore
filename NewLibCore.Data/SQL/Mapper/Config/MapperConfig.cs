@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using NewLibCore.Data.SQL.Mapper.Cache;
 using NewLibCore.Data.SQL.Mapper.Database;
+using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
 using NewLibCore.Logger;
 
 namespace NewLibCore.Data.SQL.Mapper.Config
@@ -19,7 +20,10 @@ namespace NewLibCore.Data.SQL.Mapper.Config
         /// <param name="mapperType">映射类型</param>
         private MapperConfig(MapperType mapperType)
         {
-            var services = new ServiceCollection().AddTransient<ExecutionCore>();
+            var services = new ServiceCollection()
+                .AddTransient<ExecutionCore>()
+                .AddTransient<SegmentManager>();
+
             if (mapperType == MapperType.MSSQL)
             {
                 services = services.AddSingleton<InstanceConfig, MsSqlInstanceConfig>();

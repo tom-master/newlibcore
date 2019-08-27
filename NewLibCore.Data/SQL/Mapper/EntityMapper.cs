@@ -67,7 +67,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
             return RunDiagnosis.Watch(() =>
              {
-                 var segmentManager = new SegmentManager();
+                 var segmentManager = MapperConfig.ServiceProvider.GetService<SegmentManager>();
                  segmentManager.Add(expression);
                  Handler<TModel> builder = new UpdateHandler<TModel>(model, segmentManager, true);
                  return builder.GetTranslationResult().ExecuteTranslateResult(_executionCore).ToPrimitive<Int32>() > 0;
@@ -84,7 +84,6 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             return new SelectMapper<TModel>(_executionCore).Select(fields);
         }
-
 
         /// <summary>
         /// 执行一個返回列表的sql语句
@@ -162,12 +161,13 @@ namespace NewLibCore.Data.SQL.Mapper
 
     public sealed class SelectMapper<TModel> where TModel : EntityBase, new()
     {
-        private readonly SegmentManager _segmentManager = new SegmentManager();
+        private readonly SegmentManager _segmentManager;
 
         private readonly ExecutionCore _executionCore;
         internal SelectMapper(ExecutionCore executionCore)
         {
             _executionCore = executionCore;
+            _segmentManager = MapperConfig.ServiceProvider.GetService<SegmentManager>();
         }
 
         public Boolean Exist()
@@ -212,17 +212,7 @@ namespace NewLibCore.Data.SQL.Mapper
             });
         }
 
-        public SelectMapper<TModel> Select<T>(Expression<Func<TModel, T, dynamic>> fields = null) where T : EntityBase, new()
-        {
-            if (fields != null)
-            {
-                _segmentManager.Add(fields);
-            }
-
-            return this;
-        }
-
-        public SelectMapper<TModel> Select(Expression<Func<TModel, dynamic>> fields = null)
+        internal SelectMapper<TModel> Select(Expression<Func<TModel, dynamic>> fields = null)
         {
             if (fields != null)
             {

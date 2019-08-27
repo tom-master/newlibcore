@@ -91,7 +91,6 @@ namespace NewLibCore.Data.SQL.Mapper
                 }
             }
             Result.Append("WHERE 1=1");
-
             //翻译Where条件对象
             if (_segmentManager.Where != null)
             {

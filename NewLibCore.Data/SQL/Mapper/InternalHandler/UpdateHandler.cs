@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
@@ -13,9 +14,7 @@ namespace NewLibCore.Data.SQL.Mapper
     internal class UpdateHandler<TModel> : Handler<TModel> where TModel : EntityBase, new()
     {
         private readonly TModel _modelInstance;
-
         private readonly Boolean _verifyModel;
-
         private readonly SegmentManager _segmentManager;
 
         /// <summary>
@@ -42,18 +41,27 @@ namespace NewLibCore.Data.SQL.Mapper
             {
                 _modelInstance.Validate();
             }
-
+            
             var (TableName, AliasName) = typeof(TModel).GetTableName();
-
             var propertys = _modelInstance.GetChangedProperty();
+
             var segment = TranslationSegment.CreateTranslation(_segmentManager);
-            segment.Result.Append(String.Format(Instance.UpdateTemplate, TableName, AliasName, String.Join(",", propertys.Select(p => $@"{AliasName}.{p.Key}=@{p.Key}"))), propertys.Select(c => new EntityParameter(c.Key, c.Value)));
-            if (_segmentManager.Where != null)
-            {
-                segment.Translate();
-            }
+            segment.Result.Append(ReplacePlaceholder(TableName, AliasName, propertys), CreateParameter(propertys));
+            segment.Translate();
+            segment.Result.Append($@"{RelationType.AND} {AliasName}.IsDeleted=0");
             _modelInstance.Reset();
+
             return segment.Result.Append($@"{Instance.Extension.RowCount}");
+        }
+
+        private static IEnumerable<EntityParameter> CreateParameter(IReadOnlyList<KeyValuePair<String, Object>> propertys)
+        {
+            return propertys.Select(c => new EntityParameter(c.Key, c.Value));
+        }
+
+        private String ReplacePlaceholder(String TableName, String AliasName, IReadOnlyList<KeyValuePair<String, Object>> propertys)
+        {
+            return String.Format(Instance.UpdateTemplate, TableName, AliasName, String.Join(",", propertys.Select(p => $@"{AliasName}.{p.Key}=@{p.Key}")));
         }
     }
 }

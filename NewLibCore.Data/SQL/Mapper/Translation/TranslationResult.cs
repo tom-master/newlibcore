@@ -111,11 +111,11 @@ namespace NewLibCore.Data.SQL.Mapper
         private RawExecuteResult Execute(ExecutionCore executionCore)
         {
             var executeResult = GetCache();
-            var executeType = executionCore.GetExecuteType(this.ToString());
-            if (executeType == ExecuteType.SELECT && executeResult == null)
+            var executeType = executionCore.GetExecuteType(ToString());
+            if (executeResult == null)
             {
                 executeResult = executionCore.Execute(this);
-                SetCache(executeResult);
+                SetCache(executeType, executeResult);
             }
 
             return executeResult;
@@ -140,11 +140,14 @@ namespace NewLibCore.Data.SQL.Mapper
         /// 设置缓存
         /// </summary>
         /// <param name="executeResult">sql执行后原始的执行结果</param>
-        private void SetCache(RawExecuteResult executeResult)
+        private void SetCache(ExecuteType executeType, RawExecuteResult executeResult)
         {
             if (_cache != null)
             {
-                _cache.Add(PrepareCacheKey(), executeResult);
+                if (executeType == ExecuteType.SELECT)
+                {
+                    _cache.Add(PrepareCacheKey(), executeResult);
+                }
             }
         }
 

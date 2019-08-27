@@ -14,14 +14,12 @@ namespace NewLibCore.Run
             using (var mapper = EntityMapper.CreateMapper())
             {
 
-                var r = mapper.Select<Member>(w => new { w.Id, w.Name }).ToList<(Int32 Id, String Name)>();
-
                 // //添加一个对象到数据库
-                // var user = mapper.Add(new User());
+                var user = new User(); //mapper.Add(new User("123123","123123"));
 
-                // //更新指定对象字段
-                // user.ModifyLockScreenPassword("123");
-                // mapper.Update(user, user => user.Id == 4);
+                //更新指定对象字段
+                user.ModifyLockScreenPassword("123");
+                mapper.Update(user, u => u.Id == 4);
 
                 // //不限条件查询User表
                 // //SELECT user.* FROM User AS user;
@@ -77,6 +75,13 @@ namespace NewLibCore.Run
 
         }
 
+    }
+
+    public class TestModel
+    {
+        public Int32 Id { get; set; }
+
+        public String Name { get; set; }
     }
 
     public enum WallpaperSource

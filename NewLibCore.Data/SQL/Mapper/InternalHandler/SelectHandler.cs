@@ -32,7 +32,7 @@ namespace NewLibCore.Data.SQL.Mapper
             var (Fields, AliasName) = StatementParse(_segmentManager.Field);
 
             var segment = TranslationSegment.CreateTranslation(_segmentManager);
-            segment.Result.Append(String.Format(Instance.SelectTemplate, Fields, typeof(TModel).GetTableName().TableName, AliasName));
+            segment.Result.Append(ReplacePlaceholder(Fields, AliasName));
             segment.Translate();
 
             var aliasMapper = _segmentManager.MergeAliasMapper();
@@ -64,6 +64,11 @@ namespace NewLibCore.Data.SQL.Mapper
             }
 
             return segment.Result;
+        }
+
+        private String ReplacePlaceholder(String Fields, String AliasName)
+        {
+            return String.Format(Instance.SelectTemplate, Fields, typeof(TModel).GetTableName().TableName, AliasName);
         }
 
         /// <summary>
