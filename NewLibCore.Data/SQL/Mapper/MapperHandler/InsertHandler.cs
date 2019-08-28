@@ -6,7 +6,6 @@ using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper
 {
-
     /// <summary>
     /// 新增操作处理
     /// </summary>
