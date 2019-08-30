@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using NewLibCore.Data.SQL.Mapper;
-using NewLibCore.Data.SQL.Mapper.Config;
+using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 
 namespace NewLibCore.Run
@@ -10,11 +11,11 @@ namespace NewLibCore.Run
     {
         public static void Main(String[] args)
         {
-            MapperConfig.InitMapper();
-            using (var mapper = EntityMapper.CreateMapper())
-            {
-                mapper.Select<User>().Where(w => w.Id == 4).ToList();
-            }
+            //MapperConfig.InitMapper();
+            //using (var mapper = EntityMapper.CreateMapper())
+            //{
+            //    mapper.Select<User>().Where(w => w.Id == 4).ToList();
+            //}
 
 
 
@@ -76,10 +77,41 @@ namespace NewLibCore.Run
             //    });
             //}
 
+            
+            try
+            {
+                var r = Test().WaitAsync(TimeSpan.FromSeconds(1)).Result;
+                Console.Write(r);
+            }
+            catch (Exception e)
+            {
+                Console.Write(e.Message);
+            }
             Console.ReadKey();
         }
-    }
 
+        internal static async Task<Int32> Test()
+        {
+            await Task.Delay(1000 * 3);
+            return 1;
+        }
+    }
+    public static class TaskWaitingExtensions
+    {
+        public static async Task<T> WaitAsync<T>(this Task<T> task, TimeSpan timeout)
+        {
+            using (var cts = new CancellationTokenSource())
+            {
+                var delayTask = Task.Delay(timeout, cts.Token);
+                if (await Task.WhenAny(task, delayTask) == task)
+                {
+                    cts.Cancel();
+                    return await task;
+                }
+                throw new OperationCanceledException("The operation has timed out.");
+            }
+        }
+    }
     public class TestModel
     {
         public Int32 Id { get; set; }
