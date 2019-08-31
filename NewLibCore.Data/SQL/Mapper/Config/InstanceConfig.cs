@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using NewLibCore.Data.SQL.Mapper.Cache;
-using NewLibCore.Logger;
 
-namespace NewLibCore.Data.SQL.Mapper.Config
+namespace NewLibCore.Data.SQL.Mapper
 {
     /// <summary>
     /// 数据库实例配置

@@ -2,7 +2,7 @@
 using System.Data.Common;
 using MySql.Data.MySqlClient;
 
-namespace NewLibCore.Data.SQL.Mapper.Config
+namespace NewLibCore.Data.SQL.Mapper
 {
     /// <summary>
     /// mysql数据库实例配置

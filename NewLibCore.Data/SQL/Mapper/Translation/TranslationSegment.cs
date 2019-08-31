@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Microsoft.Extensions.DependencyInjection;
-using NewLibCore.Data.SQL.Mapper.Config;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
 using NewLibCore.Validate;

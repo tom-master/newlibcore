@@ -1,7 +1,6 @@
 using System;
 using System.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
-using NewLibCore.Data.SQL.Mapper.Config;
 using NewLibCore.Logger;
 
 namespace NewLibCore.Data.SQL.Mapper.EntityExtension

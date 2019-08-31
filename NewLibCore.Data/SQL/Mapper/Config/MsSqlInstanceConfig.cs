@@ -2,7 +2,7 @@
 using System.Data.Common;
 using System.Data.SqlClient;
 
-namespace NewLibCore.Data.SQL.Mapper.Config
+namespace NewLibCore.Data.SQL.Mapper
 {
     /// <summary>
     /// mssql数据库实例配置

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
-using NewLibCore.Data.SQL.Mapper.Config;
 using NewLibCore.Logger;
 using NewLibCore.Security;
 using NewLibCore.Validate;

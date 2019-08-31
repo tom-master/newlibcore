@@ -5,7 +5,7 @@ using NewLibCore.Data.SQL.Mapper.Database;
 using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
 using NewLibCore.Logger;
 
-namespace NewLibCore.Data.SQL.Mapper.Config
+namespace NewLibCore.Data.SQL.Mapper
 {
     /// <summary>
     /// 映射配置

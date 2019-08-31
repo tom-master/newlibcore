@@ -4,7 +4,6 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
-using NewLibCore.Data.SQL.Mapper.Config;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Validate;
 

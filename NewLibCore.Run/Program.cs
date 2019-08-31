@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using NewLibCore.Data.SQL.Mapper;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 
 namespace NewLibCore.Run
@@ -11,11 +12,11 @@ namespace NewLibCore.Run
     {
         public static void Main(String[] args)
         {
-            //MapperConfig.InitMapper();
-            //using (var mapper = EntityMapper.CreateMapper())
-            //{
-            //    mapper.Select<User>().Where(w => w.Id == 4).ToList();
-            //}
+            MapperConfig.InitMapper();
+            using (var mapper = EntityMapper.CreateMapper())
+            {
+                var r = mapper.Select<User>().Where(w => w.Id == 4).ToList();
+            }
 
 
 
@@ -77,7 +78,7 @@ namespace NewLibCore.Run
             //    });
             //}
 
-            
+
             try
             {
                 var r = Test().WaitAsync(TimeSpan.FromSeconds(1)).Result;
