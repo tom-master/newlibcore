@@ -1,4 +1,6 @@
-# EntityMapper简介(持续更新...)
+# EntityMapper(持续更新...)
+
+### 简介
 **EntityMapper**是一个可以将简单的**Expression**翻译为对应的**SQL**语句，支持连接查询以及排序等操作，后续还会继续支持复杂**SQL**语句翻译操作
 # 基本操作示例
 
