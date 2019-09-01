@@ -36,5 +36,6 @@
   using(var mapper = EntityMapper.CreateMapper())
   {
     var users = mapper.Select<User>().Where(user=>user.Id==1).ToList();
+    var user = mapper.Select<User>().Where(user=>user.Id==1).FirstOrDefault();
   }
   ```
