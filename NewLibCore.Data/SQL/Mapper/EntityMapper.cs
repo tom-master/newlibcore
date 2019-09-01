@@ -45,8 +45,8 @@ namespace NewLibCore.Data.SQL.Mapper
 
             return RunDiagnosis.Watch(() =>
              {
-                 Handler<TModel> builder = new InsertHandler<TModel>(model, true);
-                 var translationResult = builder.GetTranslationResult();
+                 Handler handler = new InsertHandler<TModel>(model, true);
+                 var translationResult = handler.GetTranslationResult();
                  model.Id = translationResult.ExecuteTranslateResult(_executionCore).ToPrimitive<Int32>();
                  return model;
              });
@@ -68,8 +68,8 @@ namespace NewLibCore.Data.SQL.Mapper
              {
                  var segmentManager = MapperConfig.ServiceProvider.GetService<SegmentManager>();
                  segmentManager.Add(expression);
-                 Handler<TModel> builder = new UpdateHandler<TModel>(model, segmentManager, true);
-                 return builder.GetTranslationResult().ExecuteTranslateResult(_executionCore).ToPrimitive<Int32>() > 0;
+                 Handler handler = new UpdateHandler<TModel>(model, segmentManager, true);
+                 return handler.GetTranslationResult().ExecuteTranslateResult(_executionCore).ToPrimitive<Int32>() > 0;
              });
         }
 
@@ -79,7 +79,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <param name="fields">字段</param>
         /// <typeparam name="TModel"></typeparam>
         /// <returns></returns>
-        public SelectMapper<TModel> Select<TModel>(Expression<Func<TModel, dynamic>> fields = null) where TModel : EntityBase, new()
+        public SelectMapper<TModel> Select<TModel>(Expression<Func<TModel, dynamic>> fields = null) where TModel : new()
         {
             return new SelectMapper<TModel>(_executionCore).Select(fields);
         }
@@ -158,7 +158,7 @@ namespace NewLibCore.Data.SQL.Mapper
         }
     }
 
-    public sealed class SelectMapper<TModel> where TModel : EntityBase, new()
+    public sealed class SelectMapper<TModel> where TModel : new()
     {
         private readonly SegmentManager _segmentManager;
 
@@ -190,6 +190,15 @@ namespace NewLibCore.Data.SQL.Mapper
             {
                 var executeResult = InternalExecuteSql();
                 return executeResult.ToSingle<TModel>();
+            });
+        }
+
+        public T FirstOrDefault<T>() where T : new()
+        {
+            return RunDiagnosis.Watch(() =>
+            {
+                var executeResult = InternalExecuteSql();
+                return executeResult.ToSingle<T>();
             });
         }
 
@@ -229,7 +238,7 @@ namespace NewLibCore.Data.SQL.Mapper
             return this;
         }
 
-        public SelectMapper<TModel> Where<T>(Expression<Func<T, Boolean>> expression) where T : EntityBase, new()
+        public SelectMapper<TModel> Where<T>(Expression<Func<T, Boolean>> expression) where T : new()
         {
             Parameter.Validate(expression);
             _segmentManager.Add(expression);
@@ -237,7 +246,7 @@ namespace NewLibCore.Data.SQL.Mapper
             return this;
         }
 
-        public SelectMapper<TModel> Where<T>(Expression<Func<TModel, T, Boolean>> expression) where T : EntityBase, new()
+        public SelectMapper<TModel> Where<T>(Expression<Func<TModel, T, Boolean>> expression) where T : new()
         {
             Parameter.Validate(expression);
             _segmentManager.Add(expression);
@@ -253,7 +262,7 @@ namespace NewLibCore.Data.SQL.Mapper
             return this;
         }
 
-        public SelectMapper<TModel> LeftJoin<TRight>(Expression<Func<TModel, TRight, Boolean>> expression) where TRight : EntityBase, new()
+        public SelectMapper<TModel> LeftJoin<TRight>(Expression<Func<TModel, TRight, Boolean>> expression) where TRight : new()
         {
             Parameter.Validate(expression);
             _segmentManager.Add(expression, JoinType.LEFT);
@@ -261,7 +270,7 @@ namespace NewLibCore.Data.SQL.Mapper
             return this;
         }
 
-        public SelectMapper<TModel> RightJoin<TRight>(Expression<Func<TModel, TRight, Boolean>> expression) where TRight : EntityBase, new()
+        public SelectMapper<TModel> RightJoin<TRight>(Expression<Func<TModel, TRight, Boolean>> expression) where TRight : new()
         {
             Parameter.Validate(expression);
             _segmentManager.Add(expression, JoinType.RIGHT);
@@ -269,7 +278,7 @@ namespace NewLibCore.Data.SQL.Mapper
             return this;
         }
 
-        public SelectMapper<TModel> InnerJoin<TRight>(Expression<Func<TModel, TRight, Boolean>> expression) where TRight : EntityBase, new()
+        public SelectMapper<TModel> InnerJoin<TRight>(Expression<Func<TModel, TRight, Boolean>> expression) where TRight : new()
         {
             Parameter.Validate(expression);
             _segmentManager.Add(expression, JoinType.INNER);
@@ -278,8 +287,8 @@ namespace NewLibCore.Data.SQL.Mapper
         }
 
         public SelectMapper<TModel> LeftJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> expression)
-          where TLeft : EntityBase, new()
-          where TRight : EntityBase, new()
+          where TLeft : new()
+          where TRight : new()
         {
             Parameter.Validate(expression);
             _segmentManager.Add(expression, JoinType.LEFT);
@@ -288,8 +297,8 @@ namespace NewLibCore.Data.SQL.Mapper
         }
 
         public SelectMapper<TModel> RightJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> expression)
-            where TLeft : EntityBase, new()
-            where TRight : EntityBase, new()
+            where TLeft : new()
+            where TRight : new()
         {
             Parameter.Validate(expression);
             _segmentManager.Add(expression, JoinType.RIGHT);
@@ -325,7 +334,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
         private RawExecuteResult InternalExecuteSql()
         {
-            Handler<TModel> builder = new SelectHandler<TModel>(_segmentManager);
+            Handler builder = new SelectHandler<TModel>(_segmentManager);
             var translationResult = builder.GetTranslationResult();
             return translationResult.ExecuteTranslateResult(_executionCore);
         }

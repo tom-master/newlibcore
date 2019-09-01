@@ -11,7 +11,7 @@ namespace NewLibCore.Data.SQL.Mapper
     /// 更新处理类
     /// </summary>
     /// <typeparam name="TModel"></typeparam>
-    internal class UpdateHandler<TModel> : Handler<TModel> where TModel : EntityBase, new()
+    internal class UpdateHandler<TModel> : Handler where TModel : EntityBase, new()
     {
         private readonly TModel _modelInstance;
         private readonly Boolean _verifyModel;
@@ -41,7 +41,7 @@ namespace NewLibCore.Data.SQL.Mapper
             {
                 _modelInstance.Validate();
             }
-            
+
             var (TableName, AliasName) = typeof(TModel).GetTableName();
             var propertys = _modelInstance.GetChangedProperty();
 

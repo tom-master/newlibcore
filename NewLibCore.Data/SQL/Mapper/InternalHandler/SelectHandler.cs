@@ -13,7 +13,7 @@ namespace NewLibCore.Data.SQL.Mapper
     /// 查询处理类
     /// </summary>
     /// <typeparam name="TModel"></typeparam>
-    internal class SelectHandler<TModel> : Handler<TModel> where TModel : EntityBase, new()
+    internal class SelectHandler<TModel> : Handler where TModel : new()
     {
         private readonly SegmentManager _segmentManager;
 

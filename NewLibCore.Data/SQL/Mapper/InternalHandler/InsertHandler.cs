@@ -11,7 +11,7 @@ namespace NewLibCore.Data.SQL.Mapper
     /// 新增操作处理
     /// </summary>
     /// <typeparam name="TModel"></typeparam>
-    internal class InsertHandler<TModel> : Handler<TModel> where TModel : EntityBase, new()
+    internal class InsertHandler<TModel> : Handler where TModel : EntityBase, new()
     {
         private readonly TModel _instance;
         private readonly Boolean _verifyModel;

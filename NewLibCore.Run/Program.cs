@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,104 +16,33 @@ namespace NewLibCore.Run
             MapperConfig.InitMapper();
             using (var mapper = EntityMapper.CreateMapper())
             {
-                var r = mapper.Select<User>().Where(w => w.Id == 4).ToList();
+                // var user = new User("123123", "123123123");
+                // mapper.Add(user);
+
+                // var user = new User();
+                // user.ModifyLoginPassword("123123123123");
+                // mapper.Update(user, u => u.Id == 4);
+
+                //var r = mapper.Select<User>(user => new { user.Id, user.Name }).ToList();
+                //var r = mapper.Select<User>(user => new { user.Id, user.Name }).Where(user => user.Id == 4).ToList();
+                //var r = mapper.Select<User>(user => new { user.Id, user.Name }).Where(user => user.Id == 4).ToList<User>();
+                //var r = mapper.Select<User>(user => new { user.Id, user.Name }).Where<User>(user => user.Id == 4).ToList();
+                //var r = mapper.Select<User>(user => new { user.Id, user.Name }).Where<User>(user => user.Id == 4).ToList<(Int32 Id, String Name)>();
+
+                // var r = mapper.Select<User>(user => new { user.Id, user.Name }).FirstOrDefault();
+                // var r = mapper.Select<User>(user => new { user.Id, user.Name }).Where(user => user.Id == 4).FirstOrDefault();
+                // var r = mapper.Select<User>(user => new { user.Id, user.Name }).Where(user => user.Id == 4).FirstOrDefault<User>();
+                // var r = mapper.Select<User>(user => new { user.Id, user.Name }).Where<User>(user => user.Id == 4).FirstOrDefault();
+                // var r = mapper.Select<User>(user => new { user.Id, user.Name }).Where<User>(user => user.Id == 4).FirstOrDefault<(Int32 Id, String Name)>();
             }
-
-
-
-            //MapperConfig.InitMapper();
-            //using (var mapper = EntityMapper.CreateMapper())
-            //{
-
-            //    // //添加一个对象到数据库
-            //    //var user = new User(); //mapper.Add(new User("123123","123123"));
-
-            //    ////更新指定对象字段
-            //    //user.ModifyLockScreenPassword("123");
-            //    //mapper.Update(user, u => u.Id == 4);
-
-            //    // //不限条件查询User表
-            //    // //SELECT user.* FROM User AS user;
-            //    // mapper.Select<User>().ToList();
-
-            //    // //不限条件查询的指定列
-            //    // //SELECT user.Id,user.Name,user.AddTime FROM User AS user;
-            //    // mapper.Select<User>(user => new { user.Id, user.Name, user.AddTime }).ToList();
-
-            //    // //根据条件查询User表
-            //    // //SELECT user.* FROM User AS user WHERE user.Id==4 AND user.IsDeleted=0;
-            //    // mapper.Select<User>().Where(user => user.Id == 4).ToList();
-
-            //    // //根据条件查询指定列
-            //    // //SELECT user.Id,user.Name,user.AddTime FROM User AS user WHERE user.Id==4 AND user.IsDeleted=0
-            //    // mapper.Select<User>(user => new { user.Id, user.Name, user.AddTime }).Where(user => user.Id == 4).ToList();
-
-            //    // //使用内连接查询User与Config表中都存在的数据
-            //    // //SELECT * FROM User AS user INNER JOIN Config AS config ON config.Id=user.Id WHERE user.Id=4 AND user.IsDeleted=0 AND config.IsDeleted=0
-            //    // mapper.Select<User>().InnerJoin<Config>((user, config) => user.ConfigId == config.Id).Where(user => user.Id == 4).ToList();
-
-            //    // //使用内连接查询User与Config表中都存在的数据
-            //    // //SELECT * FROM User AS user INNER JOIN Config AS config ON config.Id=user.Id WHERE config.Id==1 AND user.IsDeleted= 0 AND config.IsDeleted=0
-            //    // mapper.Select<User>().InnerJoin<Config>((user, config) => user.ConfigId == config.Id).Where<Config>(config => config.Id == 1).ToList();
-
-            //}
-            //var parameters = new EntityParameter("@id", new List<Int32> { 1, 2, 3, 4, 5 });
-
-            //for (var i = 0; i < Environment.ProcessorCount; i++)
-            //{
-            //    ThreadPool.QueueUserWorkItem((a1) =>
-            //    {
-            //        using (var mapper = EntityMapper.CreateMapper())
-            //        {
-            //            mapper.OpenTransaction();
-            //            try
-            //            {
-            //                mapper.Select<User>().Where(w => w.Id == 4).FirstOrDefault();
-            //                mapper.Commit();
-            //            }
-            //            catch (Exception)
-            //            {
-            //                throw;
-            //            }
-            //        }
-            //    });
-            //}
-
-
-            try
-            {
-                var r = Test().WaitAsync(TimeSpan.FromSeconds(1)).Result;
-                Console.Write(r);
-            }
-            catch (Exception e)
-            {
-                Console.Write(e.Message);
-            }
-            Console.ReadKey();
         }
 
-        internal static async Task<Int32> Test()
+        public static void Test<ValueTuple>(Expression<Func<ValueTuple, dynamic>> fields)
         {
-            await Task.Delay(1000 * 3);
-            return 1;
+
         }
     }
-    public static class TaskWaitingExtensions
-    {
-        public static async Task<T> WaitAsync<T>(this Task<T> task, TimeSpan timeout)
-        {
-            using (var cts = new CancellationTokenSource())
-            {
-                var delayTask = Task.Delay(timeout, cts.Token);
-                if (await Task.WhenAny(task, delayTask) == task)
-                {
-                    cts.Cancel();
-                    return await task;
-                }
-                throw new OperationCanceledException("The operation has timed out.");
-            }
-        }
-    }
+
     public class TestModel
     {
         public Int32 Id { get; set; }
@@ -268,6 +198,8 @@ namespace NewLibCore.Run
         public Int32 WallpaperId { get; private set; }
 
         public Wallpaper Wallpaper { get; set; }
+
+        public Int32 UserId { get; set; }
 
         /// <summary>
         /// 账户头像是否被更改

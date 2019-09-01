@@ -67,8 +67,8 @@ namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
         /// <typeparam name="TModel">主表</typeparam>
         /// <typeparam name="TJoin">子表</typeparam>
         /// <returns></returns>
-        internal void Add<TModel, TJoin>(Expression<Func<TModel, TJoin, Boolean>> expression, JoinType joinType) where TModel : EntityBase, new()
-            where TJoin : EntityBase, new()
+        internal void Add<TModel, TJoin>(Expression<Func<TModel, TJoin, Boolean>> expression, JoinType joinType) where TModel : new()
+            where TJoin : new()
         {
             Parameter.Validate(expression);
             Joins.Add(new JoinSegment
@@ -87,7 +87,7 @@ namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
         /// <typeparam name="TModel">主表</typeparam>
         /// <typeparam name="TJoin">连接类型</typeparam>
         /// <returns></returns>
-        internal void Add<TModel, TJoin>(Expression<Func<TModel, TJoin, Boolean>> expression) where TModel : EntityBase, new()
+        internal void Add<TModel, TJoin>(Expression<Func<TModel, TJoin, Boolean>> expression) where TModel : new()
         {
             Parameter.Validate(expression);
             Where = new SimpleStatement
@@ -102,7 +102,7 @@ namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
         /// </summary>
         /// <param name="expression">表达式</param>
         /// <typeparam name="TModel">主表</typeparam>
-        internal void Add<TModel>(Expression<Func<TModel, Boolean>> expression) where TModel : EntityBase, new()
+        internal void Add<TModel>(Expression<Func<TModel, Boolean>> expression) where TModel : new()
         {
             Parameter.Validate(expression);
             Where = new SimpleStatement
@@ -117,7 +117,7 @@ namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
         /// </summary>
         /// <param name="expression">表达式</param>
         /// <typeparam name="TModel">主表</typeparam>
-        internal void Add<TModel>(Expression<Func<TModel, dynamic>> expression) where TModel : EntityBase, new()
+        internal void Add<TModel>(Expression<Func<TModel, dynamic>> expression) where TModel : new()
         {
             Parameter.Validate(expression);
             Field = new SimpleStatement
@@ -133,7 +133,7 @@ namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
         /// <typeparam name="TModel">主表</typeparam>
         /// <typeparam name="T">子表</typeparam>
         /// <returns></returns>
-        internal void Add<TModel, T>(Expression<Func<TModel, T, dynamic>> expression) where TModel : EntityBase, new()
+        internal void Add<TModel, T>(Expression<Func<TModel, T, dynamic>> expression) where TModel : new()
         where T : EntityBase, new()
         {
             Parameter.Validate(expression);
