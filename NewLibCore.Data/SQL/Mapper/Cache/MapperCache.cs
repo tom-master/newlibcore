@@ -46,7 +46,7 @@ namespace NewLibCore.Data.SQL.Mapper.Cache
             _baseCache = MemoryCache.Default;
         }
 
-        protected internal override void Add(String key, Object obj, TimeSpan? timeOut = null)
+        protected internal override void Add(String key, Object obj, DateTime? timeOut = null)
         {
             var alive = new Random(DateTime.Now.Millisecond).Next(1, 3);
             var cacheItem = new CacheItem(key, obj);
