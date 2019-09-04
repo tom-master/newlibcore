@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
 using NewLibCore.Data.SQL.Mapper;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 
@@ -13,6 +9,8 @@ namespace NewLibCore.Run
     {
         public static void Main(String[] args)
         {
+            #region 
+
             MapperConfig.InitMapper();
             using (var mapper = EntityMapper.CreateMapper())
             {
@@ -33,13 +31,12 @@ namespace NewLibCore.Run
                 // var r = mapper.Select<User>(user => new { user.Id, user.Name }).Where(user => user.Id == 4).FirstOrDefault();
                 // var r = mapper.Select<User>(user => new { user.Id, user.Name }).Where(user => user.Id == 4).FirstOrDefault<User>();
                 // var r = mapper.Select<User>(user => new { user.Id, user.Name }).Where<User>(user => user.Id == 4).FirstOrDefault();
-                // var r = mapper.Select<User>(user => new { user.Id, user.Name }).Where<User>(user => user.Id == 4).FirstOrDefault<(Int32 Id, String Name)>();
+                var r = mapper.Select<User>(user => new { user.Id, user.Name }).Where<User>(user => user.Id == 4).FirstOrDefault<(Int32 Id, String Name)>();
+
+
             }
-        }
 
-        public static void Test<ValueTuple>(Expression<Func<ValueTuple, dynamic>> fields)
-        {
-
+            #endregion
         }
     }
 

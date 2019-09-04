@@ -4,6 +4,10 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.2</TargetFramework>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="4.5.1" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NewLibCore.Data\NewLibCore.Data.csproj" />
         <ProjectReference Include="..\NewLibCore\NewLibCore.csproj" />
