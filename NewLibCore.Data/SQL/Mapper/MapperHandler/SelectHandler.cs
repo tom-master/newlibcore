@@ -29,10 +29,11 @@ namespace NewLibCore.Data.SQL.Mapper
 
         protected override TranslationResult ExecuteTranslate()
         {
-            var (Fields, AliasName) = StatementParse(_segmentManager.Field);
+            var (Fields, AliasName) = StatementParse(_segmentManager.SelectField);
 
             var segment = TranslationSegment.CreateTranslation(_segmentManager);
-            segment.Result.Append(ReplacePlaceholder(Fields, AliasName));
+            var mainTable = _segmentManager.From.AliaNameMapper[0];
+            segment.Result.Append(String.Format(Instance.SelectTemplate, Fields, mainTable.Key, mainTable.Value));
             segment.Translate();
 
             var aliasMapper = _segmentManager.MergeAliasMapper();
@@ -40,7 +41,7 @@ namespace NewLibCore.Data.SQL.Mapper
             //当出现查询但张表不加Where条件时，则强制将IsDeleted=0添加到后面
             if (_segmentManager.Where == null)
             {
-                segment.Result.Append($@"{RelationType.AND.ToString()} {AliasName}.IsDeleted = 0");
+                segment.Result.Append($@"{RelationType.AND.ToString()} {mainTable.Value}.IsDeleted = 0");
             }
             else
             {
@@ -65,12 +66,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
             return segment.Result;
         }
-
-        private String ReplacePlaceholder(String Fields, String AliasName)
-        {
-            return String.Format(Instance.SelectTemplate, Fields, typeof(TModel).GetTableName().TableName, AliasName);
-        }
-
+         
         /// <summary>
         ///判断表达式语句类型并转换为相应的sql
         /// </summary>

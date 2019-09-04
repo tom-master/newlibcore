@@ -80,9 +80,9 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <param name="fields">字段</param>
         /// <typeparam name="TModel"></typeparam>
         /// <returns></returns>
-        public ISelectMapper<TModel> Select<TModel>(Expression<Func<TModel, dynamic>> fields = null) where TModel : new()
+        public SelectMapper<TModel> From<TModel>() where TModel : new()
         {
-            return new SelectMapper<TModel>(_executionCore).Select(fields);
+            return new SelectMapper<TModel>(_executionCore).From();
         }
 
         /// <summary>
@@ -159,5 +159,5 @@ namespace NewLibCore.Data.SQL.Mapper
         }
     }
 
-   
+
 }

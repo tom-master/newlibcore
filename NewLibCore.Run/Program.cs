@@ -31,7 +31,9 @@ namespace NewLibCore.Run
                 // var r = mapper.Select<User>(user => new { user.Id, user.Name }).Where(user => user.Id == 4).FirstOrDefault();
                 // var r = mapper.Select<User>(user => new { user.Id, user.Name }).Where(user => user.Id == 4).FirstOrDefault<User>();
                 // var r = mapper.Select<User>(user => new { user.Id, user.Name }).Where<User>(user => user.Id == 4).FirstOrDefault();
-                var r = mapper.Select<User>(user => new { user.Id, user.Name }).Where<User>(user => user.Id == 4).FirstOrDefault<(Int32 Id, String Name)>();
+                // var r = mapper.Select<User>(user => new { user.Id, user.Name }).Where<User>(user => user.Id == 4).FirstOrDefault<(Int32 Id, String Name)>();
+
+                var r = mapper.From<User>().Select(s => new { s.Name, s.Id }).ToList();
 
 
             }

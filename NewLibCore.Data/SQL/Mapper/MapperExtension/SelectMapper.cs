@@ -7,84 +7,30 @@ using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Data.SQL.Mapper.MapperExtension
+namespace NewLibCore.Data.SQL.Mapper
 {
-    public sealed class SelectMapper<TModel> : ISelectMapper<TModel> where TModel : new()
+    public sealed class SelectMapper<TModel> /*: ISelectMapper<TModel>*/ where TModel : new()
     {
-        private readonly SegmentManager _segmentManager;
-
-        private readonly ExecutionCore _executionCore;
         internal SelectMapper(ExecutionCore executionCore)
         {
-            _executionCore = executionCore;
-            _segmentManager = MapperConfig.ServiceProvider.GetService<SegmentManager>();
+            ExecutionCore = executionCore;
+            SegmentManager = MapperConfig.ServiceProvider.GetService<SegmentManager>();
         }
 
-        public Boolean Exist()
-        {
-            return Count() > 0;
-        }
+        internal ExecutionCore ExecutionCore { get; private set; }
 
-        public Int32 Count()
-        {
-            return RunDiagnosis.Watch(() =>
-            {
-                Select(s => "COUNT(*)");
-                var executeResult = InternalExecuteSql();
-                return executeResult.ToPrimitive<Int32>();
-            });
-        }
+        internal SegmentManager SegmentManager { get; private set; }
 
-        public TModel FirstOrDefault()
+        internal SelectMapper<TModel> From()
         {
-            return RunDiagnosis.Watch(() =>
-            {
-                var executeResult = InternalExecuteSql();
-                return executeResult.ToSingle<TModel>();
-            });
-        }
-
-        public T FirstOrDefault<T>() where T : new()
-        {
-            return RunDiagnosis.Watch(() =>
-            {
-                var executeResult = InternalExecuteSql();
-                return executeResult.ToSingle<T>();
-            });
-        }
-
-        public List<TModel> ToList()
-        {
-            return RunDiagnosis.Watch(() =>
-            {
-                var executeResult = InternalExecuteSql();
-                return executeResult.ToList<TModel>();
-            });
-        }
-
-        public List<T> ToList<T>() where T : new()
-        {
-            return RunDiagnosis.Watch(() =>
-            {
-                var executeResult = InternalExecuteSql();
-                return executeResult.ToList<T>();
-            });
-        }
-
-        internal SelectMapper<TModel> Select(Expression<Func<TModel, dynamic>> fields = null)
-        {
-            if (fields != null)
-            {
-                _segmentManager.Add(fields);
-            }
-
+            SegmentManager.Add<TModel>();
             return this;
         }
 
         public SelectMapper<TModel> Where(Expression<Func<TModel, Boolean>> expression)
         {
             Parameter.Validate(expression);
-            _segmentManager.Add(expression);
+            SegmentManager.Add(expression);
 
             return this;
         }
@@ -92,7 +38,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
         public SelectMapper<TModel> Where<T>(Expression<Func<T, Boolean>> expression) where T : new()
         {
             Parameter.Validate(expression);
-            _segmentManager.Add(expression);
+            SegmentManager.Add(expression);
 
             return this;
         }
@@ -100,23 +46,15 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
         public SelectMapper<TModel> Where<T>(Expression<Func<TModel, T, Boolean>> expression) where T : new()
         {
             Parameter.Validate(expression);
-            _segmentManager.Add(expression);
+            SegmentManager.Add(expression);
 
-            return this;
-        }
-
-        public SelectMapper<TModel> Page(Int32 pageIndex, Int32 pageSize)
-        {
-            Parameter.Validate(pageIndex);
-            Parameter.Validate(pageSize);
-            _segmentManager.AddPage(pageIndex, pageSize);
             return this;
         }
 
         public SelectMapper<TModel> LeftJoin<TRight>(Expression<Func<TModel, TRight, Boolean>> expression) where TRight : new()
         {
             Parameter.Validate(expression);
-            _segmentManager.Add(expression, JoinType.LEFT);
+            SegmentManager.Add(expression, JoinType.LEFT);
 
             return this;
         }
@@ -124,7 +62,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
         public SelectMapper<TModel> RightJoin<TRight>(Expression<Func<TModel, TRight, Boolean>> expression) where TRight : new()
         {
             Parameter.Validate(expression);
-            _segmentManager.Add(expression, JoinType.RIGHT);
+            SegmentManager.Add(expression, JoinType.RIGHT);
 
             return this;
         }
@@ -132,7 +70,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
         public SelectMapper<TModel> InnerJoin<TRight>(Expression<Func<TModel, TRight, Boolean>> expression) where TRight : new()
         {
             Parameter.Validate(expression);
-            _segmentManager.Add(expression, JoinType.INNER);
+            SegmentManager.Add(expression, JoinType.INNER);
 
             return this;
         }
@@ -142,7 +80,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
           where TRight : new()
         {
             Parameter.Validate(expression);
-            _segmentManager.Add(expression, JoinType.LEFT);
+            SegmentManager.Add(expression, JoinType.LEFT);
 
             return this;
         }
@@ -152,7 +90,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
             where TRight : new()
         {
             Parameter.Validate(expression);
-            _segmentManager.Add(expression, JoinType.RIGHT);
+            SegmentManager.Add(expression, JoinType.RIGHT);
 
             return this;
         }
@@ -162,32 +100,108 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
             where TRight : new()
         {
             Parameter.Validate(expression);
-            _segmentManager.Add(expression, JoinType.INNER);
+            SegmentManager.Add(expression, JoinType.INNER);
 
             return this;
         }
 
-        public SelectMapper<TModel> OrderByDesc<TOrder, TKey>(Expression<Func<TOrder, TKey>> order) where TOrder : new()
+    }
+
+    public static class Queryable
+    {
+
+        public static SelectMapper<TModel> Select<TModel>(this SelectMapper<TModel> mapper, Expression<Func<TModel, dynamic>> fields = null) where TModel : new()
+        {
+            if (fields != null)
+            {
+                mapper.SegmentManager.Add(fields);
+            }
+
+            return mapper;
+        }
+
+        public static SelectMapper<TModel> OrderByDesc<TModel, TKey>(this SelectMapper<TModel> mapper, Expression<Func<TModel, TKey>> order) where TModel : new()
         {
             Parameter.Validate(order);
-            _segmentManager.AddOrderBy(order, OrderByType.DESC);
+            mapper.SegmentManager.AddOrderBy(order, OrderByType.DESC);
 
-            return this;
+            return mapper;
         }
 
-        public SelectMapper<TModel> OrderByAsc<TOrder, TKey>(Expression<Func<TOrder, TKey>> order) where TOrder : new()
+        public static SelectMapper<TModel> OrderByAsc<TModel, TKey>(this SelectMapper<TModel> mapper, Expression<Func<TModel, TKey>> order) where TModel : new()
         {
             Parameter.Validate(order);
-            _segmentManager.AddOrderBy(order, OrderByType.ASC);
+            mapper.SegmentManager.AddOrderBy(order, OrderByType.ASC);
 
-            return this;
+            return mapper;
         }
 
-        private RawExecuteResult InternalExecuteSql()
+        public static SelectMapper<TModel> Page<TModel>(this SelectMapper<TModel> mapper, Int32 pageIndex, Int32 pageSize) where TModel : new()
         {
-            Handler builder = new SelectHandler<TModel>(_segmentManager);
+            Parameter.Validate(pageIndex);
+            Parameter.Validate(pageSize);
+            mapper.SegmentManager.AddPage(pageIndex, pageSize);
+
+            return mapper;
+        }
+
+
+        public static Boolean Exist<TModel>(this SelectMapper<TModel> mapper) where TModel : new()
+        {
+            return Count(mapper) > 0;
+        }
+
+        public static Int32 Count<TModel>(this SelectMapper<TModel> mapper) where TModel : new()
+        {
+            return RunDiagnosis.Watch(() =>
+            {
+                mapper.Select(s => "COUNT(*)");
+                var executeResult = InternalExecuteSql(mapper);
+                return executeResult.ToPrimitive<Int32>();
+            });
+        }
+
+        public static TModel FirstOrDefault<TModel>(this SelectMapper<TModel> mapper) where TModel : new()
+        {
+            return RunDiagnosis.Watch(() =>
+            {
+                var executeResult = InternalExecuteSql(mapper);
+                return executeResult.ToSingle<TModel>();
+            });
+        }
+
+        //public static T FirstOrDefault<T, TModel>(this SelectMapper<TModel> mapper) where T : new() where TModel : new()
+        //{
+        //    return RunDiagnosis.Watch(() =>
+        //    {
+        //        var executeResult = InternalExecuteSql<TModel>();
+        //        return executeResult.ToSingle<T>();
+        //    });
+        //}
+
+        public static List<TModel> ToList<TModel>(this SelectMapper<TModel> mapper) where TModel : new()
+        {
+            return RunDiagnosis.Watch(() =>
+            {
+                var executeResult = InternalExecuteSql(mapper);
+                return executeResult.ToList<TModel>();
+            });
+        }
+
+        //public List<T> ToList<T>() where T : new()
+        //{
+        //    return RunDiagnosis.Watch(() =>
+        //    {
+        //        var executeResult = InternalExecuteSql();
+        //        return executeResult.ToList<T>();
+        //    });
+        //}
+
+        private static RawExecuteResult InternalExecuteSql<TModel>(SelectMapper<TModel> mapper) where TModel : new()
+        {
+            Handler builder = new SelectHandler<TModel>(mapper.SegmentManager);
             var translationResult = builder.GetTranslationResult();
-            return translationResult.ExecuteTranslateResult(_executionCore);
+            return translationResult.ExecuteTranslateResult(mapper.ExecutionCore);
         }
     }
 }

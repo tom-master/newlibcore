@@ -22,13 +22,18 @@ namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
         /// 字段语句对象
         /// </summary>
         /// <value></value>
-        internal SimpleStatement Field { get; private set; }
+        internal SimpleStatement SelectField { get; private set; }
 
         /// <summary>
         /// Where语句对象
         /// </summary>
         /// <value></value>
         internal SimpleStatement Where { get; private set; }
+
+        /// <summary>
+        /// from语句 对象
+        /// </summary>
+        internal SimpleStatement From { get; private set; }
 
         /// <summary>
         /// 分页语句对象
@@ -120,9 +125,22 @@ namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
         internal void Add<TModel>(Expression<Func<TModel, dynamic>> expression) where TModel : new()
         {
             Parameter.Validate(expression);
-            Field = new SimpleStatement
+            SelectField = new SimpleStatement
             {
                 Expression = expression
+            };
+        }
+
+        internal void Add<TModel>() where TModel : new()
+        {
+            Expression<Func<Type>> expression = () => typeof(TModel);
+            From = new SimpleStatement
+            {
+                Expression = expression,
+                AliaNameMapper = new List<KeyValuePair<String, String>>
+                {
+                   new KeyValuePair<String, String>(typeof(TModel).GetTableName().TableName,typeof(TModel).GetTableName().AliasName)
+                }
             };
         }
 
@@ -137,7 +155,7 @@ namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
         where T : EntityBase, new()
         {
             Parameter.Validate(expression);
-            Field = new SimpleStatement
+            SelectField = new SimpleStatement
             {
                 Expression = expression
             };
