@@ -80,7 +80,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <param name="fields">字段</param>
         /// <typeparam name="TModel"></typeparam>
         /// <returns></returns>
-        public SelectMapper<TModel> From<TModel>() where TModel : new()
+        public B<TModel> From<TModel>() where TModel : new()
         {
             return new SelectMapper<TModel>(_executionCore).From();
         }
