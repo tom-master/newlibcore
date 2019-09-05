@@ -25,7 +25,6 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
             _segmentManager.Add<TModel>();
             return new B<TModel>(_segmentManager, _executionCore);
         }
-
     }
 
     public class A<TModel> where TModel : new()

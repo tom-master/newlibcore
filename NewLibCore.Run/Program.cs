@@ -21,21 +21,10 @@ namespace NewLibCore.Run
                 // user.ModifyLoginPassword("123123123123");
                 // mapper.Update(user, u => u.Id == 4);
 
-                //var r = mapper.Select<User>(user => new { user.Id, user.Name }).ToList();
-                //var r = mapper.Select<User>(user => new { user.Id, user.Name }).Where(user => user.Id == 4).ToList();
-                //var r = mapper.Select<User>(user => new { user.Id, user.Name }).Where(user => user.Id == 4).ToList<User>();
-                //var r = mapper.Select<User>(user => new { user.Id, user.Name }).Where<User>(user => user.Id == 4).ToList();
-                //var r = mapper.Select<User>(user => new { user.Id, user.Name }).Where<User>(user => user.Id == 4).ToList<(Int32 Id, String Name)>();
-
-                // var r = mapper.Select<User>(user => new { user.Id, user.Name }).FirstOrDefault();
-                // var r = mapper.Select<User>(user => new { user.Id, user.Name }).Where(user => user.Id == 4).FirstOrDefault();
-                // var r = mapper.Select<User>(user => new { user.Id, user.Name }).Where(user => user.Id == 4).FirstOrDefault<User>();
-                // var r = mapper.Select<User>(user => new { user.Id, user.Name }).Where<User>(user => user.Id == 4).FirstOrDefault();
-                // var r = mapper.Select<User>(user => new { user.Id, user.Name }).Where<User>(user => user.Id == 4).FirstOrDefault<(Int32 Id, String Name)>();
-
-                var r = mapper.From<User>().Where(w => w.Id == 4).Select().ToList();
-
-
+                //var r1 = mapper.From<User>().Where(w => w.Id == 4).Select().ToList();
+                //var r2 = mapper.From<User>().Where(w => w.Id == 4).Select().FirstOrDefault();
+                //var r3 = mapper.From<User>().Where(w => w.Id == 4).Select(user => new { user.Id, user.Name }).ToList<TestModel>();
+                //var r4 = mapper.From<User>().Where(w => w.Id == 4).Select(user => new { user.Id, user.Name }).FirstOrDefault<(String Id, String Name)>();
             }
 
             #endregion
