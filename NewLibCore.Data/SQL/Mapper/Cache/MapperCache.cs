@@ -16,7 +16,7 @@ namespace NewLibCore.Data.SQL.Mapper.Cache
         /// <param name="key">缓存键</param>
         /// <param name="obj">缓存值</param>
         /// <param name="timeOut">超时时间</param>
-        protected internal abstract void Add(String key, Object obj, TimeSpan? timeOut = null);
+        protected internal abstract void Add(String key, Object obj, DateTime? timeOut = null);
 
         /// <summary>
         /// 获取一个执行结果缓存
