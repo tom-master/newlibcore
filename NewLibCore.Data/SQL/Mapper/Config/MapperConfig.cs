@@ -31,7 +31,6 @@ namespace NewLibCore.Data.SQL.Mapper
         /// </summary>
         public static IsolationLevel TransactionLevel { get; set; } = IsolationLevel.Unspecified;
 
-
         internal static InstanceConfig Instance
         {
             get
