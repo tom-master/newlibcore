@@ -16,7 +16,9 @@ namespace NewLibCore.Data.SQL.Mapper.Database
     internal sealed class MapperDbContext : IMapperDbContext
     {
         private Boolean _disposed = false;
+
         private DbConnection _connection;
+
         private DbTransaction _dataTransaction;
 
         public MapperDbContext()
