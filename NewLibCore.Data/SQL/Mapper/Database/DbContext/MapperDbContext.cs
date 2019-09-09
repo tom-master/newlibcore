@@ -113,7 +113,6 @@ namespace NewLibCore.Data.SQL.Mapper.Database
                 return executeType;
             }
 
-
             throw new Exception($@"SQL语句执行类型解析失败:{operationType}");
         }
 
