@@ -96,9 +96,9 @@ namespace NewLibCore.Data.SQL.Mapper
         /// </summary>
         /// <param name="executionCore">执行翻译结果的对象</param>
         /// <returns></returns>
-        internal RawExecuteResult ExecuteTranslateResult(ExecutionCore executionCore)
+        internal RawExecuteResult ExecuteTranslateResult()
         {
-            return Execute(executionCore);
+            return Execute();
         }
 
         internal void Clear()
@@ -107,8 +107,10 @@ namespace NewLibCore.Data.SQL.Mapper
             _parameters.Clear();
         }
 
-        private RawExecuteResult Execute(ExecutionCore executionCore)
+        private RawExecuteResult Execute()
         {
+            var executionCore = MapperConfig.ServiceProvider.GetService<ExecutionCore>();
+
             var executeResult = GetCache();
             var executeType = executionCore.GetExecuteType(ToString());
             if (executeResult == null)

@@ -9,12 +9,10 @@ namespace NewLibCore.Data.SQL.Mapper.QueryPart
     public class E<TModel> where TModel : new()
     {
         private readonly SegmentManager _segmentManager;
-        private readonly ExecutionCore _executionCore;
 
-        internal E(SegmentManager segmentManager, ExecutionCore executionCore)
+        internal E(SegmentManager segmentManager)
         {
             _segmentManager = segmentManager;
-            _executionCore = executionCore;
         }
 
         public TModel FirstOrDefault()
@@ -57,7 +55,7 @@ namespace NewLibCore.Data.SQL.Mapper.QueryPart
         {
             Handler builder = new SelectHandler<TModel>(_segmentManager);
             var translationResult = builder.GetTranslationResult();
-            return translationResult.ExecuteTranslateResult(_executionCore);
+            return translationResult.ExecuteTranslateResult();
         }
     }
 }

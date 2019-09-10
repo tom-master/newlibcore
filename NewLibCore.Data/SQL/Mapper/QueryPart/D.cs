@@ -10,12 +10,10 @@ namespace NewLibCore.Data.SQL.Mapper.QueryPart
     public class D<TModel> : E<TModel> where TModel : new()
     {
         private readonly SegmentManager _segmentManager;
-        private readonly ExecutionCore _executionCore;
 
-        internal D(SegmentManager segmentManager, ExecutionCore executionCore) : base(segmentManager, executionCore)
+        internal D(SegmentManager segmentManager) : base(segmentManager)
         {
             _segmentManager = segmentManager;
-            _executionCore = executionCore;
         }
 
         public E<TModel> Page(Int32 pageIndex, Int32 pageSize)
@@ -24,7 +22,7 @@ namespace NewLibCore.Data.SQL.Mapper.QueryPart
             Parameter.Validate(pageSize);
             _segmentManager.AddPage(pageIndex, pageSize);
 
-            return new E<TModel>(_segmentManager, _executionCore);
+            return new E<TModel>(_segmentManager);
         }
 
         public E<TModel> OrderByDesc<TOrder, TKey>(Expression<Func<TOrder, TKey>> order) where TOrder : new()
@@ -32,7 +30,7 @@ namespace NewLibCore.Data.SQL.Mapper.QueryPart
             Parameter.Validate(order);
             _segmentManager.AddOrderBy(order, OrderByType.DESC);
 
-            return new E<TModel>(_segmentManager, _executionCore);
+            return new E<TModel>(_segmentManager);
         }
 
         public E<TModel> OrderByAsc<TOrder, TKey>(Expression<Func<TOrder, TKey>> order) where TOrder : new()
@@ -40,7 +38,7 @@ namespace NewLibCore.Data.SQL.Mapper.QueryPart
             Parameter.Validate(order);
             _segmentManager.AddOrderBy(order, OrderByType.ASC);
 
-            return new E<TModel>(_segmentManager, _executionCore);
+            return new E<TModel>(_segmentManager);
         }
     }
 }

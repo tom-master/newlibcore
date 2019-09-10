@@ -10,12 +10,10 @@ namespace NewLibCore.Data.SQL.Mapper.QueryPart
     public class B<TModel> : A<TModel> where TModel : new()
     {
         private readonly SegmentManager _segmentManager;
-        private readonly ExecutionCore _executionCore;
 
-        internal B(SegmentManager segmentManager, ExecutionCore executionCore) : base(segmentManager, executionCore)
+        internal B(SegmentManager segmentManager) : base(segmentManager)
         {
             _segmentManager = segmentManager;
-            _executionCore = executionCore;
         }
 
         public B<TModel> LeftJoin<TRight>(Expression<Func<TModel, TRight, Boolean>> expression) where TRight : new()

@@ -11,10 +11,9 @@ namespace NewLibCore.Data.SQL.Mapper.QueryPart
         private readonly SegmentManager _segmentManager;
         private readonly ExecutionCore _executionCore;
 
-        internal C(SegmentManager segmentManager, ExecutionCore executionCore)
+        internal C(SegmentManager segmentManager)
         {
             _segmentManager = segmentManager;
-            _executionCore = executionCore;
         }
 
         public D<TModel> Select(Expression<Func<TModel, dynamic>> fields = null)
@@ -24,7 +23,7 @@ namespace NewLibCore.Data.SQL.Mapper.QueryPart
                 _segmentManager.Add(fields);
             }
 
-            return new D<TModel>(_segmentManager, _executionCore);
+            return new D<TModel>(_segmentManager);
         }
     }
 }
