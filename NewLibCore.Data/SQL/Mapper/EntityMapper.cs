@@ -6,6 +6,7 @@ using NewLibCore.Data.SQL.Mapper.Database;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
 using NewLibCore.Data.SQL.Mapper.MapperExtension;
+using NewLibCore.Data.SQL.Mapper.QueryPart;
 using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper
@@ -80,9 +81,9 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <param name="fields">字段</param>
         /// <typeparam name="TModel"></typeparam>
         /// <returns></returns>
-        public B<TModel> From<TModel>() where TModel : new()
+        public B<TModel> Query<TModel>() where TModel : new()
         {
-            return new SelectMapper<TModel>(_executionCore).From();
+            return new QueryMapper<TModel>(_executionCore).Query();
         }
 
         /// <summary>
@@ -92,36 +93,13 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <param name="parameters">实体参数</param>
         /// <typeparam name="TModel"></typeparam>
         /// <returns></returns>
-        public List<TModel> ExecuteToList<TModel>(String sql, IEnumerable<EntityParameter> parameters = null) where TModel : new()
+        public List<TModel> SqlQuery<TModel>(String sql, IEnumerable<EntityParameter> parameters = null) where TModel : new()
         {
             Parameter.Validate(sql);
 
             return RunDiagnosis.Watch(() =>
             {
                 return RawExecute(sql, parameters).ToList<TModel>();
-            });
-        }
-
-        /// <summary>
-        /// 执行一个返回单个TModel的sql语句
-        /// </summary>
-        /// <param name="sql">sql语句</param>
-        /// <param name="parameters">实体参数</param>
-        /// <typeparam name="TModel"></typeparam>
-        /// <returns></returns>
-        public TModel ExecuteToSingle<TModel>(String sql, IEnumerable<EntityParameter> parameters = null) where TModel : new()
-        {
-            Parameter.Validate(sql);
-
-            return RunDiagnosis.Watch(() =>
-            {
-                var modelType = typeof(TModel);
-                if (modelType.IsNumeric())
-                {
-                    return RawExecute(sql, parameters).ToPrimitive<TModel>();
-                }
-
-                return RawExecute(sql, parameters).ToSingle<TModel>();
             });
         }
 
@@ -158,6 +136,4 @@ namespace NewLibCore.Data.SQL.Mapper
             _executionCore.Dispose();
         }
     }
-
-
 }
