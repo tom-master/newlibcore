@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq.Expressions;
+using NewLibCore.Data.SQL.Mapper.Database;
 using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
 using NewLibCore.Validate;
 
@@ -9,8 +10,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
     public class JoinSegment<TModel> : WhereSegment<TModel> where TModel : new()
     {
         private readonly SegmentManager _segmentManager;
-
-        internal JoinSegment(SegmentManager segmentManager) : base(segmentManager)
+        internal JoinSegment(SegmentManager segmentManager, ExecutionCore executionCore) : base(segmentManager, executionCore)
         {
             _segmentManager = segmentManager;
         }

@@ -17,9 +17,6 @@ namespace NewLibCore.Data.SQL.Mapper
     {
         private readonly ExecutionCore _executionCore;
 
-        /// <summary>
-        /// 初始化一个EntityMapper类的实例
-        /// </summary>
         public EntityMapper()
         {
             _executionCore = MapperConfig.ServiceProvider.GetService<ExecutionCore>();
@@ -39,7 +36,7 @@ namespace NewLibCore.Data.SQL.Mapper
              {
                  Handler handler = new InsertHandler<TModel>(model, true);
                  var translationResult = handler.GetTranslationResult();
-                 model.Id = translationResult.Execute().ToPrimitive<Int32>();
+                 model.Id = translationResult.Execute(_executionCore).ToPrimitive<Int32>();
                  return model;
              });
         }
@@ -61,7 +58,7 @@ namespace NewLibCore.Data.SQL.Mapper
                 var segmentManager = MapperConfig.ServiceProvider.GetService<SegmentManager>();
                 segmentManager.Add(expression);
                 Handler handler = new UpdateHandler<TModel>(model, segmentManager, true);
-                return handler.GetTranslationResult().Execute().ToPrimitive<Int32>() > 0;
+                return handler.GetTranslationResult().Execute(_executionCore).ToPrimitive<Int32>() > 0;
             });
         }
 
@@ -75,7 +72,7 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             var segmentManager = MapperConfig.ServiceProvider.GetService<SegmentManager>();
             segmentManager.Add<TModel>();
-            return new JoinSegment<TModel>(segmentManager);
+            return new JoinSegment<TModel>(segmentManager, _executionCore);
         }
 
         /// <summary>
@@ -93,7 +90,7 @@ namespace NewLibCore.Data.SQL.Mapper
             {
                 var sqlResult = TranslationResult.CreateTranslationResult();
                 sqlResult.Append(sql, parameters);
-                return sqlResult.Execute().ToList<TModel>();
+                return sqlResult.Execute(_executionCore).ToList<TModel>();
             });
         }
 
