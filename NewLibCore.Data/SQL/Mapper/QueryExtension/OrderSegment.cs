@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq.Expressions;
 using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
-using NewLibCore.Data.SQL.Mapper.QueryExtension;
 using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper.MapperExtension

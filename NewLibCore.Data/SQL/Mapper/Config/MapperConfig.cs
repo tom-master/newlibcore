@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using NewLibCore.Data.SQL.Mapper.Cache;
 using NewLibCore.Data.SQL.Mapper.Database;
 using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
@@ -12,8 +11,6 @@ namespace NewLibCore.Data.SQL.Mapper
     /// </summary>
     public class MapperConfig
     {
-        private static readonly Object _obj = new Object();
-
         /// <summary>
         /// 初始化一个MapperConfig类的实例
         /// </summary>
@@ -21,18 +18,18 @@ namespace NewLibCore.Data.SQL.Mapper
         private MapperConfig(MapperType mapperType)
         {
             var services = new ServiceCollection()
-                .AddSingleton<ResultCache, ExecutionResultCache>()
-                .AddSingleton<ILogger, ConsoleLogger>()
+                .AddTransient<ResultCache, ExecutionResultCache>()
                 .AddTransient<ExecutionCore>()
-                .AddTransient<SegmentManager>();
+                .AddTransient<SegmentManager>()
+                .AddSingleton<ILogger, ConsoleLogger>();
 
             if (mapperType == MapperType.MSSQL)
             {
-                services = services.AddSingleton<InstanceConfig, MsSqlInstanceConfig>();
+                services = services.AddTransient<InstanceConfig, MsSqlInstanceConfig>();
             }
             else if (mapperType == MapperType.MYSQL)
             {
-                services = services.AddSingleton<InstanceConfig, MySqlInstanceConfig>();
+                services = services.AddTransient<InstanceConfig, MySqlInstanceConfig>();
             }
             ServiceProvider = services.BuildServiceProvider();
         }

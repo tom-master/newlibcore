@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Timers;
+using System.Threading;
 using NewLibCore.Data.SQL.Mapper;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 
@@ -8,31 +8,38 @@ namespace NewLibCore.Run
 {
     public class Program
     {
-        private static readonly Timer _timer = new Timer(1000 * 3);
 
         public static void Main(String[] args)
         {
             #region 
 
             MapperConfig.InitMapper();
-            using (var mapper = EntityMapper.CreateMapper())
-            { 
 
-                #region 
-                // var user = new User("123123", "123123123");
-                // mapper.Add(user);
+            for (var i = 0; i < 4; i++)
+            {
+                var thread = new Thread(new ParameterizedThreadStart((a) =>
+                {
+                    using (var mapper = new EntityMapper())
+                    {
+                        mapper.Query<User>().Where(w => w.Id == 4).Select().ToList();
+                        #region 
+                        // var user = new User("123123", "123123123");
+                        // mapper.Add(user);
 
-                // var user = new User();
-                // user.ModifyLoginPassword("123123123123");
-                // mapper.Update(user, u => u.Id == 4);
+                        // var user = new User();
+                        // user.ModifyLoginPassword("123123123123");
+                        // mapper.Update(user, u => u.Id == 4);
 
-                //var r1 = mapper.From<User>().Where(w => w.Id == 4).Select().ToList();
-                //var r2 = mapper.From<User>().Where(w => w.Id == 4).Select().FirstOrDefault();
-                //var r3 = mapper.From<User>().Where(w => w.Id == 4).Select(user => new { user.Id, user.Name }).ToList<TestModel>();
-                //var r4 = mapper.From<User>().Where(w => w.Id == 4).Select(user => new { user.Id, user.Name }).FirstOrDefault<(String Id, String Name)>();
-                #endregion
+                        //var r1 = mapper.From<User>().Where(w => w.Id == 4).Select().ToList();
+                        //var r2 = mapper.From<User>().Where(w => w.Id == 4).Select().FirstOrDefault();
+                        //var r3 = mapper.From<User>().Where(w => w.Id == 4).Select(user => new { user.Id, user.Name }).ToList<TestModel>();
+                        //var r4 = mapper.From<User>().Where(w => w.Id == 4).Select(user => new { user.Id, user.Name }).FirstOrDefault<(String Id, String Name)>();
+                        #endregion
+                    }
+                }));
+                thread.Start();
             }
-
+            Console.ReadKey();
             #endregion
         }
     }

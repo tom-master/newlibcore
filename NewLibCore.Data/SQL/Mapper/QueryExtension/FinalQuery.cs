@@ -5,7 +5,7 @@ using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
 namespace NewLibCore.Data.SQL.Mapper.MapperExtension
 {
 
-    public class FinalQuery<TModel>
+    public class FinalQuery<TModel> where TModel : new()
     {
         private readonly SegmentManager _segmentManager;
 
@@ -53,7 +53,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
         private RawExecuteResult InternalExecuteSql()
         {
             Handler handler = new QueryHandler<TModel>(_segmentManager);
-            return handler.GetTranslationResult().ExecuteTranslateResult();
+            return handler.GetTranslationResult().Execute();
         }
     }
 }

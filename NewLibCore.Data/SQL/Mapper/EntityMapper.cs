@@ -20,18 +20,9 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <summary>
         /// 初始化一个EntityMapper类的实例
         /// </summary>
-        private EntityMapper()
+        public EntityMapper()
         {
             _executionCore = MapperConfig.ServiceProvider.GetService<ExecutionCore>();
-        }
-
-        /// <summary>
-        /// 初始化一个EntityMapper类的实例
-        /// </summary>
-        /// <returns></returns>
-        public static EntityMapper CreateMapper()
-        {
-            return new EntityMapper();
         }
 
         /// <summary>
@@ -48,7 +39,7 @@ namespace NewLibCore.Data.SQL.Mapper
              {
                  Handler handler = new InsertHandler<TModel>(model, true);
                  var translationResult = handler.GetTranslationResult();
-                 model.Id = translationResult.ExecuteTranslateResult().ToPrimitive<Int32>();
+                 model.Id = translationResult.Execute().ToPrimitive<Int32>();
                  return model;
              });
         }
@@ -66,12 +57,12 @@ namespace NewLibCore.Data.SQL.Mapper
             Parameter.Validate(expression);
 
             return RunDiagnosis.Watch(() =>
-             {
-                 var segmentManager = MapperConfig.ServiceProvider.GetService<SegmentManager>();
-                 segmentManager.Add(expression);
-                 Handler handler = new UpdateHandler<TModel>(model, segmentManager, true);
-                 return handler.GetTranslationResult().ExecuteTranslateResult().ToPrimitive<Int32>() > 0;
-             });
+            {
+                var segmentManager = MapperConfig.ServiceProvider.GetService<SegmentManager>();
+                segmentManager.Add(expression);
+                Handler handler = new UpdateHandler<TModel>(model, segmentManager, true);
+                return handler.GetTranslationResult().Execute().ToPrimitive<Int32>() > 0;
+            });
         }
 
         /// <summary>
@@ -102,7 +93,7 @@ namespace NewLibCore.Data.SQL.Mapper
             {
                 var sqlResult = TranslationResult.CreateTranslationResult();
                 sqlResult.Append(sql, parameters);
-                return sqlResult.ExecuteTranslateResult().ToList<TModel>();
+                return sqlResult.Execute().ToList<TModel>();
             });
         }
 

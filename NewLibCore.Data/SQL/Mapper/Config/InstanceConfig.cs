@@ -13,17 +13,17 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <summary>
         /// 逻辑关系映射
         /// </summary>
-        protected static readonly IDictionary<RelationType, String> RelationMapper = new Dictionary<RelationType, String>();
+        protected readonly IDictionary<RelationType, String> RelationMapper = new Dictionary<RelationType, String>();
 
         /// <summary>
         /// 连接关系映射
         /// </summary>
-        protected static readonly IDictionary<JoinType, String> JoinTypeMapper = new Dictionary<JoinType, String>();
+        protected readonly IDictionary<JoinType, String> JoinTypeMapper = new Dictionary<JoinType, String>();
 
         /// <summary>
         /// 排序方式映射
         /// </summary>
-        protected static readonly IDictionary<OrderByType, String> OrderTypeMapper = new Dictionary<OrderByType, String>();
+        protected readonly IDictionary<OrderByType, String> OrderTypeMapper = new Dictionary<OrderByType, String>();
 
         /// <summary>
         /// 初始化一个InstanceConfig类的实例
