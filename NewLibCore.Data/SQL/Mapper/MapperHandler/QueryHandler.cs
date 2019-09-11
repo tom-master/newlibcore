@@ -13,7 +13,7 @@ namespace NewLibCore.Data.SQL.Mapper
     /// 查询处理类
     /// </summary>
     /// <typeparam name="TModel"></typeparam>
-    internal class SelectHandler<TModel> : Handler where TModel : new()
+    internal class QueryHandler<TModel> : Handler where TModel : new()
     {
         private readonly SegmentManager _segmentManager;
 
@@ -21,7 +21,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// 初始化一个SelectHandler类的实例
         /// </summary>
         /// <param name="segmentManager">表达式分解后的对象</param>
-        internal SelectHandler(SegmentManager segmentManager)
+        internal QueryHandler(SegmentManager segmentManager)
         {
             Parameter.Validate(segmentManager);
             _segmentManager = segmentManager;
@@ -57,25 +57,25 @@ namespace NewLibCore.Data.SQL.Mapper
                 segment.Result.Append(orderTemplate);
             }
 
-            if (_segmentManager.Page != null)
+            if (_segmentManager.Pagination != null)
             {
-                var pageIndex = (_segmentManager.Page.Size * (_segmentManager.Page.Index - 1)).ToString();
-                var pageSize = _segmentManager.Page.Size.ToString();
+                var pageIndex = (_segmentManager.Pagination.Size * (_segmentManager.Pagination.Index - 1)).ToString();
+                var pageSize = _segmentManager.Pagination.Size.ToString();
                 segment.Result.Append(Instance.Extension.Page.Replace("{value}", pageIndex).Replace("{pageSize}", pageSize));
             }
 
             return segment.Result;
         }
-         
+
         /// <summary>
         ///判断表达式语句类型并转换为相应的sql
         /// </summary>
-        /// <param name="statement">表达式分解后的对象</param>
+        /// <param name="expressionMapper">表达式分解后的对象</param>
         /// <returns></returns>
-        protected override (String Fields, String AliasName) StatementParse(Statement statement)
+        private static (String Fields, String AliasName) StatementParse(ExpressionMapper expressionMapper)
         {
             var modelAliasName = new List<String>();
-            if (statement == null) //如果表达式语句为空则表示需要翻译为SELECT a.xxx,a.xxx,a.xxx 类型的语句
+            if (expressionMapper == null) //如果表达式语句为空则表示需要翻译为SELECT a.xxx,a.xxx,a.xxx 类型的语句
             {
                 var modelType = typeof(TModel);
                 var f = new List<String>();
@@ -91,7 +91,7 @@ namespace NewLibCore.Data.SQL.Mapper
                 return (String.Join(",", f), modelAliasName.FirstOrDefault());
             }
 
-            var fields = (LambdaExpression)statement.Expression;
+            var fields = (LambdaExpression)expressionMapper.Expression;
             foreach (var item in fields.Parameters)
             {
                 modelAliasName.Add(item.Type.GetTableName().AliasName);

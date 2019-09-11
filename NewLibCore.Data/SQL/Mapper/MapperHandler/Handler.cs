@@ -1,5 +1,5 @@
 ﻿using System;
-using Microsoft.Extensions.DependencyInjection; 
+using Microsoft.Extensions.DependencyInjection;
 using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
 
 namespace NewLibCore.Data.SQL.Mapper
@@ -37,15 +37,5 @@ namespace NewLibCore.Data.SQL.Mapper
         /// </summary>
         /// <returns></returns>
         protected abstract TranslationResult ExecuteTranslate();
-
-        /// <summary>
-        /// 字段转换
-        /// </summary>
-        /// <param name="statement">表达式拆分后的语句对象</param>
-        /// <returns></returns>
-        protected virtual (String Fields, String AliasName) StatementParse(Statement statement)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

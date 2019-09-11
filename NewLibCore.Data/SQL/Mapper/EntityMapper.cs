@@ -6,7 +6,6 @@ using NewLibCore.Data.SQL.Mapper.Database;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
 using NewLibCore.Data.SQL.Mapper.MapperExtension;
-using NewLibCore.Data.SQL.Mapper.QueryPart;
 using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper
@@ -81,9 +80,11 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <param name="fields">字段</param>
         /// <typeparam name="TModel"></typeparam>
         /// <returns></returns>
-        public B<TModel> Query<TModel>() where TModel : new()
+        public JoinSegment<TModel> Query<TModel>() where TModel : new()
         {
-            return new QueryMapper<TModel>().Query();
+            var segmentManager = MapperConfig.ServiceProvider.GetService<SegmentManager>();
+            segmentManager.Add<TModel>();
+            return new JoinSegment<TModel>(segmentManager);
         }
 
         /// <summary>
@@ -99,21 +100,10 @@ namespace NewLibCore.Data.SQL.Mapper
 
             return RunDiagnosis.Watch(() =>
             {
-                return RawExecute(sql, parameters).ToList<TModel>();
+                var sqlResult = TranslationResult.CreateTranslationResult();
+                sqlResult.Append(sql, parameters);
+                return sqlResult.ExecuteTranslateResult().ToList<TModel>();
             });
-        }
-
-        /// <summary>
-        /// 直接执行sql语句
-        /// </summary>
-        /// <param name="sql">sql语句</param>
-        /// <param name="parameters">实体参数</param>
-        /// <returns></returns>
-        private RawExecuteResult RawExecute(String sql, IEnumerable<EntityParameter> parameters = null)
-        {
-            var sqlResult = TranslationResult.CreateTranslationResult();
-            sqlResult.Append(sql, parameters);
-            return sqlResult.ExecuteTranslateResult();
         }
 
         public void OpenTransaction()

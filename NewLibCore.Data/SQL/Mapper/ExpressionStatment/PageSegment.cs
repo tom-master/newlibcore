@@ -5,7 +5,7 @@ namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
     /// <summary>
     /// 分页语句对象
     /// </summary>
-    internal class PageSegment : Statement
+    internal class PaginationExpressionMapper : ExpressionMapper
     {
         internal Int32 Index { get; set; }
 

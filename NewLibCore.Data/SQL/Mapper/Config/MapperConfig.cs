@@ -21,6 +21,8 @@ namespace NewLibCore.Data.SQL.Mapper
         private MapperConfig(MapperType mapperType)
         {
             var services = new ServiceCollection()
+                .AddSingleton<ResultCache, ExecutionResultCache>()
+                .AddSingleton<ILogger, ConsoleLogger>()
                 .AddTransient<ExecutionCore>()
                 .AddTransient<SegmentManager>();
 
@@ -32,10 +34,7 @@ namespace NewLibCore.Data.SQL.Mapper
             {
                 services = services.AddSingleton<InstanceConfig, MySqlInstanceConfig>();
             }
-            ServiceProvider = services
-                .AddSingleton<ResultCache, ExecutionResultCache>()
-                .AddSingleton<ILogger, ConsoleLogger>()
-                .BuildServiceProvider();
+            ServiceProvider = services.BuildServiceProvider();
         }
 
         /// <summary>
@@ -50,6 +49,6 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <summary>
         /// 提供依赖注入的对象
         /// </summary>
-        internal static IServiceProvider ServiceProvider { get; private set; }
+        internal static ServiceProvider ServiceProvider { get; private set; }
     }
 }

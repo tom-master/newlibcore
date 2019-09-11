@@ -16,35 +16,35 @@ namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
         /// 排序语句对象
         /// </summary>
         /// <value></value>
-        internal OrderStatement Order { get; private set; }
+        internal OrderExpressionMapper Order { get; private set; }
 
         /// <summary>
         /// 字段语句对象
         /// </summary>
         /// <value></value>
-        internal SimpleStatement SelectField { get; private set; }
+        internal SimpleExpressionMapper SelectField { get; private set; }
 
         /// <summary>
         /// Where语句对象
         /// </summary>
         /// <value></value>
-        internal SimpleStatement Where { get; private set; }
+        internal SimpleExpressionMapper Where { get; private set; }
 
         /// <summary>
         /// from语句 对象
         /// </summary>
-        internal SimpleStatement From { get; private set; }
+        internal SimpleExpressionMapper From { get; private set; }
 
         /// <summary>
         /// 分页语句对象
         /// </summary>
         /// <value></value>
-        internal PageSegment Page { get; private set; }
+        internal PaginationExpressionMapper Pagination { get; private set; }
 
         /// <summary>
         /// 连接语句对象列表
         /// </summary>
-        internal IList<JoinSegment> Joins { get; private set; } = new List<JoinSegment>();
+        internal IList<JoinExpressionMapper> Joins { get; private set; } = new List<JoinExpressionMapper>();
 
         /// <summary>
         /// 将表达式拆分出相应的排序对象
@@ -57,7 +57,7 @@ namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
         internal void AddOrderBy<TModel, TKey>(Expression<Func<TModel, TKey>> order, OrderByType orderByType)
         {
             Parameter.Validate(order);
-            Order = new OrderStatement
+            Order = new OrderExpressionMapper
             {
                 Expression = order,
                 OrderBy = orderByType
@@ -76,7 +76,7 @@ namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
             where TJoin : new()
         {
             Parameter.Validate(expression);
-            Joins.Add(new JoinSegment
+            Joins.Add(new JoinExpressionMapper
             {
                 Expression = expression,
                 JoinType = joinType,
@@ -95,7 +95,7 @@ namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
         internal void Add<TModel, TJoin>(Expression<Func<TModel, TJoin, Boolean>> expression) where TModel : new()
         {
             Parameter.Validate(expression);
-            Where = new SimpleStatement
+            Where = new SimpleExpressionMapper
             {
                 Expression = expression,
                 AliaNameMapper = ParseToAliasNames(expression)
@@ -110,7 +110,7 @@ namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
         internal void Add<TModel>(Expression<Func<TModel, Boolean>> expression) where TModel : new()
         {
             Parameter.Validate(expression);
-            Where = new SimpleStatement
+            Where = new SimpleExpressionMapper
             {
                 Expression = expression,
                 AliaNameMapper = ParseToAliasNames(expression)
@@ -125,7 +125,7 @@ namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
         internal void Add<TModel>(Expression<Func<TModel, dynamic>> expression) where TModel : new()
         {
             Parameter.Validate(expression);
-            SelectField = new SimpleStatement
+            SelectField = new SimpleExpressionMapper
             {
                 Expression = expression
             };
@@ -134,7 +134,7 @@ namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
         internal void Add<TModel>() where TModel : new()
         {
             Expression<Func<Type>> expression = () => typeof(TModel);
-            From = new SimpleStatement
+            From = new SimpleExpressionMapper
             {
                 Expression = expression,
                 AliaNameMapper = new List<KeyValuePair<String, String>>
@@ -155,7 +155,7 @@ namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
         where T : EntityBase, new()
         {
             Parameter.Validate(expression);
-            SelectField = new SimpleStatement
+            SelectField = new SimpleExpressionMapper
             {
                 Expression = expression
             };
@@ -170,7 +170,7 @@ namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
         {
             Parameter.Validate(pageIndex);
             Parameter.Validate(pageSize);
-            Page = new PageSegment
+            Pagination = new PaginationExpressionMapper
             {
                 Index = pageIndex,
                 Size = pageSize

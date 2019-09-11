@@ -1,16 +1,15 @@
 ﻿using System.Collections.Generic;
-using NewLibCore.Data.SQL.Mapper.Database;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
 
-namespace NewLibCore.Data.SQL.Mapper.QueryPart
+namespace NewLibCore.Data.SQL.Mapper.MapperExtension
 {
 
-    public class E<TModel> where TModel : new()
+    public class FinalQuery<TModel>
     {
         private readonly SegmentManager _segmentManager;
 
-        internal E(SegmentManager segmentManager)
+        internal FinalQuery(SegmentManager segmentManager)
         {
             _segmentManager = segmentManager;
         }
@@ -53,9 +52,8 @@ namespace NewLibCore.Data.SQL.Mapper.QueryPart
 
         private RawExecuteResult InternalExecuteSql()
         {
-            Handler builder = new SelectHandler<TModel>(_segmentManager);
-            var translationResult = builder.GetTranslationResult();
-            return translationResult.ExecuteTranslateResult();
+            Handler handler = new QueryHandler<TModel>(_segmentManager);
+            return handler.GetTranslationResult().ExecuteTranslateResult();
         }
     }
 }
