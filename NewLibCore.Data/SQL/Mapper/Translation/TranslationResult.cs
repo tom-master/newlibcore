@@ -110,7 +110,7 @@ namespace NewLibCore.Data.SQL.Mapper
         private RawExecuteResult InternalExecute()
         {
             var executeResult = GetCache();
-            var executionCore = MapperConfig.ServiceProvider.GetService<ExecutionCore>();
+            var executionCore = MapperConfig.ServiceProvider.GetService<DbContext>();
             var executeType = executionCore.GetExecuteType(ToString());
             if (executeResult == null)
             {

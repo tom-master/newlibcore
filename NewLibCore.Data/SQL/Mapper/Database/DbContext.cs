@@ -12,7 +12,7 @@ namespace NewLibCore.Data.SQL.Mapper.Database
     /// <summary>
     /// sql语句执行
     /// </summary>
-    internal sealed class ExecutionCore : IDisposable
+    internal sealed class DbContext : IDisposable
     {
         private DbConnection _connection;
 
@@ -25,7 +25,7 @@ namespace NewLibCore.Data.SQL.Mapper.Database
         /// <summary>
         /// 初始化一个ExecutionCore类的实例
         /// </summary>
-        public ExecutionCore()
+        public DbContext()
         {
             var instanceConfig = MapperConfig.ServiceProvider.GetService<InstanceConfig>();
             Parameter.Validate(instanceConfig);

@@ -38,8 +38,7 @@ namespace NewLibCore.Run
                     }
                 }));
                 thread.Start();
-            }
-            Console.ReadKey();
+            } 
             #endregion
         }
     }

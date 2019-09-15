@@ -15,11 +15,11 @@ namespace NewLibCore.Data.SQL.Mapper
     /// </summary>
     public sealed class EntityMapper : IDisposable
     {
-        private readonly ExecutionCore _executionCore;
+        private readonly DbContext _executionCore;
 
         public EntityMapper()
         {
-            _executionCore = MapperConfig.ServiceProvider.GetService<ExecutionCore>();
+            _executionCore = MapperConfig.ServiceProvider.GetService<DbContext>();
         }
 
         /// <summary>
