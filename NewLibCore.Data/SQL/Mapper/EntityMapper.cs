@@ -36,7 +36,7 @@ namespace NewLibCore.Data.SQL.Mapper
              {
                  Handler handler = new InsertHandler<TModel>(model, true);
                  var translationResult = handler.GetTranslationResult();
-                 model.Id = translationResult.Execute(_executionCore).ToPrimitive<Int32>();
+                 model.Id = translationResult.Execute().ToPrimitive<Int32>();
                  return model;
              });
         }
@@ -58,7 +58,7 @@ namespace NewLibCore.Data.SQL.Mapper
                 var segmentManager = MapperConfig.ServiceProvider.GetService<SegmentManager>();
                 segmentManager.Add(expression);
                 Handler handler = new UpdateHandler<TModel>(model, segmentManager, true);
-                return handler.GetTranslationResult().Execute(_executionCore).ToPrimitive<Int32>() > 0;
+                return handler.GetTranslationResult().Execute().ToPrimitive<Int32>() > 0;
             });
         }
 
@@ -72,7 +72,7 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             var segmentManager = MapperConfig.ServiceProvider.GetService<SegmentManager>();
             segmentManager.Add<TModel>();
-            return new JoinSegment<TModel>(segmentManager, _executionCore);
+            return new JoinSegment<TModel>(segmentManager);
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace NewLibCore.Data.SQL.Mapper
             {
                 var sqlResult = TranslationResult.CreateTranslationResult();
                 sqlResult.Append(sql, parameters);
-                return sqlResult.Execute(_executionCore).ToList<TModel>();
+                return sqlResult.Execute().ToList<TModel>();
             });
         }
 

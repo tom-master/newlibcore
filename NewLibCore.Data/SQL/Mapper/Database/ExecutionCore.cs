@@ -12,7 +12,7 @@ namespace NewLibCore.Data.SQL.Mapper.Database
     /// <summary>
     /// sql语句执行
     /// </summary>
-    public class ExecutionCore : IDisposable
+    internal sealed class ExecutionCore : IDisposable
     {
         private DbConnection _connection;
 

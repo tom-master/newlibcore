@@ -9,19 +9,17 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
     public class WhereSegment<TModel> where TModel : new()
     {
         private readonly SegmentManager _segmentManager;
-        private readonly ExecutionCore _executionCore;
 
-        internal WhereSegment(SegmentManager segmentManager, ExecutionCore executionCore)
+        internal WhereSegment(SegmentManager segmentManager)
         {
             _segmentManager = segmentManager;
-            _executionCore = executionCore;
         }
 
         public SelectSegment<TModel> Where(Expression<Func<TModel, Boolean>> expression)
         {
             Parameter.Validate(expression);
             _segmentManager.Add(expression);
-            return new SelectSegment<TModel>(_segmentManager, _executionCore);
+            return new SelectSegment<TModel>(_segmentManager);
         }
 
         public SelectSegment<TModel> Where<T>(Expression<Func<T, Boolean>> expression) where T : new()
@@ -29,7 +27,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
             Parameter.Validate(expression);
             _segmentManager.Add(expression);
 
-            return new SelectSegment<TModel>(_segmentManager, _executionCore);
+            return new SelectSegment<TModel>(_segmentManager);
         }
 
         public SelectSegment<TModel> Where<T>(Expression<Func<TModel, T, Boolean>> expression) where T : new()
@@ -37,7 +35,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
             Parameter.Validate(expression);
             _segmentManager.Add(expression);
 
-            return new SelectSegment<TModel>(_segmentManager, _executionCore);
+            return new SelectSegment<TModel>(_segmentManager);
         }
     }
 }

@@ -10,7 +10,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
     public class JoinSegment<TModel> : WhereSegment<TModel> where TModel : new()
     {
         private readonly SegmentManager _segmentManager;
-        internal JoinSegment(SegmentManager segmentManager, ExecutionCore executionCore) : base(segmentManager, executionCore)
+        internal JoinSegment(SegmentManager segmentManager) : base(segmentManager)
         {
             _segmentManager = segmentManager;
         }

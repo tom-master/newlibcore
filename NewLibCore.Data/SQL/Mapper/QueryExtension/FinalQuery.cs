@@ -7,13 +7,11 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
 {
     public class FinalQuery<TModel> where TModel : new()
     {
-        private readonly SegmentManager _segmentManager;
-        private readonly ExecutionCore _executionCore;
+        private readonly SegmentManager _segmentManager; 
 
-        internal FinalQuery(SegmentManager segmentManager, ExecutionCore executionCore)
+        internal FinalQuery(SegmentManager segmentManager)
         {
-            _segmentManager = segmentManager;
-            _executionCore = executionCore;
+            _segmentManager = segmentManager; 
         }
 
         public TModel FirstOrDefault()
@@ -55,7 +53,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
         private RawExecuteResult InternalExecuteSql()
         {
             Handler handler = new QueryHandler<TModel>(_segmentManager);
-            return handler.GetTranslationResult().Execute(_executionCore);
+            return handler.GetTranslationResult().Execute();
         }
     }
 }
