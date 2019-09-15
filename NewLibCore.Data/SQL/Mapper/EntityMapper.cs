@@ -68,11 +68,11 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <param name="fields">字段</param>
         /// <typeparam name="TModel"></typeparam>
         /// <returns></returns>
-        public JoinSegment<TModel> Query<TModel>() where TModel : new()
+        public IJoin<TModel> Query<TModel>() where TModel : new()
         {
             var segmentManager = MapperConfig.ServiceProvider.GetService<SegmentManager>();
             segmentManager.Add<TModel>();
-            return new JoinSegment<TModel>(segmentManager);
+            return new Join<TModel>(segmentManager);
         }
 
         /// <summary>

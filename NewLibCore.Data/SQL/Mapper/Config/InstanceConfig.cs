@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using NewLibCore.Data.SQL.Mapper.Cache;
+using NewLibCore.Data.SQL.Mapper.Database;
 
 namespace NewLibCore.Data.SQL.Mapper
 {
@@ -38,6 +39,8 @@ namespace NewLibCore.Data.SQL.Mapper
             InitJoinType();
             InitOrderType();
         }
+
+        protected DbContext DbContext { get; set; }
 
         /// <summary>
         /// 获取连接字符串

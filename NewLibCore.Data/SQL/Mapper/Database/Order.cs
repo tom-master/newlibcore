@@ -8,9 +8,9 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
 
     public interface IOrder<TModel> where TModel : new()
     {
-        IQuery<TModel> OrderByDesc<TOrder, TKey>(Expression<Func<TOrder, TKey>> order) where TOrder : new();
+        IQuery<TModel> ThenDesc<TOrder, TKey>(Expression<Func<TOrder, TKey>> order) where TOrder : new();
 
-        IQuery<TModel> OrderByAsc<TOrder, TKey>(Expression<Func<TOrder, TKey>> order) where TOrder : new();
+        IQuery<TModel> ThenAsc<TOrder, TKey>(Expression<Func<TOrder, TKey>> order) where TOrder : new();
     }
 
     public class Order<TModel> : IOrder<TModel> where TModel : new()
@@ -22,7 +22,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
             _segmentManager = segmentManager;
         }
 
-        public IQuery<TModel> OrderByDesc<TOrder, TKey>(Expression<Func<TOrder, TKey>> order) where TOrder : new()
+        public IQuery<TModel> ThenDesc<TOrder, TKey>(Expression<Func<TOrder, TKey>> order) where TOrder : new()
         {
             Parameter.Validate(order);
             _segmentManager.AddOrderBy(order, OrderByType.DESC);
@@ -30,7 +30,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
             return new Query<TModel>(_segmentManager);
         }
 
-        public IQuery<TModel> OrderByAsc<TOrder, TKey>(Expression<Func<TOrder, TKey>> order) where TOrder : new()
+        public IQuery<TModel> ThenAsc<TOrder, TKey>(Expression<Func<TOrder, TKey>> order) where TOrder : new()
         {
             Parameter.Validate(order);
             _segmentManager.AddOrderBy(order, OrderByType.ASC);

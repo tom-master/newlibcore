@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.Common;
 using System.Data.SqlClient;
+using NewLibCore.Data.SQL.Mapper.Database;
 
 namespace NewLibCore.Data.SQL.Mapper
 {
@@ -12,10 +13,11 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <summary>
         /// 初始化一个MsSqlInstanceConfig类的实例
         /// </summary>
-        public MsSqlInstanceConfig()
+        public MsSqlInstanceConfig(DbContext dbContext)
         {
-
+            DbContext = dbContext;
         }
+
 
         internal override InstanceExtension Extension
         {

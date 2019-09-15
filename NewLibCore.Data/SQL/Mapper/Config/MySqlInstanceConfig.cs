@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.Common;
 using MySql.Data.MySqlClient;
+using NewLibCore.Data.SQL.Mapper.Database;
 
 namespace NewLibCore.Data.SQL.Mapper
 {
@@ -12,9 +13,9 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <summary>
         /// 初始化一个MySqlInstanceConfig类的实例
         /// </summary>
-        public MySqlInstanceConfig()
+        public MySqlInstanceConfig(DbContext dbContext)
         {
-
+            DbContext = dbContext;
         }
 
         internal override String UpdateTemplate

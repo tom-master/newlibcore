@@ -7,7 +7,7 @@ using NewLibCore.Validate;
 namespace NewLibCore.Data.SQL.Mapper.MapperExtension
 {
 
-    public interface IJoin<TModel> where TModel : new()
+    public interface IJoin<TModel> : IQuery<TModel> where TModel : new()
     {
         IJoin<TModel> LeftJoin<TRight>(Expression<Func<TModel, TRight, Boolean>> expression) where TRight : new();
 
@@ -22,10 +22,10 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
         IJoin<TModel> InnerJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> expression) where TLeft : new() where TRight : new();
     }
 
-    public class JoinSegment<TModel> : Query<TModel>, IJoin<TModel> where TModel : new()
+    public class Join<TModel> : Query<TModel>, IJoin<TModel> where TModel : new()
     {
         private readonly SegmentManager _segmentManager;
-        internal JoinSegment(SegmentManager segmentManager) : base(segmentManager)
+        internal Join(SegmentManager segmentManager) : base(segmentManager)
         {
             _segmentManager = segmentManager;
         }

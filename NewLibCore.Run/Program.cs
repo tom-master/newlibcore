@@ -21,7 +21,6 @@ namespace NewLibCore.Run
                 {
                     using (var mapper = new EntityMapper())
                     {
-                        mapper.Query<User>().Where(w => w.Id == 4).Select().ToList();
                         #region 
                         // var user = new User("123123", "123123123");
                         // mapper.Add(user);

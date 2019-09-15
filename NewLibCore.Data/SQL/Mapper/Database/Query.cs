@@ -7,7 +7,7 @@ using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper.MapperExtension
 {
-    public interface IQuery<TModel> where TModel : new()
+    public interface IQuery<TModel> : IOrder<TModel> where TModel : new()
     {
         IQuery<TModel> Where(Expression<Func<TModel, Boolean>> expression);
 
@@ -28,16 +28,14 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
         List<T> ToList<T>() where T : new();
     }
 
-    public class Query<TModel> : IQuery<TModel> where TModel : new()
+    public class Query<TModel> : Order<TModel>, IQuery<TModel> where TModel : new()
     {
         private readonly SegmentManager _segmentManager;
 
-        internal Query(SegmentManager segmentManager)
+        internal Query(SegmentManager segmentManager) : base(segmentManager)
         {
             _segmentManager = segmentManager;
         }
-
-
 
         public IQuery<TModel> Page(int pageIndex, int pageSize)
         {
