@@ -36,12 +36,19 @@ namespace NewLibCore.Data.SQL.Mapper
         }
 
         /// <summary>
-        /// 初始化映射配置
+        /// 初始化mysql配置
         /// </summary>
-        /// <param name="mapperType">映射类型</param>
-        public static void InitMapper(MapperType mapperType = MapperType.MYSQL)
+        public static void InitMySql()
         {
-            new MapperConfig(mapperType);
+            new MapperConfig(MapperType.MYSQL);
+        }
+
+        /// <summary>
+        /// 初始化mssql配置
+        /// </summary>
+        public static void InitMsSql()
+        {
+            new MapperConfig(MapperType.MSSQL);
         }
 
         /// <summary>

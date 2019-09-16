@@ -13,7 +13,7 @@ namespace NewLibCore.Run
         {
             #region 
 
-            MapperConfig.InitMapper();
+            MapperConfig.InitMySql();
 
             for (var i = 0; i < 4; i++)
             {
