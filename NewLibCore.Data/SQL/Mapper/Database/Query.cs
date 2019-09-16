@@ -56,8 +56,6 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
             return new Query<TModel>(_segmentManager);
         }
 
-
-
         public IQuery<TModel> Where(Expression<Func<TModel, Boolean>> expression)
         {
             Parameter.Validate(expression);
