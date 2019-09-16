@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using NewLibCore.Data.SQL.Mapper.Database;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
 using NewLibCore.Validate;
@@ -119,6 +120,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
         {
             Handler handler = new QueryHandler<TModel>();
             handler.AddSegmentManager(_segmentManager);
+            handler.AddDbContext(_dbContext);
             return handler.Execute();
         }
     }

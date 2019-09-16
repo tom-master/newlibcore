@@ -35,6 +35,7 @@ namespace NewLibCore.Data.SQL.Mapper
             return RunDiagnosis.Watch(() =>
             {
                 Handler handler = new InsertHandler<TModel>(model);
+                handler.AddDbContext(_executionCore);
                 model.Id = handler.Execute().ToPrimitive<Int32>();
                 return model;
             });
@@ -58,6 +59,7 @@ namespace NewLibCore.Data.SQL.Mapper
                 segmentManager.Add(expression);
                 Handler handler = new UpdateHandler<TModel>(model);
                 handler.AddSegmentManager(segmentManager);
+                handler.AddDbContext(_executionCore);
                 return handler.Execute().ToPrimitive<Int32>() > 0;
             });
         }
