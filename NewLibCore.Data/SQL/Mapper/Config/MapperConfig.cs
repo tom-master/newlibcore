@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System;
+using Microsoft.Extensions.DependencyInjection;
 using NewLibCore.Data.SQL.Mapper.Cache;
 using NewLibCore.Data.SQL.Mapper.Database;
 using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
@@ -42,6 +43,12 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             new MapperConfig(mapperType);
         }
+
+        /// <summary>
+        /// 启用模型验证
+        /// </summary>
+        /// <value></value>
+        public static Boolean EnableModelValidate { get; set; }
 
         /// <summary>
         /// 提供依赖注入的对象

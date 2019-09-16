@@ -14,24 +14,21 @@ namespace NewLibCore.Data.SQL.Mapper
     internal class InsertHandler<TModel> : Handler where TModel : EntityBase, new()
     {
         private readonly TModel _instance;
-        private readonly Boolean _verifyModel;
 
         /// <summary>
         /// 初始化一个InsertHandler类的实例
         /// </summary>
         /// <param name="model">要插入的模型</param>
-        /// <param name="isVerifyModel">是否验证模型</param>
-        internal InsertHandler(TModel model, Boolean isVerifyModel = false)
+        internal InsertHandler(TModel model)
         {
             Parameter.Validate(model);
-            _verifyModel = isVerifyModel;
             _instance = model;
         }
 
         internal override RawExecuteResult Execute()
         {
             _instance.OnChanged();
-            if (_verifyModel)
+            if (MapperConfig.EnableModelValidate)
             {
                 _instance.Validate();
             }

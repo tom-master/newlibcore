@@ -13,23 +13,23 @@ namespace NewLibCore.Data.SQL.Mapper
     /// <typeparam name="TModel"></typeparam>
     internal class UpdateHandler<TModel> : Handler where TModel : EntityBase, new()
     {
+        private SegmentManager _segmentManager;
+
         private readonly TModel _modelInstance;
-        private readonly Boolean _verifyModel;
-        private readonly SegmentManager _segmentManager;
 
         /// <summary>
         /// 初始化一个UpdateHandler类的实例
         /// </summary>
         /// <param name="model">要更新的模型</param>
-        /// <param name="segmentManager">表达式分解后的对象</param>
-        /// <param name="verifyModel">是否验证模型</param>
-        public UpdateHandler(TModel model, SegmentManager segmentManager, Boolean verifyModel = false)
+        public UpdateHandler(TModel model)
         {
             Parameter.Validate(model);
-            Parameter.Validate(segmentManager);
-
             _modelInstance = model;
-            _verifyModel = verifyModel;
+        }
+
+        internal override void AddSegmentManager(SegmentManager segmentManager)
+        {
+            Parameter.Validate(segmentManager);
             _segmentManager = segmentManager;
         }
 
@@ -37,7 +37,7 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             _modelInstance.SetUpdateTime();
 
-            if (_verifyModel)
+            if (MapperConfig.EnableModelValidate)
             {
                 _modelInstance.Validate();
             }

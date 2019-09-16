@@ -117,7 +117,8 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
 
         private RawExecuteResult InternalExecuteSql()
         {
-            Handler handler = new QueryHandler<TModel>(_segmentManager);
+            Handler handler = new QueryHandler<TModel>();
+            handler.AddSegmentManager(_segmentManager);
             return handler.Execute();
         }
     }

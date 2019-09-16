@@ -29,5 +29,10 @@ namespace NewLibCore.Data.SQL.Mapper
         /// </summary>
         /// <returns></returns>
         internal abstract RawExecuteResult Execute();
+
+        internal virtual void AddSegmentManager(SegmentManager segmentManager)
+        {
+
+        }
     }
 }

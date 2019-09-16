@@ -15,13 +15,9 @@ namespace NewLibCore.Data.SQL.Mapper
     /// <typeparam name="TModel"></typeparam>
     internal class QueryHandler<TModel> : Handler where TModel : new()
     {
-        private readonly SegmentManager _segmentManager;
+        private SegmentManager _segmentManager;
 
-        /// <summary>
-        /// 初始化一个SelectHandler类的实例
-        /// </summary>
-        /// <param name="segmentManager">表达式分解后的对象</param>
-        internal QueryHandler(SegmentManager segmentManager)
+        internal override void AddSegmentManager(SegmentManager segmentManager)
         {
             Parameter.Validate(segmentManager);
             _segmentManager = segmentManager;
