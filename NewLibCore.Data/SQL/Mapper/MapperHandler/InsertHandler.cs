@@ -28,7 +28,7 @@ namespace NewLibCore.Data.SQL.Mapper
             _instance = model;
         }
 
-        protected override TranslationResult ExecuteTranslate()
+        internal override RawExecuteResult Execute()
         {
             _instance.OnChanged();
             if (_verifyModel)
@@ -40,7 +40,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
             var tableName = typeof(TModel).GetTableName().TableName;
             var template = ReplacePlaceholder(propertyInfos, tableName);
-            return TranslationResult.CreateTranslationResult().Append(template, CreateParameter(propertyInfos));
+            return TranslationResult.CreateTranslationResult().Append(template, CreateParameter(propertyInfos)).Execute();
         }
 
         private static IEnumerable<EntityParameter> CreateParameter(IReadOnlyList<KeyValuePair<String, Object>> propertyInfos)

@@ -35,8 +35,7 @@ namespace NewLibCore.Data.SQL.Mapper
             return RunDiagnosis.Watch(() =>
              {
                  Handler handler = new InsertHandler<TModel>(model, true);
-                 var translationResult = handler.GetTranslationResult();
-                 model.Id = translationResult.Execute().ToPrimitive<Int32>();
+                 model.Id = handler.Execute().ToPrimitive<Int32>();
                  return model;
              });
         }
@@ -58,7 +57,7 @@ namespace NewLibCore.Data.SQL.Mapper
                 var segmentManager = MapperConfig.ServiceProvider.GetService<SegmentManager>();
                 segmentManager.Add(expression);
                 Handler handler = new UpdateHandler<TModel>(model, segmentManager, true);
-                return handler.GetTranslationResult().Execute().ToPrimitive<Int32>() > 0;
+                return handler.Execute().ToPrimitive<Int32>() > 0;
             });
         }
 

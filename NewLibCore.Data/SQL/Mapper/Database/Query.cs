@@ -120,7 +120,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
         private RawExecuteResult InternalExecuteSql()
         {
             Handler handler = new QueryHandler<TModel>(_segmentManager);
-            return handler.GetTranslationResult().Execute();
+            return handler.Execute();
         }
     }
 }

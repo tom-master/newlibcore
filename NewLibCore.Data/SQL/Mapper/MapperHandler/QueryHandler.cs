@@ -27,7 +27,7 @@ namespace NewLibCore.Data.SQL.Mapper
             _segmentManager = segmentManager;
         }
 
-        protected override TranslationResult ExecuteTranslate()
+        internal override RawExecuteResult Execute()
         {
             var (Fields, AliasName) = StatementParse(_segmentManager.SelectField);
 
@@ -64,7 +64,7 @@ namespace NewLibCore.Data.SQL.Mapper
                 segment.Result.Append(Instance.Extension.Page.Replace("{value}", pageIndex).Replace("{pageSize}", pageSize));
             }
 
-            return segment.Result;
+            return segment.Result.Execute();
         }
 
         /// <summary>

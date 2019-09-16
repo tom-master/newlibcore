@@ -10,14 +10,6 @@ namespace NewLibCore.Data.SQL.Mapper
     /// </summary>
     internal class MySqlInstanceConfig : InstanceConfig
     {
-        /// <summary>
-        /// 初始化一个MySqlInstanceConfig类的实例
-        /// </summary>
-        public MySqlInstanceConfig(DbContext dbContext)
-        {
-            DbContext = dbContext;
-        }
-
         internal override String UpdateTemplate
         {
             get

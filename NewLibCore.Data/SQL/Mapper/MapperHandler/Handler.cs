@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
+using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
 
 namespace NewLibCore.Data.SQL.Mapper
@@ -24,18 +25,9 @@ namespace NewLibCore.Data.SQL.Mapper
         protected InstanceConfig Instance { get; private set; }
 
         /// <summary>
-        /// 获取表达式段翻译后的结果
-        /// </summary>
-        /// <returns></returns>
-        internal TranslationResult GetTranslationResult()
-        {
-            return ExecuteTranslate();
-        }
-
-        /// <summary>
         /// 执行表达式段的翻译
         /// </summary>
         /// <returns></returns>
-        protected abstract TranslationResult ExecuteTranslate();
+        internal abstract RawExecuteResult Execute();
     }
 }

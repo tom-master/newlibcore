@@ -40,8 +40,6 @@ namespace NewLibCore.Data.SQL.Mapper
             InitOrderType();
         }
 
-        protected DbContext DbContext { get; set; }
-
         /// <summary>
         /// 获取连接字符串
         /// </summary>

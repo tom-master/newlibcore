@@ -20,19 +20,16 @@ namespace NewLibCore.Data.SQL.Mapper
             var services = new ServiceCollection()
                 .AddTransient<ResultCache, ExecutionResultCache>()
                 .AddTransient<SegmentManager>()
-                //.AddTransient<DbContext>()
+                .AddTransient<DbContext>()
                 .AddSingleton<ILogger, ConsoleLogger>();
-
 
             if (mapperType == MapperType.MSSQL)
             {
-                services = services.AddSingleton<InstanceConfig>(new MsSqlInstanceConfig(new DbContext()));
-                //services = services.AddTransient<InstanceConfig, MsSqlInstanceConfig>();
+                services = services.AddTransient<InstanceConfig, MsSqlInstanceConfig>();
             }
             else if (mapperType == MapperType.MYSQL)
             {
-                services = services.AddSingleton<InstanceConfig>(new MySqlInstanceConfig(new DbContext()));
-                //services = services.AddTransient<InstanceConfig, MySqlInstanceConfig>();
+                services = services.AddTransient<InstanceConfig, MySqlInstanceConfig>();
             }
             ServiceProvider = services.BuildServiceProvider();
         }

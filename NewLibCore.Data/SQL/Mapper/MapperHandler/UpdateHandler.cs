@@ -33,7 +33,7 @@ namespace NewLibCore.Data.SQL.Mapper
             _segmentManager = segmentManager;
         }
 
-        protected override TranslationResult ExecuteTranslate()
+        internal override RawExecuteResult Execute()
         {
             _modelInstance.SetUpdateTime();
 
@@ -51,7 +51,7 @@ namespace NewLibCore.Data.SQL.Mapper
             segment.Result.Append($@"{RelationType.AND} {AliasName}.IsDeleted=0");
             _modelInstance.Reset();
 
-            return segment.Result.Append($@"{Instance.Extension.RowCount}");
+            return segment.Result.Append($@"{Instance.Extension.RowCount}").Execute();
         }
 
         private static IEnumerable<EntityParameter> CreateParameter(IReadOnlyList<KeyValuePair<String, Object>> propertys)
