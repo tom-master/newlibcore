@@ -15,7 +15,7 @@ namespace NewLibCore.Data.SQL.Mapper
     /// </summary>
     internal sealed class TranslationResult
     {
-        private readonly StringBuilder _originSql;
+        private StringBuilder _originSql;
         private readonly IList<EntityParameter> _parameters;
         private readonly ResultCache _cache = null;
 
@@ -36,15 +36,6 @@ namespace NewLibCore.Data.SQL.Mapper
         internal static TranslationResult CreateTranslationResult()
         {
             return new TranslationResult();
-        }
-
-        /// <summary>
-        /// 获取EntityParameter列表
-        /// </summary>
-        /// <returns></returns>
-        internal IList<EntityParameter> GetParameters()
-        {
-            return _parameters;
         }
 
         /// <summary>
@@ -96,29 +87,23 @@ namespace NewLibCore.Data.SQL.Mapper
         /// </summary>
         /// <param name="executionCore">执行翻译结果的对象</param>
         /// <returns></returns>
-        internal RawExecuteResult Execute()
+        internal RawExecuteResult Execute(IMapperDbContext mapperDbContext)
         {
-            return InternalExecute();
+            var executeResult = GetCache();
+            var executeType = mapperDbContext.GetExecuteType(ToString());
+            if (executeResult == null)
+            {
+                executeResult = mapperDbContext.RawExecute(ToString(), _parameters);
+                SetCache(executeType, executeResult);
+            }
+
+            return executeResult;
         }
 
         internal void Clear()
         {
             _originSql.Clear();
             _parameters.Clear();
-        }
-
-        private RawExecuteResult InternalExecute()
-        {
-            var executeResult = GetCache();
-            var executionCore = MapperConfig.ServiceProvider.GetService<DbContext>();
-            var executeType = executionCore.GetExecuteType(ToString());
-            if (executeResult == null)
-            {
-                executeResult = executionCore.Execute(this);
-                SetCache(executeType, executeResult);
-            }
-
-            return executeResult;
         }
 
         /// <summary>
@@ -129,7 +114,7 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             Parameter.Validate(_originSql);
             var cacheKey = ToString();
-            foreach (var item in GetParameters())
+            foreach (var item in _parameters)
             {
                 cacheKey = cacheKey.Replace(item.Key, item.Value.ToString());
             }
@@ -169,21 +154,11 @@ namespace NewLibCore.Data.SQL.Mapper
             return default;
         }
 
-        /// <summary>
-        /// 将sql语句中多余的空格去掉
-        /// </summary>
-        /// <param name="sql">语句</param>
-        /// <returns></returns>
-        private String ReformatSql(String sql)
-        {
-            Parameter.Validate(sql);
-            sql = sql.Replace("   ", " ").Replace("  ", " ");
-            return sql.Trim();
-        }
-
         public override String ToString()
         {
-            return ReformatSql(_originSql.ToString());
+            Parameter.Validate(_originSql);
+            _originSql = _originSql.Replace("   ", " ").Replace("  ", " ");
+            return _originSql.ToString().Trim();
         }
     }
 }

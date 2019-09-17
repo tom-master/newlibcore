@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using NewLibCore.Data.SQL.Mapper.Database;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Validate;
 
@@ -19,7 +20,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// 初始化一个InsertHandler类的实例
         /// </summary>
         /// <param name="model">要插入的模型</param>
-        internal InsertHandler(TModel model)
+        internal InsertHandler(TModel model, IMapperDbContext mapperDbContext) : base(mapperDbContext)
         {
             Parameter.Validate(model);
             _instance = model;
@@ -37,7 +38,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
             var tableName = typeof(TModel).GetTableName().TableName;
             var template = ReplacePlaceholder(propertyInfos, tableName);
-            return TranslationResult.CreateTranslationResult().Append(template, CreateParameter(propertyInfos)).Execute();
+            return TranslationResult.CreateTranslationResult().Append(template, CreateParameter(propertyInfos)).Execute(MapperDbContext);
         }
 
         private static IEnumerable<EntityParameter> CreateParameter(IReadOnlyList<KeyValuePair<String, Object>> propertyInfos)

@@ -25,7 +25,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
     public class Join<TModel> : Query<TModel>, IJoin<TModel> where TModel : new()
     {
         private readonly SegmentManager _segmentManager;
-        internal Join(SegmentManager segmentManager) : base(segmentManager)
+        internal Join(SegmentManager segmentManager, IMapperDbContext mapperDbContext) : base(segmentManager, mapperDbContext)
         {
             _segmentManager = segmentManager;
         }

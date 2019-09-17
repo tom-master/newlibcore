@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using NewLibCore.Data.SQL.Mapper.Database;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
 using NewLibCore.Validate;
@@ -13,23 +14,19 @@ namespace NewLibCore.Data.SQL.Mapper
     /// <typeparam name="TModel"></typeparam>
     internal class UpdateHandler<TModel> : Handler where TModel : EntityBase, new()
     {
-        private SegmentManager _segmentManager;
-
         private readonly TModel _modelInstance;
+        private readonly SegmentManager _segmentManager;
 
         /// <summary>
         /// 初始化一个UpdateHandler类的实例
         /// </summary>
         /// <param name="model">要更新的模型</param>
-        public UpdateHandler(TModel model)
+        public UpdateHandler(TModel model, SegmentManager segmentManager, IMapperDbContext mapperDbContext) : base(mapperDbContext)
         {
             Parameter.Validate(model);
-            _modelInstance = model;
-        }
-
-        internal override void AddSegmentManager(SegmentManager segmentManager)
-        {
             Parameter.Validate(segmentManager);
+
+            _modelInstance = model;
             _segmentManager = segmentManager;
         }
 
@@ -51,7 +48,7 @@ namespace NewLibCore.Data.SQL.Mapper
             segment.Result.Append($@"{RelationType.AND} {AliasName}.IsDeleted=0");
             _modelInstance.Reset();
 
-            return segment.Result.Append($@"{Instance.Extension.RowCount}").Execute();
+            return segment.Result.Append($@"{Instance.Extension.RowCount}").Execute(MapperDbContext);
         }
 
         private static IEnumerable<EntityParameter> CreateParameter(IReadOnlyList<KeyValuePair<String, Object>> propertys)

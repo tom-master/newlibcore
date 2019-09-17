@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using NewLibCore.Data.SQL.Mapper.Database;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
 using NewLibCore.Validate;
@@ -15,9 +16,9 @@ namespace NewLibCore.Data.SQL.Mapper
     /// <typeparam name="TModel"></typeparam>
     internal class QueryHandler<TModel> : Handler where TModel : new()
     {
-        private SegmentManager _segmentManager;
+        private readonly SegmentManager _segmentManager;
 
-        internal override void AddSegmentManager(SegmentManager segmentManager)
+        internal QueryHandler(SegmentManager segmentManager, IMapperDbContext mapperDbContext) : base(mapperDbContext)
         {
             Parameter.Validate(segmentManager);
             _segmentManager = segmentManager;
@@ -60,7 +61,7 @@ namespace NewLibCore.Data.SQL.Mapper
                 segment.Result.Append(Instance.Extension.Page.Replace("{value}", pageIndex).Replace("{pageSize}", pageSize));
             }
 
-            return segment.Result.Execute();
+            return segment.Result.Execute(MapperDbContext);
         }
 
         /// <summary>

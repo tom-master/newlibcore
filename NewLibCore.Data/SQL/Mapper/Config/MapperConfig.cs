@@ -21,7 +21,7 @@ namespace NewLibCore.Data.SQL.Mapper
             var services = new ServiceCollection()
                 .AddTransient<ResultCache, ExecutionResultCache>()
                 .AddTransient<SegmentManager>()
-                .AddTransient<DbContext>()
+                .AddTransient<IMapperDbContext>()
                 .AddSingleton<ILogger, ConsoleLogger>();
 
             if (mapperType == MapperType.MSSQL)

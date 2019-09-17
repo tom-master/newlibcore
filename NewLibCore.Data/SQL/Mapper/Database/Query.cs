@@ -8,7 +8,7 @@ using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper.MapperExtension
 {
-    public interface IQuery<TModel> : IOrder<TModel> where TModel : new()
+    public interface IQuery<TModel> where TModel : new()
     {
         IQuery<TModel> Where(Expression<Func<TModel, Boolean>> expression);
 
@@ -29,22 +29,24 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
         List<T> ToList<T>() where T : new();
     }
 
-    public class Query<TModel> : Order<TModel>, IQuery<TModel> where TModel : new()
+    public class Query<TModel> : IQuery<TModel> where TModel : new()
     {
         private readonly SegmentManager _segmentManager;
+        private readonly IMapperDbContext _mapperDbContext;
 
-        internal Query(SegmentManager segmentManager) : base(segmentManager)
+        internal Query(SegmentManager segmentManager, IMapperDbContext mapperDbContext)
         {
             _segmentManager = segmentManager;
+            _mapperDbContext = mapperDbContext;
         }
 
-        public IQuery<TModel> Page(int pageIndex, int pageSize)
+        public IQuery<TModel> Page(Int32 pageIndex, Int32 pageSize)
         {
             Parameter.Validate(pageIndex);
             Parameter.Validate(pageSize);
             _segmentManager.AddPage(pageIndex, pageSize);
 
-            return new Query<TModel>(_segmentManager);
+            return this;
         }
 
         public IQuery<TModel> Select(Expression<Func<TModel, dynamic>> fields = null)
@@ -54,14 +56,14 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
                 _segmentManager.Add(fields);
             }
 
-            return new Query<TModel>(_segmentManager);
+            return this;
         }
 
         public IQuery<TModel> Where(Expression<Func<TModel, Boolean>> expression)
         {
             Parameter.Validate(expression);
             _segmentManager.Add(expression);
-            return new Query<TModel>(_segmentManager);
+            return this;
         }
 
         public IQuery<TModel> Where<T>(Expression<Func<T, Boolean>> expression) where T : new()
@@ -69,7 +71,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
             Parameter.Validate(expression);
             _segmentManager.Add(expression);
 
-            return new Query<TModel>(_segmentManager);
+            return this;
         }
 
         public IQuery<TModel> Where<T>(Expression<Func<TModel, T, Boolean>> expression) where T : new()
@@ -77,7 +79,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
             Parameter.Validate(expression);
             _segmentManager.Add(expression);
 
-            return new Query<TModel>(_segmentManager);
+            return this;
         }
 
         public TModel FirstOrDefault()
@@ -118,9 +120,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
 
         private RawExecuteResult InternalExecuteSql()
         {
-            Handler handler = new QueryHandler<TModel>();
-            handler.AddSegmentManager(_segmentManager);
-            handler.AddDbContext(_dbContext);
+            Handler handler = new QueryHandler<TModel>(_segmentManager, _mapperDbContext);
             return handler.Execute();
         }
     }

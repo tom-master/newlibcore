@@ -13,13 +13,13 @@ namespace NewLibCore.Data.SQL.Mapper
     /// <summary>
     /// 将对应的操作翻译为sql并执行
     /// </summary>
-    public sealed class EntityMapper : IDisposable
+    public sealed class EntityMapper
     {
-        private readonly DbContext _executionCore;
+        private readonly IMapperDbContext _mapperDbContext;
 
         public EntityMapper()
         {
-            _executionCore = MapperConfig.ServiceProvider.GetService<DbContext>();
+            _mapperDbContext = MapperConfig.ServiceProvider.GetService<IMapperDbContext>();
         }
 
         /// <summary>
@@ -34,8 +34,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
             return RunDiagnosis.Watch(() =>
             {
-                Handler handler = new InsertHandler<TModel>(model);
-                handler.AddDbContext(_executionCore);
+                Handler handler = new InsertHandler<TModel>(model, _mapperDbContext);
                 model.Id = handler.Execute().ToPrimitive<Int32>();
                 return model;
             });
@@ -57,9 +56,7 @@ namespace NewLibCore.Data.SQL.Mapper
             {
                 var segmentManager = MapperConfig.ServiceProvider.GetService<SegmentManager>();
                 segmentManager.Add(expression);
-                Handler handler = new UpdateHandler<TModel>(model);
-                handler.AddSegmentManager(segmentManager);
-                handler.AddDbContext(_executionCore);
+                Handler handler = new UpdateHandler<TModel>(model, segmentManager, _mapperDbContext);
                 return handler.Execute().ToPrimitive<Int32>() > 0;
             });
         }
@@ -67,14 +64,13 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <summary>
         /// 查询一個TModel
         /// </summary>
-        /// <param name="fields">字段</param>
         /// <typeparam name="TModel"></typeparam>
         /// <returns></returns>
         public IJoin<TModel> Query<TModel>() where TModel : new()
         {
             var segmentManager = MapperConfig.ServiceProvider.GetService<SegmentManager>();
             segmentManager.Add<TModel>();
-            return new Join<TModel>(segmentManager);
+            return new Join<TModel>(segmentManager, _mapperDbContext);
         }
 
         /// <summary>
@@ -92,28 +88,8 @@ namespace NewLibCore.Data.SQL.Mapper
             {
                 var sqlResult = TranslationResult.CreateTranslationResult();
                 sqlResult.Append(sql, parameters);
-                return sqlResult.Execute().ToList<TModel>();
+                return sqlResult.Execute(_mapperDbContext).ToList<TModel>();
             });
-        }
-
-        public void OpenTransaction()
-        {
-            _executionCore.OpenTransaction();
-        }
-
-        public void Commit()
-        {
-            _executionCore.Commit();
-        }
-
-        public void Rollback()
-        {
-            _executionCore.Rollback();
-        }
-
-        public void Dispose()
-        {
-            _executionCore.Dispose();
         }
     }
 }
