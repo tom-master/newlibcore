@@ -27,6 +27,8 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
         List<TModel> ToList();
 
         List<T> ToList<T>() where T : new();
+
+        Int32 Count();
     }
 
     public class Query<TModel> : IQuery<TModel> where TModel : new()
@@ -122,6 +124,16 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
         {
             Handler handler = new QueryHandler<TModel>(_segmentManager, _mapperDbContext);
             return handler.Execute();
+        }
+
+        public Int32 Count()
+        {
+            return RunDiagnosis.Watch(() =>
+            {
+                Select((a) => "COUNT(1)");
+                var executeResult = InternalExecuteSql();
+                return executeResult.ToSingle<Int32>();
+            });
         }
     }
 }
