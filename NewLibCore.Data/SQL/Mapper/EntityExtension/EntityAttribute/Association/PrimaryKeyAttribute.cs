@@ -1,6 +1,6 @@
 ﻿using System; 
 
-namespace NewLibCore.Data.SQL.Mapper.EntityExtension
+namespace NewLibCore.Data.SQL.Mapper
 {
     /// <summary>
     /// 主键特性

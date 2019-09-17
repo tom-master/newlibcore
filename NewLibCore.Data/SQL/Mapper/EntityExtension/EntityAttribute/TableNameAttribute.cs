@@ -1,6 +1,6 @@
 using System;
 
-namespace NewLibCore.Data.SQL.Mapper.EntityExtension
+namespace NewLibCore.Data.SQL.Mapper
 {
     /// <summary>
     /// 标记被修饰的类为数据库中的一个表

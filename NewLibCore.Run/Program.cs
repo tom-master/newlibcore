@@ -19,9 +19,11 @@ namespace NewLibCore.Run
             {
                 var thread = new Thread(new ParameterizedThreadStart((a) =>
                 {
-                    var mapper = new EntityMapper();
+                    using (var mapper = new EntityMapper())
+                    {
+                        mapper.Query<User>().Where(w => w.Id == 4).FirstOrDefault();
+                    }
 
-                    mapper.Query<User>().Where(w => w.Id == 4).FirstOrDefault();
                     #region 
                     // var user = new User("123123", "123123123");
                     // mapper.Add(user);

@@ -5,7 +5,7 @@ using System.Reflection;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Data.SQL.Mapper.EntityExtension
+namespace NewLibCore.Data.SQL.Mapper
 {
     internal class PO
     {

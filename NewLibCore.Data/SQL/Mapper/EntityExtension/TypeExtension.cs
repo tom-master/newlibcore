@@ -1,9 +1,9 @@
 using System;
 using System.Linq;
 
-namespace NewLibCore.Data.SQL.Mapper.EntityExtension
+namespace NewLibCore.Data.SQL.Mapper
 {
-    internal static class TypeExtension
+    internal static class EntityTypeExtension
     {
         /// <summary>
         /// 获取设置在实体的指定表名

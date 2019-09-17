@@ -20,7 +20,7 @@ namespace NewLibCore.Data.SQL.Mapper.Database
 
         public MapperDbContext()
         {
-            var instanceConfig = MapperConfig.ServiceProvider.GetService<InstanceConfig>();
+            var instanceConfig = MapperConfig.DIProvider.GetService<InstanceConfig>();
             _connection = instanceConfig.GetConnectionInstance();
         }
 
@@ -55,7 +55,7 @@ namespace NewLibCore.Data.SQL.Mapper.Database
         {
             if (_dataTransaction == null)
             {
-                _dataTransaction = _connection.BeginTransaction();
+                _dataTransaction = _connection.BeginTransaction(MapperConfig.TransactionLevel);
                 RunDiagnosis.Info("开启事务");
             }
         }

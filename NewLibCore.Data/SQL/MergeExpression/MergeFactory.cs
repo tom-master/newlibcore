@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq.Expressions;
-using NewLibCore.Data.SQL.Mapper.EntityExtension;
+using NewLibCore.Data.SQL.Mapper;
 
 namespace NewLibCore.Data.SQL.MergeExpression
 {

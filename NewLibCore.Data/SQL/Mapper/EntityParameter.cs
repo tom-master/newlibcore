@@ -31,7 +31,7 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             Parameter.Validate(entityParameter);
 
-            var instance = MapperConfig.ServiceProvider.GetService<InstanceConfig>();
+            var instance = MapperConfig.DIProvider.GetService<InstanceConfig>();
 
             var parameter = instance.GetParameterInstance();
             parameter.ParameterName = entityParameter.Key;
@@ -79,14 +79,14 @@ namespace NewLibCore.Data.SQL.Mapper
                         }
                     }
                     var ex = $@"无法转换的类型{objType.Name}";
-                    MapperConfig.ServiceProvider.GetService<ILogger>().Error(ex);
+                    MapperConfig.DIProvider.GetService<ILogger>().Error(ex);
                     throw new Exception(ex);
                 }
                 return obj;
             }
             catch (Exception ex)
             {
-                MapperConfig.ServiceProvider.GetService<ILogger>().Error(ex.ToString());
+                MapperConfig.DIProvider.GetService<ILogger>().Error(ex.ToString());
                 throw;
             }
         }

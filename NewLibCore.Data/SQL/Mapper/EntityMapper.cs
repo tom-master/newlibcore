@@ -13,13 +13,13 @@ namespace NewLibCore.Data.SQL.Mapper
     /// <summary>
     /// 将对应的操作翻译为sql并执行
     /// </summary>
-    public sealed class EntityMapper
+    public sealed class EntityMapper : IDisposable
     {
         private readonly IMapperDbContext _mapperDbContext;
 
         public EntityMapper()
         {
-            _mapperDbContext = MapperConfig.ServiceProvider.GetService<IMapperDbContext>();
+            _mapperDbContext = MapperConfig.DIProvider.GetService<IMapperDbContext>();
         }
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
             return RunDiagnosis.Watch(() =>
             {
-                var segmentManager = MapperConfig.ServiceProvider.GetService<SegmentManager>();
+                var segmentManager = MapperConfig.DIProvider.GetService<SegmentManager>();
                 segmentManager.Add(expression);
                 Handler handler = new UpdateHandler<TModel>(model, segmentManager, _mapperDbContext);
                 return handler.Execute().ToPrimitive<Int32>() > 0;
@@ -68,7 +68,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <returns></returns>
         public IJoin<TModel> Query<TModel>() where TModel : new()
         {
-            var segmentManager = MapperConfig.ServiceProvider.GetService<SegmentManager>();
+            var segmentManager = MapperConfig.DIProvider.GetService<SegmentManager>();
             segmentManager.Add<TModel>();
             return new Join<TModel>(segmentManager, _mapperDbContext);
         }
@@ -90,6 +90,26 @@ namespace NewLibCore.Data.SQL.Mapper
                 sqlResult.Append(sql, parameters);
                 return sqlResult.Execute(_mapperDbContext).ToList<TModel>();
             });
+        }
+
+        public void OpenTran()
+        {
+            _mapperDbContext.OpenTransaction();
+        }
+
+        public void Commit()
+        {
+            _mapperDbContext.Commit();
+        }
+
+        public void Rollback()
+        {
+            _mapperDbContext.Rollback();
+        }
+
+        public void Dispose()
+        {
+            _mapperDbContext.Dispose();
         }
     }
 }

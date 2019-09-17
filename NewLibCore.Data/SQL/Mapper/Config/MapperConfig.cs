@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using Microsoft.Extensions.DependencyInjection;
 using NewLibCore.Data.SQL.Mapper.Cache;
 using NewLibCore.Data.SQL.Mapper.Database;
@@ -32,7 +33,7 @@ namespace NewLibCore.Data.SQL.Mapper
             {
                 services = services.AddTransient<InstanceConfig, MySqlInstanceConfig>();
             }
-            ServiceProvider = services.BuildServiceProvider();
+            DIProvider = services.BuildServiceProvider();
         }
 
         /// <summary>
@@ -55,11 +56,16 @@ namespace NewLibCore.Data.SQL.Mapper
         /// 启用模型验证
         /// </summary>
         /// <value></value>
-        public static Boolean EnableModelValidate { get; set; }
+        public static Boolean EnableModelValidate { get; set; } = true;
+
+        /// <summary>
+        /// 事务隔离级别
+        /// </summary>
+        public static IsolationLevel TransactionLevel { get; set; } = IsolationLevel.Unspecified;
 
         /// <summary>
         /// 提供依赖注入的对象
         /// </summary>
-        internal static ServiceProvider ServiceProvider { get; private set; }
+        internal static ServiceProvider DIProvider { get; private set; }
     }
 }

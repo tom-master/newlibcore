@@ -11,7 +11,7 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
 
         static RunDiagnosis()
         {
-            _logger = MapperConfig.ServiceProvider.GetService<ILogger>();
+            _logger = MapperConfig.DIProvider.GetService<ILogger>();
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
         }
 
