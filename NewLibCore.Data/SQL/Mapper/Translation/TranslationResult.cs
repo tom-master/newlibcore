@@ -87,7 +87,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// </summary>
         /// <param name="executionCore">执行翻译结果的对象</param>
         /// <returns></returns>
-        internal RawExecuteResult Execute(IMapperDbContext mapperDbContext)
+        internal RawResult Execute(IMapperDbContext mapperDbContext)
         {
             var executeResult = GetCache();
             var executeType = mapperDbContext.GetExecuteType(ToString());
@@ -125,7 +125,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// 设置缓存
         /// </summary>
         /// <param name="executeResult">sql执行后原始的执行结果</param>
-        private void SetCache(ExecuteType executeType, RawExecuteResult executeResult)
+        private void SetCache(ExecuteType executeType, RawResult executeResult)
         {
             if (_cache != null)
             {
@@ -140,14 +140,14 @@ namespace NewLibCore.Data.SQL.Mapper
         /// 获取缓存
         /// </summary>
         /// <returns></returns>
-        private RawExecuteResult GetCache()
+        private RawResult GetCache()
         {
             if (_cache != null)
             {
                 var cacheResult = _cache.Get(PrepareCacheKey());
                 if (cacheResult != null)
                 {
-                    return (RawExecuteResult)cacheResult;
+                    return (RawResult)cacheResult;
                 }
             }
 

@@ -6,7 +6,7 @@ namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
     /// <summary>
     /// 连接语句对象
     /// </summary>
-    internal class JoinExpressionMapper : ExpressionMapper
+    internal class JoinExpressionMapper : Statement
     {
         protected internal String MainTable { get; set; }
 

@@ -8,9 +8,9 @@ using NewLibCore.Validate;
 namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
 {
     /// <summary>
-    /// 分解的表达式段
+    /// 将外部传入的表达式树保存起来
     /// </summary>
-    internal class SegmentManager
+    internal class StatementStore
     {
         /// <summary>
         /// 排序语句对象
@@ -22,7 +22,7 @@ namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
         /// 字段语句对象
         /// </summary>
         /// <value></value>
-        internal SimpleExpressionMapper SelectField { get; private set; }
+        internal SimpleExpressionMapper Select { get; private set; }
 
         /// <summary>
         /// Where语句对象
@@ -125,7 +125,7 @@ namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
         internal void Add<TModel>(Expression<Func<TModel, dynamic>> expression) where TModel : new()
         {
             Parameter.Validate(expression);
-            SelectField = new SimpleExpressionMapper
+            Select = new SimpleExpressionMapper
             {
                 Expression = expression
             };
@@ -155,7 +155,7 @@ namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
         where T : EntityBase, new()
         {
             Parameter.Validate(expression);
-            SelectField = new SimpleExpressionMapper
+            Select = new SimpleExpressionMapper
             {
                 Expression = expression
             };

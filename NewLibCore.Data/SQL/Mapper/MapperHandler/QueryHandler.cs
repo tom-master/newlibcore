@@ -16,27 +16,27 @@ namespace NewLibCore.Data.SQL.Mapper
     /// <typeparam name="TModel"></typeparam>
     internal class QueryHandler<TModel> : Handler where TModel : new()
     {
-        private readonly SegmentManager _segmentManager;
+        private readonly StatementStore _statementStore;
 
-        internal QueryHandler(SegmentManager segmentManager, IMapperDbContext mapperDbContext) : base(mapperDbContext)
+        internal QueryHandler(StatementStore statementStore, IMapperDbContext mapperDbContext) : base(mapperDbContext)
         {
-            Parameter.Validate(segmentManager);
-            _segmentManager = segmentManager;
+            Parameter.Validate(statementStore);
+            _statementStore = statementStore;
         }
 
-        internal override RawExecuteResult Execute()
+        internal override RawResult Execute()
         {
-            var (Fields, AliasName) = StatementParse(_segmentManager.SelectField);
+            var (Fields, AliasName) = StatementParse(_statementStore.Select);
 
-            var segment = TranslationSegment.CreateTranslation(_segmentManager);
-            var mainTable = _segmentManager.From.AliaNameMapper[0];
+            var segment = TranslationContext.CreateTranslation(_statementStore);
+            var mainTable = _statementStore.From.AliaNameMapper[0];
             segment.Result.Append(String.Format(Instance.SelectTemplate, Fields, mainTable.Key, mainTable.Value));
             segment.Translate();
 
-            var aliasMapper = _segmentManager.MergeAliasMapper();
+            var aliasMapper = _statementStore.MergeAliasMapper();
 
             //当出现查询但张表不加Where条件时，则强制将IsDeleted=0添加到后面
-            if (_segmentManager.Where == null)
+            if (_statementStore.Where == null)
             {
                 segment.Result.Append($@"{RelationType.AND.ToString()} {mainTable.Value}.IsDeleted = 0");
             }
@@ -47,17 +47,17 @@ namespace NewLibCore.Data.SQL.Mapper
                     segment.Result.Append($@"{RelationType.AND} {aliasItem.Value.ToLower()}.IsDeleted = 0");
                 }
             }
-            if (_segmentManager.Order != null)
+            if (_statementStore.Order != null)
             {
-                var (fields, tableName) = StatementParse(_segmentManager.Order);
-                var orderTemplate = Instance.OrderByBuilder(_segmentManager.Order.OrderBy, $@"{tableName}.{fields}");
+                var (fields, tableName) = StatementParse(_statementStore.Order);
+                var orderTemplate = Instance.OrderByBuilder(_statementStore.Order.OrderBy, $@"{tableName}.{fields}");
                 segment.Result.Append(orderTemplate);
             }
 
-            if (_segmentManager.Pagination != null)
+            if (_statementStore.Pagination != null)
             {
-                var pageIndex = (_segmentManager.Pagination.Size * (_segmentManager.Pagination.Index - 1)).ToString();
-                var pageSize = _segmentManager.Pagination.Size.ToString();
+                var pageIndex = (_statementStore.Pagination.Size * (_statementStore.Pagination.Index - 1)).ToString();
+                var pageSize = _statementStore.Pagination.Size.ToString();
                 segment.Result.Append(Instance.Extension.Page.Replace("{value}", pageIndex).Replace("{pageSize}", pageSize));
             }
 
@@ -69,10 +69,10 @@ namespace NewLibCore.Data.SQL.Mapper
         /// </summary>
         /// <param name="expressionMapper">表达式分解后的对象</param>
         /// <returns></returns>
-        private static (String Fields, String AliasName) StatementParse(ExpressionMapper expressionMapper)
+        private static (String Fields, String AliasName) StatementParse(Statement statement)
         {
             var modelAliasName = new List<String>();
-            if (expressionMapper == null) //如果表达式语句为空则表示需要翻译为SELECT a.xxx,a.xxx,a.xxx 类型的语句
+            if (statement == null) //如果表达式语句为空则表示需要翻译为SELECT a.xxx,a.xxx,a.xxx 类型的语句
             {
                 var modelType = typeof(TModel);
                 var f = new List<String>();
@@ -88,7 +88,7 @@ namespace NewLibCore.Data.SQL.Mapper
                 return (String.Join(",", f), modelAliasName.FirstOrDefault());
             }
 
-            var fields = (LambdaExpression)expressionMapper.Expression;
+            var fields = (LambdaExpression)statement.Expression;
             foreach (var item in fields.Parameters)
             {
                 modelAliasName.Add(item.Type.GetTableName().AliasName);

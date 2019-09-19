@@ -54,7 +54,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
             return RunDiagnosis.Watch(() =>
             {
-                var segmentManager = MapperConfig.DIProvider.GetService<SegmentManager>();
+                var segmentManager = MapperConfig.DIProvider.GetService<StatementStore>();
                 segmentManager.Add(expression);
                 Handler handler = new UpdateHandler<TModel>(model, segmentManager, _mapperDbContext);
                 return handler.Execute().ToPrimitive<Int32>() > 0;
@@ -68,7 +68,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <returns></returns>
         public IJoin<TModel> Query<TModel>() where TModel : new()
         {
-            var segmentManager = MapperConfig.DIProvider.GetService<SegmentManager>();
+            var segmentManager = MapperConfig.DIProvider.GetService<StatementStore>();
             segmentManager.Add<TModel>();
             return new Join<TModel>(segmentManager, _mapperDbContext);
         }

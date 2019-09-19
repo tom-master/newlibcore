@@ -49,6 +49,6 @@ namespace NewLibCore.Data.SQL.Mapper.Database
         /// <param name="parameters">参数</param>
         /// <param name="commandType"></param>
         /// <returns></returns>
-        RawExecuteResult RawExecute(String sql, IEnumerable<EntityParameter> parameters = null, CommandType commandType = CommandType.Text);
+        RawResult RawExecute(String sql, IEnumerable<EntityParameter> parameters = null, CommandType commandType = CommandType.Text);
     }
 }

@@ -15,22 +15,22 @@ namespace NewLibCore.Data.SQL.Mapper
     internal class UpdateHandler<TModel> : Handler where TModel : EntityBase, new()
     {
         private readonly TModel _modelInstance;
-        private readonly SegmentManager _segmentManager;
+        private readonly StatementStore _statementStore;
 
         /// <summary>
         /// 初始化一个UpdateHandler类的实例
         /// </summary>
         /// <param name="model">要更新的模型</param>
-        public UpdateHandler(TModel model, SegmentManager segmentManager, IMapperDbContext mapperDbContext) : base(mapperDbContext)
+        public UpdateHandler(TModel model, StatementStore statementStore, IMapperDbContext mapperDbContext) : base(mapperDbContext)
         {
             Parameter.Validate(model);
-            Parameter.Validate(segmentManager);
+            Parameter.Validate(statementStore);
 
             _modelInstance = model;
-            _segmentManager = segmentManager;
+            _statementStore = statementStore;
         }
 
-        internal override RawExecuteResult Execute()
+        internal override RawResult Execute()
         {
             _modelInstance.SetUpdateTime();
 
@@ -42,8 +42,8 @@ namespace NewLibCore.Data.SQL.Mapper
             var (TableName, AliasName) = typeof(TModel).GetTableName();
             var propertys = _modelInstance.GetChangedProperty();
 
-            var segment = TranslationSegment.CreateTranslation(_segmentManager);
-            segment.Result.Append(ReplacePlaceholder(TableName, AliasName, propertys), CreateParameter(propertys));
+            var segment = TranslationContext.CreateTranslation(_statementStore);
+            segment.Result.Append(ReplacePlaceholder(TableName, AliasName, propertys), propertys.Select(c => new EntityParameter(c.Key, c.Value)));
             segment.Translate();
             segment.Result.Append($@"{RelationType.AND} {AliasName}.IsDeleted=0");
             _modelInstance.Reset();
@@ -51,10 +51,6 @@ namespace NewLibCore.Data.SQL.Mapper
             return segment.Result.Append($@"{Instance.Extension.RowCount}").Execute(MapperDbContext);
         }
 
-        private static IEnumerable<EntityParameter> CreateParameter(IReadOnlyList<KeyValuePair<String, Object>> propertys)
-        {
-            return propertys.Select(c => new EntityParameter(c.Key, c.Value));
-        }
 
         private String ReplacePlaceholder(String TableName, String AliasName, IReadOnlyList<KeyValuePair<String, Object>> propertys)
         {

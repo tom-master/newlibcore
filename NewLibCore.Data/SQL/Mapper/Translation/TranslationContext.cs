@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Microsoft.Extensions.DependencyInjection;
-using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
 using NewLibCore.Validate;
 
@@ -12,12 +11,25 @@ namespace NewLibCore.Data.SQL.Mapper
     /// <summary>
     /// 翻译表达式
     /// </summary>
-    internal class TranslationSegment : ITranslationSegment
+    internal interface ITranslationContext
     {
-        private readonly Stack<String> _parameterNameStack;
-        private readonly SegmentManager _segmentManager;
-        private readonly Stack<RelationType> _relationTypesStack;
+        /// <summary>
+        /// 翻译
+        /// </summary>
+        /// <returns></returns>
+        void Translate();
+    }
+
+    /// <summary>
+    /// 翻译表达式
+    /// </summary>
+    internal class TranslationContext : ITranslationContext
+    {
         private readonly InstanceConfig _instance;
+        private readonly StatementStore _statementStore;
+
+        private readonly Stack<String> _parameterNameStack;
+        private readonly Stack<RelationType> _relationTypesStack;
 
         private JoinType _joinType;
         private IReadOnlyList<KeyValuePair<String, String>> _tableAliasMapper;
@@ -27,11 +39,11 @@ namespace NewLibCore.Data.SQL.Mapper
         /// </summary>
         /// <param name="segmentManager">表达式分解后的对象</param>
         /// <returns></returns>
-        private TranslationSegment(SegmentManager segmentManager)
+        private TranslationContext(StatementStore statementStore)
         {
-            Parameter.Validate(segmentManager);
+            Parameter.Validate(statementStore);
 
-            _segmentManager = segmentManager;
+            _statementStore = statementStore;
 
             _relationTypesStack = new Stack<RelationType>();
             _parameterNameStack = new Stack<String>();
@@ -48,9 +60,9 @@ namespace NewLibCore.Data.SQL.Mapper
         /// </summary>
         /// <param name="segmentManager">表达式分解后的对象</param>
         /// <returns></returns>
-        internal static TranslationSegment CreateTranslation(SegmentManager segmentManager)
+        internal static TranslationContext CreateTranslation(StatementStore statementStore)
         {
-            return new TranslationSegment(segmentManager);
+            return new TranslationContext(statementStore);
         }
 
         /// <summary>
@@ -60,10 +72,10 @@ namespace NewLibCore.Data.SQL.Mapper
         public void Translate()
         {
             //获取合并后的表别名
-            _tableAliasMapper = _segmentManager.MergeAliasMapper();
+            _tableAliasMapper = _statementStore.MergeAliasMapper();
 
             //循环翻译连接对象
-            foreach (var item in _segmentManager.Joins)
+            foreach (var item in _statementStore.Joins)
             {
                 if (item.AliaNameMapper == null || item.JoinType == JoinType.NONE)
                 {
@@ -91,9 +103,9 @@ namespace NewLibCore.Data.SQL.Mapper
             }
             Result.Append("WHERE 1=1");
             //翻译Where条件对象
-            if (_segmentManager.Where != null)
+            if (_statementStore.Where != null)
             {
-                var lambdaExp = (LambdaExpression)_segmentManager.Where.Expression;
+                var lambdaExp = (LambdaExpression)_statementStore.Where.Expression;
                 //当表达式主体为常量时则直接返回，不做解析
                 if (lambdaExp.Body.NodeType == ExpressionType.Constant)
                 {

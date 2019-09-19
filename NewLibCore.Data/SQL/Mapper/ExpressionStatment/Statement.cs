@@ -7,7 +7,7 @@ namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
     /// <summary>
     /// 表达式拆分后的语句对象
     /// </summary>
-    internal abstract class ExpressionMapper
+    internal abstract class Statement
     {
         protected internal Expression Expression { get; set; }
 

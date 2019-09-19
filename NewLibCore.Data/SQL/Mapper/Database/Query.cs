@@ -33,12 +33,12 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
 
     public class Query<TModel> : IQuery<TModel> where TModel : new()
     {
-        private readonly SegmentManager _segmentManager;
+        private readonly StatementStore _statementStore;
         private readonly IMapperDbContext _mapperDbContext;
 
-        internal Query(SegmentManager segmentManager, IMapperDbContext mapperDbContext)
+        internal Query(StatementStore statementStore, IMapperDbContext mapperDbContext)
         {
-            _segmentManager = segmentManager;
+            _statementStore = statementStore;
             _mapperDbContext = mapperDbContext;
         }
 
@@ -46,7 +46,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
         {
             Parameter.Validate(pageIndex);
             Parameter.Validate(pageSize);
-            _segmentManager.AddPage(pageIndex, pageSize);
+            _statementStore.AddPage(pageIndex, pageSize);
 
             return this;
         }
@@ -55,7 +55,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
         {
             if (fields != null)
             {
-                _segmentManager.Add(fields);
+                _statementStore.Add(fields);
             }
 
             return this;
@@ -64,14 +64,14 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
         public IQuery<TModel> Where(Expression<Func<TModel, Boolean>> expression)
         {
             Parameter.Validate(expression);
-            _segmentManager.Add(expression);
+            _statementStore.Add(expression);
             return this;
         }
 
         public IQuery<TModel> Where<T>(Expression<Func<T, Boolean>> expression) where T : new()
         {
             Parameter.Validate(expression);
-            _segmentManager.Add(expression);
+            _statementStore.Add(expression);
 
             return this;
         }
@@ -79,7 +79,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
         public IQuery<TModel> Where<T>(Expression<Func<TModel, T, Boolean>> expression) where T : new()
         {
             Parameter.Validate(expression);
-            _segmentManager.Add(expression);
+            _statementStore.Add(expression);
 
             return this;
         }
@@ -120,9 +120,9 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
             });
         }
 
-        private RawExecuteResult InternalExecuteSql()
+        private RawResult InternalExecuteSql()
         {
-            Handler handler = new QueryHandler<TModel>(_segmentManager, _mapperDbContext);
+            Handler handler = new QueryHandler<TModel>(_statementStore, _mapperDbContext);
             return handler.Execute();
         }
 

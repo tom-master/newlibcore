@@ -30,6 +30,6 @@ namespace NewLibCore.Data.SQL.Mapper
         /// 执行表达式段的翻译
         /// </summary>
         /// <returns></returns>
-        internal abstract RawExecuteResult Execute();
+        internal abstract RawResult Execute();
     }
 }

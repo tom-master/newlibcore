@@ -26,7 +26,7 @@ namespace NewLibCore.Data.SQL.Mapper
             _instance = model;
         }
 
-        internal override RawExecuteResult Execute()
+        internal override RawResult Execute()
         {
             _instance.OnChanged();
             if (MapperConfig.EnableModelValidate)
@@ -38,13 +38,10 @@ namespace NewLibCore.Data.SQL.Mapper
 
             var tableName = typeof(TModel).GetTableName().TableName;
             var template = ReplacePlaceholder(propertyInfos, tableName);
-            return TranslationResult.CreateTranslationResult().Append(template, CreateParameter(propertyInfos)).Execute(MapperDbContext);
+            return TranslationResult.CreateTranslationResult()
+                .Append(template, propertyInfos.Select(c => new EntityParameter(c.Key, c.Value))).Execute(MapperDbContext);
         }
-
-        private static IEnumerable<EntityParameter> CreateParameter(IReadOnlyList<KeyValuePair<String, Object>> propertyInfos)
-        {
-            return propertyInfos.Select(c => new EntityParameter(c.Key, c.Value));
-        }
+ 
 
         private String ReplacePlaceholder(IReadOnlyList<KeyValuePair<String, Object>> propertyInfos, String tableName)
         {

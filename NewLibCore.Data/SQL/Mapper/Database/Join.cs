@@ -24,16 +24,16 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
 
     public class Join<TModel> : Query<TModel>, IJoin<TModel> where TModel : new()
     {
-        private readonly SegmentManager _segmentManager;
-        internal Join(SegmentManager segmentManager, IMapperDbContext mapperDbContext) : base(segmentManager, mapperDbContext)
+        private readonly StatementStore _statementStore;
+        internal Join(StatementStore statementStore, IMapperDbContext mapperDbContext) : base(statementStore, mapperDbContext)
         {
-            _segmentManager = segmentManager;
+            _statementStore = statementStore;
         }
 
         public IJoin<TModel> LeftJoin<TRight>(Expression<Func<TModel, TRight, Boolean>> expression) where TRight : new()
         {
             Parameter.Validate(expression);
-            _segmentManager.Add(expression, JoinType.LEFT);
+            _statementStore.Add(expression, JoinType.LEFT);
 
             return this;
         }
@@ -41,7 +41,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
         public IJoin<TModel> LeftJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> expression) where TLeft : new() where TRight : new()
         {
             Parameter.Validate(expression);
-            _segmentManager.Add(expression, JoinType.LEFT);
+            _statementStore.Add(expression, JoinType.LEFT);
 
             return this;
         }
@@ -49,7 +49,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
         public IJoin<TModel> RightJoin<TRight>(Expression<Func<TModel, TRight, Boolean>> expression) where TRight : new()
         {
             Parameter.Validate(expression);
-            _segmentManager.Add(expression, JoinType.RIGHT);
+            _statementStore.Add(expression, JoinType.RIGHT);
 
             return this;
         }
@@ -57,7 +57,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
         public IJoin<TModel> RightJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> expression) where TLeft : new() where TRight : new()
         {
             Parameter.Validate(expression);
-            _segmentManager.Add(expression, JoinType.RIGHT);
+            _statementStore.Add(expression, JoinType.RIGHT);
 
             return this;
         }
@@ -65,7 +65,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
         public IJoin<TModel> InnerJoin<TRight>(Expression<Func<TModel, TRight, Boolean>> expression) where TRight : new()
         {
             Parameter.Validate(expression);
-            _segmentManager.Add(expression, JoinType.INNER);
+            _statementStore.Add(expression, JoinType.INNER);
 
             return this;
         }
@@ -73,7 +73,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
         public IJoin<TModel> InnerJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> expression) where TLeft : new() where TRight : new()
         {
             Parameter.Validate(expression);
-            _segmentManager.Add(expression, JoinType.INNER);
+            _statementStore.Add(expression, JoinType.INNER);
 
             return this;
         }

@@ -10,14 +10,14 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
     /// <summary>
     /// 存储未包装过的sql执行结果
     /// </summary>
-    internal sealed class RawExecuteResult
+    internal sealed class RawResult
     {
         private Object _result;
 
         /// <summary>
         /// 初始化一个RawExecuteResult类的实例
         /// </summary>
-        internal RawExecuteResult()
+        internal RawResult()
         {
         }
 
@@ -36,7 +36,7 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
         /// </summary>
         /// <typeparam name="TResult">原生类型</typeparam>
         /// <returns></returns>
-        internal TResult ToPrimitive<TResult>()
+        internal TResult ToPrimitive<TResult>() where TResult : struct
         {
             var modelType = typeof(TResult);
             if (modelType.IsComplexType())

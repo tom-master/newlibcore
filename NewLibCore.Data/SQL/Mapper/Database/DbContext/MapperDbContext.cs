@@ -102,7 +102,7 @@ namespace NewLibCore.Data.SQL.Mapper.Database
             throw new Exception($@"SQL语句执行类型解析失败:{operationType}");
         }
 
-        public RawExecuteResult RawExecute(String sql, IEnumerable<EntityParameter> parameters = null, CommandType commandType = CommandType.Text)
+        public RawResult RawExecute(String sql, IEnumerable<EntityParameter> parameters = null, CommandType commandType = CommandType.Text)
         {
             try
             {
@@ -124,7 +124,7 @@ namespace NewLibCore.Data.SQL.Mapper.Database
                     RunDiagnosis.Info($@"SQL语句:{sql} 占位符与参数:{(parameters == null || !parameters.Any() ? "" : String.Join($@"{Environment.NewLine}", parameters.Select(s => $@"{s.Key}----{s.Value}")))}");
 
                     var executeType = GetExecuteType(sql);
-                    var executeResult = new RawExecuteResult();
+                    var executeResult = new RawResult();
                     if (executeType == ExecuteType.SELECT)
                     {
                         using (var dr = cmd.ExecuteReader())
