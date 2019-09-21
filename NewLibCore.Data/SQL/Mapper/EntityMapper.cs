@@ -85,7 +85,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <param name="parameters">实体参数</param>
         /// <typeparam name="TModel"></typeparam>
         /// <returns></returns>
-        public List<TModel> SqlQuery<TModel>(String sql, IEnumerable<EntityParameter> parameters = null) where TModel : new()
+        public RawResult SqlQuery(String sql, IEnumerable<EntityParameter> parameters = null) where TModel : new()
         {
             Parameter.Validate(sql);
 
@@ -93,7 +93,7 @@ namespace NewLibCore.Data.SQL.Mapper
             {
                 var sqlResult = TranslationResult.CreateTranslationResult();
                 sqlResult.Append(sql, parameters);
-                return sqlResult.Execute(_mapperDbContext).ToList<TModel>();
+                return sqlResult.Execute(_mapperDbContext);
             });
         }
 

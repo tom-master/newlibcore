@@ -10,7 +10,7 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
     /// <summary>
     /// 存储未包装过的sql执行结果
     /// </summary>
-    internal sealed class RawResult
+    public sealed class RawResult
     {
         private Object _result;
 
@@ -36,7 +36,7 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
         /// </summary>
         /// <typeparam name="TResult">原生类型</typeparam>
         /// <returns></returns>
-        internal TResult ToPrimitive<TResult>() where TResult : struct
+        public TResult ToPrimitive<TResult>() where TResult : struct
         {
             var modelType = typeof(TResult);
             if (modelType.IsComplexType())
@@ -51,7 +51,7 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
         /// </summary>
         /// <typeparam name="TResult">原生类型</typeparam>
         /// <returns></returns>
-        internal List<TResult> ToList<TResult>() where TResult : new()
+        public List<TResult> ToList<TResult>() where TResult : new()
         {
             return ((DataTable)_result).ToList<TResult>();
         }
@@ -61,7 +61,7 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
         /// </summary>
         /// <typeparam name="TResult">原生类型</typeparam>
         /// <returns></returns>
-        internal TResult ToSingle<TResult>() where TResult : new()
+        public TResult ToSingle<TResult>() where TResult : new()
         {
             return ToList<TResult>().FirstOrDefault();
         }
