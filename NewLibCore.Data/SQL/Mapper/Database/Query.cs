@@ -23,6 +23,10 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
 
         IQuery<TModel> ThenByDesc<TKey>(Expression<Func<TModel, TKey>> order);
 
+        IQuery<TModel> ThenByDesc<TOrder, TKey>(Expression<Func<TOrder, TKey>> order) where TOrder : new();
+
+        IQuery<TModel> ThenByAsc<TKey>(Expression<Func<TModel, TKey>> order);
+
         IQuery<TModel> ThenByAsc<TOrder, TKey>(Expression<Func<TOrder, TKey>> order) where TOrder : new();
 
         IQuery<TModel> Page(Int32 pageIndex, Int32 pageSize);
@@ -161,6 +165,20 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
         }
 
         public IQuery<TModel> ThenByAsc<TOrder, TKey>(Expression<Func<TOrder, TKey>> order) where TOrder : new()
+        {
+            Parameter.Validate(order);
+            _statementStore.AddOrderBy(order, OrderByType.ASC);
+            return this;
+        }
+
+        public IQuery<TModel> ThenByDesc<TOrder, TKey>(Expression<Func<TOrder, TKey>> order) where TOrder : new()
+        {
+            Parameter.Validate(order);
+            _statementStore.AddOrderBy(order, OrderByType.DESC);
+            return this;
+        }
+
+        public IQuery<TModel> ThenByAsc<TKey>(Expression<Func<TModel, TKey>> order)
         {
             Parameter.Validate(order);
             _statementStore.AddOrderBy(order, OrderByType.ASC);
