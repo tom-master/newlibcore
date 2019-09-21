@@ -18,6 +18,9 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
 
         IQuery<TModel> Select(Expression<Func<TModel, dynamic>> fields = null);
 
+        IQuery<TModel> Select<T, T1>(Expression<Func<T, T1, dynamic>> fields = null) where T : new()
+        where T1 : new();
+
         IQuery<TModel> Page(Int32 pageIndex, Int32 pageSize);
 
         TModel FirstOrDefault();
@@ -58,6 +61,16 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
                 _statementStore.Add(fields);
             }
 
+            return this;
+        }
+
+        public IQuery<TModel> Select<T, T1>(Expression<Func<T, T1, dynamic>> fields = null) where T : new()
+        where T1 : new()
+        {
+            if (fields != null)
+            {
+                _statementStore.Add(fields);
+            }
             return this;
         }
 

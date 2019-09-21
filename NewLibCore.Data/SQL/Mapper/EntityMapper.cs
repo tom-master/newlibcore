@@ -17,9 +17,14 @@ namespace NewLibCore.Data.SQL.Mapper
     {
         private readonly IMapperDbContext _mapperDbContext;
 
-        public EntityMapper()
+        private EntityMapper()
         {
             _mapperDbContext = MapperConfig.DIProvider.GetService<IMapperDbContext>();
+        }
+
+        public static EntityMapper CreateMapper()
+        {
+            return new EntityMapper();
         }
 
         /// <summary>
@@ -92,7 +97,7 @@ namespace NewLibCore.Data.SQL.Mapper
             });
         }
 
-        public void OpenTran()
+        public void OpenTransaction()
         {
             _mapperDbContext.OpenTransaction();
         }

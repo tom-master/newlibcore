@@ -17,7 +17,7 @@ namespace NewLibCore.Run
             //{
             //    var thread = new Thread(new ParameterizedThreadStart((a) =>
             //    {
-            using (var mapper = new EntityMapper())
+            using (var mapper = EntityMapper.CreateMapper())
             {
                 #region 
                 //var user = new User("123123", "123123123");

@@ -152,7 +152,7 @@ namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
         /// <typeparam name="T">子表</typeparam>
         /// <returns></returns>
         internal void Add<TModel, T>(Expression<Func<TModel, T, dynamic>> expression) where TModel : new()
-        where T : EntityBase, new()
+        where T : new()
         {
             Parameter.Validate(expression);
             Select = new SimpleExpressionMapper
