@@ -102,7 +102,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
             return RunDiagnosis.Watch(() =>
             {
                 var executeResult = InternalExecuteSql();
-                return executeResult.ToSingle<TModel>();
+                return executeResult.FirstOrDefault<TModel>();
             });
         }
 
@@ -111,7 +111,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
             return RunDiagnosis.Watch(() =>
             {
                 var executeResult = InternalExecuteSql();
-                return executeResult.ToSingle<T>();
+                return executeResult.FirstOrDefault<T>();
             });
         }
 
@@ -145,7 +145,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
             {
                 Select((a) => "COUNT(1)");
                 var executeResult = InternalExecuteSql();
-                return executeResult.ToSingle<Int32>();
+                return executeResult.FirstOrDefault<Int32>();
             });
         }
     }

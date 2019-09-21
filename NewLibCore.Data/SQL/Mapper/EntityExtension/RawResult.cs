@@ -32,22 +32,7 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
         }
 
         /// <summary>
-        /// 返回.net的原生类型
-        /// </summary>
-        /// <typeparam name="TResult">原生类型</typeparam>
-        /// <returns></returns>
-        public TResult ToPrimitive<TResult>() where TResult : struct
-        {
-            var modelType = typeof(TResult);
-            if (modelType.IsComplexType())
-            {
-                throw new InvalidCastException($@"当返回.net的原生类型时需要调用ToPrimitive方法");
-            }
-            return (TResult)Convert.ChangeType(_result, typeof(TResult));
-        }
-
-        /// <summary>
-        /// 返回继承于EntityBase的集合对象
+        /// 返回集合对象
         /// </summary>
         /// <typeparam name="TResult">原生类型</typeparam>
         /// <returns></returns>
@@ -57,13 +42,13 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
         }
 
         /// <summary>
-        /// 返回继承于EntityBase的单个对象
+        /// 返回单个对象
         /// </summary>
         /// <typeparam name="TResult">原生类型</typeparam>
         /// <returns></returns>
-        public TResult ToSingle<TResult>() where TResult : new()
+        public TResult FirstOrDefault<TResult>() where TResult : new()
         {
-            return ToList<TResult>().FirstOrDefault();
+            return ((DataTable)_result).FirstOrDefault<TResult>();
         }
 
         public override String ToString()

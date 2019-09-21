@@ -21,7 +21,7 @@ namespace NewLibCore.Run
             using (var mapper = EntityMapper.CreateMapper())
             {
 
-                var r1 = mapper.SqlQuery<Int32>("SELECT COUNT(1) FROM newcrm_user AS a ").FirstOrDefault();
+                var r1 = mapper.SqlQuery("SELECT a.* FROM newcrm_user AS a ").FirstOrDefault<User>();
 
 
                 #region 

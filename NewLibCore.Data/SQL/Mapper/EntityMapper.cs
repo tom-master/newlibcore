@@ -40,7 +40,7 @@ namespace NewLibCore.Data.SQL.Mapper
             return RunDiagnosis.Watch(() =>
             {
                 Handler handler = new InsertHandler<TModel>(model, _mapperDbContext);
-                model.Id = handler.Execute().ToPrimitive<Int32>();
+                model.Id = handler.Execute().FirstOrDefault<Int32>();
                 return model;
             });
         }
@@ -62,7 +62,7 @@ namespace NewLibCore.Data.SQL.Mapper
                 var segmentManager = MapperConfig.DIProvider.GetService<StatementStore>();
                 segmentManager.Add(expression);
                 Handler handler = new UpdateHandler<TModel>(model, segmentManager, _mapperDbContext);
-                return handler.Execute().ToPrimitive<Int32>() > 0;
+                return handler.Execute().FirstOrDefault<Int32>() > 0;
             });
         }
 
@@ -85,7 +85,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <param name="parameters">实体参数</param>
         /// <typeparam name="TModel"></typeparam>
         /// <returns></returns>
-        public RawResult SqlQuery(String sql, IEnumerable<EntityParameter> parameters = null) where TModel : new()
+        public RawResult SqlQuery(String sql, IEnumerable<EntityParameter> parameters = null)
         {
             Parameter.Validate(sql);
 

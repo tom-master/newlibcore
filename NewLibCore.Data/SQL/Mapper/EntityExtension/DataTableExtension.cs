@@ -34,8 +34,12 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
         /// <typeparam name="T">期望的类型</typeparam>
         /// <param name="dataTable">sql执行后的原始结果</param>
         /// <returns></returns>
-        internal static T ToSingle<T>(this DataTable dataTable) where T : new()
+        internal static T FirstOrDefault<T>(this DataTable dataTable) where T : new()
         {
+            if (dataTable.Rows.Count == 1 && dataTable.Columns.Count == 1)
+            {
+                return (T)ChangeType(dataTable.Rows[0][0], typeof(T));
+            }
             return ToList<T>(dataTable).FirstOrDefault();
         }
 
@@ -44,13 +48,24 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
             try
             {
                 var list = new List<T>();
-                foreach (DataRow dr in dt.Rows)
+
+                if (!typeof(T).IsComplexType())
                 {
                     var obj = Activator.CreateInstance<T>();
                     var type = obj.GetType();
-                    var propertys = type.GetProperties(BindingFlags.Instance | BindingFlags.Public);
-                    if (propertys.Any())
+                    for (int i = 0; i < dt.Rows.Count; i++)
                     {
+                        list.Add((T)ChangeType(dt.Rows[i][0], type));
+                    }
+                }
+                else
+                {
+                    foreach (DataRow dr in dt.Rows)
+                    {
+                        var obj = Activator.CreateInstance<T>();
+                        var type = obj.GetType();
+                        var propertys = type.GetProperties(BindingFlags.Instance | BindingFlags.Public);
+
                         foreach (var propertyInfo in propertys)
                         {
                             if (dt.Columns.Contains(propertyInfo.Name))
@@ -64,11 +79,30 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
                             }
                         }
                         list.Add(obj);
-                    }
-                    else
-                    {
-                        var valueTuple = CreateValueTuple(dr.ItemArray);
-                        list.Add((T)valueTuple);
+
+                        #region 
+                        // if (propertys.Any())
+                        // {
+                        //     foreach (var propertyInfo in propertys)
+                        //     {
+                        //         if (dt.Columns.Contains(propertyInfo.Name))
+                        //         {
+                        //             var value = dr[propertyInfo.Name];
+                        //             if (value != DBNull.Value)
+                        //             {
+                        //                 var fast = new FastProperty(propertyInfo);
+                        //                 fast.Set(obj, ChangeType(value, propertyInfo.PropertyType));
+                        //             }
+                        //         }
+                        //     }
+                        //     list.Add(obj);
+                        // }
+                        // else
+                        // {
+                        //     var valueTuple = CreateValueTuple(dr.ItemArray);
+                        //     list.Add((T)valueTuple);
+                        // }
+                        #endregion
                     }
                 }
                 return list;
