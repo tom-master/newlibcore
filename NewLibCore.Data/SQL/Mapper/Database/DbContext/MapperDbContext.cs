@@ -167,6 +167,5 @@ namespace NewLibCore.Data.SQL.Mapper.Database
                 throw;
             }
         }
-
     }
 }
