@@ -163,7 +163,7 @@ namespace NewLibCore.Data.SQL.Mapper.Database
             }
             catch (Exception ex)
             {
-                RunDiagnosis.Error($@"{ex}");
+                RunDiagnosis.Error($@"SQL语句执行发生异常{ex}");
                 throw;
             }
         }
