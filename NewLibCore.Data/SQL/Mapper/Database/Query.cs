@@ -148,7 +148,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
         {
             return RunDiagnosis.Watch(() =>
             {
-                Select((a) => "COUNT(1)");
+                Select((a) => "COUNT(*)");
                 var executeResult = InternalExecuteSql();
                 return executeResult.FirstOrDefault<Int32>();
             });

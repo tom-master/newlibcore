@@ -5,7 +5,6 @@ using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper.MapperExtension
 {
-
     public interface IJoin<TModel> : IQuery<TModel> where TModel : new()
     {
         IJoin<TModel> LeftJoin<TRight>(Expression<Func<TModel, TRight, Boolean>> expression) where TRight : new();
