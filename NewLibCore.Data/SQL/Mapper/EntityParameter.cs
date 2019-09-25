@@ -31,8 +31,6 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             Parameter.Validate(entityParameter);
 
-
-
             DbParameter parameter = null;
             if (MapperConfig.MapperType == MapperType.MSSQL)
             {
