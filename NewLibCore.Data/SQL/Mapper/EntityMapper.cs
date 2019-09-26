@@ -118,22 +118,7 @@ namespace NewLibCore.Data.SQL.Mapper
                 return sqlResult.Execute();
             });
         }
-
-        //public void OpenTransaction()
-        //{
-        //    _mapperDbContext.OpenTransaction();
-        //}
-
-        //public void Commit()
-        //{
-        //    _mapperDbContext.Commit();
-        //}
-
-        //public void Rollback()
-        //{
-        //    _mapperDbContext.Rollback();
-        //}
-
+        
         public void Dispose()
         {
             _serviceScope.Dispose();
