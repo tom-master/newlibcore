@@ -18,7 +18,9 @@ namespace NewLibCore.Data.SQL.Mapper
     public sealed class EntityMapper : IDisposable
     {
         private readonly IMapperDbContext _mapperDbContext;
+
         private readonly IServiceScope _serviceScope;
+
         private readonly IServiceProvider _serviceProvider;
 
         private EntityMapper()
