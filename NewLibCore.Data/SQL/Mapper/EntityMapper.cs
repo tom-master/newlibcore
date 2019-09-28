@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using Microsoft.Extensions.DependencyInjection;
+using NewLibCore.Data.SQL.Mapper.Cache;
 using NewLibCore.Data.SQL.Mapper.Database;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
 using NewLibCore.Data.SQL.Mapper.MapperExtension;
+using NewLibCore.Logger;
 using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper
@@ -16,16 +18,36 @@ namespace NewLibCore.Data.SQL.Mapper
     public sealed class EntityMapper : IDisposable
     {
         private readonly IMapperDbContext _mapperDbContext;
+        private readonly IServiceScope _serviceScope;
 
         private EntityMapper()
         {
-            _mapperDbContext = MapperConfig.DIProvider.GetService<IMapperDbContext>();
+            //_mapperDbContext = MapperConfig.DIProvider.GetService<IMapperDbContext>();
+
+            var services = new ServiceCollection()
+               .AddTransient<ResultCache, ExecutionResultCache>()
+               .AddTransient<StatementStore>()
+               .AddScoped<IMapperDbContext, MapperDbContext>()
+               .AddSingleton<ILogger, ConsoleLogger>();
+
+            if (MapperConfig.MapperType == MapperType.MSSQL)
+            {
+                services = services.AddTransient<InstanceConfig, MsSqlInstanceConfig>();
+            }
+            else if (MapperConfig.MapperType == MapperType.MYSQL)
+            {
+                services = services.AddTransient<InstanceConfig, MySqlInstanceConfig>();
+            }
+            var serviceProvider = services.BuildServiceProvider();
+            _serviceScope = serviceProvider.CreateScope();
+            MapperConfig.ServiceProvider = _serviceScope.ServiceProvider;
         }
 
         public static EntityMapper CreateMapper()
         {
             return new EntityMapper();
         }
+
 
         /// <summary>
         /// 添加一個TModel
@@ -59,7 +81,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
             return RunDiagnosis.Watch(() =>
             {
-                var segmentManager = MapperConfig.DIProvider.GetService<StatementStore>();
+                var segmentManager = MapperConfig.ServiceProvider.GetService<StatementStore>();
                 segmentManager.Add(expression);
                 Handler handler = new UpdateHandler<TModel>(model, segmentManager, _mapperDbContext);
                 return handler.Execute().FirstOrDefault<Int32>() > 0;
@@ -73,7 +95,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <returns></returns>
         public IJoin<TModel> Query<TModel>() where TModel : new()
         {
-            var segmentManager = MapperConfig.DIProvider.GetService<StatementStore>();
+            var segmentManager = MapperConfig.ServiceProvider.GetService<StatementStore>();
             segmentManager.Add<TModel>();
             return new Join<TModel>(segmentManager, _mapperDbContext);
         }
@@ -115,6 +137,7 @@ namespace NewLibCore.Data.SQL.Mapper
         public void Dispose()
         {
             _mapperDbContext.Dispose();
+            _serviceScope.Dispose();
         }
     }
 }

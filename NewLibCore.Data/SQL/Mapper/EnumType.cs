@@ -16,7 +16,7 @@ namespace NewLibCore.Data.SQL.Mapper
     /// <summary>
     /// 数据库类型
     /// </summary>
-    internal enum MapperType
+    public enum MapperType
     {
         NONE = 0,
         MSSQL = 1,
