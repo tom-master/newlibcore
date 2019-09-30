@@ -19,10 +19,7 @@ namespace NewLibCore.Run
             //    {
             using (var mapper = EntityMapper.CreateMapper())
             {
-
-                var r1 = mapper.SqlQuery("SELECT a.* FROM newcrm_user AS a ").FirstOrDefault<User>();
-
-
+                //var r1 = mapper.SqlQuery("SELECT a.* FROM newcrm_user AS a ").FirstOrDefault<User>();
                 #region 
                 //var user = new User("123123", "123123123");
                 //mapper.Add(user);
@@ -43,6 +40,8 @@ namespace NewLibCore.Run
             //thread.Start();
             //}
             #endregion
+
+            Console.ReadKey();
         }
     }
 

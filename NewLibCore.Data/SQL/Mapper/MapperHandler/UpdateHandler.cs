@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using NewLibCore.Data.SQL.Mapper.Database;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
 using NewLibCore.Validate;
@@ -21,7 +20,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// 初始化一个UpdateHandler类的实例
         /// </summary>
         /// <param name="model">要更新的模型</param>
-        public UpdateHandler(TModel model, StatementStore statementStore, IMapperDbContext mapperDbContext) : base(mapperDbContext)
+        public UpdateHandler(TModel model, StatementStore statementStore)
         {
             Parameter.Validate(model);
             Parameter.Validate(statementStore);
@@ -48,7 +47,7 @@ namespace NewLibCore.Data.SQL.Mapper
             translateContext.Result.Append($@"{RelationType.AND} {AliasName}.IsDeleted=0");
             _modelInstance.Reset();
 
-            return translateContext.Result.Append($@"{Instance.Extension.RowCount}").Execute(MapperDbContext);
+            return translateContext.Result.Append($@"{Instance.Extension.RowCount}").Execute();
         }
 
 

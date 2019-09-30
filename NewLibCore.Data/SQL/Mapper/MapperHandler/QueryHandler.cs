@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using NewLibCore.Data.SQL.Mapper.Database;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
 using NewLibCore.Validate;
@@ -18,7 +17,7 @@ namespace NewLibCore.Data.SQL.Mapper
     {
         private readonly StatementStore _statementStore;
 
-        internal QueryHandler(StatementStore statementStore, IMapperDbContext mapperDbContext) : base(mapperDbContext)
+        internal QueryHandler(StatementStore statementStore)
         {
             Parameter.Validate(statementStore);
             _statementStore = statementStore;
@@ -61,7 +60,7 @@ namespace NewLibCore.Data.SQL.Mapper
                 translateContext.Result.Append(Instance.Extension.Page.Replace("{value}", pageIndex).Replace("{pageSize}", pageSize));
             }
 
-            return translateContext.Result.Execute(MapperDbContext);
+            return translateContext.Result.Execute();
         }
 
         /// <summary>

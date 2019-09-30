@@ -22,8 +22,6 @@ namespace NewLibCore.Data.SQL.Mapper
 
         private EntityMapper()
         {
-            //_mapperDbContext = MapperConfig.DIProvider.GetService<IMapperDbContext>();
-
             var services = new ServiceCollection()
                .AddTransient<ResultCache, ExecutionResultCache>()
                .AddTransient<StatementStore>()
@@ -41,13 +39,12 @@ namespace NewLibCore.Data.SQL.Mapper
             var serviceProvider = services.BuildServiceProvider();
             _serviceScope = serviceProvider.CreateScope();
             MapperConfig.ServiceProvider = _serviceScope.ServiceProvider;
-        }
+        } 
 
         public static EntityMapper CreateMapper()
         {
             return new EntityMapper();
         }
-
 
         /// <summary>
         /// 添加一個TModel
@@ -61,7 +58,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
             return RunDiagnosis.Watch(() =>
             {
-                Handler handler = new InsertHandler<TModel>(model, _mapperDbContext);
+                Handler handler = new InsertHandler<TModel>(model);
                 model.Id = handler.Execute().FirstOrDefault<Int32>();
                 return model;
             });
@@ -83,7 +80,7 @@ namespace NewLibCore.Data.SQL.Mapper
             {
                 var segmentManager = MapperConfig.ServiceProvider.GetService<StatementStore>();
                 segmentManager.Add(expression);
-                Handler handler = new UpdateHandler<TModel>(model, segmentManager, _mapperDbContext);
+                Handler handler = new UpdateHandler<TModel>(model, segmentManager);
                 return handler.Execute().FirstOrDefault<Int32>() > 0;
             });
         }
@@ -97,7 +94,7 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             var segmentManager = MapperConfig.ServiceProvider.GetService<StatementStore>();
             segmentManager.Add<TModel>();
-            return new Join<TModel>(segmentManager, _mapperDbContext);
+            return new Join<TModel>(segmentManager);
         }
 
         /// <summary>
@@ -115,7 +112,7 @@ namespace NewLibCore.Data.SQL.Mapper
             {
                 var sqlResult = TranslateResult.CreateResult();
                 sqlResult.Append(sql, parameters);
-                return sqlResult.Execute(_mapperDbContext);
+                return sqlResult.Execute();
             });
         }
 

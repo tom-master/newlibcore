@@ -87,13 +87,15 @@ namespace NewLibCore.Data.SQL.Mapper
         /// </summary>
         /// <param name="executionCore">执行翻译结果的对象</param>
         /// <returns></returns>
-        internal RawResult Execute(IMapperDbContext mapperDbContext)
+        internal RawResult Execute()
         {
+            var dbContext = MapperConfig.ServiceProvider.GetService<IMapperDbContext>();
+
             var executeResult = GetCache();
-            var executeType = mapperDbContext.GetExecuteType(ToString());
+            var executeType = dbContext.GetExecuteType(ToString());
             if (executeResult == null)
             {
-                executeResult = mapperDbContext.RawExecute(ToString(), _parameters);
+                executeResult = dbContext.RawExecute(ToString(), _parameters);
                 SetCache(executeType, executeResult);
             }
 

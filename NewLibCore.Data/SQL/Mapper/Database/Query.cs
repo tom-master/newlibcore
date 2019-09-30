@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using NewLibCore.Data.SQL.Mapper.Database;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
 using NewLibCore.Validate;
@@ -45,12 +44,10 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
     public class Query<TModel> : IQuery<TModel> where TModel : new()
     {
         private readonly StatementStore _statementStore;
-        private readonly IMapperDbContext _mapperDbContext;
 
-        internal Query(StatementStore statementStore, IMapperDbContext mapperDbContext)
+        internal Query(StatementStore statementStore)
         {
             _statementStore = statementStore;
-            _mapperDbContext = mapperDbContext;
         }
 
         public IQuery<TModel> Page(Int32 pageIndex, Int32 pageSize)
@@ -143,7 +140,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
 
         private RawResult InternalExecuteSql()
         {
-            Handler handler = new QueryHandler<TModel>(_statementStore, _mapperDbContext);
+            Handler handler = new QueryHandler<TModel>(_statementStore);
             return handler.Execute();
         }
 

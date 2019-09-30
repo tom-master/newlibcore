@@ -13,18 +13,15 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <summary>
         /// 初始化一个Handler类的实例
         /// </summary>
-        internal Handler(IMapperDbContext mapperDbContext)
+        internal Handler()
         {
             Instance = MapperConfig.ServiceProvider.GetService<InstanceConfig>();
-            MapperDbContext = mapperDbContext;
         }
 
         /// <summary>
         /// 数据库配置实例
         /// </summary>
         protected InstanceConfig Instance { get; private set; }
-
-        internal IMapperDbContext MapperDbContext { get; private set; }
 
         /// <summary>
         /// 执行表达式段的翻译

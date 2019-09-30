@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq.Expressions;
-using NewLibCore.Data.SQL.Mapper.Database;
 using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
 using NewLibCore.Validate;
 
@@ -25,7 +24,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
     public class Join<TModel> : Query<TModel>, IJoin<TModel> where TModel : new()
     {
         private readonly StatementStore _statementStore;
-        internal Join(StatementStore statementStore, IMapperDbContext mapperDbContext) : base(statementStore, mapperDbContext)
+        internal Join(StatementStore statementStore) : base(statementStore)
         {
             _statementStore = statementStore;
         }
