@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using NewLibCore.Data.SQL.Mapper;
 
 namespace NewLibCore.Run
@@ -12,7 +11,7 @@ namespace NewLibCore.Run
         {
             #region 
 
-            MapperConfig.InitMySql();
+            MapperConfig.MapperType = MapperType.MYSQL;
 
             //for (var i = 0; i < 4; i++)
             //{

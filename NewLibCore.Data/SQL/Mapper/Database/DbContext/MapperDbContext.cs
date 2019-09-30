@@ -20,7 +20,7 @@ namespace NewLibCore.Data.SQL.Mapper.Database
 
         public MapperDbContext()
         {
-            var instanceConfig = MapperConfig.DIProvider.GetService<InstanceConfig>();
+            var instanceConfig = MapperConfig.ServiceProvider.GetService<InstanceConfig>();
             _connection = instanceConfig.GetConnectionInstance();
         }
 

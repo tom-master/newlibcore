@@ -15,7 +15,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// </summary>
         internal Handler(IMapperDbContext mapperDbContext)
         {
-            Instance = MapperConfig.DIProvider.GetService<InstanceConfig>();
+            Instance = MapperConfig.ServiceProvider.GetService<InstanceConfig>();
             MapperDbContext = mapperDbContext;
         }
 

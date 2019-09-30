@@ -48,7 +48,7 @@ namespace NewLibCore.Data.SQL.Mapper
             _relationTypesStack = new Stack<RelationType>();
             _parameterNameStack = new Stack<String>();
             _tableAliasMapper = new List<KeyValuePair<String, String>>();
-            _instance = MapperConfig.DIProvider.GetService<InstanceConfig>();
+            _instance = MapperConfig.ServiceProvider.GetService<InstanceConfig>();
 
             Result = TranslateResult.CreateResult();
         }
