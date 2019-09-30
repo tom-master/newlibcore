@@ -42,13 +42,13 @@ namespace NewLibCore.Data.SQL.Mapper
             var (TableName, AliasName) = typeof(TModel).GetTableName();
             var propertys = _modelInstance.GetChangedProperty();
 
-            var segment = TranslationContext.CreateTranslation(_statementStore);
-            segment.Result.Append(ReplacePlaceholder(TableName, AliasName, propertys), propertys.Select(c => new EntityParameter(c.Key, c.Value)));
-            segment.Translate();
-            segment.Result.Append($@"{RelationType.AND} {AliasName}.IsDeleted=0");
+            var translateContext = TranslateContext.CreateContext(_statementStore);
+            translateContext.Result.Append(ReplacePlaceholder(TableName, AliasName, propertys), propertys.Select(c => new EntityParameter(c.Key, c.Value)));
+            translateContext.Translate();
+            translateContext.Result.Append($@"{RelationType.AND} {AliasName}.IsDeleted=0");
             _modelInstance.Reset();
 
-            return segment.Result.Append($@"{Instance.Extension.RowCount}").Execute(MapperDbContext);
+            return translateContext.Result.Append($@"{Instance.Extension.RowCount}").Execute(MapperDbContext);
         }
 
 

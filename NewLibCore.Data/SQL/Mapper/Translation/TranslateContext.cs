@@ -23,7 +23,7 @@ namespace NewLibCore.Data.SQL.Mapper
     /// <summary>
     /// 翻译表达式
     /// </summary>
-    internal class TranslationContext : ITranslationContext
+    internal class TranslateContext : ITranslationContext
     {
         private readonly InstanceConfig _instance;
         private readonly StatementStore _statementStore;
@@ -35,11 +35,11 @@ namespace NewLibCore.Data.SQL.Mapper
         private IReadOnlyList<KeyValuePair<String, String>> _tableAliasMapper;
 
         /// <summary>
-        /// 初始化一个TranslationSegment类的实例
+        /// 初始化一个TranslateContext类的实例
         /// </summary>
-        /// <param name="segmentManager">表达式分解后的对象</param>
+        /// <param name="statementStore">表达式分解后的对象</param>
         /// <returns></returns>
-        private TranslationContext(StatementStore statementStore)
+        private TranslateContext(StatementStore statementStore)
         {
             Parameter.Validate(statementStore);
 
@@ -50,19 +50,19 @@ namespace NewLibCore.Data.SQL.Mapper
             _tableAliasMapper = new List<KeyValuePair<String, String>>();
             _instance = MapperConfig.DIProvider.GetService<InstanceConfig>();
 
-            Result = TranslationResult.CreateTranslationResult();
+            Result = TranslateResult.CreateResult();
         }
 
-        internal TranslationResult Result { get; private set; }
+        internal TranslateResult Result { get; private set; }
 
         /// <summary>
-        /// 初始化一个TranslationSegment类的实例
+        /// 初始化一个TranslateContext类的实例
         /// </summary>
-        /// <param name="segmentManager">表达式分解后的对象</param>
+        /// <param name="statementStore">表达式分解后的对象</param>
         /// <returns></returns>
-        internal static TranslationContext CreateTranslation(StatementStore statementStore)
+        internal static TranslateContext CreateContext(StatementStore statementStore)
         {
-            return new TranslationContext(statementStore);
+            return new TranslateContext(statementStore);
         }
 
         /// <summary>

@@ -86,7 +86,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
             return RunDiagnosis.Watch(() =>
             {
-                var sqlResult = TranslationResult.CreateTranslationResult();
+                var sqlResult = TranslateResult.CreateResult();
                 sqlResult.Append(sql, parameters);
                 return sqlResult.Execute(_mapperDbContext).ToList<TModel>();
             });
