@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using NewLibCore.Data.SQL.Mapper;
 
 namespace NewLibCore.Run
@@ -17,8 +18,12 @@ namespace NewLibCore.Run
             //{
             //    var thread = new Thread(new ParameterizedThreadStart((a) =>
             //    {
-            using (var mapper = new EntityMapper())
+            using (var mapper = EntityMapper.CreateMapper())
             {
+
+                var r1 = mapper.SqlQuery("SELECT a.* FROM newcrm_user AS a ").FirstOrDefault<User>();
+
+
                 #region 
                 //var user = new User("123123", "123123123");
                 //mapper.Add(user);

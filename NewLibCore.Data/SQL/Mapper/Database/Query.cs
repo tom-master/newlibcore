@@ -18,6 +18,17 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
 
         IQuery<TModel> Select(Expression<Func<TModel, dynamic>> fields = null);
 
+        IQuery<TModel> Select<T, T1>(Expression<Func<T, T1, dynamic>> fields = null) where T : new()
+        where T1 : new();
+
+        IQuery<TModel> ThenByDesc<TKey>(Expression<Func<TModel, TKey>> order);
+
+        IQuery<TModel> ThenByDesc<TOrder, TKey>(Expression<Func<TOrder, TKey>> order) where TOrder : new();
+
+        IQuery<TModel> ThenByAsc<TKey>(Expression<Func<TModel, TKey>> order);
+
+        IQuery<TModel> ThenByAsc<TOrder, TKey>(Expression<Func<TOrder, TKey>> order) where TOrder : new();
+
         IQuery<TModel> Page(Int32 pageIndex, Int32 pageSize);
 
         TModel FirstOrDefault();
@@ -61,6 +72,16 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
             return this;
         }
 
+        public IQuery<TModel> Select<T, T1>(Expression<Func<T, T1, dynamic>> fields = null) where T : new()
+        where T1 : new()
+        {
+            if (fields != null)
+            {
+                _statementStore.Add(fields);
+            }
+            return this;
+        }
+
         public IQuery<TModel> Where(Expression<Func<TModel, Boolean>> expression)
         {
             Parameter.Validate(expression);
@@ -89,7 +110,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
             return RunDiagnosis.Watch(() =>
             {
                 var executeResult = InternalExecuteSql();
-                return executeResult.ToSingle<TModel>();
+                return executeResult.FirstOrDefault<TModel>();
             });
         }
 
@@ -98,7 +119,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
             return RunDiagnosis.Watch(() =>
             {
                 var executeResult = InternalExecuteSql();
-                return executeResult.ToSingle<T>();
+                return executeResult.FirstOrDefault<T>();
             });
         }
 
@@ -132,8 +153,36 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
             {
                 Select((a) => "COUNT(1)");
                 var executeResult = InternalExecuteSql();
-                return executeResult.ToSingle<Int32>();
+                return executeResult.FirstOrDefault<Int32>();
             });
+        }
+
+        public IQuery<TModel> ThenByDesc<TKey>(Expression<Func<TModel, TKey>> order)
+        {
+            Parameter.Validate(order);
+            _statementStore.AddOrderBy(order, OrderByType.DESC);
+            return this;
+        }
+
+        public IQuery<TModel> ThenByAsc<TOrder, TKey>(Expression<Func<TOrder, TKey>> order) where TOrder : new()
+        {
+            Parameter.Validate(order);
+            _statementStore.AddOrderBy(order, OrderByType.ASC);
+            return this;
+        }
+
+        public IQuery<TModel> ThenByDesc<TOrder, TKey>(Expression<Func<TOrder, TKey>> order) where TOrder : new()
+        {
+            Parameter.Validate(order);
+            _statementStore.AddOrderBy(order, OrderByType.DESC);
+            return this;
+        }
+
+        public IQuery<TModel> ThenByAsc<TKey>(Expression<Func<TModel, TKey>> order)
+        {
+            Parameter.Validate(order);
+            _statementStore.AddOrderBy(order, OrderByType.ASC);
+            return this;
         }
     }
 }

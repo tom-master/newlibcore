@@ -17,9 +17,14 @@ namespace NewLibCore.Data.SQL.Mapper
     {
         private readonly IMapperDbContext _mapperDbContext;
 
-        public EntityMapper()
+        private EntityMapper()
         {
             _mapperDbContext = MapperConfig.DIProvider.GetService<IMapperDbContext>();
+        }
+
+        public static EntityMapper CreateMapper()
+        {
+            return new EntityMapper();
         }
 
         /// <summary>
@@ -35,7 +40,7 @@ namespace NewLibCore.Data.SQL.Mapper
             return RunDiagnosis.Watch(() =>
             {
                 Handler handler = new InsertHandler<TModel>(model, _mapperDbContext);
-                model.Id = handler.Execute().ToPrimitive<Int32>();
+                model.Id = handler.Execute().FirstOrDefault<Int32>();
                 return model;
             });
         }
@@ -57,7 +62,7 @@ namespace NewLibCore.Data.SQL.Mapper
                 var segmentManager = MapperConfig.DIProvider.GetService<StatementStore>();
                 segmentManager.Add(expression);
                 Handler handler = new UpdateHandler<TModel>(model, segmentManager, _mapperDbContext);
-                return handler.Execute().ToPrimitive<Int32>() > 0;
+                return handler.Execute().FirstOrDefault<Int32>() > 0;
             });
         }
 
@@ -80,7 +85,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <param name="parameters">实体参数</param>
         /// <typeparam name="TModel"></typeparam>
         /// <returns></returns>
-        public List<TModel> SqlQuery<TModel>(String sql, IEnumerable<EntityParameter> parameters = null) where TModel : new()
+        public RawResult SqlQuery(String sql, IEnumerable<EntityParameter> parameters = null)
         {
             Parameter.Validate(sql);
 
@@ -88,11 +93,11 @@ namespace NewLibCore.Data.SQL.Mapper
             {
                 var sqlResult = TranslateResult.CreateResult();
                 sqlResult.Append(sql, parameters);
-                return sqlResult.Execute(_mapperDbContext).ToList<TModel>();
+                return sqlResult.Execute(_mapperDbContext);
             });
         }
 
-        public void OpenTran()
+        public void OpenTransaction()
         {
             _mapperDbContext.OpenTransaction();
         }
