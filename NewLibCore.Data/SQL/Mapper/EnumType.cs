@@ -35,7 +35,7 @@ namespace NewLibCore.Data.SQL.Mapper
     /// <summary>
     /// 连接类型
     /// </summary>
-    internal enum JoinType
+    internal enum JoinRelation
     {
         NONE = 0,
         INNER = 1,

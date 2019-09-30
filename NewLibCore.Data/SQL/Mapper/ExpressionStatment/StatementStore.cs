@@ -72,14 +72,14 @@ namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
         /// <typeparam name="TModel">主表</typeparam>
         /// <typeparam name="TJoin">子表</typeparam>
         /// <returns></returns>
-        internal void Add<TModel, TJoin>(Expression<Func<TModel, TJoin, Boolean>> expression, JoinType joinType) where TModel : new()
+        internal void Add<TModel, TJoin>(Expression<Func<TModel, TJoin, Boolean>> expression, JoinRelation joinRelation) where TModel : new()
             where TJoin : new()
         {
             Parameter.Validate(expression);
             Joins.Add(new JoinExpressionMapper
             {
                 Expression = expression,
-                JoinType = joinType,
+                JoinRelation = joinRelation,
                 AliaNameMapper = ParseToAliasNames(expression),
                 MainTable = typeof(TModel).GetTableName().TableName
             });

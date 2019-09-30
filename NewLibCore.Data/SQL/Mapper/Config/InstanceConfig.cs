@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using NewLibCore.Data.SQL.Mapper.Cache;
-using NewLibCore.Data.SQL.Mapper.Database;
 
 namespace NewLibCore.Data.SQL.Mapper
 {
@@ -14,12 +13,12 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <summary>
         /// 逻辑关系映射
         /// </summary>
-        protected readonly IDictionary<RelationType, String> RelationMapper = new Dictionary<RelationType, String>();
+        protected readonly IDictionary<RelationType, String> LogicRelationMapper = new Dictionary<RelationType, String>();
 
         /// <summary>
         /// 连接关系映射
         /// </summary>
-        protected readonly IDictionary<JoinType, String> JoinTypeMapper = new Dictionary<JoinType, String>();
+        protected readonly IDictionary<JoinRelation, String> JoinRelationMapper = new Dictionary<JoinRelation, String>();
 
         /// <summary>
         /// 排序方式映射
@@ -31,8 +30,8 @@ namespace NewLibCore.Data.SQL.Mapper
         /// </summary>
         protected InstanceConfig()
         {
-            RelationMapper.Clear();
-            JoinTypeMapper.Clear();
+            LogicRelationMapper.Clear();
+            JoinRelationMapper.Clear();
             OrderTypeMapper.Clear();
 
             InitRelationType();
@@ -122,13 +121,13 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <summary>
         /// 连接语句构建
         /// </summary>
-        /// <param name="joinType">连接类型</param>
+        /// <param name="joinRelation">连接类型</param>
         /// <param name="left">左语句</param>
         /// <param name="right">右语句</param>
         /// <returns></returns>
-        internal String JoinBuilder(JoinType joinType, String left, String right)
+        internal String JoinBuilder(JoinRelation joinRelation, String left, String right)
         {
-            return String.Format(JoinTypeMapper[joinType], left, right);
+            return String.Format(JoinRelationMapper[joinRelation], left, right);
         }
 
         /// <summary>
@@ -147,14 +146,14 @@ namespace NewLibCore.Data.SQL.Mapper
         /// </summary>
         private void InitRelationType()
         {
-            RelationMapper.Add(RelationType.AND, "{0} AND {1}");
-            RelationMapper.Add(RelationType.OR, "{0} OR {1}");
-            RelationMapper.Add(RelationType.EQ, "{0} = {1}");
-            RelationMapper.Add(RelationType.NQ, "{0} <> {1}");
-            RelationMapper.Add(RelationType.GT, "{0} < {1}");
-            RelationMapper.Add(RelationType.LT, "{0} > {1}");
-            RelationMapper.Add(RelationType.GE, "{0} <= {1}");
-            RelationMapper.Add(RelationType.LE, "{0} >= {1}");
+            LogicRelationMapper.Add(RelationType.AND, "{0} AND {1}");
+            LogicRelationMapper.Add(RelationType.OR, "{0} OR {1}");
+            LogicRelationMapper.Add(RelationType.EQ, "{0} = {1}");
+            LogicRelationMapper.Add(RelationType.NQ, "{0} <> {1}");
+            LogicRelationMapper.Add(RelationType.GT, "{0} < {1}");
+            LogicRelationMapper.Add(RelationType.LT, "{0} > {1}");
+            LogicRelationMapper.Add(RelationType.GE, "{0} <= {1}");
+            LogicRelationMapper.Add(RelationType.LE, "{0} >= {1}");
 
             AppendRelationType();
         }
@@ -164,10 +163,10 @@ namespace NewLibCore.Data.SQL.Mapper
         /// </summary>
         private void InitJoinType()
         {
-            JoinTypeMapper.Add(JoinType.NONE, "");
-            JoinTypeMapper.Add(JoinType.INNER, "INNER JOIN {0} AS {1} ON");
-            JoinTypeMapper.Add(JoinType.LEFT, "LEFT JOIN {0} AS {1} ON");
-            JoinTypeMapper.Add(JoinType.RIGHT, "RIGHT JOIN {0} AS {1} ON");
+            JoinRelationMapper.Add(JoinRelation.NONE, "");
+            JoinRelationMapper.Add(JoinRelation.INNER, "INNER JOIN {0} AS {1} ON");
+            JoinRelationMapper.Add(JoinRelation.LEFT, "LEFT JOIN {0} AS {1} ON");
+            JoinRelationMapper.Add(JoinRelation.RIGHT, "RIGHT JOIN {0} AS {1} ON");
         }
 
         /// <summary>

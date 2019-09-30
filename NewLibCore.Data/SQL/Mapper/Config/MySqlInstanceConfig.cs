@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Data.Common;
 using MySql.Data.MySqlClient;
-using NewLibCore.Data.SQL.Mapper.Database;
 
 namespace NewLibCore.Data.SQL.Mapper
 {
@@ -20,10 +19,10 @@ namespace NewLibCore.Data.SQL.Mapper
 
         protected override void AppendRelationType()
         {
-            RelationMapper.Add(RelationType.FULL_LIKE, "{0} LIKE CONCAT('%',{1},'%')");
-            RelationMapper.Add(RelationType.START_LIKE, "{0} LIKE CONCAT('',{1},'%')");
-            RelationMapper.Add(RelationType.END_LIKE, "{0} LIKE CONCAT('%',{1},'')");
-            RelationMapper.Add(RelationType.IN, "FIND_IN_SET({0},{1})");
+            LogicRelationMapper.Add(RelationType.FULL_LIKE, "{0} LIKE CONCAT('%',{1},'%')");
+            LogicRelationMapper.Add(RelationType.START_LIKE, "{0} LIKE CONCAT('',{1},'%')");
+            LogicRelationMapper.Add(RelationType.END_LIKE, "{0} LIKE CONCAT('%',{1},'')");
+            LogicRelationMapper.Add(RelationType.IN, "FIND_IN_SET({0},{1})");
         }
 
         internal override DbConnection GetConnectionInstance()
@@ -38,7 +37,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
         internal override String RelationBuilder(RelationType relationType, String left, String right)
         {
-            return String.Format(RelationMapper[relationType], left, right);
+            return String.Format(LogicRelationMapper[relationType], left, right);
         }
 
         internal override InstanceExtension Extension

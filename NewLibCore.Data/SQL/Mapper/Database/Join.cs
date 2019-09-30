@@ -33,7 +33,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
         public IJoin<TModel> LeftJoin<TRight>(Expression<Func<TModel, TRight, Boolean>> expression) where TRight : new()
         {
             Parameter.Validate(expression);
-            _statementStore.Add(expression, JoinType.LEFT);
+            _statementStore.Add(expression, JoinRelation.LEFT);
 
             return this;
         }
@@ -41,7 +41,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
         public IJoin<TModel> LeftJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> expression) where TLeft : new() where TRight : new()
         {
             Parameter.Validate(expression);
-            _statementStore.Add(expression, JoinType.LEFT);
+            _statementStore.Add(expression, JoinRelation.LEFT);
 
             return this;
         }
@@ -49,7 +49,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
         public IJoin<TModel> RightJoin<TRight>(Expression<Func<TModel, TRight, Boolean>> expression) where TRight : new()
         {
             Parameter.Validate(expression);
-            _statementStore.Add(expression, JoinType.RIGHT);
+            _statementStore.Add(expression, JoinRelation.RIGHT);
 
             return this;
         }
@@ -57,7 +57,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
         public IJoin<TModel> RightJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> expression) where TLeft : new() where TRight : new()
         {
             Parameter.Validate(expression);
-            _statementStore.Add(expression, JoinType.RIGHT);
+            _statementStore.Add(expression, JoinRelation.RIGHT);
 
             return this;
         }
@@ -65,7 +65,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
         public IJoin<TModel> InnerJoin<TRight>(Expression<Func<TModel, TRight, Boolean>> expression) where TRight : new()
         {
             Parameter.Validate(expression);
-            _statementStore.Add(expression, JoinType.INNER);
+            _statementStore.Add(expression, JoinRelation.INNER);
 
             return this;
         }
@@ -73,7 +73,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
         public IJoin<TModel> InnerJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> expression) where TLeft : new() where TRight : new()
         {
             Parameter.Validate(expression);
-            _statementStore.Add(expression, JoinType.INNER);
+            _statementStore.Add(expression, JoinRelation.INNER);
 
             return this;
         }

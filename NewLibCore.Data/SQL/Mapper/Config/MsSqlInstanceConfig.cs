@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Data.Common;
 using System.Data.SqlClient;
-using NewLibCore.Data.SQL.Mapper.Database;
 
 namespace NewLibCore.Data.SQL.Mapper
 {
@@ -33,10 +32,10 @@ namespace NewLibCore.Data.SQL.Mapper
 
         protected override void AppendRelationType()
         {
-            RelationMapper.Add(RelationType.FULL_LIKE, "{0} LIKE '%{1}%'");
-            RelationMapper.Add(RelationType.START_LIKE, "{0} LIKE '{1}%'");
-            RelationMapper.Add(RelationType.END_LIKE, "{0} LIKE '%{1}' ");
-            RelationMapper.Add(RelationType.IN, "{0} IN ({1})");
+            LogicRelationMapper.Add(RelationType.FULL_LIKE, "{0} LIKE '%{1}%'");
+            LogicRelationMapper.Add(RelationType.START_LIKE, "{0} LIKE '{1}%'");
+            LogicRelationMapper.Add(RelationType.END_LIKE, "{0} LIKE '%{1}' ");
+            LogicRelationMapper.Add(RelationType.IN, "{0} IN ({1})");
         }
 
         internal override DbConnection GetConnectionInstance()
@@ -51,7 +50,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
         internal override String RelationBuilder(RelationType relationType, String left, String right)
         {
-            return String.Format(RelationMapper[relationType], left, right);
+            return String.Format(LogicRelationMapper[relationType], left, right);
         }
     }
 }

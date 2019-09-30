@@ -10,6 +10,6 @@ namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
     {
         protected internal String MainTable { get; set; }
 
-        protected internal JoinType JoinType { get; set; }
+        protected internal JoinRelation JoinRelation { get; set; }
     }
 }

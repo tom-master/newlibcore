@@ -31,7 +31,7 @@ namespace NewLibCore.Data.SQL.Mapper
         private readonly Stack<String> _parameterNameStack;
         private readonly Stack<RelationType> _relationTypesStack;
 
-        private JoinType _joinType;
+        private JoinRelation _joinRelation;
         private IReadOnlyList<KeyValuePair<String, String>> _tableAliasMapper;
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace NewLibCore.Data.SQL.Mapper
             //循环翻译连接对象
             foreach (var item in _statementStore.Joins)
             {
-                if (item.AliaNameMapper == null || item.JoinType == JoinType.NONE)
+                if (item.AliaNameMapper == null || item.JoinRelation == JoinRelation.NONE)
                 {
                     continue;
                 }
@@ -91,11 +91,11 @@ namespace NewLibCore.Data.SQL.Mapper
                     }
 
                     //获取连接语句的模板
-                    var joinTemplate = _instance.JoinBuilder(item.JoinType, aliasItem.Key, aliasItem.Value.ToLower());
+                    var joinTemplate = _instance.JoinBuilder(item.JoinRelation, aliasItem.Key, aliasItem.Value.ToLower());
                     Result.Append(joinTemplate);
 
                     //设置相应的连接类型
-                    _joinType = item.JoinType;
+                    _joinRelation = item.JoinRelation;
 
                     //获取连接类型中的存储的表达式对象进行翻译
                     InternalBuildWhere(item.Expression);
@@ -112,7 +112,7 @@ namespace NewLibCore.Data.SQL.Mapper
                     return;
                 }
 
-                _joinType = JoinType.NONE;
+                _joinRelation = JoinRelation.NONE;
                 Result.Append(RelationType.AND.ToString());
 
                 //获取Where类型中的存储的表达式对象进行翻译
@@ -364,7 +364,7 @@ namespace NewLibCore.Data.SQL.Mapper
         private void LogicStatementBuilder(BinaryExpression binary, RelationType relationType)
         {
             var binaryExp = binary;
-            if (_joinType != JoinType.NONE)
+            if (_joinRelation != JoinRelation.NONE)
             {
                 GetJoin(binaryExp, relationType);
             }
