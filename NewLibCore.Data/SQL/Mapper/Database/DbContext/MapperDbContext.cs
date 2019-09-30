@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Data.SqlClient;
 using System.Linq;
-using Microsoft.Extensions.DependencyInjection;
+using MySql.Data.MySqlClient;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Validate;
 
@@ -20,8 +21,18 @@ namespace NewLibCore.Data.SQL.Mapper.Database
 
         public MapperDbContext()
         {
-            var instanceConfig = MapperConfig.ServiceProvider.GetService<InstanceConfig>();
-            _connection = instanceConfig.GetConnectionInstance();
+            if (MapperConfig.MapperType == MapperType.MYSQL)
+            {
+                _connection = new MySqlConnection(Host.GetHostVar("NewCrmDatabase"));
+            }
+            else if (MapperConfig.MapperType == MapperType.MSSQL)
+            {
+                _connection = new SqlConnection(Host.GetHostVar("NewCrmDatabase"));
+            }
+            else
+            {
+                throw new Exception($@"暂不支持的数据库类型:{MapperConfig.MapperType}");
+            }
         }
 
         public void Commit()

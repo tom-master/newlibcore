@@ -38,15 +38,7 @@ namespace NewLibCore.Data.SQL.Mapper
             LogicRelationMapper.Add(RelationType.IN, "{0} IN ({1})");
         }
 
-        internal override DbConnection GetConnectionInstance()
-        {
-            return new SqlConnection(ConnectionString);
-        }
-
-        internal override DbParameter GetParameterInstance()
-        {
-            return new SqlParameter();
-        }
+      
 
         internal override String RelationBuilder(RelationType relationType, String left, String right)
         {

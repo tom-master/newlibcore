@@ -47,13 +47,13 @@ namespace NewLibCore.Data.SQL.Mapper
             translateContext.Result.Append($@"{RelationType.AND} {AliasName}.IsDeleted=0");
             _modelInstance.Reset();
 
-            return translateContext.Result.Append($@"{Instance.Extension.RowCount}").Execute();
+            return translateContext.Result.Append($@"{MapperConfig.Instance.Extension.RowCount}").Execute();
         }
 
 
         private String ReplacePlaceholder(String TableName, String AliasName, IReadOnlyList<KeyValuePair<String, Object>> propertys)
         {
-            return String.Format(Instance.UpdateTemplate, TableName, AliasName, String.Join(",", propertys.Select(p => $@"{AliasName}.{p.Key}=@{p.Key}")));
+            return String.Format(MapperConfig.Instance.UpdateTemplate, TableName, AliasName, String.Join(",", propertys.Select(p => $@"{AliasName}.{p.Key}=@{p.Key}")));
         }
     }
 }

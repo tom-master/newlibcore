@@ -43,7 +43,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
         private String ReplacePlaceholder(IReadOnlyList<KeyValuePair<String, Object>> propertyInfos, String tableName)
         {
-            return String.Format(Instance.AddTemplate, tableName, String.Join(",", propertyInfos.Select(c => c.Key)), String.Join(",", propertyInfos.Select(key => $@"@{key.Key}")), Instance.Extension.Identity);
+            return String.Format(MapperConfig.Instance.AddTemplate, tableName, String.Join(",", propertyInfos.Select(c => c.Key)), String.Join(",", propertyInfos.Select(key => $@"@{key.Key}")), MapperConfig.Instance.Extension.Identity);
         }
     }
 }

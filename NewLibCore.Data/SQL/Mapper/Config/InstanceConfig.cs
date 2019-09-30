@@ -40,11 +40,6 @@ namespace NewLibCore.Data.SQL.Mapper
         }
 
         /// <summary>
-        /// 获取连接字符串
-        /// </summary>
-        protected String ConnectionString { get { return Host.GetHostVar("NewCrmDatabase"); } }
-
-        /// <summary>
         /// 获取初始化完成的查询缓存对象
         /// </summary>
         internal ResultCache Cache { get; private set; }
@@ -96,18 +91,6 @@ namespace NewLibCore.Data.SQL.Mapper
         /// </summary>
         /// <value></value>
         internal virtual InstanceExtension Extension { get; }
-
-        /// <summary>
-        /// 获取数据库连接对象实例
-        /// </summary>
-        /// <returns></returns>
-        internal abstract DbConnection GetConnectionInstance();
-
-        /// <summary>
-        /// 获取SQL语句参数对象实例
-        /// </summary>
-        /// <returns></returns>
-        internal abstract DbParameter GetParameterInstance();
 
         /// <summary>
         /// 逻辑关系构建

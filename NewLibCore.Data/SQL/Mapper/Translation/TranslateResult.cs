@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.Extensions.DependencyInjection;
 using NewLibCore.Data.SQL.Mapper.Cache;
 using NewLibCore.Data.SQL.Mapper.Database;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Validate;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace NewLibCore.Data.SQL.Mapper
 {
@@ -17,25 +17,27 @@ namespace NewLibCore.Data.SQL.Mapper
     {
         private StringBuilder _originSql;
         private readonly IList<EntityParameter> _parameters;
-        private readonly ResultCache _cache = null;
+        private readonly ResultCache _cache = new ExecutionResultCache();
+        private readonly IServiceProvider _serviceProvider;
 
         /// <summary>
         /// 初始化一个TranslationResult类的实例
         /// </summary>
-        private TranslateResult()
+        private TranslateResult(IServiceProvider serviceProvider)
         {
-            _originSql = new StringBuilder();
+            _originSql = new StringBuilder(); 
             _parameters = new List<EntityParameter>();
-            _cache = MapperConfig.ServiceProvider.GetService<ResultCache>();
+
+            _serviceProvider = serviceProvider;
         }
 
         /// <summary>
         /// 创建一个TranslationResult类的实例
         /// </summary>
         /// <returns></returns>
-        internal static TranslateResult CreateResult()
+        internal static TranslateResult CreateResult(IServiceProvider serviceProvider)
         {
-            return new TranslateResult();
+            return new TranslateResult(serviceProvider);
         }
 
         /// <summary>
@@ -89,8 +91,9 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <returns></returns>
         internal RawResult Execute()
         {
-            var dbContext = MapperConfig.ServiceProvider.GetService<IMapperDbContext>();
+            var dbContext = _serviceProvider.GetService<IMapperDbContext>();
 
+            Console.WriteLine(dbContext.GetHashCode());
             var executeResult = GetCache();
             var executeType = dbContext.GetExecuteType(ToString());
             if (executeResult == null)
@@ -99,7 +102,7 @@ namespace NewLibCore.Data.SQL.Mapper
                 SetCache(executeType, executeResult);
             }
 
-            return executeResult;
+            return executeResult; 
         }
 
         internal void Clear()

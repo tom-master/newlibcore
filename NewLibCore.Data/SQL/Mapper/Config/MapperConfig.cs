@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Data;
-using Microsoft.Extensions.DependencyInjection;
+using NewLibCore.Logger;
 
 namespace NewLibCore.Data.SQL.Mapper
 {
@@ -10,7 +10,15 @@ namespace NewLibCore.Data.SQL.Mapper
     public class MapperConfig
     {
 
+        /// <summary>
+        /// 映射的数据库类型
+        /// </summary>
         public static MapperType MapperType { get; set; } = MapperType.MYSQL;
+
+        /// <summary>
+        /// 日志
+        /// </summary>
+        public static ILogger Logger { get; } = new ConsoleLogger();
 
         /// <summary>
         /// 启用模型验证
@@ -23,9 +31,21 @@ namespace NewLibCore.Data.SQL.Mapper
         /// </summary>
         public static IsolationLevel TransactionLevel { get; set; } = IsolationLevel.Unspecified;
 
-        /// <summary>
-        /// 提供依赖注入的对象
-        /// </summary>
-        internal static IServiceProvider ServiceProvider { get; set; }
+
+        internal static InstanceConfig Instance
+        {
+            get
+            {
+                if (MapperType == MapperType.MSSQL)
+                {
+                    return new MsSqlInstanceConfig();
+                }
+                else if (MapperType == MapperType.MYSQL)
+                {
+                    return new MySqlInstanceConfig();
+                }
+                throw new Exception($@"暂不支持的数据库类型:{MapperType}");
+            }
+        }
     }
 }

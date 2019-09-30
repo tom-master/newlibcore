@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Data.Common;
-using MySql.Data.MySqlClient;
 
 namespace NewLibCore.Data.SQL.Mapper
 {
@@ -23,16 +21,6 @@ namespace NewLibCore.Data.SQL.Mapper
             LogicRelationMapper.Add(RelationType.START_LIKE, "{0} LIKE CONCAT('',{1},'%')");
             LogicRelationMapper.Add(RelationType.END_LIKE, "{0} LIKE CONCAT('%',{1},'')");
             LogicRelationMapper.Add(RelationType.IN, "FIND_IN_SET({0},{1})");
-        }
-
-        internal override DbConnection GetConnectionInstance()
-        {
-            return new MySqlConnection(ConnectionString);
-        }
-
-        internal override DbParameter GetParameterInstance()
-        {
-            return new MySqlParameter();
         }
 
         internal override String RelationBuilder(RelationType relationType, String left, String right)

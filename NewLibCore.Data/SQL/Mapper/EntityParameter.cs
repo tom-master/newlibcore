@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Data.SqlClient;
 using System.Linq;
-using Microsoft.Extensions.DependencyInjection;
-using NewLibCore.Logger;
+using MySql.Data.MySqlClient;
 using NewLibCore.Security;
 using NewLibCore.Validate;
 
@@ -31,9 +31,22 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             Parameter.Validate(entityParameter);
 
-            var instance = MapperConfig.ServiceProvider.GetService<InstanceConfig>();
 
-            var parameter = instance.GetParameterInstance();
+
+            DbParameter parameter = null;
+            if (MapperConfig.MapperType == MapperType.MSSQL)
+            {
+                parameter = new SqlParameter();
+            }
+            else if (MapperConfig.MapperType == MapperType.MYSQL)
+            {
+                parameter = new MySqlParameter();
+            }
+            else
+            {
+                throw new Exception($@"暂不支持的数据库类型:{MapperConfig.MapperType}");
+            }
+
             parameter.ParameterName = entityParameter.Key;
             parameter.Value = entityParameter.Value;
             return parameter;
@@ -79,14 +92,14 @@ namespace NewLibCore.Data.SQL.Mapper
                         }
                     }
                     var ex = $@"无法转换的类型{objType.Name}";
-                    MapperConfig.ServiceProvider.GetService<ILogger>().Error(ex);
+                    MapperConfig.Logger.Error(ex);
                     throw new Exception(ex);
                 }
                 return obj;
             }
             catch (Exception ex)
             {
-                MapperConfig.ServiceProvider.GetService<ILogger>().Error(ex.ToString());
+                MapperConfig.Logger.Error(ex.ToString());
                 throw;
             }
         }

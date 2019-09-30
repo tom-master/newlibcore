@@ -19,6 +19,7 @@ namespace NewLibCore.Data.SQL.Mapper
     {
         private readonly IMapperDbContext _mapperDbContext;
         private readonly IServiceScope _serviceScope;
+        private readonly IServiceProvider _serviceProvider;
 
         private EntityMapper()
         {
@@ -30,16 +31,18 @@ namespace NewLibCore.Data.SQL.Mapper
 
             if (MapperConfig.MapperType == MapperType.MSSQL)
             {
-                services = services.AddTransient<InstanceConfig, MsSqlInstanceConfig>();
+                services = services.AddScoped<InstanceConfig, MsSqlInstanceConfig>();
             }
             else if (MapperConfig.MapperType == MapperType.MYSQL)
             {
-                services = services.AddTransient<InstanceConfig, MySqlInstanceConfig>();
+                services = services.AddScoped<InstanceConfig, MySqlInstanceConfig>();
             }
             var serviceProvider = services.BuildServiceProvider();
             _serviceScope = serviceProvider.CreateScope();
-            MapperConfig.ServiceProvider = _serviceScope.ServiceProvider;
-        } 
+            _serviceProvider = _serviceScope.ServiceProvider;
+
+            Console.WriteLine(_serviceProvider.GetService<IMapperDbContext>().GetHashCode());
+        }
 
         public static EntityMapper CreateMapper()
         {
@@ -78,7 +81,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
             return RunDiagnosis.Watch(() =>
             {
-                var segmentManager = MapperConfig.ServiceProvider.GetService<StatementStore>();
+                var segmentManager = _serviceProvider.GetService<StatementStore>();
                 segmentManager.Add(expression);
                 Handler handler = new UpdateHandler<TModel>(model, segmentManager);
                 return handler.Execute().FirstOrDefault<Int32>() > 0;
@@ -92,7 +95,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <returns></returns>
         public IJoin<TModel> Query<TModel>() where TModel : new()
         {
-            var segmentManager = MapperConfig.ServiceProvider.GetService<StatementStore>();
+            var segmentManager = _serviceProvider.GetService<StatementStore>();
             segmentManager.Add<TModel>();
             return new Join<TModel>(segmentManager);
         }
@@ -110,30 +113,29 @@ namespace NewLibCore.Data.SQL.Mapper
 
             return RunDiagnosis.Watch(() =>
             {
-                var sqlResult = TranslateResult.CreateResult();
+                var sqlResult = TranslateResult.CreateResult(_serviceProvider);
                 sqlResult.Append(sql, parameters);
                 return sqlResult.Execute();
             });
         }
 
-        public void OpenTransaction()
-        {
-            _mapperDbContext.OpenTransaction();
-        }
+        //public void OpenTransaction()
+        //{
+        //    _mapperDbContext.OpenTransaction();
+        //}
 
-        public void Commit()
-        {
-            _mapperDbContext.Commit();
-        }
+        //public void Commit()
+        //{
+        //    _mapperDbContext.Commit();
+        //}
 
-        public void Rollback()
-        {
-            _mapperDbContext.Rollback();
-        }
+        //public void Rollback()
+        //{
+        //    _mapperDbContext.Rollback();
+        //}
 
         public void Dispose()
         {
-            _mapperDbContext.Dispose();
             _serviceScope.Dispose();
         }
     }

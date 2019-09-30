@@ -1,23 +1,19 @@
 using System;
 using System.Diagnostics;
-using Microsoft.Extensions.DependencyInjection;
-using NewLibCore.Logger;
 
 namespace NewLibCore.Data.SQL.Mapper.EntityExtension
 {
     internal sealed class RunDiagnosis
     {
-        private static ILogger _logger;
 
         static RunDiagnosis()
         {
-            _logger = MapperConfig.ServiceProvider.GetService<ILogger>();
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
         }
 
         private static void CurrentDomain_UnhandledException(Object sender, UnhandledExceptionEventArgs e)
         {
-            _logger.Error(((Exception)e.ExceptionObject).Message);
+            MapperConfig.Logger.Error(((Exception)e.ExceptionObject).Message);
         }
 
         /// <summary>
@@ -32,33 +28,33 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
             sw.Start();
             var returnValue = func();
             sw.Stop();
-            _logger.Info($@"共花费{Math.Round(sw.Elapsed.TotalSeconds, 2)}s");
+            MapperConfig.Logger.Info($@"共花费{Math.Round(sw.Elapsed.TotalSeconds, 2)}s");
             return returnValue;
         }
 
         internal static void Info(String message)
         {
-            _logger.Info(message);
+            MapperConfig.Logger.Info(message);
         }
 
         internal static void Error(String message)
         {
-            _logger.Error(message);
+            MapperConfig.Logger.Error(message);
         }
 
         internal static void Debug(String message)
         {
-            _logger.Debug(message);
+            MapperConfig.Logger.Debug(message);
         }
 
         internal static void Fail(String message)
         {
-            _logger.Fail(message);
+            MapperConfig.Logger.Fail(message);
         }
 
         internal static void Warn(String message)
         {
-            _logger.Warn(message);
+            MapperConfig.Logger.Warn(message);
         }
     }
 }

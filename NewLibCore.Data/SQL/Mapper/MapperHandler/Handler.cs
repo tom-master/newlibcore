@@ -15,13 +15,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// </summary>
         internal Handler()
         {
-            Instance = MapperConfig.ServiceProvider.GetService<InstanceConfig>();
         }
-
-        /// <summary>
-        /// 数据库配置实例
-        /// </summary>
-        protected InstanceConfig Instance { get; private set; }
 
         /// <summary>
         /// 执行表达式段的翻译

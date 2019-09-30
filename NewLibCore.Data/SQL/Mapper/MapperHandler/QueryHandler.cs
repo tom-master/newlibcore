@@ -29,7 +29,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
             var translateContext = TranslateContext.CreateContext(_statementStore);
             var mainTable = _statementStore.From.AliaNameMapper[0];
-            translateContext.Result.Append(String.Format(Instance.SelectTemplate, Fields, mainTable.Key, mainTable.Value));
+            translateContext.Result.Append(String.Format(MapperConfig.Instance.SelectTemplate, Fields, mainTable.Key, mainTable.Value));
             translateContext.Translate();
 
             var aliasMapper = _statementStore.MergeAliasMapper();
@@ -49,7 +49,7 @@ namespace NewLibCore.Data.SQL.Mapper
             if (_statementStore.Order != null)
             {
                 var (fields, tableName) = StatementParse(_statementStore.Order);
-                var orderTemplate = Instance.OrderByBuilder(_statementStore.Order.OrderBy, $@"{tableName}.{fields}");
+                var orderTemplate = MapperConfig.Instance.OrderByBuilder(_statementStore.Order.OrderBy, $@"{tableName}.{fields}");
                 translateContext.Result.Append(orderTemplate);
             }
 
@@ -57,7 +57,7 @@ namespace NewLibCore.Data.SQL.Mapper
             {
                 var pageIndex = (_statementStore.Pagination.Size * (_statementStore.Pagination.Index - 1)).ToString();
                 var pageSize = _statementStore.Pagination.Size.ToString();
-                translateContext.Result.Append(Instance.Extension.Page.Replace("{value}", pageIndex).Replace("{pageSize}", pageSize));
+                translateContext.Result.Append(MapperConfig.Instance.Extension.Page.Replace("{value}", pageIndex).Replace("{pageSize}", pageSize));
             }
 
             return translateContext.Result.Execute();

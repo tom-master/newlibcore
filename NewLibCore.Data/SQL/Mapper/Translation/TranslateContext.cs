@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using Microsoft.Extensions.DependencyInjection;
 using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
 using NewLibCore.Validate;
 
@@ -25,7 +24,6 @@ namespace NewLibCore.Data.SQL.Mapper
     /// </summary>
     internal class TranslateContext : ITranslationContext
     {
-        private readonly InstanceConfig _instance;
         private readonly StatementStore _statementStore;
 
         private readonly Stack<String> _parameterNameStack;
@@ -48,7 +46,7 @@ namespace NewLibCore.Data.SQL.Mapper
             _relationTypesStack = new Stack<RelationType>();
             _parameterNameStack = new Stack<String>();
             _tableAliasMapper = new List<KeyValuePair<String, String>>();
-            _instance = MapperConfig.ServiceProvider.GetService<InstanceConfig>();
+
 
             Result = TranslateResult.CreateResult();
         }
@@ -91,7 +89,7 @@ namespace NewLibCore.Data.SQL.Mapper
                     }
 
                     //获取连接语句的模板
-                    var joinTemplate = _instance.JoinBuilder(item.JoinRelation, aliasItem.Key, aliasItem.Value.ToLower());
+                    var joinTemplate = MapperConfig.Instance.JoinBuilder(item.JoinRelation, aliasItem.Key, aliasItem.Value.ToLower());
                     Result.Append(joinTemplate);
 
                     //设置相应的连接类型
@@ -259,7 +257,7 @@ namespace NewLibCore.Data.SQL.Mapper
                             internalAliasName = $@"{ _tableAliasMapper.Where(w => w.Key == parameterExp.Type.GetTableName().TableName && w.Value == parameterExp.Type.GetTableName().AliasName).FirstOrDefault().Value.ToLower()}.";
 
                             var newParameterName = Guid.NewGuid().ToString().Replace("-", "");
-                            Result.Append(_instance.RelationBuilder(_relationTypesStack.Pop(), $@"{internalAliasName}{memberExp.Member.Name}", $"@{newParameterName}"));
+                            Result.Append(MapperConfig.Instance.RelationBuilder(_relationTypesStack.Pop(), $@"{internalAliasName}{memberExp.Member.Name}", $"@{newParameterName}"));
                             _parameterNameStack.Push(newParameterName);
                         }
                     }
@@ -401,7 +399,7 @@ namespace NewLibCore.Data.SQL.Mapper
                 var (LeftMember, LeftAliasName) = GetLeftMemberAndAliasName(binary);
                 var (RightMember, RightAliasName) = GetRightMemberAndAliasName(binary);
 
-                var relationTemplate = _instance.RelationBuilder(relationType, $"{RightAliasName}.{RightMember.Member.Name}", $"{LeftAliasName}.{LeftMember.Member.Name}");
+                var relationTemplate = MapperConfig.Instance.RelationBuilder(relationType, $"{RightAliasName}.{RightMember.Member.Name}", $"{LeftAliasName}.{LeftMember.Member.Name}");
                 Result.Append(relationTemplate);
             }
             else if (binary.Left.NodeType == ExpressionType.Constant) //表达式左边为常量
@@ -409,14 +407,14 @@ namespace NewLibCore.Data.SQL.Mapper
                 var (RightMember, RightAliasName) = GetRightMemberAndAliasName(binary);
                 var constant = (ConstantExpression)binary.Left;
                 var value = Boolean.TryParse(constant.Value.ToString(), out var result) ? (result ? 1 : 0).ToString() : constant.Value;
-                Result.Append(_instance.RelationBuilder(relationType, value + "", $"{RightAliasName}.{RightMember.Member.Name}"));
+                Result.Append(MapperConfig.Instance.RelationBuilder(relationType, value + "", $"{RightAliasName}.{RightMember.Member.Name}"));
             }
             else if (binary.Right.NodeType == ExpressionType.Constant) //表达式的右边为常量
             {
                 var (LeftMember, LeftAliasName) = GetLeftMemberAndAliasName(binary);
                 var constant = (ConstantExpression)binary.Right;
                 var value = Boolean.TryParse(constant.Value.ToString(), out var result) ? (result ? 1 : 0).ToString() : constant.Value;
-                Result.Append(_instance.RelationBuilder(relationType, $"{LeftAliasName}.{LeftMember.Member.Name}", value + ""));
+                Result.Append(MapperConfig.Instance.RelationBuilder(relationType, $"{LeftAliasName}.{LeftMember.Member.Name}", value + ""));
             }
         }
 
