@@ -46,6 +46,10 @@ namespace NewLibCore.Data.SQL.Mapper
             Console.WriteLine(_serviceProvider.GetService<IMapperDbContext>().GetHashCode());
         }
 
+        /// <summary>
+        /// 创建一个实体映射对象
+        /// </summary>
+        /// <returns></returns>
         public static EntityMapper CreateMapper()
         {
             return new EntityMapper();
@@ -120,7 +124,7 @@ namespace NewLibCore.Data.SQL.Mapper
                 return sqlResult.Execute();
             });
         }
-        
+
         public void Dispose()
         {
             _serviceScope.Dispose();
