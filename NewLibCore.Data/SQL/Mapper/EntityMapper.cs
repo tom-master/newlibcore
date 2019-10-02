@@ -125,6 +125,9 @@ namespace NewLibCore.Data.SQL.Mapper
             });
         }
 
+        /// <summary>
+        /// 释放资源
+        /// </summary>
         public void Dispose()
         {
             _serviceScope.Dispose();
