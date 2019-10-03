@@ -16,9 +16,12 @@ namespace NewLibCore.Data.SQL.Mapper
     internal sealed class TranslateResult
     {
         private StringBuilder _originSql;
+
         private readonly IList<EntityParameter> _parameters;
-        private readonly ResultCache _cache = new ExecutionResultCache();
+ 
         private readonly IServiceProvider _serviceProvider;
+
+        private readonly ResultCache _cache = new ExecutionResultCache();
 
         /// <summary>
         /// 初始化一个TranslationResult类的实例
