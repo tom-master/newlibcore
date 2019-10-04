@@ -18,7 +18,7 @@ namespace NewLibCore.Data.SQL.Mapper
         private StringBuilder _originSql;
 
         private readonly IList<EntityParameter> _parameters;
- 
+
         private readonly IServiceProvider _serviceProvider;
 
         private readonly ResultCache _cache = new ExecutionResultCache();
@@ -28,7 +28,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// </summary>
         private TranslateResult(IServiceProvider serviceProvider)
         {
-            _originSql = new StringBuilder(); 
+            _originSql = new StringBuilder();
             _parameters = new List<EntityParameter>();
 
             _serviceProvider = serviceProvider;
@@ -105,9 +105,12 @@ namespace NewLibCore.Data.SQL.Mapper
                 SetCache(executeType, executeResult);
             }
 
-            return executeResult; 
+            return executeResult;
         }
 
+        /// <summary>
+        /// 清空上次使用后留下的数据
+        /// </summary>
         internal void Clear()
         {
             _originSql.Clear();
