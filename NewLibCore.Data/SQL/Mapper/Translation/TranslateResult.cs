@@ -165,6 +165,10 @@ namespace NewLibCore.Data.SQL.Mapper
             return default;
         }
 
+        /// <summary>
+        /// 返回存储的sql语句
+        /// </summary>
+        /// <returns></returns>
         public override String ToString()
         {
             Parameter.Validate(_originSql);
