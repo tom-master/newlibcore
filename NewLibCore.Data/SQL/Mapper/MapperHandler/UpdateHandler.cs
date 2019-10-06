@@ -14,6 +14,7 @@ namespace NewLibCore.Data.SQL.Mapper
     internal class UpdateHandler<TModel> : Handler where TModel : EntityBase, new()
     {
         private readonly TModel _modelInstance;
+        
         private readonly StatementStore _statementStore;
 
         /// <summary>
@@ -49,7 +50,6 @@ namespace NewLibCore.Data.SQL.Mapper
 
             return translateContext.Result.Append($@"{MapperConfig.Instance.Extension.RowCount}").Execute();
         }
-
 
         private String ReplacePlaceholder(String TableName, String AliasName, IReadOnlyList<KeyValuePair<String, Object>> propertys)
         {
