@@ -22,7 +22,11 @@ namespace NewLibCore.Data.SQL.Mapper
             Parameter.Validate(statementStore);
             _statementStore = statementStore;
         }
-
+        
+        /// <summary>
+        /// 执行查询操作的翻译
+        /// </summary>
+        /// <returns></returns>
         internal override RawResult Execute()
         {
             var (Fields, AliasName) = StatementParse(_statementStore.Select);
