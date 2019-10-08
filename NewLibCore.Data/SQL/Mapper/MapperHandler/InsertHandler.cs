@@ -24,6 +24,10 @@ namespace NewLibCore.Data.SQL.Mapper
             _instance = model;
         }
 
+        /// <summary>
+        /// 执行插入操作的翻译
+        /// </summary>
+        /// <returns></returns>
         internal override RawResult Execute()
         {
             _instance.OnChanged();
