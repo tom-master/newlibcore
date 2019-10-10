@@ -5,7 +5,6 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
 {
     internal sealed class RunDiagnosis
     {
-
         static RunDiagnosis()
         {
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
