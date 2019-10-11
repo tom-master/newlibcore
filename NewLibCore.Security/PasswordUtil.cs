@@ -11,6 +11,12 @@ namespace NewLibCore.Security
     {
         private const Int32 _saltLength = 4;
 
+        /// <summary>
+        /// 比较两个密码是否相等
+        /// </summary>
+        /// <param name="dbPassword"></param>
+        /// <param name="userPassword"></param>
+        /// <returns></returns>
         public static Boolean ComparePasswords(String dbPassword, String userPassword)
         {
             Parameter.Validate(dbPassword);
