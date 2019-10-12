@@ -43,6 +43,11 @@ namespace NewLibCore.Security
             return result;
         }
 
+        /// <summary>
+        /// 创建数据库密码
+        /// </summary>
+        /// <param name="userPassword"></param>
+        /// <returns></returns>
         public static String CreateDbPassword(String userPassword)
         {
             Parameter.Validate(userPassword);
