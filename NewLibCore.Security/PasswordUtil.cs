@@ -98,6 +98,12 @@ namespace NewLibCore.Security
             return !array1.Where((t, i) => t != array2[i]).Any();
         }
 
+        /// <summary>
+        /// 创建加盐密码
+        /// </summary>
+        /// <param name="saltValue"></param>
+        /// <param name="unsaltedPassword"></param>
+        /// <returns></returns>
         private static Byte[] CreateSaltedPassword(Byte[] saltValue, Byte[] unsaltedPassword)
         {
             Parameter.Validate(saltValue);
