@@ -82,6 +82,12 @@ namespace NewLibCore.Security
             return saltedPassword;
         }
 
+        /// <summary>
+        /// 比较字节数组是否相等
+        /// </summary>
+        /// <param name="array1"></param>
+        /// <param name="array2"></param>
+        /// <returns></returns>
         private static Boolean CompareByteArray(ICollection<Byte> array1, IList<Byte> array2 = null)
         {
             Parameter.Validate(array1);
