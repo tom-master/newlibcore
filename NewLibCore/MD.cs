@@ -12,6 +12,11 @@ namespace NewLibCore
     public static class MD
     {
 
+        /// <summary>
+        /// 获取输入流的MD5值
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <returns></returns>
         public static String GetMD5(Stream stream)
         {
             var bs = new Byte[stream.Length];
