@@ -66,6 +66,11 @@ namespace NewLibCore.Security
             return Convert.ToBase64String(saltedPassword);
         }
 
+        /// <summary>
+        /// 计算输入的字符串的Hash
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
         private static Byte[] HashString(String str)
         {
             Parameter.Validate(str);
