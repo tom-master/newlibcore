@@ -6,8 +6,12 @@ using NewLibCore.Validate;
 
 namespace NewLibCore
 {
-    public class MD
+    /// <summary>
+    /// 提供计算MD5的操作类 
+    /// </summary>
+    public static class MD
     {
+
         public static String GetMD5(Stream stream)
         {
             var bs = new Byte[stream.Length];
