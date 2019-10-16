@@ -11,7 +11,6 @@ namespace NewLibCore
     /// </summary>
     public static class MD
     {
-
         /// <summary>
         /// 获取输入流的MD5值
         /// </summary>
@@ -24,6 +23,11 @@ namespace NewLibCore
             return InternalMd5(bs);
         }
 
+        /// <summary>
+        /// 获取输入的字符串的MD5值
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         public static String GetMD5(String input)
         {
             return InternalMd5(Encoding.Default.GetBytes(input));
