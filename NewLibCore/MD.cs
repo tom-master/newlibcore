@@ -33,6 +33,11 @@ namespace NewLibCore
             return InternalMd5(Encoding.Default.GetBytes(input));
         }
 
+        /// <summary>
+        /// 获取输入的字节数组的MD5值
+        /// </summary>
+        /// <param name="bs"></param>
+        /// <returns></returns>
         private static String InternalMd5(Byte[] bs)
         {
             Parameter.Validate(bs);
