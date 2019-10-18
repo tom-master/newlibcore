@@ -6,6 +6,9 @@ using NewLibCore.Validate;
 
 namespace NewLibCore
 {
+    /// <summary>
+    /// 提供对文件的操作类
+    /// </summary>
     public static class FileHelper
     {
         /// <summary>
@@ -291,6 +294,6 @@ namespace NewLibCore
         }
         #endregion
 
-       
+
     }
 }
