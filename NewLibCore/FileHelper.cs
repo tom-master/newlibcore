@@ -291,7 +291,5 @@ namespace NewLibCore
             }
         }
         #endregion
-
-
     }
 }
