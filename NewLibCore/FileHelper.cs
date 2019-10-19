@@ -68,6 +68,7 @@ namespace NewLibCore
         /// </summary>
         public static String[] GetFileNames(String directoryPath)
         {
+            Parameter.Validate(directoryPath);
             //如果目录不存在，则抛出异常
             if (!IsExistDirectory(directoryPath))
             {
