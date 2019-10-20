@@ -84,8 +84,9 @@ namespace NewLibCore
         /// </summary>
         public static String[] GetFileNames(String directoryPath, String searchPattern, Boolean isSearchChild)
         {
-
+            Parameter.Validate(directoryPath);
             Parameter.Validate(searchPattern);
+            
             //如果目录不存在，则抛出异常
             if (!IsExistDirectory(directoryPath))
             {
