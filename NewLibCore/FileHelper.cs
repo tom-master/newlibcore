@@ -35,6 +35,8 @@ namespace NewLibCore
         /// </summary>
         public static void CreateDirectory(String directoryPath)
         {
+            Parameter.Validate(directoryPath);
+            
             //如果目录不存在则创建该目录
             if (!IsExistDirectory(directoryPath))
             {
@@ -86,7 +88,7 @@ namespace NewLibCore
         {
             Parameter.Validate(directoryPath);
             Parameter.Validate(searchPattern);
-            
+
             //如果目录不存在，则抛出异常
             if (!IsExistDirectory(directoryPath))
             {
