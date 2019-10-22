@@ -36,7 +36,7 @@ namespace NewLibCore
         public static void CreateDirectory(String directoryPath)
         {
             Parameter.Validate(directoryPath);
-            
+
             //如果目录不存在则创建该目录
             if (!IsExistDirectory(directoryPath))
             {
@@ -131,6 +131,7 @@ namespace NewLibCore
         /// </summary>
         public static String[] GetDirectories(String directoryPath, String searchPattern, Boolean isSearchChild)
         {
+            Parameter.Validate(directoryPath);
             Parameter.Validate(searchPattern);
 
             try
