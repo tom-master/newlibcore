@@ -156,6 +156,8 @@ namespace NewLibCore
         public static void WriteText(String filePath, String content)
         {
             Parameter.Validate(filePath);
+            Parameter.Validate(content);
+
             File.WriteAllText(filePath, content);
         }
         #endregion
