@@ -6,6 +6,9 @@ namespace NewLibCore
 {
     public static class EnumExtensions
     {
+        /// <summary>
+        /// 将输入的值转换成指定的枚举类型
+        /// </summary>
         public static T ToEnum<T>(String value) where T : struct
         {
             if (String.IsNullOrEmpty(value))
