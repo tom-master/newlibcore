@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Linq;
+using NewLibCore.Validate;
 
 namespace NewLibCore
 {
@@ -11,6 +12,8 @@ namespace NewLibCore
         /// </summary>
         public static T ToEnum<T>(String value) where T : struct
         {
+            Parameter.Validate(value);
+
             if (String.IsNullOrEmpty(value))
             {
                 throw new ArgumentException("value不能为空");
@@ -25,8 +28,12 @@ namespace NewLibCore
             throw new ArgumentException($"{value}不是有效的类型");
         }
 
+        /// <summary>
+        /// 将输入的值转换成指定的枚举类型
+        /// </summary>
         public static T ToEnum<T>(Int32 value) where T : struct
         {
+            Parameter.Validate(0);
             return (T)Enum.ToObject(typeof(T), value);
         }
 
