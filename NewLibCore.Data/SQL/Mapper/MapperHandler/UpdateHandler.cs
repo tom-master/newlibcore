@@ -43,17 +43,12 @@ namespace NewLibCore.Data.SQL.Mapper
             var propertys = _modelInstance.GetChangedProperty();
 
             var translateContext = TranslateContext.CreateContext(_statementStore);
-            translateContext.Result.Append(ReplacePlaceholder(TableName, AliasName, propertys), propertys.Select(c => new EntityParameter(c.Key, c.Value)));
+            translateContext.Result.Append(String.Format(MapperConfig.Instance.UpdateTemplate, TableName, AliasName, String.Join(",", propertys.Select(p => $@"{AliasName}.{p.Key}=@{p.Key}"))));
             translateContext.Translate();
             translateContext.Result.Append($@"{RelationType.AND} {AliasName}.IsDeleted=0");
             _modelInstance.Reset();
 
             return translateContext.Result.Append($@"{MapperConfig.Instance.Extension.RowCount}").Execute();
-        }
-
-        private String ReplacePlaceholder(String TableName, String AliasName, IReadOnlyList<KeyValuePair<String, Object>> propertys)
-        {
-            return String.Format(MapperConfig.Instance.UpdateTemplate, TableName, AliasName, String.Join(",", propertys.Select(p => $@"{AliasName}.{p.Key}=@{p.Key}")));
-        }
+        } 
     }
 }
