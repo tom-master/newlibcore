@@ -119,7 +119,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
             return RunDiagnosis.Watch(() =>
             {
-                var sqlResult = TranslateResult.CreateResult(_serviceProvider);
+                var sqlResult = TranslateResult.CreateResult();
                 sqlResult.Append(sql, parameters);
                 return sqlResult.Execute();
             });
