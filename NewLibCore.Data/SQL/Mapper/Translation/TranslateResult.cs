@@ -19,28 +19,25 @@ namespace NewLibCore.Data.SQL.Mapper
 
         private readonly IList<EntityParameter> _parameters;
 
-        private readonly IServiceProvider _serviceProvider;
-
         private readonly ResultCache _cache = new ExecutionResultCache();
 
         /// <summary>
         /// 初始化一个TranslationResult类的实例
         /// </summary>
-        private TranslateResult(IServiceProvider serviceProvider)
+        private TranslateResult()
         {
             _originSql = new StringBuilder();
             _parameters = new List<EntityParameter>();
 
-            _serviceProvider = serviceProvider;
         }
 
         /// <summary>
         /// 创建一个TranslationResult类的实例
         /// </summary>
         /// <returns></returns>
-        internal static TranslateResult CreateResult(IServiceProvider serviceProvider)
+        internal static TranslateResult CreateResult()
         {
-            return new TranslateResult(serviceProvider);
+            return new TranslateResult();
         }
 
         /// <summary>
