@@ -119,9 +119,8 @@ namespace NewLibCore.Data.SQL.Mapper
 
             return RunDiagnosis.Watch(() =>
             {
-                var sqlResult = TranslateResult.CreateResult();
-                sqlResult.Append(sql, parameters);
-                return sqlResult.Execute();
+                var directSqlHandler = new DirectSqlHandler(sql, parameters);
+                return directSqlHandler.Execute();
             });
         }
 
