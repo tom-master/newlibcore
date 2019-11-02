@@ -14,19 +14,19 @@ namespace NewLibCore.Data.SQL.Mapper
     {
         private readonly TModel _modelInstance;
 
-        private readonly StatementStore _statementStore;
+        private readonly ExpressionStore _expressionStore;
 
         /// <summary>
         /// 初始化一个UpdateHandler类的实例
         /// </summary>
         /// <param name="model">要更新的模型</param>
-        public UpdateHandler(TModel model, StatementStore statementStore)
+        public UpdateHandler(TModel model, ExpressionStore expressionStore)
         {
             Parameter.Validate(model);
-            Parameter.Validate(statementStore);
+            Parameter.Validate(expressionStore);
 
             _modelInstance = model;
-            _statementStore = statementStore;
+            _expressionStore = expressionStore;
         }
 
         internal override RawResult Execute()
@@ -42,10 +42,10 @@ namespace NewLibCore.Data.SQL.Mapper
             var propertys = _modelInstance.GetChangedProperty();
 
             var translateResult = TranslateResult.CreateResult();
-            var translateContext = ExpressionParser.CreateParser();
+            var parser = ExpressionParser.CreateParser();
 
             translateResult.Append(String.Format(MapperConfig.Instance.UpdateTemplate, TableName, AliasName, String.Join(",", propertys.Select(p => $@"{AliasName}.{p.Key}=@{p.Key}"))));
-            translateResult.Append(translateContext.Parse(_statementStore).ToString());
+            translateResult.Append(parser.Parse(_expressionStore).ToString());
             translateResult.Append($@"{RelationType.AND} {AliasName}.IsDeleted=0");
             translateResult.Append($@"{MapperConfig.Instance.Extension.RowCount}");
             _modelInstance.Reset();

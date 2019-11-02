@@ -27,7 +27,6 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             var services = new ServiceCollection()
                .AddTransient<ResultCache, ExecutionResultCache>()
-               .AddTransient<StatementStore>()
                .AddScoped<IMapperDbContext, MapperDbContext>()
                .AddSingleton<ILogger, ConsoleLogger>();
 
@@ -87,9 +86,9 @@ namespace NewLibCore.Data.SQL.Mapper
 
             return RunDiagnosis.Watch(() =>
             {
-                var segmentManager = _serviceProvider.GetService<StatementStore>();
-                segmentManager.Add(expression);
-                Handler handler = new UpdateHandler<TModel>(model, segmentManager);
+                var expressionStore = new ExpressionStore();
+                expressionStore.Add(expression);
+                Handler handler = new UpdateHandler<TModel>(model, expressionStore);
                 return handler.Execute().FirstOrDefault<Int32>() > 0;
             });
         }
@@ -101,9 +100,9 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <returns></returns>
         public IJoin<TModel> Query<TModel>() where TModel : new()
         {
-            var segmentManager = _serviceProvider.GetService<StatementStore>();
-            segmentManager.Add<TModel>();
-            return new Join<TModel>(segmentManager);
+            var expressionStore = new ExpressionStore();
+            expressionStore.Add<TModel>();
+            return new Join<TModel>(expressionStore);
         }
 
         /// <summary>

@@ -15,12 +15,12 @@ namespace NewLibCore.Data.SQL.Mapper
     /// <typeparam name="TModel"></typeparam>
     internal class QueryHandler<TModel> : Handler where TModel : new()
     {
-        private readonly StatementStore _statementStore;
+        private readonly ExpressionStore _expressionStore;
 
-        internal QueryHandler(StatementStore statementStore)
+        internal QueryHandler(ExpressionStore expressionStore)
         {
-            Parameter.Validate(statementStore);
-            _statementStore = statementStore;
+            Parameter.Validate(expressionStore);
+            _expressionStore = expressionStore;
         }
 
         /// <summary>
@@ -29,20 +29,20 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <returns></returns>
         internal override RawResult Execute()
         {
-            var (Fields, AliasName) = StatementParse(_statementStore.Select);
+            var (Fields, AliasName) = StatementParse(_expressionStore.Select);
 
-            var translateContext = ExpressionParser.CreateParser();
+            var parser = ExpressionParser.CreateParser();
             var translateResult = TranslateResult.CreateResult();
 
-            var mainTable = _statementStore.From.AliaNameMapper[0];
+            var mainTable = _expressionStore.From.AliaNameMapper[0];
 
             translateResult.Append(String.Format(MapperConfig.Instance.SelectTemplate, Fields, mainTable.Key, mainTable.Value));
-            translateResult.Append(translateContext.Parse(_statementStore).ToString());
+            translateResult.Append(parser.Parse(_expressionStore).ToString());
 
-            var aliasMapper = _statementStore.MergeAliasMapper();
+            var aliasMapper = _expressionStore.MergeAliasMapper();
 
             //当出现查询但张表不加Where条件时，则强制将IsDeleted=0添加到后面
-            if (_statementStore.Where == null)
+            if (_expressionStore.Where == null)
             {
                 translateResult.Append($@"{RelationType.AND.ToString()} {mainTable.Value}.IsDeleted = 0");
             }
@@ -53,17 +53,17 @@ namespace NewLibCore.Data.SQL.Mapper
                     translateResult.Append($@"{RelationType.AND} {aliasItem.Value.ToLower()}.IsDeleted = 0");
                 }
             }
-            if (_statementStore.Order != null)
+            if (_expressionStore.Order != null)
             {
-                var (fields, tableName) = StatementParse(_statementStore.Order);
-                var orderTemplate = MapperConfig.Instance.OrderByBuilder(_statementStore.Order.OrderBy, $@"{tableName}.{fields}");
+                var (fields, tableName) = StatementParse(_expressionStore.Order);
+                var orderTemplate = MapperConfig.Instance.OrderByBuilder(_expressionStore.Order.OrderBy, $@"{tableName}.{fields}");
                 translateResult.Append(orderTemplate);
             }
 
-            if (_statementStore.Pagination != null)
+            if (_expressionStore.Pagination != null)
             {
-                var pageIndex = (_statementStore.Pagination.Size * (_statementStore.Pagination.Index - 1)).ToString();
-                var pageSize = _statementStore.Pagination.Size.ToString();
+                var pageIndex = (_expressionStore.Pagination.Size * (_expressionStore.Pagination.Index - 1)).ToString();
+                var pageSize = _expressionStore.Pagination.Size.ToString();
                 translateResult.Append(MapperConfig.Instance.Extension.Page.Replace("{value}", pageIndex).Replace("{pageSize}", pageSize));
             }
 
@@ -75,10 +75,10 @@ namespace NewLibCore.Data.SQL.Mapper
         /// </summary>
         /// <param name="expressionMapper">表达式分解后的对象</param>
         /// <returns></returns>
-        private static (String Fields, String AliasName) StatementParse(Statement statement)
+        private static (String Fields, String AliasName) StatementParse(ExpressionMapperBase expressionMapperBase)
         {
             var modelAliasName = new List<String>();
-            if (statement == null) //如果表达式语句为空则表示需要翻译为SELECT a.xxx,a.xxx,a.xxx 类型的语句
+            if (expressionMapperBase == null) //如果表达式语句为空则表示需要翻译为SELECT a.xxx,a.xxx,a.xxx 类型的语句
             {
                 var modelType = typeof(TModel);
                 var f = new List<String>();
@@ -94,7 +94,7 @@ namespace NewLibCore.Data.SQL.Mapper
                 return (String.Join(",", f), modelAliasName.FirstOrDefault());
             }
 
-            var fields = (LambdaExpression)statement.Expression;
+            var fields = (LambdaExpression)expressionMapperBase.Expression;
             foreach (var item in fields.Parameters)
             {
                 modelAliasName.Add(item.Type.GetTableName().AliasName);

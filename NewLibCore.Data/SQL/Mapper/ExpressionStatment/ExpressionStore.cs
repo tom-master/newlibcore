@@ -10,7 +10,7 @@ namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
     /// <summary>
     /// 将外部传入的表达式树保存起来
     /// </summary>
-    internal class StatementStore
+    internal class ExpressionStore
     {
         /// <summary>
         /// 排序语句对象

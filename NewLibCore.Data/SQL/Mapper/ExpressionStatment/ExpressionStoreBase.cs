@@ -7,7 +7,7 @@ namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
     /// <summary>
     /// 表达式拆分后的语句对象
     /// </summary>
-    internal abstract class Statement
+    internal abstract class ExpressionMapperBase
     {
         protected internal Expression Expression { get; set; }
 
@@ -17,7 +17,7 @@ namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
     /// <summary>
     /// 连接语句对象
     /// </summary>
-    internal class JoinExpressionMapper : Statement
+    internal class JoinExpressionMapper : ExpressionMapperBase
     {
         protected internal String MainTable { get; set; }
 
@@ -28,7 +28,7 @@ namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
     /// <summary>
     /// 排序语句对象
     /// </summary>
-    internal class OrderExpressionMapper : Statement
+    internal class OrderExpressionMapper : ExpressionMapperBase
     {
         protected internal OrderByType OrderBy { get; set; }
     }
@@ -36,7 +36,7 @@ namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
     /// <summary>
     /// 分页语句对象
     /// </summary>
-    internal class PaginationExpressionMapper : Statement
+    internal class PaginationExpressionMapper : ExpressionMapperBase
     {
         internal Int32 Index { get; set; }
 
@@ -46,7 +46,7 @@ namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
     /// <summary>
     /// 简单语句对象
     /// </summary>
-    internal class SimpleExpressionMapper : Statement
+    internal class SimpleExpressionMapper : ExpressionMapperBase
     {
 
     }

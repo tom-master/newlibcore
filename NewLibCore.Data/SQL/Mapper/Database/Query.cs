@@ -43,18 +43,18 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
 
     public class Query<TModel> : IQuery<TModel> where TModel : new()
     {
-        private readonly StatementStore _statementStore;
+        private readonly ExpressionStore _expressionStore;
 
-        internal Query(StatementStore statementStore)
+        internal Query(ExpressionStore expressionStore)
         {
-            _statementStore = statementStore;
+            _expressionStore = expressionStore;
         }
 
         public IQuery<TModel> Page(Int32 pageIndex, Int32 pageSize)
         {
             Parameter.Validate(pageIndex);
             Parameter.Validate(pageSize);
-            _statementStore.AddPage(pageIndex, pageSize);
+            _expressionStore.AddPage(pageIndex, pageSize);
 
             return this;
         }
@@ -63,7 +63,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
         {
             if (fields != null)
             {
-                _statementStore.Add(fields);
+                _expressionStore.Add(fields);
             }
 
             return this;
@@ -74,7 +74,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
         {
             if (fields != null)
             {
-                _statementStore.Add(fields);
+                _expressionStore.Add(fields);
             }
             return this;
         }
@@ -82,14 +82,14 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
         public IQuery<TModel> Where(Expression<Func<TModel, Boolean>> expression)
         {
             Parameter.Validate(expression);
-            _statementStore.Add(expression);
+            _expressionStore.Add(expression);
             return this;
         }
 
         public IQuery<TModel> Where<T>(Expression<Func<T, Boolean>> expression) where T : new()
         {
             Parameter.Validate(expression);
-            _statementStore.Add(expression);
+            _expressionStore.Add(expression);
 
             return this;
         }
@@ -97,7 +97,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
         public IQuery<TModel> Where<T>(Expression<Func<TModel, T, Boolean>> expression) where T : new()
         {
             Parameter.Validate(expression);
-            _statementStore.Add(expression);
+            _expressionStore.Add(expression);
 
             return this;
         }
@@ -140,7 +140,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
 
         private RawResult InternalExecuteSql()
         {
-            Handler handler = new QueryHandler<TModel>(_statementStore);
+            Handler handler = new QueryHandler<TModel>(_expressionStore);
             return handler.Execute();
         }
 
@@ -157,28 +157,28 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
         public IQuery<TModel> ThenByDesc<TKey>(Expression<Func<TModel, TKey>> order)
         {
             Parameter.Validate(order);
-            _statementStore.AddOrderBy(order, OrderByType.DESC);
+            _expressionStore.AddOrderBy(order, OrderByType.DESC);
             return this;
         }
 
         public IQuery<TModel> ThenByAsc<TOrder, TKey>(Expression<Func<TOrder, TKey>> order) where TOrder : new()
         {
             Parameter.Validate(order);
-            _statementStore.AddOrderBy(order, OrderByType.ASC);
+            _expressionStore.AddOrderBy(order, OrderByType.ASC);
             return this;
         }
 
         public IQuery<TModel> ThenByDesc<TOrder, TKey>(Expression<Func<TOrder, TKey>> order) where TOrder : new()
         {
             Parameter.Validate(order);
-            _statementStore.AddOrderBy(order, OrderByType.DESC);
+            _expressionStore.AddOrderBy(order, OrderByType.DESC);
             return this;
         }
 
         public IQuery<TModel> ThenByAsc<TKey>(Expression<Func<TModel, TKey>> order)
         {
             Parameter.Validate(order);
-            _statementStore.AddOrderBy(order, OrderByType.ASC);
+            _expressionStore.AddOrderBy(order, OrderByType.ASC);
             return this;
         }
     }

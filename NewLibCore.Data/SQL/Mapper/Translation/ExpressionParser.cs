@@ -17,7 +17,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// 翻译
         /// </summary>
         /// <returns></returns>
-        StringBuilder Parse(StatementStore statementStore);
+        StringBuilder Parse(ExpressionStore expressionStore);
     }
 
     /// <summary>
@@ -61,15 +61,15 @@ namespace NewLibCore.Data.SQL.Mapper
         /// 翻译
         /// </summary>
         /// <returns></returns>
-        public StringBuilder Parse(StatementStore statementStore)
+        public StringBuilder Parse(ExpressionStore expressionStore)
         {
-            Parameter.Validate(statementStore);
+            Parameter.Validate(expressionStore);
 
             //获取合并后的表别名
-            _tableAliasMapper = statementStore.MergeAliasMapper();
+            _tableAliasMapper = expressionStore.MergeAliasMapper();
 
             //循环翻译连接对象
-            foreach (var item in statementStore.Joins)
+            foreach (var item in expressionStore.Joins)
             {
                 if (item.AliaNameMapper == null || item.JoinRelation == JoinRelation.NONE)
                 {
@@ -97,9 +97,9 @@ namespace NewLibCore.Data.SQL.Mapper
             }
             _internalStore.Append("WHERE 1=1");
             //翻译Where条件对象
-            if (statementStore.Where != null)
+            if (expressionStore.Where != null)
             {
-                var lambdaExp = (LambdaExpression)statementStore.Where.Expression;
+                var lambdaExp = (LambdaExpression)expressionStore.Where.Expression;
                 //当表达式主体为常量时则直接返回，不做解析
                 if (lambdaExp.Body.NodeType == ExpressionType.Constant)
                 {

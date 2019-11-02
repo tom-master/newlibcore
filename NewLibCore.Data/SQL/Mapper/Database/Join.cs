@@ -22,8 +22,8 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
 
     public class Join<TModel> : Query<TModel>, IJoin<TModel> where TModel : new()
     {
-        private readonly StatementStore _statementStore;
-        internal Join(StatementStore statementStore) : base(statementStore)
+        private readonly ExpressionStore _statementStore;
+        internal Join(ExpressionStore statementStore) : base(statementStore)
         {
             _statementStore = statementStore;
         }
