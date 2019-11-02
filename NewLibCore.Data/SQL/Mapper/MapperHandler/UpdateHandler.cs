@@ -14,7 +14,7 @@ namespace NewLibCore.Data.SQL.Mapper
     internal class UpdateHandler<TModel> : Handler where TModel : EntityBase, new()
     {
         private readonly TModel _modelInstance;
-        
+
         private readonly StatementStore _statementStore;
 
         /// <summary>
@@ -42,13 +42,16 @@ namespace NewLibCore.Data.SQL.Mapper
             var (TableName, AliasName) = typeof(TModel).GetTableName();
             var propertys = _modelInstance.GetChangedProperty();
 
-            var translateContext = TranslateContext.CreateContext(_statementStore).Translate();
-            translateContext.Result.Append(String.Format(MapperConfig.Instance.UpdateTemplate, TableName, AliasName, String.Join(",", propertys.Select(p => $@"{AliasName}.{p.Key}=@{p.Key}"))));
-            translateContext.Translate();
-            translateContext.Result.Append($@"{RelationType.AND} {AliasName}.IsDeleted=0");
+            var translateResult = TranslateResult.CreateResult();
+            var translateContext = TranslateContext.CreateContext(_statementStore);
+
+            translateResult.Append(String.Format(MapperConfig.Instance.UpdateTemplate, TableName, AliasName, String.Join(",", propertys.Select(p => $@"{AliasName}.{p.Key}=@{p.Key}"))));
+            translateResult.Append(translateContext.Translate().ToString());
+            translateResult.Append($@"{RelationType.AND} {AliasName}.IsDeleted=0");
+            translateResult.Append($@"{MapperConfig.Instance.Extension.RowCount}");
             _modelInstance.Reset();
 
-            return translateContext.Result.Append($@"{MapperConfig.Instance.Extension.RowCount}").Execute();
-        } 
+            return translateResult.Execute();
+        }
     }
 }
