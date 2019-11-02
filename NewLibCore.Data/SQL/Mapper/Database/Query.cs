@@ -9,27 +9,6 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
 {
     public interface IQuery<TModel> where TModel : new()
     {
-        IQuery<TModel> Where(Expression<Func<TModel, Boolean>> expression);
-
-        IQuery<TModel> Where<T>(Expression<Func<T, Boolean>> expression) where T : new();
-
-        IQuery<TModel> Where<T>(Expression<Func<TModel, T, Boolean>> expression) where T : new();
-
-        IQuery<TModel> Select(Expression<Func<TModel, dynamic>> fields = null);
-
-        IQuery<TModel> Select<T, T1>(Expression<Func<T, T1, dynamic>> fields = null) where T : new()
-        where T1 : new();
-
-        IQuery<TModel> ThenByDesc<TKey>(Expression<Func<TModel, TKey>> order);
-
-        IQuery<TModel> ThenByDesc<TOrder, TKey>(Expression<Func<TOrder, TKey>> order) where TOrder : new();
-
-        IQuery<TModel> ThenByAsc<TKey>(Expression<Func<TModel, TKey>> order);
-
-        IQuery<TModel> ThenByAsc<TOrder, TKey>(Expression<Func<TOrder, TKey>> order) where TOrder : new();
-
-        IQuery<TModel> Page(Int32 pageIndex, Int32 pageSize);
-
         TModel FirstOrDefault();
 
         T FirstOrDefault<T>() where T : new();
@@ -41,66 +20,105 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
         Int32 Count();
     }
 
+    public static class QueryExtension
+    {
+        public static IQuery<TModel> Page<TModel>(this Query<TModel> query, Int32 pageIndex, Int32 pageSize) where TModel : new()
+        {
+            Parameter.Validate(pageIndex);
+            Parameter.Validate(pageSize);
+            query._expressionStore.AddPage(pageIndex, pageSize);
+            return query;
+        }
+
+        public static IQuery<TModel> Select<TModel>(this Query<TModel> query, Expression<Func<TModel, dynamic>> fields = null) where TModel : new()
+        {
+            if (fields != null)
+            {
+                query._expressionStore.Add(fields);
+            }
+
+            return query;
+        }
+
+        public static IQuery<TModel> Select<TModel, T, T1>(this Query<TModel> query, Expression<Func<T, T1, dynamic>> fields = null)
+        where TModel : new()
+        where T : new()
+        where T1 : new()
+        {
+            if (fields != null)
+            {
+                query._expressionStore.Add(fields);
+            }
+            return query;
+        }
+
+        public static IQuery<TModel> Where<TModel>(this Query<TModel> query, Expression<Func<TModel, Boolean>> expression) where TModel : new()
+        {
+            Parameter.Validate(expression);
+            query._expressionStore.Add(expression);
+            return query;
+        }
+
+        public static IQuery<TModel> Where<TModel, T>(this Query<TModel> query, Expression<Func<T, Boolean>> expression)
+        where TModel : new()
+        where T : new()
+        {
+            Parameter.Validate(expression);
+            query._expressionStore.Add(expression);
+            return query;
+        }
+
+        public static IQuery<TModel> Where<TModel, T>(this Query<TModel> query, Expression<Func<TModel, T, Boolean>> expression)
+        where TModel : new()
+         where T : new()
+        {
+            Parameter.Validate(expression);
+            query._expressionStore.Add(expression);
+            return query;
+        }
+
+        public static IQuery<TModel> ThenByDesc<TModel, TKey>(this Query<TModel> query, Expression<Func<TModel, TKey>> order) where TModel : new()
+        {
+            Parameter.Validate(order);
+            query._expressionStore.AddOrderBy(order, OrderByType.DESC);
+            return query;
+        }
+
+        public static IQuery<TModel> ThenByAsc<TModel, TOrder, TKey>(this Query<TModel> query, Expression<Func<TOrder, TKey>> order)
+        where TModel : new()
+        where TOrder : new()
+        {
+            Parameter.Validate(order);
+            query._expressionStore.AddOrderBy(order, OrderByType.ASC);
+            return query;
+        }
+
+        public static IQuery<TModel> ThenByDesc<TModel, TOrder, TKey>(this Query<TModel> query, Expression<Func<TOrder, TKey>> order)
+        where TModel : new()
+        where TOrder : new()
+        {
+            Parameter.Validate(order);
+            query._expressionStore.AddOrderBy(order, OrderByType.DESC);
+            return query;
+        }
+
+        public static IQuery<TModel> ThenByAsc<TModel, TKey>(this Query<TModel> query, Expression<Func<TModel, TKey>> order) where TModel : new()
+        {
+            Parameter.Validate(order);
+            query._expressionStore.AddOrderBy(order, OrderByType.ASC);
+            return query;
+        }
+    }
+
     public class Query<TModel> : IQuery<TModel> where TModel : new()
     {
-        private readonly ExpressionStore _expressionStore;
+        internal readonly ExpressionStore _expressionStore;
 
         internal Query(ExpressionStore expressionStore)
         {
             _expressionStore = expressionStore;
         }
 
-        public IQuery<TModel> Page(Int32 pageIndex, Int32 pageSize)
-        {
-            Parameter.Validate(pageIndex);
-            Parameter.Validate(pageSize);
-            _expressionStore.AddPage(pageIndex, pageSize);
-
-            return this;
-        }
-
-        public IQuery<TModel> Select(Expression<Func<TModel, dynamic>> fields = null)
-        {
-            if (fields != null)
-            {
-                _expressionStore.Add(fields);
-            }
-
-            return this;
-        }
-
-        public IQuery<TModel> Select<T, T1>(Expression<Func<T, T1, dynamic>> fields = null) where T : new()
-        where T1 : new()
-        {
-            if (fields != null)
-            {
-                _expressionStore.Add(fields);
-            }
-            return this;
-        }
-
-        public IQuery<TModel> Where(Expression<Func<TModel, Boolean>> expression)
-        {
-            Parameter.Validate(expression);
-            _expressionStore.Add(expression);
-            return this;
-        }
-
-        public IQuery<TModel> Where<T>(Expression<Func<T, Boolean>> expression) where T : new()
-        {
-            Parameter.Validate(expression);
-            _expressionStore.Add(expression);
-
-            return this;
-        }
-
-        public IQuery<TModel> Where<T>(Expression<Func<TModel, T, Boolean>> expression) where T : new()
-        {
-            Parameter.Validate(expression);
-            _expressionStore.Add(expression);
-
-            return this;
-        }
 
         public TModel FirstOrDefault()
         {
@@ -148,38 +166,10 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
         {
             return RunDiagnosis.Watch(() =>
             {
-                Select((a) => "COUNT(*)");
+                this.Select((a) => "COUNT(*)");
                 var executeResult = InternalExecuteSql();
                 return executeResult.FirstOrDefault<Int32>();
             });
-        }
-
-        public IQuery<TModel> ThenByDesc<TKey>(Expression<Func<TModel, TKey>> order)
-        {
-            Parameter.Validate(order);
-            _expressionStore.AddOrderBy(order, OrderByType.DESC);
-            return this;
-        }
-
-        public IQuery<TModel> ThenByAsc<TOrder, TKey>(Expression<Func<TOrder, TKey>> order) where TOrder : new()
-        {
-            Parameter.Validate(order);
-            _expressionStore.AddOrderBy(order, OrderByType.ASC);
-            return this;
-        }
-
-        public IQuery<TModel> ThenByDesc<TOrder, TKey>(Expression<Func<TOrder, TKey>> order) where TOrder : new()
-        {
-            Parameter.Validate(order);
-            _expressionStore.AddOrderBy(order, OrderByType.DESC);
-            return this;
-        }
-
-        public IQuery<TModel> ThenByAsc<TKey>(Expression<Func<TModel, TKey>> order)
-        {
-            Parameter.Validate(order);
-            _expressionStore.AddOrderBy(order, OrderByType.ASC);
-            return this;
         }
     }
 }
