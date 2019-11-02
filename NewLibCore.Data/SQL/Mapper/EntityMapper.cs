@@ -118,8 +118,8 @@ namespace NewLibCore.Data.SQL.Mapper
 
             return RunDiagnosis.Watch(() =>
             {
-                var directSqlHandler = new DirectSqlHandler(sql, parameters);
-                return directSqlHandler.Execute();
+                Handler handler = new DirectSqlHandler(sql, parameters);
+                return handler.Execute();
             });
         }
 
