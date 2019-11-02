@@ -22,7 +22,7 @@ namespace NewLibCore.Data.SQL.Mapper
             Parameter.Validate(statementStore);
             _statementStore = statementStore;
         }
-        
+
         /// <summary>
         /// 执行查询操作的翻译
         /// </summary>
@@ -32,39 +32,42 @@ namespace NewLibCore.Data.SQL.Mapper
             var (Fields, AliasName) = StatementParse(_statementStore.Select);
 
             var translateContext = TranslateContext.CreateContext(_statementStore);
+            var translateResult = TranslateResult.CreateResult();
+
             var mainTable = _statementStore.From.AliaNameMapper[0];
-            translateContext.Result.Append(String.Format(MapperConfig.Instance.SelectTemplate, Fields, mainTable.Key, mainTable.Value));
-            translateContext.Translate();
+
+            translateResult.Append(String.Format(MapperConfig.Instance.SelectTemplate, Fields, mainTable.Key, mainTable.Value));
+            translateResult.Append(translateContext.Translate().ToString());
 
             var aliasMapper = _statementStore.MergeAliasMapper();
 
             //当出现查询但张表不加Where条件时，则强制将IsDeleted=0添加到后面
             if (_statementStore.Where == null)
             {
-                translateContext.Result.Append($@"{RelationType.AND.ToString()} {mainTable.Value}.IsDeleted = 0");
+                translateResult.Append($@"{RelationType.AND.ToString()} {mainTable.Value}.IsDeleted = 0");
             }
             else
             {
                 foreach (var aliasItem in aliasMapper)
                 {
-                    translateContext.Result.Append($@"{RelationType.AND} {aliasItem.Value.ToLower()}.IsDeleted = 0");
+                    translateResult.Append($@"{RelationType.AND} {aliasItem.Value.ToLower()}.IsDeleted = 0");
                 }
             }
             if (_statementStore.Order != null)
             {
                 var (fields, tableName) = StatementParse(_statementStore.Order);
                 var orderTemplate = MapperConfig.Instance.OrderByBuilder(_statementStore.Order.OrderBy, $@"{tableName}.{fields}");
-                translateContext.Result.Append(orderTemplate);
+                translateResult.Append(orderTemplate);
             }
 
             if (_statementStore.Pagination != null)
             {
                 var pageIndex = (_statementStore.Pagination.Size * (_statementStore.Pagination.Index - 1)).ToString();
                 var pageSize = _statementStore.Pagination.Size.ToString();
-                translateContext.Result.Append(MapperConfig.Instance.Extension.Page.Replace("{value}", pageIndex).Replace("{pageSize}", pageSize));
+                translateResult.Append(MapperConfig.Instance.Extension.Page.Replace("{value}", pageIndex).Replace("{pageSize}", pageSize));
             }
 
-            return translateContext.Result.Execute();
+            return translateResult.Execute();
         }
 
         /// <summary>
