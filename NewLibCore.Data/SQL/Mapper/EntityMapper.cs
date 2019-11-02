@@ -17,11 +17,7 @@ namespace NewLibCore.Data.SQL.Mapper
     /// </summary>
     public sealed class EntityMapper : IDisposable
     {
-        private readonly IMapperDbContext _mapperDbContext;
-
         private readonly IServiceScope _serviceScope;
-
-        private readonly IServiceProvider _serviceProvider;
 
         private EntityMapper()
         {
@@ -40,9 +36,6 @@ namespace NewLibCore.Data.SQL.Mapper
             }
             var serviceProvider = services.BuildServiceProvider();
             _serviceScope = serviceProvider.CreateScope();
-            _serviceProvider = _serviceScope.ServiceProvider;
-
-            Console.WriteLine(_serviceProvider.GetService<IMapperDbContext>().GetHashCode());
         }
 
         /// <summary>
@@ -86,9 +79,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
             return RunDiagnosis.Watch(() =>
             {
-                var expressionStore = new ExpressionStore();
-                expressionStore.Add(expression);
-                Handler handler = new UpdateHandler<TModel>(model, expressionStore);
+                Handler handler = new UpdateHandler<TModel>(model, expression);
                 return handler.Execute().FirstOrDefault<Int32>() > 0;
             });
         }

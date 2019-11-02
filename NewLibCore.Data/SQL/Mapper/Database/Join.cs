@@ -24,7 +24,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
     {
         private readonly ExpressionStore _statementStore;
         internal Join(ExpressionStore statementStore) : base(statementStore)
-        {
+        { 
             _statementStore = statementStore;
         }
 

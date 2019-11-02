@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Linq.Expressions;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
 using NewLibCore.Validate;
@@ -14,19 +15,19 @@ namespace NewLibCore.Data.SQL.Mapper
     {
         private readonly TModel _modelInstance;
 
-        private readonly ExpressionStore _expressionStore;
+        private readonly Expression<Func<TModel, Boolean>> _filter;
 
         /// <summary>
         /// 初始化一个UpdateHandler类的实例
         /// </summary>
         /// <param name="model">要更新的模型</param>
-        public UpdateHandler(TModel model, ExpressionStore expressionStore)
+        public UpdateHandler(TModel model, Expression<Func<TModel, Boolean>> filter)
         {
             Parameter.Validate(model);
-            Parameter.Validate(expressionStore);
+            Parameter.Validate(filter);
 
             _modelInstance = model;
-            _expressionStore = expressionStore;
+            _filter = filter;
         }
 
         internal override RawResult Execute()
@@ -44,8 +45,11 @@ namespace NewLibCore.Data.SQL.Mapper
             var translateResult = TranslateResult.CreateResult();
             var parser = ExpressionParser.CreateParser();
 
+            var expressionStore = new ExpressionStore();
+            expressionStore.Add(_filter);
+
             translateResult.Append(String.Format(MapperConfig.Instance.UpdateTemplate, TableName, AliasName, String.Join(",", propertys.Select(p => $@"{AliasName}.{p.Key}=@{p.Key}"))));
-            translateResult.Append(parser.Parse(_expressionStore).ToString());
+            translateResult.Append(parser.Parse(expressionStore).ToString());
             translateResult.Append($@"{RelationType.AND} {AliasName}.IsDeleted=0");
             translateResult.Append($@"{MapperConfig.Instance.Extension.RowCount}");
             _modelInstance.Reset();
