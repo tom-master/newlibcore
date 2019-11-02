@@ -11,30 +11,27 @@ namespace NewLibCore.Data.SQL.Mapper
     /// <summary>
     /// 翻译表达式
     /// </summary>
-    internal interface ITranslationContext
+    internal interface IExpressionParser
     {
         /// <summary>
         /// 翻译
         /// </summary>
         /// <returns></returns>
-        StringBuilder Translate();
+        StringBuilder Parse(StatementStore statementStore);
     }
 
     /// <summary>
     /// 翻译表达式
     /// </summary>
-    internal class TranslateContext : ITranslationContext
+    internal class ExpressionParser : IExpressionParser
     {
         private JoinRelation _joinRelation;
 
         private readonly StringBuilder _internalStore;
 
-        private readonly StatementStore _statementStore;
-
         private readonly Stack<String> _parameterNameStack;
 
         private readonly Stack<RelationType> _relationTypesStack;
-
 
         private IReadOnlyList<KeyValuePair<String, String>> _tableAliasMapper;
 
@@ -43,12 +40,8 @@ namespace NewLibCore.Data.SQL.Mapper
         /// </summary>
         /// <param name="statementStore">表达式分解后的对象</param>
         /// <returns></returns>
-        private TranslateContext(StatementStore statementStore)
+        private ExpressionParser()
         {
-            Parameter.Validate(statementStore);
-
-            _statementStore = statementStore;
-
             _internalStore = new StringBuilder();
             _parameterNameStack = new Stack<String>();
             _relationTypesStack = new Stack<RelationType>();
@@ -56,26 +49,27 @@ namespace NewLibCore.Data.SQL.Mapper
         }
 
         /// <summary>
-        /// 初始化一个TranslateContext类的实例
+        /// 初始化一个ExpressionParser类的实例
         /// </summary>
-        /// <param name="statementStore">表达式分解后的对象</param>
         /// <returns></returns>
-        internal static TranslateContext CreateContext(StatementStore statementStore)
+        internal static ExpressionParser CreateParser()
         {
-            return new TranslateContext(statementStore);
+            return new ExpressionParser();
         }
 
         /// <summary>
         /// 翻译
         /// </summary>
         /// <returns></returns>
-        public StringBuilder Translate()
+        public StringBuilder Parse(StatementStore statementStore)
         {
+            Parameter.Validate(statementStore);
+
             //获取合并后的表别名
-            _tableAliasMapper = _statementStore.MergeAliasMapper();
+            _tableAliasMapper = statementStore.MergeAliasMapper();
 
             //循环翻译连接对象
-            foreach (var item in _statementStore.Joins)
+            foreach (var item in statementStore.Joins)
             {
                 if (item.AliaNameMapper == null || item.JoinRelation == JoinRelation.NONE)
                 {
@@ -103,9 +97,9 @@ namespace NewLibCore.Data.SQL.Mapper
             }
             _internalStore.Append("WHERE 1=1");
             //翻译Where条件对象
-            if (_statementStore.Where != null)
+            if (statementStore.Where != null)
             {
-                var lambdaExp = (LambdaExpression)_statementStore.Where.Expression;
+                var lambdaExp = (LambdaExpression)statementStore.Where.Expression;
                 //当表达式主体为常量时则直接返回，不做解析
                 if (lambdaExp.Body.NodeType == ExpressionType.Constant)
                 {

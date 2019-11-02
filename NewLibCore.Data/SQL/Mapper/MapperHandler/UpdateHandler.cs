@@ -42,10 +42,10 @@ namespace NewLibCore.Data.SQL.Mapper
             var propertys = _modelInstance.GetChangedProperty();
 
             var translateResult = TranslateResult.CreateResult();
-            var translateContext = TranslateContext.CreateContext(_statementStore);
+            var translateContext = ExpressionParser.CreateParser();
 
             translateResult.Append(String.Format(MapperConfig.Instance.UpdateTemplate, TableName, AliasName, String.Join(",", propertys.Select(p => $@"{AliasName}.{p.Key}=@{p.Key}"))));
-            translateResult.Append(translateContext.Translate().ToString());
+            translateResult.Append(translateContext.Parse(_statementStore).ToString());
             translateResult.Append($@"{RelationType.AND} {AliasName}.IsDeleted=0");
             translateResult.Append($@"{MapperConfig.Instance.Extension.RowCount}");
             _modelInstance.Reset();

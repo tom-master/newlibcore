@@ -31,13 +31,13 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             var (Fields, AliasName) = StatementParse(_statementStore.Select);
 
-            var translateContext = TranslateContext.CreateContext(_statementStore);
+            var translateContext = ExpressionParser.CreateParser();
             var translateResult = TranslateResult.CreateResult();
 
             var mainTable = _statementStore.From.AliaNameMapper[0];
 
             translateResult.Append(String.Format(MapperConfig.Instance.SelectTemplate, Fields, mainTable.Key, mainTable.Value));
-            translateResult.Append(translateContext.Translate().ToString());
+            translateResult.Append(translateContext.Parse(_statementStore).ToString());
 
             var aliasMapper = _statementStore.MergeAliasMapper();
 
