@@ -20,7 +20,71 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
         Int32 Count();
     }
 
-    public static class QueryExtension
+    
+    public class Query<TModel> : IQuery<TModel> where TModel : new()
+    {
+        internal readonly ExpressionStore _expressionStore;
+
+        internal Query(ExpressionStore expressionStore)
+        {
+            _expressionStore = expressionStore;
+        }
+
+
+        public TModel FirstOrDefault()
+        {
+            return RunDiagnosis.Watch(() =>
+            {
+                var executeResult = InternalExecuteSql();
+                return executeResult.FirstOrDefault<TModel>();
+            });
+        }
+
+        public T FirstOrDefault<T>() where T : new()
+        {
+            return RunDiagnosis.Watch(() =>
+            {
+                var executeResult = InternalExecuteSql();
+                return executeResult.FirstOrDefault<T>();
+            });
+        }
+
+        public List<TModel> ToList()
+        {
+            return RunDiagnosis.Watch(() =>
+            {
+                var executeResult = InternalExecuteSql();
+                return executeResult.ToList<TModel>();
+            });
+        }
+
+        public List<T> ToList<T>() where T : new()
+        {
+            return RunDiagnosis.Watch(() =>
+            {
+                var executeResult = InternalExecuteSql();
+                return executeResult.ToList<T>();
+            });
+        }
+
+        private RawResult InternalExecuteSql()
+        {
+            Handler handler = new QueryHandler<TModel>(_expressionStore);
+            return handler.Execute();
+        }
+
+        public Int32 Count()
+        {
+            return RunDiagnosis.Watch(() =>
+            {
+                this.Select((a) => "COUNT(*)");
+                var executeResult = InternalExecuteSql();
+                return executeResult.FirstOrDefault<Int32>();
+            });
+        }
+    }
+
+    public static class SelectExtension
     {
         public static IQuery<TModel> Page<TModel>(this Query<TModel> query, Int32 pageIndex, Int32 pageSize) where TModel : new()
         {
@@ -110,66 +174,4 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
         }
     }
 
-    public class Query<TModel> : IQuery<TModel> where TModel : new()
-    {
-        internal readonly ExpressionStore _expressionStore;
-
-        internal Query(ExpressionStore expressionStore)
-        {
-            _expressionStore = expressionStore;
-        }
-
-
-        public TModel FirstOrDefault()
-        {
-            return RunDiagnosis.Watch(() =>
-            {
-                var executeResult = InternalExecuteSql();
-                return executeResult.FirstOrDefault<TModel>();
-            });
-        }
-
-        public T FirstOrDefault<T>() where T : new()
-        {
-            return RunDiagnosis.Watch(() =>
-            {
-                var executeResult = InternalExecuteSql();
-                return executeResult.FirstOrDefault<T>();
-            });
-        }
-
-        public List<TModel> ToList()
-        {
-            return RunDiagnosis.Watch(() =>
-            {
-                var executeResult = InternalExecuteSql();
-                return executeResult.ToList<TModel>();
-            });
-        }
-
-        public List<T> ToList<T>() where T : new()
-        {
-            return RunDiagnosis.Watch(() =>
-            {
-                var executeResult = InternalExecuteSql();
-                return executeResult.ToList<T>();
-            });
-        }
-
-        private RawResult InternalExecuteSql()
-        {
-            Handler handler = new QueryHandler<TModel>(_expressionStore);
-            return handler.Execute();
-        }
-
-        public Int32 Count()
-        {
-            return RunDiagnosis.Watch(() =>
-            {
-                this.Select((a) => "COUNT(*)");
-                var executeResult = InternalExecuteSql();
-                return executeResult.FirstOrDefault<Int32>();
-            });
-        }
-    }
 }
