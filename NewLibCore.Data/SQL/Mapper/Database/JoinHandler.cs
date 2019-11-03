@@ -9,7 +9,8 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
     public class JoinHandler<TModel> where TModel : new()
     {
         private readonly ExpressionStore _expressionStore;
-        internal JoinHandler(ExpressionStore expressionStore)
+
+        internal JoinHandler(ExpressionStore expressionStore) 
         {
             _expressionStore = expressionStore;
         }
