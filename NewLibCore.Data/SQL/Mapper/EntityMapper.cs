@@ -89,11 +89,11 @@ namespace NewLibCore.Data.SQL.Mapper
         /// </summary>
         /// <typeparam name="TModel"></typeparam>
         /// <returns></returns>
-        public IJoin<TModel> Query<TModel>() where TModel : new()
+        public JoinHandler<TModel> Query<TModel>() where TModel : new()
         {
             var expressionStore = new ExpressionStore();
             expressionStore.Add<TModel>();
-            return new Join<TModel>(expressionStore);
+            return new JoinHandler<TModel>(expressionStore);
         }
 
         /// <summary>

@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
+using NewLibCore.Data.SQL.Mapper.MapperExtension;
 using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper
@@ -15,7 +16,7 @@ namespace NewLibCore.Data.SQL.Mapper
     /// <typeparam name="TModel"></typeparam>
     internal class QueryHandler<TModel> : Handler where TModel : new()
     {
-        private readonly ExpressionStore _expressionStore;
+        internal readonly ExpressionStore _expressionStore;
 
         internal QueryHandler(ExpressionStore expressionStore)
         {
@@ -122,5 +123,59 @@ namespace NewLibCore.Data.SQL.Mapper
             }
             return (String.Join(",", anonymousObjFields), modelAliasName.FirstOrDefault());
         }
+
+        public TModel FirstOrDefault()
+        {
+            return RunDiagnosis.Watch(() =>
+            {
+                var executeResult = InternalExecuteSql();
+                return executeResult.FirstOrDefault<TModel>();
+            });
+        }
+
+        public T FirstOrDefault<T>() where T : new()
+        {
+            return RunDiagnosis.Watch(() =>
+            {
+                var executeResult = InternalExecuteSql();
+                return executeResult.FirstOrDefault<T>();
+            });
+        }
+
+        public List<TModel> ToList()
+        {
+            return RunDiagnosis.Watch(() =>
+            {
+                var executeResult = InternalExecuteSql();
+                return executeResult.ToList<TModel>();
+            });
+        }
+
+        public List<T> ToList<T>() where T : new()
+        {
+            return RunDiagnosis.Watch(() =>
+            {
+                var executeResult = InternalExecuteSql();
+                return executeResult.ToList<T>();
+            });
+        }
+
+        private RawResult InternalExecuteSql()
+        {
+            Handler handler = new QueryHandler<TModel>(_expressionStore);
+            return handler.Execute();
+        }
+
+        public Int32 Count()
+        {
+            return RunDiagnosis.Watch(() =>
+            {
+                // this.Select((a) => "COUNT(*)");
+                // var executeResult = InternalExecuteSql();
+                // return executeResult.FirstOrDefault<Int32>();
+                return 0;
+            });
+        }
+
     }
 }
