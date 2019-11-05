@@ -5,8 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using NewLibCore.Data.SQL.Mapper.Cache;
 using NewLibCore.Data.SQL.Mapper.Database;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
-using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
-using NewLibCore.Data.SQL.Mapper.MapperExtension;
 using NewLibCore.Logger;
 using NewLibCore.Validate;
 
@@ -89,11 +87,10 @@ namespace NewLibCore.Data.SQL.Mapper
         /// </summary>
         /// <typeparam name="TModel"></typeparam>
         /// <returns></returns>
-        public JoinHandler<TModel> Query<TModel>() where TModel : new()
+        internal RawResult Query<TModel>() where TModel : new()
         {
-            var expressionStore = new ExpressionStore();
-            expressionStore.Add<TModel>();
-            return new JoinHandler<TModel>(expressionStore);
+            Handler handler = new QueryHandler<TModel>(_expressionStore);
+            return handler.Execute();
         }
 
         /// <summary>
