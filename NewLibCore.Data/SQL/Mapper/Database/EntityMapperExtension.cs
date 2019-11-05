@@ -195,7 +195,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
         {
             return RunDiagnosis.Watch(() =>
             {
-                var executeResult = entityMapper.Query<TModel>();
+                var executeResult = entityMapper.Query<TModel>(_expressionStore);
                 return executeResult.FirstOrDefault<TModel>();
             });
         }
@@ -205,7 +205,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
         {
             return RunDiagnosis.Watch(() =>
             {
-                var executeResult = entityMapper.Query<TModel>();
+                var executeResult = entityMapper.Query<TModel>(_expressionStore);
                 return executeResult.ToList<TModel>();
             });
         }
