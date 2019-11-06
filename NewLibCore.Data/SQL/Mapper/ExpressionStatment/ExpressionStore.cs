@@ -64,6 +64,130 @@ namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
             };
         }
 
+        internal void AddWhere<TModel1>(Expression<Func<TModel1, Boolean>> filter) where TModel1 : new()
+        {
+            Parameter.Validate(filter);
+            Where = new SimpleExpressionMapper
+            {
+                Expression = filter,
+                AliaNameMapper = ParseToAliasNames(filter)
+            };
+        }
+
+        internal void AddWhere<TModel1, TModel2>(Expression<Func<TModel1, TModel2, Boolean>> filter)
+        where TModel1 : new()
+        where TModel2 : new()
+        {
+            Parameter.Validate(filter);
+            Where = new SimpleExpressionMapper
+            {
+                Expression = filter,
+                AliaNameMapper = ParseToAliasNames(filter)
+            };
+        }
+
+        internal void AddWhere<TModel1, TModel2, TModel3>(Expression<Func<TModel1, TModel2, TModel3, Boolean>> filter)
+        where TModel1 : new()
+        where TModel2 : new()
+        where TModel3 : new()
+        {
+            Parameter.Validate(filter);
+            Where = new SimpleExpressionMapper
+            {
+                Expression = filter,
+                AliaNameMapper = ParseToAliasNames(filter)
+            };
+        }
+
+        internal void AddWhere<TModel1, TModel2, TModel3, TModel4>(Expression<Func<TModel1, TModel2, TModel3, TModel4, Boolean>> filter)
+        where TModel1 : new()
+        where TModel2 : new()
+        where TModel3 : new()
+        where TModel4 : new()
+        {
+            Parameter.Validate(filter);
+            Where = new SimpleExpressionMapper
+            {
+                Expression = filter,
+                AliaNameMapper = ParseToAliasNames(filter)
+            };
+        }
+
+        internal void AddWhere<TModel1, TModel2, TModel3, TModel4, TModel5>(Expression<Func<TModel1, TModel2, TModel3, TModel4, TModel5, Boolean>> filter)
+        where TModel1 : new()
+        where TModel2 : new()
+        where TModel3 : new()
+        where TModel4 : new()
+        where TModel5 : new()
+        {
+            Parameter.Validate(filter);
+            Where = new SimpleExpressionMapper
+            {
+                Expression = filter,
+                AliaNameMapper = ParseToAliasNames(filter)
+            };
+        }
+
+        internal void AddSelect<TModel1>(Expression<Func<TModel1, dynamic>> selector)
+        where TModel1 : new()
+        {
+            Parameter.Validate(selector);
+            Select = new SimpleExpressionMapper
+            {
+                Expression = selector
+            };
+        }
+
+        internal void AddSelect<TModel1, TModel2>(Expression<Func<TModel1, TModel2, dynamic>> selector)
+        where TModel1 : new()
+        where TModel2 : new()
+        {
+            Parameter.Validate(selector);
+            Select = new SimpleExpressionMapper
+            {
+                Expression = selector
+            };
+        }
+
+        internal void AddSelect<TModel1, TModel2, TModel3>(Expression<Func<TModel1, TModel2, TModel3, dynamic>> selector)
+        where TModel1 : new()
+        where TModel2 : new()
+        where TModel3 : new()
+        {
+            Parameter.Validate(selector);
+            Select = new SimpleExpressionMapper
+            {
+                Expression = selector
+            };
+        }
+
+        internal void AddSelect<TModel1, TModel2, TModel3, TModel4>(Expression<Func<TModel1, TModel2, TModel3, TModel4, dynamic>> selector)
+        where TModel1 : new()
+        where TModel2 : new()
+        where TModel3 : new()
+        where TModel4 : new()
+        {
+            Parameter.Validate(selector);
+            Select = new SimpleExpressionMapper
+            {
+                Expression = selector
+            };
+        }
+
+        internal void AddSelect<TModel1, TModel2, TModel3, TModel4, TModel5>(Expression<Func<TModel1, TModel2, TModel3, TModel4, TModel5, dynamic>> selector)
+        where TModel1 : new()
+        where TModel2 : new()
+        where TModel3 : new()
+        where TModel4 : new()
+        where TModel5 : new()
+        {
+            Parameter.Validate(selector);
+            Select = new SimpleExpressionMapper
+            {
+                Expression = selector
+            };
+        }
+
         /// <summary>
         /// 将表达式拆分出相应的连接对象
         /// </summary>
@@ -72,7 +196,7 @@ namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
         /// <typeparam name="TModel">主表</typeparam>
         /// <typeparam name="TJoin">子表</typeparam>
         /// <returns></returns>
-        internal void Add<TModel, TJoin>(Expression<Func<TModel, TJoin, Boolean>> expression, JoinRelation joinRelation) where TModel : new()
+        internal void AddJoin<TModel, TJoin>(Expression<Func<TModel, TJoin, Boolean>> expression, JoinRelation joinRelation) where TModel : new()
             where TJoin : new()
         {
             Parameter.Validate(expression);
@@ -85,23 +209,7 @@ namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
             });
         }
 
-        /// <summary>
-        /// 将表达式拆分出相应的Where对象
-        /// </summary>
-        /// <param name="expression">连接表达式</param>
-        /// <typeparam name="TModel">主表</typeparam>
-        /// <typeparam name="TJoin">连接类型</typeparam>
-        /// <returns></returns>
-        internal void Add<TModel, TJoin>(Expression<Func<TModel, TJoin, Boolean>> expression) where TModel : new()
-        {
-            Parameter.Validate(expression);
-            Where = new SimpleExpressionMapper
-            {
-                Expression = expression,
-                AliaNameMapper = ParseToAliasNames(expression)
-            };
-        }
-
+        
         /// <summary>
         /// 将表达式拆分出相应的Where对象
         /// </summary>
@@ -116,51 +224,7 @@ namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
                 AliaNameMapper = ParseToAliasNames(expression)
             };
         }
-
-        /// <summary>
-        /// 将表达式拆分出相应的字段对象
-        /// </summary>
-        /// <param name="expression">表达式</param>
-        /// <typeparam name="TModel">主表</typeparam>
-        internal void Add<TModel>(Expression<Func<TModel, dynamic>> expression) where TModel : new()
-        {
-            Parameter.Validate(expression);
-            Select = new SimpleExpressionMapper
-            {
-                Expression = expression
-            };
-        }
-
-        internal void Add<TModel>() where TModel : new()
-        {
-            Expression<Func<Type>> expression = () => typeof(TModel);
-            From = new SimpleExpressionMapper
-            {
-                Expression = expression,
-                AliaNameMapper = new List<KeyValuePair<String, String>>
-                {
-                   new KeyValuePair<String, String>(typeof(TModel).GetTableName().TableName,typeof(TModel).GetTableName().AliasName)
-                }
-            };
-        }
-
-        /// <summary>
-        /// 将表达式拆分出相应的字段对象
-        /// </summary>
-        /// <param name="expression">表达式</param>
-        /// <typeparam name="TModel">主表</typeparam>
-        /// <typeparam name="T">子表</typeparam>
-        /// <returns></returns>
-        internal void Add<TModel, T>(Expression<Func<TModel, T, dynamic>> expression) where TModel : new()
-        where T : new()
-        {
-            Parameter.Validate(expression);
-            Select = new SimpleExpressionMapper
-            {
-                Expression = expression
-            };
-        }
-
+     
         /// <summary>
         /// 将表达式拆分出相应的分页对象
         /// </summary>

@@ -22,7 +22,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
          where TRight : new()
         {
             Parameter.Validate(expression);
-            _expressionStore.Add(expression, JoinRelation.LEFT);
+            _expressionStore.AddJoin(expression, JoinRelation.LEFT);
 
             return entityMapper;
         }
@@ -34,7 +34,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
         where TRight : new()
         {
             Parameter.Validate(expression);
-            _expressionStore.Add(expression, JoinRelation.RIGHT);
+            _expressionStore.AddJoin(expression, JoinRelation.RIGHT);
 
             return entityMapper;
         }
@@ -45,7 +45,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
         where TRight : new()
         {
             Parameter.Validate(expression);
-            _expressionStore.Add(expression, JoinRelation.INNER);
+            _expressionStore.AddJoin(expression, JoinRelation.INNER);
 
             return entityMapper;
         }
@@ -59,12 +59,12 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
             return entityMapper;
         }
 
-        public static EntityMapper Select<TModel>(this EntityMapper entityMapper, Expression<Func<TModel, dynamic>> fields = null)
-        where TModel : new()
+        public static EntityMapper Select<TModel1>(this EntityMapper entityMapper, Expression<Func<TModel1, dynamic>> fields = null)
+        where TModel1 : new()
         {
             if (fields != null)
             {
-                _expressionStore.Add(fields);
+                _expressionStore.AddSelect(fields);
             }
 
             return entityMapper;
@@ -76,7 +76,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
         {
             if (fields != null)
             {
-                _expressionStore.Add(fields);
+                _expressionStore.AddSelect(fields);
             }
             return entityMapper;
         }
@@ -87,7 +87,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
         {
             if (fields != null)
             {
-                _expressionStore.Add(fields);
+                _expressionStore.AddSelect(fields);
             }
             return entityMapper;
         }
@@ -100,7 +100,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
         {
             if (fields != null)
             {
-                _expressionStore.Add(fields);
+                _expressionStore.AddSelect(fields);
             }
             return entityMapper;
         }
@@ -114,7 +114,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
         {
             if (fields != null)
             {
-                _expressionStore.Add(fields);
+                _expressionStore.AddSelect(fields);
             }
             return entityMapper;
         }
@@ -124,7 +124,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
         where TModel1 : new()
         {
             Parameter.Validate(expression);
-            _expressionStore.Add(expression);
+            _expressionStore.AddWhere(expression);
             return entityMapper;
         }
 
@@ -133,7 +133,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
        where TModel2 : new()
         {
             Parameter.Validate(expression);
-            _expressionStore.Add(expression);
+            _expressionStore.AddWhere(expression);
             return entityMapper;
         }
 
@@ -144,7 +144,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
         where TModel3 : new()
         {
             Parameter.Validate(expression);
-            _expressionStore.Add(expression);
+            _expressionStore.AddWhere(expression);
             return entityMapper;
         }
 
@@ -156,7 +156,7 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
         where TModel4 : new()
         {
             Parameter.Validate(expression);
-            _expressionStore.Add(expression);
+            _expressionStore.AddWhere(expression);
             return entityMapper;
         }
 
@@ -166,9 +166,10 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
         where TModel2 : new()
         where TModel3 : new()
         where TModel4 : new()
+        where TModel5 : new()
         {
             Parameter.Validate(expression);
-            _expressionStore.Add(expression);
+            _expressionStore.AddWhere(expression);
             return entityMapper;
         }
 
