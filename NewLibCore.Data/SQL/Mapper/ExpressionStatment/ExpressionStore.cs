@@ -46,6 +46,20 @@ namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
         /// </summary>
         internal IList<JoinExpressionMapper> Joins { get; private set; } = new List<JoinExpressionMapper>();
 
+        internal void AddFrom<TModel>()
+        where TModel : new()
+        {
+            Expression<Func<Type>> expression = () => typeof(TModel);
+            From = new SimpleExpressionMapper
+            {
+                Expression = expression,
+                AliaNameMapper = new List<KeyValuePair<String, String>>
+                {
+                   new KeyValuePair<String, String>(typeof(TModel).GetTableName().TableName,typeof(TModel).GetTableName().AliasName)
+                }
+            };
+        }
+
         /// <summary>
         /// 将表达式拆分出相应的排序对象
         /// </summary>
@@ -209,22 +223,6 @@ namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
             });
         }
 
-        
-        /// <summary>
-        /// 将表达式拆分出相应的Where对象
-        /// </summary>
-        /// <param name="expression">表达式</param>
-        /// <typeparam name="TModel">主表</typeparam>
-        internal void Add<TModel>(Expression<Func<TModel, Boolean>> expression) where TModel : new()
-        {
-            Parameter.Validate(expression);
-            Where = new SimpleExpressionMapper
-            {
-                Expression = expression,
-                AliaNameMapper = ParseToAliasNames(expression)
-            };
-        }
-     
         /// <summary>
         /// 将表达式拆分出相应的分页对象
         /// </summary>

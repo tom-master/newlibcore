@@ -5,7 +5,7 @@ using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Data.SQL.Mapper.MapperExtension
+namespace NewLibCore.Data.SQL.Mapper
 {
 
     public static class EntityMapperExtension
@@ -15,6 +15,13 @@ namespace NewLibCore.Data.SQL.Mapper.MapperExtension
         static EntityMapperExtension()
         {
             _expressionStore = new ExpressionStore();
+        }
+
+        public static EntityMapper Query<TModel>(this EntityMapper entityMapper)
+        where TModel : new()
+        {
+            _expressionStore.AddFrom<TModel>();
+            return entityMapper;
         }
 
         public static EntityMapper LeftJoin<TLeft, TRight>(this EntityMapper entityMapper, Expression<Func<TLeft, TRight, Boolean>> expression)

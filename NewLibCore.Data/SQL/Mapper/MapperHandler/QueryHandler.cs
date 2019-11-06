@@ -5,7 +5,6 @@ using System.Linq.Expressions;
 using System.Reflection;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
-using NewLibCore.Data.SQL.Mapper.MapperExtension;
 using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper

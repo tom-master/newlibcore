@@ -46,7 +46,7 @@ namespace NewLibCore.Data.SQL.Mapper
             var parser = ExpressionParser.CreateParser();
 
             var expressionStore = new ExpressionStore();
-            expressionStore.Add(_filter);
+            expressionStore.AddWhere(_filter);
 
             translateResult.Append(String.Format(MapperConfig.Instance.UpdateTemplate, TableName, AliasName, String.Join(",", propertys.Select(p => $@"{AliasName}.{p.Key}=@{p.Key}"))));
             translateResult.Append(parser.Parse(expressionStore).ToString());

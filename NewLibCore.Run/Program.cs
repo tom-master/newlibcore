@@ -17,25 +17,9 @@ namespace NewLibCore.Run
             for (var i = 0; i < 4; i++)
             {
                 var thread = new Thread(new ParameterizedThreadStart((a) =>
-                { 
+                {
                     using (var mapper = EntityMapper.CreateMapper())
                     {
-                        //var r1 = mapper.SqlQuery("SELECT a.* FROM newcrm_user AS a ").FirstOrDefault<User>();
-                        #region 
-                        //var user = new User("123123", "123123123");
-                        //mapper.Add(user);
-
-                        //var user = new User();
-                        //user.ModifyLoginPassword("123123123123");
-                        //mapper.Update(user, u => u.Id == 4);
-
-
-                        //var r = mapper.Query<User>().Count();
-                        //var r1 = mapper.Query<User>().Where(w => w.Id == 4).Select().ToList();
-                        //var r2 = mapper.Query<User>().Where(w => w.Id == 4).Select().FirstOrDefault();
-                        //var r3 = mapper.Query<User>().Where(w => w.Id == 4).Select(user => new { user.Id, user.Name }).ToList<TestModel>();
-                        //var r4 = mapper.Query<User>().Where(w => w.Id == 4).Select(user => new { user.Id, user.Name }).FirstOrDefault<(String Id, String Name)>();
-                        #endregion
                     }
                 }));
                 thread.Start();
