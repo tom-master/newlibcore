@@ -30,7 +30,7 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             var sqlResult = TranslateResult.CreateResult();
             sqlResult.Append(_sql, _parameters);
-            return sqlResult.Execute();
+            return sqlResult.Execute(_serviceProvider);
         }
     }
 }

@@ -44,7 +44,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
             var tableName = typeof(TModel).GetTableName().TableName;
             var template = String.Format(MapperConfig.Instance.AddTemplate, tableName, String.Join(",", propertyInfos.Select(c => c.Key)), String.Join(",", propertyInfos.Select(key => $@"@{key.Key}")), MapperConfig.Instance.Extension.Identity);
-            return TranslateResult.CreateResult().Append(template, propertyInfos.Select(c => new EntityParameter(c.Key, c.Value))).Execute();
+            return TranslateResult.CreateResult().Append(template, propertyInfos.Select(c => new EntityParameter(c.Key, c.Value))).Execute(_serviceProvider);
         }
     }
 }

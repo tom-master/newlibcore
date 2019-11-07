@@ -57,7 +57,7 @@ namespace NewLibCore.Data.SQL.Mapper
             translateResult.Append($@"{MapperConfig.Instance.Extension.RowCount}");
             _modelInstance.Reset();
 
-            return translateResult.Execute();
+            return translateResult.Execute(_serviceProvider);
         }
     }
 }

@@ -22,7 +22,7 @@ namespace NewLibCore.Data.SQL.Mapper
         internal QueryHandler(ExpressionStore expressionStore, IServiceProvider serviceProvider)
         {
             Parameter.Validate(expressionStore);
-            
+
             _expressionStore = expressionStore;
             _serviceProvider = serviceProvider;
         }
@@ -71,7 +71,7 @@ namespace NewLibCore.Data.SQL.Mapper
             translateResult.Append(MapperConfig.Instance.Extension.Page.Replace("{value}", pageIndex).Replace("{pageSize}", pageSize));
         }
 
-        return translateResult.Execute();
+        return translateResult.Execute(_serviceProvider);
     }
 
     /// <summary>
