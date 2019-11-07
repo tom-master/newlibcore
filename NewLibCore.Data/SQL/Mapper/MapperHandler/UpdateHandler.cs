@@ -17,17 +17,20 @@ namespace NewLibCore.Data.SQL.Mapper
 
         private readonly Expression<Func<TModel, Boolean>> _filter;
 
+        private readonly IServiceProvider _serviceProvider;
+
         /// <summary>
         /// 初始化一个UpdateHandler类的实例
         /// </summary>
         /// <param name="model">要更新的模型</param>
-        public UpdateHandler(TModel model, Expression<Func<TModel, Boolean>> filter)
+        public UpdateHandler(TModel model, Expression<Func<TModel, Boolean>> filter, IServiceProvider serviceProvider)
         {
             Parameter.Validate(model);
             Parameter.Validate(filter);
 
             _modelInstance = model;
             _filter = filter;
+            _serviceProvider = serviceProvider;
         }
 
         internal override RawResult Execute()

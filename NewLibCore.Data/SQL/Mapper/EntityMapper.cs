@@ -58,7 +58,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
             return RunDiagnosis.Watch(() =>
             {
-                Handler handler = new InsertHandler<TModel>(model);
+                Handler handler = new InsertHandler<TModel>(model, _serviceScope.ServiceProvider);
                 model.Id = handler.Execute().FirstOrDefault<Int32>();
                 return model;
             });
@@ -78,7 +78,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
             return RunDiagnosis.Watch(() =>
             {
-                Handler handler = new UpdateHandler<TModel>(model, expression);
+                Handler handler = new UpdateHandler<TModel>(model, expression, _serviceScope.ServiceProvider);
                 return handler.Execute().FirstOrDefault<Int32>() > 0;
             });
         }
@@ -90,7 +90,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <returns></returns>
         internal RawResult Query<TModel>(ExpressionStore expressionStore) where TModel : new()
         {
-            Handler handler = new QueryHandler<TModel>(expressionStore);
+            Handler handler = new QueryHandler<TModel>(expressionStore, _serviceScope.ServiceProvider);
             return handler.Execute();
         }
 
@@ -107,7 +107,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
             return RunDiagnosis.Watch(() =>
             {
-                Handler handler = new DirectSqlHandler(sql, parameters);
+                Handler handler = new DirectSqlHandler(sql, parameters, _serviceScope.ServiceProvider);
                 return handler.Execute();
             });
         }

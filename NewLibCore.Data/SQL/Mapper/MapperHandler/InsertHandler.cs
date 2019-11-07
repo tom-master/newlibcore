@@ -14,14 +14,18 @@ namespace NewLibCore.Data.SQL.Mapper
     {
         private readonly TModel _instance;
 
+        private readonly IServiceProvider _serviceProvider;
+
         /// <summary>
         /// 初始化一个InsertHandler类的实例
         /// </summary>
         /// <param name="model">要插入的模型</param>
-        internal InsertHandler(TModel model)
+        internal InsertHandler(TModel model, IServiceProvider serviceProvider)
         {
             Parameter.Validate(model);
+
             _instance = model;
+            _serviceProvider = serviceProvider;
         }
 
         /// <summary>
