@@ -112,11 +112,27 @@ namespace NewLibCore.Data.SQL.Mapper
             });
         }
 
+        public void Commit()
+        {
+            _serviceScope.ServiceProvider.GetService<IMapperDbContext>().Commit();
+        }
+
+        public void Rollback()
+        {
+            _serviceScope.ServiceProvider.GetService<IMapperDbContext>().Rollback();
+        }
+
+        public void OpenTransaction()
+        {
+            _serviceScope.ServiceProvider.GetService<IMapperDbContext>().OpenTransaction();
+        }
+
         /// <summary>
         /// 释放资源
         /// </summary>
         public void Dispose()
         {
+            _serviceScope.ServiceProvider.GetService<IMapperDbContext>().Dispose();
             _serviceScope.Dispose();
         }
     }
