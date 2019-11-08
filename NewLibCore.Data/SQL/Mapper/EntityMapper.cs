@@ -88,10 +88,11 @@ namespace NewLibCore.Data.SQL.Mapper
         /// </summary>
         /// <typeparam name="TModel"></typeparam>
         /// <returns></returns>
-        internal RawResult Query<TModel>(ExpressionStore expressionStore) where TModel : new()
+        public QueryWrapper<TModel> Query<TModel>() where TModel : new()
         {
-            Handler handler = new QueryHandler<TModel>(expressionStore, _serviceScope.ServiceProvider);
-            return handler.Execute();
+            ExpressionStore expressionStore = new ExpressionStore();
+            expressionStore.AddFrom<TModel>();
+            return new QueryWrapper<TModel>(expressionStore, _serviceScope.ServiceProvider);
         }
 
         /// <summary>

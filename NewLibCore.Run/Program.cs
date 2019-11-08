@@ -20,6 +20,7 @@ namespace NewLibCore.Run
                 {
                     using (var mapper = EntityMapper.CreateMapper())
                     {
+                        mapper.Query<User>().FirstOrDefault();
                     }
                 }));
                 thread.Start();
