@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Validate;
 
@@ -42,8 +42,10 @@ namespace NewLibCore.Data.SQL.Mapper
 
             var propertyInfos = _instance.GetChangedProperty();
 
+            var databaseConfig = _serviceProvider.GetService<InstanceConfig>();
+
             var tableName = typeof(TModel).GetTableName().TableName;
-            var template = String.Format(MapperConfig.Instance.AddTemplate, tableName, String.Join(",", propertyInfos.Select(c => c.Key)), String.Join(",", propertyInfos.Select(key => $@"@{key.Key}")), MapperConfig.Instance.Extension.Identity);
+            var template = String.Format(databaseConfig.AddTemplate, tableName, String.Join(",", propertyInfos.Select(c => c.Key)), String.Join(",", propertyInfos.Select(key => $@"@{key.Key}")), databaseConfig.Extension.Identity);
             return TranslateResult.CreateResult().Append(template, propertyInfos.Select(c => new EntityParameter(c.Key, c.Value))).Execute(_serviceProvider);
         }
     }

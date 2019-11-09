@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using Microsoft.Extensions.DependencyInjection;
 using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
 using NewLibCore.Validate;
 
@@ -35,13 +36,16 @@ namespace NewLibCore.Data.SQL.Mapper
 
         private IReadOnlyList<KeyValuePair<String, String>> _tableAliasMapper;
 
+        private readonly IServiceProvider _serviceProvider;
+
         /// <summary>
         /// 初始化一个TranslateContext类的实例
         /// </summary>
         /// <param name="statementStore">表达式分解后的对象</param>
         /// <returns></returns>
-        private ExpressionParser()
+        private ExpressionParser(IServiceProvider serviceProvider)
         {
+            _serviceProvider = serviceProvider;
             _internalStore = new StringBuilder();
             _parameterNameStack = new Stack<String>();
             _relationTypesStack = new Stack<RelationType>();
@@ -52,9 +56,9 @@ namespace NewLibCore.Data.SQL.Mapper
         /// 初始化一个ExpressionParser类的实例
         /// </summary>
         /// <returns></returns>
-        internal static ExpressionParser CreateParser()
+        internal static ExpressionParser CreateParser(IServiceProvider serviceProvider)
         {
-            return new ExpressionParser();
+            return new ExpressionParser(serviceProvider);
         }
 
         /// <summary>
@@ -64,6 +68,8 @@ namespace NewLibCore.Data.SQL.Mapper
         public StringBuilder Parse(ExpressionStore expressionStore)
         {
             Parameter.Validate(expressionStore);
+
+            var databaseConfig = _serviceProvider.GetService<InstanceConfig>();
 
             //获取合并后的表别名
             _tableAliasMapper = expressionStore.MergeAliasMapper();
@@ -85,7 +91,7 @@ namespace NewLibCore.Data.SQL.Mapper
                     }
 
                     //获取连接语句的模板
-                    var joinTemplate = MapperConfig.Instance.JoinBuilder(item.JoinRelation, aliasItem.Key, aliasItem.Value.ToLower());
+                    var joinTemplate = databaseConfig.JoinBuilder(item.JoinRelation, aliasItem.Key, aliasItem.Value.ToLower());
                     _internalStore.Append(joinTemplate);
 
                     //设置相应的连接类型
@@ -253,8 +259,9 @@ namespace NewLibCore.Data.SQL.Mapper
                                 }
                                 internalAliasName = $@"{ _tableAliasMapper.Where(w => w.Key == parameterExp.Type.GetTableName().TableName && w.Value == parameterExp.Type.GetTableName().AliasName).FirstOrDefault().Value.ToLower()}.";
 
+                                var databaseConfig = _serviceProvider.GetService<InstanceConfig>();
                                 var newParameterName = Guid.NewGuid().ToString().Replace("-", "");
-                                _internalStore.Append(MapperConfig.Instance.RelationBuilder(_relationTypesStack.Pop(), $@"{internalAliasName}{memberExp.Member.Name}", $"@{newParameterName}"));
+                                _internalStore.Append(databaseConfig.RelationBuilder(_relationTypesStack.Pop(), $@"{internalAliasName}{memberExp.Member.Name}", $"@{newParameterName}"));
                                 _parameterNameStack.Push(newParameterName);
                             }
                         }
@@ -390,13 +397,14 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             Parameter.Validate(binary);
 
+            var databaseConfig = _serviceProvider.GetService<InstanceConfig>();
             //表达式左右两边都不为常量时例如 xx.Id==yy.Id
             if (binary.Left.NodeType != ExpressionType.Constant && binary.Right.NodeType != ExpressionType.Constant)
             {
                 var (LeftMember, LeftAliasName) = GetLeftMemberAndAliasName(binary);
                 var (RightMember, RightAliasName) = GetRightMemberAndAliasName(binary);
 
-                var relationTemplate = MapperConfig.Instance.RelationBuilder(relationType, $"{RightAliasName}.{RightMember.Member.Name}", $"{LeftAliasName}.{LeftMember.Member.Name}");
+                var relationTemplate = databaseConfig.RelationBuilder(relationType, $"{RightAliasName}.{RightMember.Member.Name}", $"{LeftAliasName}.{LeftMember.Member.Name}");
                 _internalStore.Append(relationTemplate);
             }
             else if (binary.Left.NodeType == ExpressionType.Constant) //表达式左边为常量
@@ -404,14 +412,14 @@ namespace NewLibCore.Data.SQL.Mapper
                 var (RightMember, RightAliasName) = GetRightMemberAndAliasName(binary);
                 var constant = (ConstantExpression)binary.Left;
                 var value = Boolean.TryParse(constant.Value.ToString(), out var result) ? (result ? 1 : 0).ToString() : constant.Value;
-                _internalStore.Append(MapperConfig.Instance.RelationBuilder(relationType, value + "", $"{RightAliasName}.{RightMember.Member.Name}"));
+                _internalStore.Append(databaseConfig.RelationBuilder(relationType, value + "", $"{RightAliasName}.{RightMember.Member.Name}"));
             }
             else if (binary.Right.NodeType == ExpressionType.Constant) //表达式的右边为常量
             {
                 var (LeftMember, LeftAliasName) = GetLeftMemberAndAliasName(binary);
                 var constant = (ConstantExpression)binary.Right;
                 var value = Boolean.TryParse(constant.Value.ToString(), out var result) ? (result ? 1 : 0).ToString() : constant.Value;
-                _internalStore.Append(MapperConfig.Instance.RelationBuilder(relationType, $"{LeftAliasName}.{LeftMember.Member.Name}", value + ""));
+                _internalStore.Append(databaseConfig.RelationBuilder(relationType, $"{LeftAliasName}.{LeftMember.Member.Name}", value + ""));
             }
         }
 

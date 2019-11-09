@@ -13,38 +13,34 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <summary>
         /// 映射的数据库类型
         /// </summary>
-        public static MapperType MapperType { get; set; } = MapperType.MYSQL;
+        public static MapperType MapperType { get; set; }
 
         /// <summary>
         /// 日志
         /// </summary>
-        public static ILogger Logger { get; } = new ConsoleLogger();
+        public static ILogger Logger { get; set; }
 
         /// <summary>
         /// 启用模型验证
         /// </summary>
         /// <value></value>
-        public static Boolean EnableModelValidate { get; set; } = true;
+        public static Boolean EnableModelValidate { get; set; }
 
         /// <summary>
         /// 事务隔离级别
         /// </summary>
-        public static IsolationLevel TransactionLevel { get; set; } = IsolationLevel.Unspecified;
+        public static IsolationLevel TransactionLevel { get; set; }
 
-        internal static InstanceConfig Instance
+        /// <summary>
+        /// 初始化默认配置
+        /// </summary>
+        public static void InitDefaultSetting()
         {
-            get
-            {
-                if (MapperType == MapperType.MSSQL)
-                {
-                    return new MsSqlInstanceConfig();
-                }
-                else if (MapperType == MapperType.MYSQL)
-                {
-                    return new MySqlInstanceConfig();
-                }
-                throw new Exception($@"暂不支持的数据库类型:{MapperType}");
-            }
+            MapperType = MapperType.MYSQL;
+            Logger = new ConsoleLogger();
+            EnableModelValidate = true;
+            TransactionLevel = IsolationLevel.Unspecified;
+
         }
     }
 }

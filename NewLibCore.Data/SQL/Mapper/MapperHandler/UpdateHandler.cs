@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
+using Microsoft.Extensions.DependencyInjection;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
 using NewLibCore.Validate;
@@ -46,15 +47,16 @@ namespace NewLibCore.Data.SQL.Mapper
             var propertys = _modelInstance.GetChangedProperty();
 
             var translateResult = TranslateResult.CreateResult();
-            var parser = ExpressionParser.CreateParser();
+            var parser = ExpressionParser.CreateParser(_serviceProvider);
+            var databaseConfig = _serviceProvider.GetService<InstanceConfig>();
 
             var expressionStore = new ExpressionStore();
             expressionStore.AddWhere(_filter);
 
-            translateResult.Append(String.Format(MapperConfig.Instance.UpdateTemplate, TableName, AliasName, String.Join(",", propertys.Select(p => $@"{AliasName}.{p.Key}=@{p.Key}"))));
+            translateResult.Append(String.Format(databaseConfig.UpdateTemplate, TableName, AliasName, String.Join(",", propertys.Select(p => $@"{AliasName}.{p.Key}=@{p.Key}"))));
             translateResult.Append(parser.Parse(expressionStore).ToString());
             translateResult.Append($@"{RelationType.AND} {AliasName}.IsDeleted=0");
-            translateResult.Append($@"{MapperConfig.Instance.Extension.RowCount}");
+            translateResult.Append($@"{databaseConfig.Extension.RowCount}");
             _modelInstance.Reset();
 
             return translateResult.Execute(_serviceProvider);
