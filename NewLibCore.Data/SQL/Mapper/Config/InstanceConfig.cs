@@ -129,14 +129,14 @@ namespace NewLibCore.Data.SQL.Mapper
         /// </summary>
         private void InitRelationType()
         {
-            LogicRelationMapper.Add(RelationType.AND, "{0} AND {1}");
-            LogicRelationMapper.Add(RelationType.OR, "{0} OR {1}");
-            LogicRelationMapper.Add(RelationType.EQ, "{0} = {1}");
-            LogicRelationMapper.Add(RelationType.NQ, "{0} <> {1}");
-            LogicRelationMapper.Add(RelationType.GT, "{0} < {1}");
-            LogicRelationMapper.Add(RelationType.LT, "{0} > {1}");
-            LogicRelationMapper.Add(RelationType.GE, "{0} <= {1}");
-            LogicRelationMapper.Add(RelationType.LE, "{0} >= {1}");
+            LogicRelationMapper.Add(RelationType.AND, " {0} AND {1} ");
+            LogicRelationMapper.Add(RelationType.OR, " {0} OR {1} ");
+            LogicRelationMapper.Add(RelationType.EQ, " {0} = {1} ");
+            LogicRelationMapper.Add(RelationType.NQ, " {0} <> {1} ");
+            LogicRelationMapper.Add(RelationType.GT, " {0} < {1} ");
+            LogicRelationMapper.Add(RelationType.LT, " {0} > {1} ");
+            LogicRelationMapper.Add(RelationType.GE, " {0} <= {1} ");
+            LogicRelationMapper.Add(RelationType.LE, " {0} >= {1} ");
 
             AppendRelationType();
         }
@@ -147,9 +147,9 @@ namespace NewLibCore.Data.SQL.Mapper
         private void InitJoinType()
         {
             JoinRelationMapper.Add(JoinRelation.NONE, "");
-            JoinRelationMapper.Add(JoinRelation.INNER, "INNER JOIN {0} AS {1} ON");
-            JoinRelationMapper.Add(JoinRelation.LEFT, "LEFT JOIN {0} AS {1} ON");
-            JoinRelationMapper.Add(JoinRelation.RIGHT, "RIGHT JOIN {0} AS {1} ON");
+            JoinRelationMapper.Add(JoinRelation.INNER, " INNER JOIN {0} AS {1} ON ");
+            JoinRelationMapper.Add(JoinRelation.LEFT, " LEFT JOIN {0} AS {1} ON ");
+            JoinRelationMapper.Add(JoinRelation.RIGHT, " RIGHT JOIN {0} AS {1} ON ");
         }
 
         /// <summary>
@@ -157,8 +157,8 @@ namespace NewLibCore.Data.SQL.Mapper
         /// </summary>
         private void InitOrderType()
         {
-            OrderTypeMapper.Add(OrderByType.ASC, "ORDER BY {0} ASC");
-            OrderTypeMapper.Add(OrderByType.DESC, "ORDER BY {0} DESC");
+            OrderTypeMapper.Add(OrderByType.ASC, " ORDER BY {0} ASC ");
+            OrderTypeMapper.Add(OrderByType.DESC, " ORDER BY {0} DESC ");
         }
     }
 

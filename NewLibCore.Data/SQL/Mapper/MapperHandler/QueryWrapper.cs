@@ -14,7 +14,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
         private readonly IServiceProvider _serviceProvider;
 
-        internal QueryWrapper(ExpressionStore expressionStore,IServiceProvider serviceProvider)
+        internal QueryWrapper(ExpressionStore expressionStore, IServiceProvider serviceProvider)
         {
             _expressionStore = expressionStore;
             _serviceProvider = serviceProvider;
@@ -46,6 +46,13 @@ namespace NewLibCore.Data.SQL.Mapper
             return this;
         }
 
+        public QueryWrapper<TModel> InnerJoin<TRight>(Expression<Func<TModel, TRight, Boolean>> expression)
+        where TRight : new()
+        {
+            Parameter.Validate(expression);
+            _expressionStore.AddJoin(expression, JoinRelation.INNER);
+            return this;
+        }
 
         public QueryWrapper<TModel> InnerJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> expression)
         where TLeft : new()

@@ -14,20 +14,31 @@ namespace NewLibCore.Run
 
             MapperConfig.MapperType = MapperType.MYSQL;
 
-            for (var i = 0; i < 4; i++)
+            // for (var i = 0; i < 4; i++)
+            // {
+            //     var thread = new Thread(new ParameterizedThreadStart((a) =>
+            //     {
+            //         using (var mapper = EntityMapper.CreateMapper())
+            //         {
+            //             mapper.Query<User>().FirstOrDefault();
+            //         }
+            //     }));
+            //     thread.Start();
+            // }
+
+            using (var mapper = EntityMapper.CreateMapper())
             {
-                var thread = new Thread(new ParameterizedThreadStart((a) =>
-                {
-                    using (var mapper = EntityMapper.CreateMapper())
-                    {
-                        mapper.Query<User>().FirstOrDefault();
-                    }
-                }));
-                thread.Start();
+                //var result = mapper.Query<User>().FirstOrDefault();
+                //var result = mapper.Query<User>().ToList();
+                //var result = mapper.Query<User>().Select(u => new { u.Id, u.Name, u.LoginPassword }).FirstOrDefault();
+                //var result = mapper.Query<User>().Select(u => new { u.Id, u.Name, u.LoginPassword }).ToList();
+                //var result = mapper.Query<Config>().InnerJoin<User>((c, u) => c.UserId == u.Id).FirstOrDefault();
+                //var result = mapper.Query<Config>().InnerJoin<User>((c, u) => c.UserId == u.Id).ToList();
+                    
             }
             #endregion
 
-            Console.ReadKey();
+            //Console.ReadKey();
         }
     }
 
