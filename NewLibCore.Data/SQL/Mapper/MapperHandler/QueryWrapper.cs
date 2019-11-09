@@ -26,6 +26,14 @@ namespace NewLibCore.Data.SQL.Mapper
             return this;
         }
 
+        public QueryWrapper<TModel> LeftJoin<TRight>(Expression<Func<TModel, TRight, Boolean>> expression)
+        where TRight : new()
+        {
+            Parameter.Validate(expression);
+            _expressionStore.AddJoin(expression, JoinRelation.LEFT);
+            return this;
+        }
+
         public QueryWrapper<TModel> LeftJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> expression)
         where TLeft : new()
         where TRight : new()
@@ -33,6 +41,14 @@ namespace NewLibCore.Data.SQL.Mapper
             Parameter.Validate(expression);
             _expressionStore.AddJoin(expression, JoinRelation.LEFT);
 
+            return this;
+        }
+
+        public QueryWrapper<TModel> RightJoin<TRight>(Expression<Func<TModel, TRight, Boolean>> expression)
+        where TRight : new()
+        {
+            Parameter.Validate(expression);
+            _expressionStore.AddJoin(expression, JoinRelation.LEFT);
             return this;
         }
 
