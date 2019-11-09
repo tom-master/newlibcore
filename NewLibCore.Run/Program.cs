@@ -28,14 +28,35 @@ namespace NewLibCore.Run
 
             using (var mapper = EntityMapper.CreateMapper())
             {
+                try
+                {
+                    mapper.OpenTransaction();
+
+                    var user = mapper.Query<User>().Where(w => w.Id == 4 && w.Name == "xiaofan").Select(s => new { s.Id, s.LoginPassword, s.Name }).FirstOrDefault();
+                    user.ModifyLoginPassword("xiaofan123123");
+
+                    var userRole = mapper.Query<UserRole>().Where(w => w.UserId == user.Id).FirstOrDefault();
+                    userRole.Remove();
+                    var result = mapper.Update(userRole, w => w.UserId == user.Id);
+                    if (!result)
+                    {
+                        mapper.Rollback();
+                        return;
+                    }
+                    mapper.Commit();
+                }
+                catch (System.Exception)
+                {
+                    mapper.Rollback();
+                }
+
                 //var result = mapper.Query<User>().FirstOrDefault();
                 //var result = mapper.Query<User>().ToList();
                 //var result = mapper.Query<User>().Select(u => new { u.Id, u.Name, u.LoginPassword }).FirstOrDefault();
                 //var result = mapper.Query<User>().Select(u => new { u.Id, u.Name, u.LoginPassword }).ToList();
                 //var result = mapper.Query<Config>().InnerJoin<User>((c, u) => c.UserId == u.Id).FirstOrDefault();
                 //var result = mapper.Query<Config>().InnerJoin<User>((c, u) => c.UserId == u.Id).ToList();
-
-                var result = mapper.Query<App>().LeftJoin<Member>((a,m)=>a.Id==m.AppId);
+                //var result = mapper.Query<App>().RightJoin<Member>((a, m) => a.Id == m.AppId).ToList();
 
             }
             #endregion
@@ -886,7 +907,7 @@ namespace NewLibCore.Run
         }
     }
 
-      [TableName("newcrm_app")]
+    [TableName("newcrm_app")]
     public partial class App : EntityBase
     {
         /// <summary>
@@ -1024,7 +1045,7 @@ namespace NewLibCore.Run
             Width = width > 800 ? 800 : width;
             Height = height > 600 ? 600 : height;
             AppTypeId = appTypeId;
-           
+
             if (userId == 0)
             {
                 IsSystem = true;
@@ -1036,7 +1057,7 @@ namespace NewLibCore.Run
             }
 
             Remark = remark;
-          
+
             UseCount = 0;
             IsRecommand = false;
             IsIconByUpload = isIconByUpload;
@@ -1045,5 +1066,5 @@ namespace NewLibCore.Run
         public App() { }
     }
 
-    
+
 }

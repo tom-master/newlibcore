@@ -149,8 +149,7 @@ namespace NewLibCore.Data.SQL.Mapper
         }
 
 
-        public QueryWrapper<TModel> Where<TModel1>(Expression<Func<TModel1, Boolean>> expression)
-        where TModel1 : new()
+        public QueryWrapper<TModel> Where(Expression<Func<TModel, Boolean>> expression)
         {
             Parameter.Validate(expression);
             _expressionStore.AddWhere(expression);
