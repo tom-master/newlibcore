@@ -37,7 +37,14 @@
   ```
   using(var mapper = EntityMapper.CreateMapper())
   {
-    var users = mapper.Select<User>().Where(user=>user.Id==1).ToList();
-    var user = mapper.Select<User>().Where(user=>user.Id==1).FirstOrDefault();
+    
+    var result = mapper.Query<User>().FirstOrDefault();
+    var result = mapper.Query<User>().ToList();
+    
+    var result = mapper.Query<User>().Select(u => new { u.Id, u.Name, u.LoginPassword }).FirstOrDefault();
+    var result = mapper.Query<User>().Select(u => new { u.Id, u.Name, u.LoginPassword }).ToList();
+    
+    var result = mapper.Query<Config>().InnerJoin<User>((c, u) => c.UserId == u.Id).FirstOrDefault();
+    var result = mapper.Query<Config>().InnerJoin<User>((c, u) => c.UserId == u.Id).ToList();
   }
   ```
