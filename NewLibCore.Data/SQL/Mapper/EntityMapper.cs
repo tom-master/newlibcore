@@ -133,7 +133,6 @@ namespace NewLibCore.Data.SQL.Mapper
         /// </summary>
         public void Dispose()
         {
-            _serviceScope.ServiceProvider.GetService<IMapperDbContext>().Dispose();
             _serviceScope.Dispose();
         }
     }
