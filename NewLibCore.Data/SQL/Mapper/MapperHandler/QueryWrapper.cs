@@ -149,6 +149,7 @@ namespace NewLibCore.Data.SQL.Mapper
         }
 
 
+
         public QueryWrapper<TModel> Where(Expression<Func<TModel, Boolean>> filter)
         {
             Parameter.Validate(filter);
@@ -157,6 +158,14 @@ namespace NewLibCore.Data.SQL.Mapper
         }
 
         public QueryWrapper<TModel> Where<TModel1>(Expression<Func<TModel1, Boolean>> filter)
+                where TModel1 : new()
+        {
+            Parameter.Validate(filter);
+            _expressionStore.AddWhere(filter);
+            return this;
+        }
+
+        public QueryWrapper<TModel> Where<TModel1>(Expression<Func<TModel, TModel1, Boolean>> filter)
         where TModel1 : new()
         {
             Parameter.Validate(filter);
@@ -164,7 +173,7 @@ namespace NewLibCore.Data.SQL.Mapper
             return this;
         }
 
-        public QueryWrapper<TModel> Where<TModel1, TModel2>(Expression<Func<TModel1, TModel2, Boolean>> filter)
+        public QueryWrapper<TModel> Where<TModel1, TModel2>(Expression<Func<TModel, TModel1, TModel2, Boolean>> filter)
         where TModel1 : new()
         where TModel2 : new()
         {
@@ -174,7 +183,7 @@ namespace NewLibCore.Data.SQL.Mapper
         }
 
 
-        public QueryWrapper<TModel> Where<TModel1, TModel2, TModel3>(Expression<Func<TModel1, TModel2, TModel3, Boolean>> filter)
+        public QueryWrapper<TModel> Where<TModel1, TModel2, TModel3>(Expression<Func<TModel, TModel1, TModel2, TModel3, Boolean>> filter)
         where TModel1 : new()
         where TModel2 : new()
         where TModel3 : new()
@@ -184,7 +193,7 @@ namespace NewLibCore.Data.SQL.Mapper
             return this;
         }
 
-        public QueryWrapper<TModel> Where<TModel1, TModel2, TModel3, TModel4>(Expression<Func<TModel1, TModel2, TModel3, TModel4, Boolean>> filter)
+        public QueryWrapper<TModel> Where<TModel1, TModel2, TModel3, TModel4>(Expression<Func<TModel, TModel1, TModel2, TModel3, TModel4, Boolean>> filter)
         where TModel1 : new()
         where TModel2 : new()
         where TModel3 : new()
@@ -196,7 +205,7 @@ namespace NewLibCore.Data.SQL.Mapper
         }
 
 
-        public QueryWrapper<TModel> Where<TModel1, TModel2, TModel3, TModel4, TModel5>(Expression<Func<TModel1, TModel2, TModel3, TModel4, TModel5, Boolean>> filter)
+        public QueryWrapper<TModel> Where<TModel1, TModel2, TModel3, TModel4, TModel5>(Expression<Func<TModel, TModel1, TModel2, TModel3, TModel4, TModel5, Boolean>> filter)
         where TModel1 : new()
         where TModel2 : new()
         where TModel3 : new()

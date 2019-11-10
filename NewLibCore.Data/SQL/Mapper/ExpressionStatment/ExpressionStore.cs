@@ -142,6 +142,22 @@ namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
             };
         }
 
+        internal void AddWhere<TModel1, TModel2, TModel3, TModel4, TModel5, TModel6>(Expression<Func<TModel1, TModel2, TModel3, TModel4, TModel5, TModel6, Boolean>> filter)
+        where TModel1 : new()
+        where TModel2 : new()
+        where TModel3 : new()
+        where TModel4 : new()
+        where TModel5 : new()
+        where TModel6 : new()
+        {
+            Parameter.Validate(filter);
+            Where = new SimpleExpressionMapper
+            {
+                Expression = filter,
+                AliaNameMapper = ParseToAliasNames(filter)
+            };
+        }
+
         internal void AddSelect<TModel1>(Expression<Func<TModel1, dynamic>> selector)
         where TModel1 : new()
         {
