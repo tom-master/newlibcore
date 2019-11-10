@@ -232,6 +232,15 @@ namespace NewLibCore.Data.SQL.Mapper
                 return handler.Execute().ToList<TModel>();
             });
         }
-    }
 
+         public Int32 Count()
+        {
+            return RunDiagnosis.Watch(() =>
+            {
+                Select((a) => "COUNT(*)");
+                 Handler handler = new QueryHandler<TModel>(_expressionStore, _serviceProvider);
+                return handler.Execute().FirstOrDefault<Int32>();
+            });
+        }
+    }
 }
