@@ -12,8 +12,8 @@ namespace NewLibCore.Run
         {
             #region 
 
-            MapperConfig.MapperType = MapperType.MYSQL;
-
+            MapperConfig.InitDefaultSetting();
+            
             // for (var i = 0; i < 4; i++)
             // {
             //     var thread = new Thread(new ParameterizedThreadStart((a) =>
@@ -32,17 +32,8 @@ namespace NewLibCore.Run
                 {
                     mapper.OpenTransaction();
 
-                    var user = mapper.Query<User>().Where(w => w.Id == 4 && w.Name == "xiaofan").Select(s => new { s.Id, s.LoginPassword, s.Name }).FirstOrDefault();
-                    user.ModifyLoginPassword("xiaofan123123");
-
-                    var userRole = mapper.Query<UserRole>().Where(w => w.UserId == user.Id).FirstOrDefault();
-                    userRole.Remove();
-                    var result = mapper.Update(userRole, w => w.UserId == user.Id);
-                    if (!result)
-                    {
-                        mapper.Rollback();
-                        return;
-                    }
+                    var result = mapper.Query<User>().FirstOrDefault();
+                   
                     mapper.Commit();
                 }
                 catch (System.Exception)

@@ -35,6 +35,8 @@ namespace NewLibCore.Data.SQL.Mapper.Database
             {
                 throw new Exception($@"暂不支持的数据库类型:{MapperConfig.MapperType}");
             }
+
+            OpenConnection();
         }
 
         public void Commit()
