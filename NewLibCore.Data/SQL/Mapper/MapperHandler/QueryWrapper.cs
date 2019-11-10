@@ -26,56 +26,56 @@ namespace NewLibCore.Data.SQL.Mapper
             return this;
         }
 
-        public QueryWrapper<TModel> LeftJoin<TRight>(Expression<Func<TModel, TRight, Boolean>> expression)
+        public QueryWrapper<TModel> LeftJoin<TRight>(Expression<Func<TModel, TRight, Boolean>> join)
         where TRight : new()
         {
-            Parameter.Validate(expression);
-            _expressionStore.AddJoin(expression, JoinRelation.LEFT);
+            Parameter.Validate(join);
+            _expressionStore.AddJoin(join, JoinRelation.LEFT);
             return this;
         }
 
-        public QueryWrapper<TModel> LeftJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> expression)
+        public QueryWrapper<TModel> LeftJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> join)
         where TLeft : new()
         where TRight : new()
         {
-            Parameter.Validate(expression);
-            _expressionStore.AddJoin(expression, JoinRelation.LEFT);
+            Parameter.Validate(join);
+            _expressionStore.AddJoin(join, JoinRelation.LEFT);
 
             return this;
         }
 
-        public QueryWrapper<TModel> RightJoin<TRight>(Expression<Func<TModel, TRight, Boolean>> expression)
+        public QueryWrapper<TModel> RightJoin<TRight>(Expression<Func<TModel, TRight, Boolean>> join)
         where TRight : new()
         {
-            Parameter.Validate(expression);
-            _expressionStore.AddJoin(expression, JoinRelation.LEFT);
+            Parameter.Validate(join);
+            _expressionStore.AddJoin(join, JoinRelation.LEFT);
             return this;
         }
 
-        public QueryWrapper<TModel> RightJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> expression)
+        public QueryWrapper<TModel> RightJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> join)
         where TLeft : new()
         where TRight : new()
         {
-            Parameter.Validate(expression);
-            _expressionStore.AddJoin(expression, JoinRelation.RIGHT);
+            Parameter.Validate(join);
+            _expressionStore.AddJoin(join, JoinRelation.RIGHT);
 
             return this;
         }
 
-        public QueryWrapper<TModel> InnerJoin<TRight>(Expression<Func<TModel, TRight, Boolean>> expression)
+        public QueryWrapper<TModel> InnerJoin<TRight>(Expression<Func<TModel, TRight, Boolean>> join)
         where TRight : new()
         {
-            Parameter.Validate(expression);
-            _expressionStore.AddJoin(expression, JoinRelation.INNER);
+            Parameter.Validate(join);
+            _expressionStore.AddJoin(join, JoinRelation.INNER);
             return this;
         }
 
-        public QueryWrapper<TModel> InnerJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> expression)
+        public QueryWrapper<TModel> InnerJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> join)
         where TLeft : new()
         where TRight : new()
         {
-            Parameter.Validate(expression);
-            _expressionStore.AddJoin(expression, JoinRelation.INNER);
+            Parameter.Validate(join);
+            _expressionStore.AddJoin(join, JoinRelation.INNER);
 
             return this;
         }
@@ -89,115 +89,122 @@ namespace NewLibCore.Data.SQL.Mapper
             return this;
         }
 
-        public QueryWrapper<TModel> Select(Expression<Func<TModel, dynamic>> fields)
+        public QueryWrapper<TModel> Select(Expression<Func<TModel, dynamic>> selector = null)
         {
-            if (fields != null)
+            if (selector != null)
             {
-                _expressionStore.AddSelect(fields);
+                _expressionStore.AddSelect(selector);
             }
 
             return this;
         }
 
-        public QueryWrapper<TModel> Select<TModel1, TModel2>(Expression<Func<TModel1, TModel2, dynamic>> fields = null)
+        public QueryWrapper<TModel> Select<TModel1, TModel2>(Expression<Func<TModel1, TModel2, dynamic>> selector = null)
         where TModel1 : new()
         where TModel2 : new()
         {
-            if (fields != null)
+            if (selector != null)
             {
-                _expressionStore.AddSelect(fields);
+                _expressionStore.AddSelect(selector);
             }
             return this;
         }
-        public QueryWrapper<TModel> Select<TModel1, TModel2, TModel3>(Expression<Func<TModel1, TModel2, TModel3, dynamic>> fields = null)
+        public QueryWrapper<TModel> Select<TModel1, TModel2, TModel3>(Expression<Func<TModel1, TModel2, TModel3, dynamic>> selector = null)
         where TModel1 : new()
         where TModel2 : new()
         where TModel3 : new()
         {
-            if (fields != null)
+            if (selector != null)
             {
-                _expressionStore.AddSelect(fields);
+                _expressionStore.AddSelect(selector);
             }
             return this;
         }
 
-        public QueryWrapper<TModel> Select<TModel1, TModel2, TModel3, TModel4>(Expression<Func<TModel1, TModel2, TModel3, TModel4, dynamic>> fields = null)
-        where TModel1 : new()
-        where TModel2 : new()
-        where TModel3 : new()
-        where TModel4 : new()
-        {
-            if (fields != null)
-            {
-                _expressionStore.AddSelect(fields);
-            }
-            return this;
-        }
-
-        public QueryWrapper<TModel> Select<TModel1, TModel2, TModel3, TModel4, TModel5>(Expression<Func<TModel1, TModel2, TModel3, TModel4, TModel5, dynamic>> fields = null)
-        where TModel1 : new()
-        where TModel2 : new()
-        where TModel3 : new()
-        where TModel4 : new()
-        where TModel5 : new()
-        {
-            if (fields != null)
-            {
-                _expressionStore.AddSelect(fields);
-            }
-            return this;
-        }
-
-
-        public QueryWrapper<TModel> Where(Expression<Func<TModel, Boolean>> expression)
-        {
-            Parameter.Validate(expression);
-            _expressionStore.AddWhere(expression);
-            return this;
-        }
-
-        public QueryWrapper<TModel> Where<TModel1, TModel2>(Expression<Func<TModel1, TModel2, Boolean>> expression)
-        where TModel1 : new()
-        where TModel2 : new()
-        {
-            Parameter.Validate(expression);
-            _expressionStore.AddWhere(expression);
-            return this;
-        }
-
-
-        public QueryWrapper<TModel> Where<TModel1, TModel2, TModel3>(Expression<Func<TModel1, TModel2, TModel3, Boolean>> expression)
-        where TModel1 : new()
-        where TModel2 : new()
-        where TModel3 : new()
-        {
-            Parameter.Validate(expression);
-            _expressionStore.AddWhere(expression);
-            return this;
-        }
-
-
-        public QueryWrapper<TModel> Where<TModel1, TModel2, TModel3, TModel4>(Expression<Func<TModel1, TModel2, TModel3, TModel4, Boolean>> expression)
+        public QueryWrapper<TModel> Select<TModel1, TModel2, TModel3, TModel4>(Expression<Func<TModel1, TModel2, TModel3, TModel4, dynamic>> selector = null)
         where TModel1 : new()
         where TModel2 : new()
         where TModel3 : new()
         where TModel4 : new()
         {
-            Parameter.Validate(expression);
-            _expressionStore.AddWhere(expression);
+            if (selector != null)
+            {
+                _expressionStore.AddSelect(selector);
+            }
             return this;
         }
 
-
-        public QueryWrapper<TModel> Where<TModel1, TModel2, TModel3, TModel4, TModel5>(Expression<Func<TModel1, TModel2, TModel3, TModel4, TModel5, Boolean>> expression)
+        public QueryWrapper<TModel> Select<TModel1, TModel2, TModel3, TModel4, TModel5>(Expression<Func<TModel1, TModel2, TModel3, TModel4, TModel5, dynamic>> selector = null)
         where TModel1 : new()
         where TModel2 : new()
         where TModel3 : new()
         where TModel4 : new()
         where TModel5 : new()
         {
-            Parameter.Validate(expression);
-            _expressionStore.AddWhere(expression);
+            if (selector != null)
+            {
+                _expressionStore.AddSelect(selector);
+            }
+            return this;
+        }
+
+
+        public QueryWrapper<TModel> Where(Expression<Func<TModel, Boolean>> filter)
+        {
+            Parameter.Validate(filter);
+            _expressionStore.AddWhere(filter);
+            return this;
+        }
+
+        public QueryWrapper<TModel> Where<TModel1>(Expression<Func<TModel1, Boolean>> filter)
+        where TModel1 : new()
+        {
+            Parameter.Validate(filter);
+            _expressionStore.AddWhere(filter);
+            return this;
+        }
+
+        public QueryWrapper<TModel> Where<TModel1, TModel2>(Expression<Func<TModel1, TModel2, Boolean>> filter)
+        where TModel1 : new()
+        where TModel2 : new()
+        {
+            Parameter.Validate(filter);
+            _expressionStore.AddWhere(filter);
+            return this;
+        }
+
+
+        public QueryWrapper<TModel> Where<TModel1, TModel2, TModel3>(Expression<Func<TModel1, TModel2, TModel3, Boolean>> filter)
+        where TModel1 : new()
+        where TModel2 : new()
+        where TModel3 : new()
+        {
+            Parameter.Validate(filter);
+            _expressionStore.AddWhere(filter);
+            return this;
+        }
+
+        public QueryWrapper<TModel> Where<TModel1, TModel2, TModel3, TModel4>(Expression<Func<TModel1, TModel2, TModel3, TModel4, Boolean>> filter)
+        where TModel1 : new()
+        where TModel2 : new()
+        where TModel3 : new()
+        where TModel4 : new()
+        {
+            Parameter.Validate(filter);
+            _expressionStore.AddWhere(filter);
+            return this;
+        }
+
+
+        public QueryWrapper<TModel> Where<TModel1, TModel2, TModel3, TModel4, TModel5>(Expression<Func<TModel1, TModel2, TModel3, TModel4, TModel5, Boolean>> filter)
+        where TModel1 : new()
+        where TModel2 : new()
+        where TModel3 : new()
+        where TModel4 : new()
+        where TModel5 : new()
+        {
+            Parameter.Validate(filter);
+            _expressionStore.AddWhere(filter);
             return this;
         }
 
@@ -233,12 +240,12 @@ namespace NewLibCore.Data.SQL.Mapper
             });
         }
 
-         public Int32 Count()
+        public Int32 Count()
         {
             return RunDiagnosis.Watch(() =>
             {
                 Select((a) => "COUNT(*)");
-                 Handler handler = new QueryHandler<TModel>(_expressionStore, _serviceProvider);
+                Handler handler = new QueryHandler<TModel>(_expressionStore, _serviceProvider);
                 return handler.Execute().FirstOrDefault<Int32>();
             });
         }
