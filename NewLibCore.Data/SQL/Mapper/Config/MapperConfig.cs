@@ -42,9 +42,9 @@ namespace NewLibCore.Data.SQL.Mapper
             TransactionLevel = IsolationLevel.Unspecified;
         }
 
-        public static void AddLogger()
+        public static void AddLogger(ILogger logger)
         {
-            
+            Logger = logger;
         }
-    }
+    } 
 }
