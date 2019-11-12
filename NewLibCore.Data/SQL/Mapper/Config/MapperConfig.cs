@@ -41,5 +41,10 @@ namespace NewLibCore.Data.SQL.Mapper
             EnableModelValidate = true;
             TransactionLevel = IsolationLevel.Unspecified;
         }
+
+        public static void AddLogger()
+        {
+            
+        }
     }
 }
