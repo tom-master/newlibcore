@@ -68,8 +68,8 @@ namespace NewLibCore.Data.SQL.Mapper
             EnableModelValidate = true;
             TransactionLevel = IsolationLevel.Unspecified;
 
-            _logger = () => new ConsoleLogger();
-            _cache = () => new ExecutionResultCache();
+            _logger = () => new DefaultLogger();
+            _cache = () => new DefaultResultCache();
         }
 
         public static void SetLogger(ILogger logger)

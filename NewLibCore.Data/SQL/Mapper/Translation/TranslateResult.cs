@@ -19,7 +19,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
         private readonly IList<EntityParameter> _parameters;
 
-        private readonly ResultCache _cache = new ExecutionResultCache();
+        private readonly ResultCache _cache = MapperConfig.Cache;
 
         /// <summary>
         /// 初始化一个TranslationResult类的实例

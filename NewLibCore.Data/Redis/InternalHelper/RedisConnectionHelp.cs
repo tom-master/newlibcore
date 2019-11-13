@@ -10,7 +10,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
     /// </summary>
     internal class RedisConnectionHelp
     {
-        private static ConsoleLogger _consoleLogger;
+        private static DefaultLogger _consoleLogger;
 
         private static readonly Object _locker = new Object();
 
@@ -18,7 +18,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
 
         internal RedisConnectionHelp()
         {
-            _consoleLogger = new ConsoleLogger();
+            _consoleLogger = new DefaultLogger();
         }
 
 
@@ -82,7 +82,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// <param name="e"></param>
         private static void MuxerErrorMessage(Object sender, RedisErrorEventArgs e)
         {
-            _consoleLogger.Info( "ErrorMessage: " + e.Message);
+            _consoleLogger.Info("ErrorMessage: " + e.Message);
         }
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// <param name="e"></param>
         private static void MuxerHashSlotMoved(Object sender, HashSlotMovedEventArgs e)
         {
-            _consoleLogger.Info( "HashSlotMoved:NewEndPoint" + e.NewEndPoint + ", OldEndPoint" + e.OldEndPoint);
+            _consoleLogger.Info("HashSlotMoved:NewEndPoint" + e.NewEndPoint + ", OldEndPoint" + e.OldEndPoint);
         }
 
         /// <summary>
@@ -122,7 +122,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// <param name="e"></param>
         private static void MuxerInternalError(Object sender, InternalErrorEventArgs e)
         {
-            _consoleLogger.Error( "InternalError:Message" + e.Exception.Message);
+            _consoleLogger.Error("InternalError:Message" + e.Exception.Message);
         }
 
         #endregion 事件

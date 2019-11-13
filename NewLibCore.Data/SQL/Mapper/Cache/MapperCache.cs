@@ -34,14 +34,14 @@ namespace NewLibCore.Data.SQL.Mapper.Cache
     /// <summary>
     /// 缓存sql执行的结果
     /// </summary>
-    internal class ExecutionResultCache : ResultCache
+    internal class DefaultResultCache : ResultCache
     {
         protected internal ObjectCache _baseCache;
 
         /// <summary>
         /// 初始化一个ExecutionResultCache类的实例
         /// </summary>
-        public ExecutionResultCache()
+        public DefaultResultCache()
         {
             _baseCache = MemoryCache.Default;
         }

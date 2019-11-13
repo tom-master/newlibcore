@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace NewLibCore.Logger
 {
-    public class ConsoleLogger : ILogger
+    public class DefaultLogger : ILogger
     {
         public void Debug(String message)
         {
