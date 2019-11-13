@@ -6,7 +6,7 @@ namespace NewLibCore.Data.SQL.Mapper.Cache
     /// <summary>
     /// 映射缓存
     /// </summary>
-    internal abstract class ResultCache
+    public abstract class ResultCache
     {
         public ResultCache() { }
 

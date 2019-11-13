@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Data;
+using NewLibCore.Data.SQL.Mapper.Cache;
 using NewLibCore.Logger;
+using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper
 {
@@ -10,6 +12,10 @@ namespace NewLibCore.Data.SQL.Mapper
     public class MapperConfig
     {
 
+        private static Func<ILogger> _logger = () => null;
+
+        private static Func<ResultCache> _cache = () => null;
+
         /// <summary>
         /// 映射的数据库类型
         /// </summary>
@@ -18,7 +24,29 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <summary>
         /// 日志
         /// </summary>
-        public static ILogger Logger { get; set; }
+        public static ILogger Logger
+        {
+            get
+            {
+                if (_logger == null)
+                {
+                    throw new Exception();
+                }
+                return _logger();
+            }
+        }
+
+        public static ResultCache Cache
+        {
+            get
+            {
+                if (_cache == null)
+                {
+                    throw new Exception();
+                }
+                return _cache();
+            }
+        }
 
         /// <summary>
         /// 启用模型验证
@@ -37,14 +65,23 @@ namespace NewLibCore.Data.SQL.Mapper
         public static void InitDefaultSetting()
         {
             MapperType = MapperType.MYSQL;
-            Logger = new ConsoleLogger();
             EnableModelValidate = true;
             TransactionLevel = IsolationLevel.Unspecified;
+
+            _logger = () => new ConsoleLogger();
+            _cache = () => new ExecutionResultCache();
         }
 
-        public static void AddLogger(ILogger logger)
+        public static void SetLogger(ILogger logger)
         {
-            Logger = logger;
+            Parameter.Validate(logger);
+            _logger = () => logger;
         }
-    } 
+
+        public static void SetCache(ResultCache cache)
+        {
+            Parameter.Validate(cache);
+            _cache = () => cache;
+        }
+    }
 }

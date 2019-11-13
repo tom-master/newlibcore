@@ -20,10 +20,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
         private EntityMapper()
         {
-            var services = new ServiceCollection()
-               .AddTransient<ResultCache, ExecutionResultCache>()
-               .AddScoped<IMapperDbContext, MapperDbContext>()
-               .AddSingleton<ILogger, ConsoleLogger>();
+            var services = new ServiceCollection().AddScoped<IMapperDbContext, MapperDbContext>();
 
             if (MapperConfig.MapperType == MapperType.MSSQL)
             {
