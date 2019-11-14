@@ -1,7 +1,88 @@
-# EntityMapper
+# EntityMapper(持续更新中...文档中相应的用法可能会在后续版本中变更)
 
 ### 简介
 **EntityMapper**是一个可以将简单的**Expression**翻译为对应的**SQL**语句，支持连接查询以及排序等操作，后续还会继续支持复杂**SQL**语句翻译操作
+# 数据实体变化
+* 特性
+    > Require:被修饰的属性将是不可为空的        
+    ```C#
+    [Require]
+    public String UserName { get; set; }
+    ```
+    > InputRange:被修饰的属性将会被限制输入长度    
+    ```C#
+    /// <summary>
+    /// 当InputRange只被输入一个参数时表示被修饰的属性最大只能输入50的长度
+    /// </summary>
+    [InputRange(50)]
+    public String UserName { get; set; }
+    
+    /// <summary>
+    /// 当InputRange被输入两个参数时表示被修饰属性最小不能小于10最大不能大于20的长度
+    /// </summary>
+    [InputRange(10,20)]
+    public String UserName { get; set; }
+    ```
+    > DefaultValue:被修饰的属性将可为NULL或0,但在插入数据库时会被赋值为对应的默认值   
+    ```C#
+    
+    /// <summary>
+    /// DefaultValue可被输入自定义的默认值
+    /// </summary>
+    [DefaultValue("游客")]
+    public String UserName { get; set; }
+    
+    /// <summary>
+    /// DefaultValue可根据被修饰的属性的类型来确定默认值,0或NULL
+    /// </summary>
+    [DefaultValue(typeof(String))]
+    public String UserName { get; set; }
+    ```
+    >DateTimeDefaultValue:专门用于时间类型的属性默认值   
+    
+    ```C#
+    /// <summary>
+    /// 被DateTimeDefaultValue修饰的DateTime属性将在插入数据库时具有默认值,默认值为当前时间:DateTime.Now
+    /// </summary>
+    [DateTimeDefaultValue]
+    public DateTime CreateTime { get; set; }
+    ```
+    >TableName:用于表示被修饰的数据实体在数据库中的表名称    
+    ```C#
+    /// <summary>
+    /// 当TableName只被输入单个参数时表示被修饰的实体在数据库中名为参数值
+    /// </summary>
+    [TableName("newcrm_user")]
+    public class UserEntity
+    {
+      ...
+    }
+    
+    /// <summary>
+    /// TableName第一个参数为在数据库中的表名称,第二个参数表示被修饰的类在Expression被翻译成sql语句时,表的别名
+    /// 例如 SELECT a1.UserName,a1.Password,a1.CreateTime FROM newcrm_user AS a1 WHERE a1.IsActive=1
+    /// </summary>
+    [TableName("newcrm_user","a1")]
+    public class UserEntity
+    {
+      ...
+    }
+    ```
+ * 数据实体基类
+   > EntityBase:只有数据实体继承与EntityBase后才会被EntityMapper类库所识别    
+   ```C#
+   public class UserEntity:EntityBase
+   {
+    ...
+   }
+   
+   public class UserRole:EntityBase
+   {
+    ...
+   }
+   ```
+
+
 # 基本操作示例
 
   1.初始化EntityMapper的默认设置和实例
@@ -89,7 +170,5 @@
           mapper.Rollback();
       }
   }
-  
-### 简介
-**EntityMapper**是一个可以将简单的**Expression**翻译为对应的**SQL**语句，支持连接查询以及排序等操作，后续还会继续支持复杂**SQL**语句翻译操作
-# 基本操作示例
+```
+
