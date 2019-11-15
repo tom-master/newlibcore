@@ -38,7 +38,6 @@ namespace NewLibCore.Run
                 //var result = mapper.Query<Config>().InnerJoin<User>((c, u) => c.UserId == u.Id).FirstOrDefault();
                 //var result = mapper.Query<Config>().InnerJoin<User>((c, u) => c.UserId == u.Id).ToList();
                 //var result = mapper.Query<App>().RightJoin<Member>((a, m) => a.Id == m.AppId).ToList();
-
             }
             #endregion
 
@@ -76,7 +75,7 @@ namespace NewLibCore.Run
         /// <summary>
         /// 图片地址
         /// </summary>
-        [Required, InputRange(150)]
+        [Required, InputRange(150),DefaultValue("")]
         public String Url { get; private set; }
 
         /// <summary>
