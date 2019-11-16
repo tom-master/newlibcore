@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 
 namespace NewLibCore.Data.SQL.Mapper.Database
 {
     internal interface IMapperDbContext : IDisposable
     {
+
+        Boolean UseTransaction { get; set; }
+
         /// <summary>
         /// 提交一个事物
         /// </summary>
@@ -26,7 +30,7 @@ namespace NewLibCore.Data.SQL.Mapper.Database
         /// 打开事务
         /// </summary>
         /// <returns></returns>
-        void OpenTransaction();
+        DbTransaction OpenTransaction();
 
         /// <summary>
         /// 释放资源

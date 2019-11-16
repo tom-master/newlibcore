@@ -15,11 +15,14 @@ namespace NewLibCore.Data.SQL.Mapper.Database
     /// </summary>
     internal sealed class MapperDbContext : IMapperDbContext
     {
+
         private Boolean _disposed = false;
 
         private DbConnection _connection;
 
         private DbTransaction _dataTransaction;
+
+        public Boolean UseTransaction { get; set; }
 
         public MapperDbContext()
         {
@@ -35,8 +38,6 @@ namespace NewLibCore.Data.SQL.Mapper.Database
             {
                 throw new Exception($@"暂不支持的数据库类型:{MapperConfig.MapperType}");
             }
-
-            OpenConnection();
         }
 
         public void Commit()
@@ -66,13 +67,14 @@ namespace NewLibCore.Data.SQL.Mapper.Database
             }
         }
 
-        public void OpenTransaction()
+        public DbTransaction OpenTransaction()
         {
             if (_dataTransaction == null)
             {
                 _dataTransaction = _connection.BeginTransaction(MapperConfig.TransactionLevel);
                 RunDiagnosis.Info("开启事务");
             }
+            return _dataTransaction;
         }
 
         public void Dispose()
@@ -83,7 +85,7 @@ namespace NewLibCore.Data.SQL.Mapper.Database
 
         public void Dispose(Boolean disposing)
         {
-            RunDiagnosis.Info($@"关闭连接{Environment.NewLine}");
+            RunDiagnosis.Info($@"释放资源{Environment.NewLine}");
             if (!_disposed)
             {
                 if (!disposing)
@@ -126,9 +128,9 @@ namespace NewLibCore.Data.SQL.Mapper.Database
                 OpenConnection();
                 using (var cmd = _connection.CreateCommand())
                 {
-                    if (_dataTransaction != null)
+                    if (UseTransaction)
                     {
-                        cmd.Transaction = _dataTransaction;
+                        cmd.Transaction = OpenTransaction();
                     }
 
                     cmd.CommandType = commandType;

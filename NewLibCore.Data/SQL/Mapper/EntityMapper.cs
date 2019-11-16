@@ -122,7 +122,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
         public void OpenTransaction()
         {
-            _serviceScope.ServiceProvider.GetService<IMapperDbContext>().OpenTransaction();
+            _serviceScope.ServiceProvider.GetService<IMapperDbContext>().UseTransaction = true;
         }
 
         /// <summary>
