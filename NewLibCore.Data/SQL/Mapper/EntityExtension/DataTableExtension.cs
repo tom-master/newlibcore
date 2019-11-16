@@ -36,10 +36,6 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
         /// <returns></returns>
         internal static T FirstOrDefault<T>(this DataTable dataTable) where T : new()
         {
-            if (dataTable.Rows.Count == 1 && dataTable.Columns.Count == 1)
-            {
-                return (T)ChangeType(dataTable.Rows[0][0], typeof(T));
-            }
             return ToList<T>(dataTable).FirstOrDefault();
         }
 
@@ -79,30 +75,6 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
                             }
                         }
                         list.Add(obj);
-
-                        #region 
-                        // if (propertys.Any())
-                        // {
-                        //     foreach (var propertyInfo in propertys)
-                        //     {
-                        //         if (dt.Columns.Contains(propertyInfo.Name))
-                        //         {
-                        //             var value = dr[propertyInfo.Name];
-                        //             if (value != DBNull.Value)
-                        //             {
-                        //                 var fast = new FastProperty(propertyInfo);
-                        //                 fast.Set(obj, ChangeType(value, propertyInfo.PropertyType));
-                        //             }
-                        //         }
-                        //     }
-                        //     list.Add(obj);
-                        // }
-                        // else
-                        // {
-                        //     var valueTuple = CreateValueTuple(dr.ItemArray);
-                        //     list.Add((T)valueTuple);
-                        // }
-                        #endregion
                     }
                 }
                 return list;
