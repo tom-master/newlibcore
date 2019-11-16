@@ -18,7 +18,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// 翻译
         /// </summary>
         /// <returns></returns>
-        StringBuilder Parse(ExpressionStore expressionStore);
+        (String, IList<EntityParameter>) Parse(ExpressionStore expressionStore);
     }
 
     /// <summary>
@@ -29,6 +29,8 @@ namespace NewLibCore.Data.SQL.Mapper
         private JoinRelation _joinRelation;
 
         private readonly StringBuilder _internalStore;
+
+        private readonly IList<EntityParameter> _entityParameters;
 
         private readonly Stack<String> _parameterNameStack;
 
@@ -49,6 +51,7 @@ namespace NewLibCore.Data.SQL.Mapper
             _internalStore = new StringBuilder();
             _parameterNameStack = new Stack<String>();
             _relationTypesStack = new Stack<RelationType>();
+            _entityParameters = new List<EntityParameter>();
             _tableAliasMapper = new List<KeyValuePair<String, String>>();
         }
 
@@ -65,7 +68,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// 翻译
         /// </summary>
         /// <returns></returns>
-        public StringBuilder Parse(ExpressionStore expressionStore)
+        public (String, IList<EntityParameter>) Parse(ExpressionStore expressionStore)
         {
             Parameter.Validate(expressionStore);
 
@@ -101,7 +104,7 @@ namespace NewLibCore.Data.SQL.Mapper
                     InternalBuildWhere(item.Expression);
                 }
             }
-            _internalStore.Append("WHERE 1=1");
+            _internalStore.Append(" WHERE 1=1 ");
             //翻译Where条件对象
             if (expressionStore.Where != null)
             {
@@ -109,7 +112,7 @@ namespace NewLibCore.Data.SQL.Mapper
                 //当表达式主体为常量时则直接返回，不做解析
                 if (lambdaExp.Body.NodeType == ExpressionType.Constant)
                 {
-                    return _internalStore;
+                    return (_internalStore.ToString(), _entityParameters);
                 }
 
                 _joinRelation = JoinRelation.NONE;
@@ -118,7 +121,7 @@ namespace NewLibCore.Data.SQL.Mapper
                 //获取Where类型中的存储的表达式对象进行翻译
                 InternalBuildWhere(lambdaExp);
             }
-            return _internalStore;
+            return (_internalStore.ToString(), _entityParameters);
         }
 
         /// <summary>
@@ -169,7 +172,7 @@ namespace NewLibCore.Data.SQL.Mapper
                 case ExpressionType.Constant:
                     {
                         var binaryExp = (ConstantExpression)expression;
-                        _internalStore.Append(new EntityParameter(_parameterNameStack.Pop(), binaryExp.Value));
+                        _entityParameters.Add(new EntityParameter(_parameterNameStack.Pop(), binaryExp.Value));
                         break;
                     }
                 case ExpressionType.Equal:
@@ -268,7 +271,7 @@ namespace NewLibCore.Data.SQL.Mapper
                         else
                         {
                             var getter = Expression.Lambda(memberExp).Compile();
-                            _internalStore.Append(new EntityParameter(_parameterNameStack.Pop(), getter.DynamicInvoke()));
+                            _entityParameters.Add(new EntityParameter(_parameterNameStack.Pop(), getter.DynamicInvoke()));
                             break;
                         }
                         break;

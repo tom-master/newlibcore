@@ -44,7 +44,9 @@ namespace NewLibCore.Data.SQL.Mapper
             var mainTable = _expressionStore.From.AliaNameMapper[0];
 
             translateResult.Append(String.Format(databaseConfig.SelectTemplate, Fields, mainTable.Key, mainTable.Value));
-            translateResult.Append(parser.Parse(_expressionStore).ToString());
+
+            var (sql, parameters) = parser.Parse(_expressionStore);
+            translateResult.Append(sql, parameters);
 
             var aliasMapper = _expressionStore.MergeAliasMapper();
 

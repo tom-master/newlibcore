@@ -30,7 +30,7 @@ namespace NewLibCore.Run
 
             using (var mapper = EntityMapper.CreateMapper())
             {
-                var result = mapper.Query<User>().FirstOrDefault();
+                var result = mapper.Query<User>().Where(w => w.Id == 4).FirstOrDefault();
                 //var result = mapper.Query<User>().FirstOrDefault();
                 //var result = mapper.Query<User>().ToList();
                 //var result = mapper.Query<User>().Select(u => new { u.Id, u.Name, u.LoginPassword }).FirstOrDefault();
@@ -75,7 +75,7 @@ namespace NewLibCore.Run
         /// <summary>
         /// 图片地址
         /// </summary>
-        [Required, InputRange(150),DefaultValue("")]
+        [Required, InputRange(150)]
         public String Url { get; private set; }
 
         /// <summary>
