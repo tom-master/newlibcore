@@ -46,13 +46,12 @@ namespace NewLibCore.Data.SQL.Mapper.Cache
             _baseCache = MemoryCache.Default;
         }
 
-        protected internal override void Add(String key, Object obj, DateTime? timeOut = null)
+        protected internal override void Add(String key, Object obj, DateTime? expire = null)
         {
-            var alive = new Random(DateTime.Now.Millisecond).Next(1, 3);
             var cacheItem = new CacheItem(key, obj);
             var itemPolicy = new CacheItemPolicy
             {
-                AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(alive)
+                AbsoluteExpiration = expire ?? DateTime.Now.AddHours(1)
             };
             _baseCache.Add(cacheItem, itemPolicy);
         }

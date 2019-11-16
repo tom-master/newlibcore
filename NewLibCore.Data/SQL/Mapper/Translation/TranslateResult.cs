@@ -138,7 +138,7 @@ namespace NewLibCore.Data.SQL.Mapper
             {
                 return;
             }
-            
+
             if (_cache != null)
             {
                 _cache.Add(PrepareCacheKey(), executeResult);
