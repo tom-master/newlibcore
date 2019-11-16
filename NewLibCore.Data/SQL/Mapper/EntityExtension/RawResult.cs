@@ -58,7 +58,7 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
         {
             try
             {
-                if (!typeof(TResult).IsComplexType())
+                if (!typeof(TResult).IsComplexType() && !_result.GetType().IsComplexType())
                 {
                     return (TResult)Convert.ChangeType(_result, typeof(TResult));
                 }

@@ -33,7 +33,8 @@ namespace NewLibCore
         /// </summary>
         public static T ToEnum<T>(Int32 value) where T : struct
         {
-            Parameter.Validate(0);
+            Parameter.Validate(value);
+
             return (T)Enum.ToObject(typeof(T), value);
         }
 

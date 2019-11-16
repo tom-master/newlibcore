@@ -134,12 +134,14 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <param name="executeResult">sql执行后原始的执行结果</param>
         private void SetCache(ExecuteType executeType, RawResult executeResult)
         {
+            if (executeType != ExecuteType.SELECT)
+            {
+                return;
+            }
+            
             if (_cache != null)
             {
-                if (executeType == ExecuteType.SELECT)
-                {
-                    _cache.Add(PrepareCacheKey(), executeResult);
-                }
+                _cache.Add(PrepareCacheKey(), executeResult);
             }
         }
 
