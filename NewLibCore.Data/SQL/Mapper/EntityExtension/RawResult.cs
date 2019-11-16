@@ -38,7 +38,15 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
         /// <returns></returns>
         public List<TResult> ToList<TResult>() where TResult : new()
         {
-            return ((DataTable)_result).ToList<TResult>();
+            try
+            {
+                return ((DataTable)_result).ToList<TResult>();
+            }
+            catch (System.Exception)
+            {
+                throw;
+            }
+
         }
 
         /// <summary>
@@ -52,7 +60,7 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
             {
                 if (!typeof(TResult).IsComplexType())
                 {
-                    return (TResult)_result;
+                    return (TResult)Convert.ChangeType(_result, typeof(TResult));
                 }
                 return ((DataTable)_result).FirstOrDefault<TResult>();
             }
