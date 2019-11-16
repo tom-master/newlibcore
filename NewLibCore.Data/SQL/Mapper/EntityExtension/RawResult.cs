@@ -48,8 +48,20 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
         /// <returns></returns>
         public TResult FirstOrDefault<TResult>() where TResult : new()
         {
-            return ((DataTable)_result).FirstOrDefault<TResult>();
+            try
+            {
+                if (!typeof(TResult).IsComplexType())
+                {
+                    return (TResult)_result;
+                }
+                return ((DataTable)_result).FirstOrDefault<TResult>();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
+
 
         public override String ToString()
         {
