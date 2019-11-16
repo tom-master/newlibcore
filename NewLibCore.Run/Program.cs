@@ -30,7 +30,7 @@ namespace NewLibCore.Run
 
             using (var mapper = EntityMapper.CreateMapper())
             {
-                mapper.Query<App>().Select(s => new { s.Id }).ToList();
+                var result = mapper.Query<App>().Select(s => new { s.Id }).ToList();
                 //var result = mapper.Query<User>().FirstOrDefault();
                 //var result = mapper.Query<User>().ToList();
                 //var result = mapper.Query<User>().Select(u => new { u.Id, u.Name, u.LoginPassword }).FirstOrDefault();
