@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using Microsoft.Extensions.DependencyInjection;
-using NewLibCore.Data.SQL.Mapper.Cache;
 using NewLibCore.Data.SQL.Mapper.Database;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
@@ -20,7 +19,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
         private EntityMapper()
         {
-            var services = new ServiceCollection().AddScoped<IMapperDbContext, MapperDbContext>();
+            var services = new ServiceCollection().AddScoped<MapperDbContextBase, MapperDbContext>();
 
             if (MapperConfig.MapperType == MapperType.MSSQL)
             {
@@ -112,17 +111,17 @@ namespace NewLibCore.Data.SQL.Mapper
 
         public void Commit()
         {
-            _serviceScope.ServiceProvider.GetService<IMapperDbContext>().Commit();
+            _serviceScope.ServiceProvider.GetService<MapperDbContextBase>().Commit();
         }
 
         public void Rollback()
         {
-            _serviceScope.ServiceProvider.GetService<IMapperDbContext>().Rollback();
+            _serviceScope.ServiceProvider.GetService<MapperDbContextBase>().Rollback();
         }
 
         public void OpenTransaction()
         {
-            _serviceScope.ServiceProvider.GetService<IMapperDbContext>().UseTransaction = true;
+            _serviceScope.ServiceProvider.GetService<MapperDbContextBase>().UseTransaction = true;
         }
 
         /// <summary>

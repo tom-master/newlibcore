@@ -6,44 +6,45 @@ using NewLibCore.Data.SQL.Mapper.EntityExtension;
 
 namespace NewLibCore.Data.SQL.Mapper.Database
 {
-    internal interface IMapperDbContext : IDisposable
+    internal abstract class MapperDbContextBase : IDisposable
     {
 
-        Boolean UseTransaction { get; set; }
+        protected internal Boolean UseTransaction { get; set; }
 
         /// <summary>
         /// 提交一个事物
         /// </summary>
-        void Commit();
+        protected internal abstract void Commit();
 
         /// <summary>
         /// 回滚一个事物
         /// </summary>
-        void Rollback();
+        protected internal abstract void Rollback();
 
         /// <summary>
         /// 打开连接
         /// </summary>
-        void OpenConnection();
+        protected internal abstract void OpenConnection();
 
         /// <summary>
         /// 打开事务
         /// </summary>
         /// <returns></returns>
-        DbTransaction OpenTransaction();
+        protected internal abstract DbTransaction OpenTransaction();
 
         /// <summary>
         /// 释放资源
         /// </summary>
         /// <param name="disposing"></param>
-        void Dispose(Boolean disposing);
+
+        protected internal abstract void Dispose(Boolean disposing);
 
         /// <summary>
         /// 获取语句的执行类型
         /// </summary>
         /// <param name="sql">语句</param>
         /// <returns></returns>
-        ExecuteType GetExecuteType(String sql);
+        protected internal abstract ExecuteType GetExecuteType(String sql);
 
         /// <summary>
         /// 执行原生sql语句
@@ -53,6 +54,12 @@ namespace NewLibCore.Data.SQL.Mapper.Database
         /// <param name="parameters">参数</param>
         /// <param name="commandType"></param>
         /// <returns></returns>
-        RawResult RawExecute(String sql, IEnumerable<EntityParameter> parameters = null, CommandType commandType = CommandType.Text);
+        protected internal abstract RawResult RawExecute(String sql, IEnumerable<EntityParameter> parameters = null, CommandType commandType = CommandType.Text);
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
     }
 }

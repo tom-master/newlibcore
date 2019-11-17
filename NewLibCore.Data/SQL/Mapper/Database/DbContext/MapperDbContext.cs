@@ -13,7 +13,7 @@ namespace NewLibCore.Data.SQL.Mapper.Database
     /// <summary>
     /// sql语句执行
     /// </summary>
-    internal sealed class MapperDbContext : IMapperDbContext
+    internal sealed class MapperDbContext : MapperDbContextBase
     {
 
         private Boolean _disposed = false;
@@ -21,8 +21,6 @@ namespace NewLibCore.Data.SQL.Mapper.Database
         private DbConnection _connection;
 
         private DbTransaction _dataTransaction;
-
-        public Boolean UseTransaction { get; set; }
 
         public MapperDbContext()
         {
@@ -40,7 +38,7 @@ namespace NewLibCore.Data.SQL.Mapper.Database
             }
         }
 
-        public void Commit()
+        protected internal override void Commit()
         {
             if (_dataTransaction != null)
             {
@@ -49,7 +47,7 @@ namespace NewLibCore.Data.SQL.Mapper.Database
             }
         }
 
-        public void Rollback()
+        protected internal override void Rollback()
         {
             if (_dataTransaction != null)
             {
@@ -58,7 +56,7 @@ namespace NewLibCore.Data.SQL.Mapper.Database
             }
         }
 
-        public void OpenConnection()
+        protected internal override void OpenConnection()
         {
             if (_connection.State == ConnectionState.Closed)
             {
@@ -67,7 +65,7 @@ namespace NewLibCore.Data.SQL.Mapper.Database
             }
         }
 
-        public DbTransaction OpenTransaction()
+        protected internal override DbTransaction OpenTransaction()
         {
             if (_dataTransaction == null)
             {
@@ -77,13 +75,7 @@ namespace NewLibCore.Data.SQL.Mapper.Database
             return _dataTransaction;
         }
 
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        public void Dispose(Boolean disposing)
+        protected internal override void Dispose(Boolean disposing)
         {
             RunDiagnosis.Info($@"释放资源{Environment.NewLine}");
             if (!_disposed)
@@ -107,7 +99,7 @@ namespace NewLibCore.Data.SQL.Mapper.Database
             }
         }
 
-        public ExecuteType GetExecuteType(String sql)
+        protected internal override ExecuteType GetExecuteType(String sql)
         {
             Parameter.Validate(sql);
 
@@ -120,7 +112,7 @@ namespace NewLibCore.Data.SQL.Mapper.Database
             throw new Exception($@"SQL语句执行类型解析失败:{operationType}");
         }
 
-        public RawResult RawExecute(String sql, IEnumerable<EntityParameter> parameters = null, CommandType commandType = CommandType.Text)
+        protected internal override RawResult RawExecute(String sql, IEnumerable<EntityParameter> parameters = null, CommandType commandType = CommandType.Text)
         {
             try
             {

@@ -91,7 +91,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <returns></returns>
         internal RawResult Execute(IServiceProvider serviceProvider)
         {
-            var dbContext = serviceProvider.GetService<IMapperDbContext>();
+            var dbContext = serviceProvider.GetService<MapperDbContextBase>();
 
             var executeResult = GetCache();
             var executeType = dbContext.GetExecuteType(ToString());
