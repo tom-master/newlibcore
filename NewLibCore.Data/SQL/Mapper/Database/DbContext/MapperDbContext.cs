@@ -24,6 +24,8 @@ namespace NewLibCore.Data.SQL.Mapper.Database
 
         public MapperDbContext()
         {
+            Parameter.Validate(MapperConfig.ConnectionStringName);
+
             if (MapperConfig.MapperType == MapperType.MYSQL)
             {
                 _connection = new MySqlConnection(Host.GetHostVar(MapperConfig.ConnectionStringName));

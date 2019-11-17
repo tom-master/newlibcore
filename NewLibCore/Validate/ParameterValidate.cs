@@ -7,17 +7,17 @@ namespace NewLibCore.Validate
         /// <summary>
         /// 验证引用类型是否合法
         /// </summary>
-        public static void Validate(Object validateParameter)
+        public static void Validate(Object argument)
         {
-            Validate(validateParameter, false);
+            Validate(argument, false);
         }
 
         /// <summary>
         /// 验证引用类型是否合法
         /// </summary>
-        public static void Validate(Object vaildateParameter, Boolean canNull)
+        public static void Validate(Object argument, Boolean canNull)
         {
-            if (!canNull && vaildateParameter == null)
+            if (!canNull && (argument == null || String.IsNullOrEmpty(argument.ToString())))
             {
                 throw new ArgumentNullException("参数不能为0或null");
             }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using NewLibCore.Data.SQL.Mapper;
+using NewLibCore.Validate;
 using Newtonsoft.Json;
 
 namespace NewLibCore.Run
@@ -12,7 +13,7 @@ namespace NewLibCore.Run
         public static void Main(String[] args)
         {
             #region 
-            MapperConfig.ConnectionStringName="NewCrmDatabase";
+            MapperConfig.ConnectionStringName = "NewCrmDatabase";
             MapperConfig.InitDefaultSetting();
 
             // for (var i = 0; i < 4; i++)
