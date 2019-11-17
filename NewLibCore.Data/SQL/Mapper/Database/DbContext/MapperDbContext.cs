@@ -26,11 +26,11 @@ namespace NewLibCore.Data.SQL.Mapper.Database
         {
             if (MapperConfig.MapperType == MapperType.MYSQL)
             {
-                _connection = new MySqlConnection(Host.GetHostVar("NewCrmDatabase"));
+                _connection = new MySqlConnection(Host.GetHostVar(MapperConfig.ConnectionStringName));
             }
             else if (MapperConfig.MapperType == MapperType.MSSQL)
             {
-                _connection = new SqlConnection(Host.GetHostVar("NewCrmDatabase"));
+                _connection = new SqlConnection(Host.GetHostVar(MapperConfig.ConnectionStringName));
             }
             else
             {

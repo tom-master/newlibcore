@@ -12,7 +12,7 @@ namespace NewLibCore.Run
         public static void Main(String[] args)
         {
             #region 
-
+            MapperConfig.ConnectionStringName="NewCrmDatabase";
             MapperConfig.InitDefaultSetting();
 
             // for (var i = 0; i < 4; i++)

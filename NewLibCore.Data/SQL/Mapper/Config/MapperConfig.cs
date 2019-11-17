@@ -17,6 +17,12 @@ namespace NewLibCore.Data.SQL.Mapper
         private static Func<ResultCache> _cache = () => null;
 
         /// <summary>
+        /// 连接字符串名称
+        /// </summary>
+        /// <value></value>
+        public static String ConnectionStringName { get; set; }
+
+        /// <summary>
         /// 映射的数据库类型
         /// </summary>
         public static MapperType MapperType { get; set; }
