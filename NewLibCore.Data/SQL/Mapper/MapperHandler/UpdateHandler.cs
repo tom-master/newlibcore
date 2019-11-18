@@ -49,7 +49,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
             parserResult.Append(String.Format(databaseConfig.UpdateTemplate, TableName, AliasName, String.Join(",", propertys.Select(p => $@"{AliasName}.{p.Key}=@{p.Key}"))), propertys.Select(c => new EntityParameter(c.Key, c.Value)));
             parserResult.Append(sql, parameters);
-            parserResult.Append($@"{RelationType.AND} {AliasName}.IsDeleted=0");
+            parserResult.Append($@"{PredicateType.AND} {AliasName}.IsDeleted=0");
             parserResult.Append($@"{databaseConfig.Extension.RowCount}");
             _modelInstance.Reset();
 
