@@ -42,20 +42,20 @@ namespace NewLibCore.Data.SQL.Mapper
             //当出现查询但张表不加Where条件时，则强制将IsDeleted=0添加到后面
             if (_expressionStore.Where == null)
             {
-                parserResult.Append($@"{RelationType.AND.ToString()} {mainTable.Value}.IsDeleted = 0");
+                parserResult.Append($@"{PredicateType.AND.ToString()} {mainTable.Value}.IsDeleted = 0");
             }
             else
             {
                 var aliasMapper = _expressionStore.MergeAliasMapper();
                 foreach (var aliasItem in aliasMapper)
                 {
-                    parserResult.Append($@"{RelationType.AND} {aliasItem.Value.ToLower()}.IsDeleted = 0");
+                    parserResult.Append($@"{PredicateType.AND} {aliasItem.Value.ToLower()}.IsDeleted = 0");
                 }
             }
             if (_expressionStore.Order != null)
             {
                 var (fields, tableName) = StatementParse(_expressionStore.Order);
-                var orderTemplate = databaseConfig.OrderByBuilder(_expressionStore.Order.OrderBy, $@"{tableName}.{fields}");
+                var orderTemplate = databaseConfig.CreateOrderBy(_expressionStore.Order.OrderBy, $@"{tableName}.{fields}");
                 parserResult.Append(orderTemplate);
             }
 

@@ -33,7 +33,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
         private readonly Stack<String> _parameterNameStack;
 
-        private readonly Stack<RelationType> _relationTypesStack;
+        private readonly Stack<PredicateType> _predicateTypeStack;
 
         private IReadOnlyList<KeyValuePair<String, String>> _tableAliasMapper;
 
@@ -49,7 +49,7 @@ namespace NewLibCore.Data.SQL.Mapper
             _serviceProvider = serviceProvider;
             _internalStore = new StringBuilder();
             _parameterNameStack = new Stack<String>();
-            _relationTypesStack = new Stack<RelationType>();
+            _predicateTypeStack = new Stack<PredicateType>();
             _entityParameters = new List<EntityParameter>();
             _tableAliasMapper = new List<KeyValuePair<String, String>>();
         }
@@ -93,7 +93,7 @@ namespace NewLibCore.Data.SQL.Mapper
                     }
 
                     //获取连接语句的模板
-                    var joinTemplate = databaseConfig.JoinBuilder(item.JoinRelation, aliasItem.Key, aliasItem.Value.ToLower());
+                    var joinTemplate = databaseConfig.CreateJoin(item.JoinRelation, aliasItem.Key, aliasItem.Value.ToLower());
                     _internalStore.Append(joinTemplate);
 
                     //设置相应的连接类型
@@ -115,7 +115,7 @@ namespace NewLibCore.Data.SQL.Mapper
                 }
 
                 _joinRelation = JoinRelation.NONE;
-                _internalStore.Append(RelationType.AND.ToString());
+                _internalStore.Append(PredicateType.AND.ToString());
 
                 //获取Where类型中的存储的表达式对象进行翻译
                 InternalBuildWhere(lambdaExp);
@@ -132,167 +132,167 @@ namespace NewLibCore.Data.SQL.Mapper
             switch (expression.NodeType)
             {
                 case ExpressionType.AndAlso:
-                {
-                    var binaryExp = (BinaryExpression)expression;
+                    {
+                        var binaryExp = (BinaryExpression)expression;
 
-                    if (binaryExp.Left.NodeType != ExpressionType.Constant && binaryExp.Right.NodeType != ExpressionType.Constant)
-                    {
-                        InternalBuildWhere(binaryExp.Left);
-                        _internalStore.Append(RelationType.AND.ToString());
-                        InternalBuildWhere(binaryExp.Right);
-                    }
-                    else
-                    {
-                        if (binaryExp.Left.NodeType != ExpressionType.Constant)
+                        if (binaryExp.Left.NodeType != ExpressionType.Constant && binaryExp.Right.NodeType != ExpressionType.Constant)
                         {
                             InternalBuildWhere(binaryExp.Left);
-                        }
-                        else if (binaryExp.Right.NodeType != ExpressionType.Constant)
-                        {
+                            _internalStore.Append(PredicateType.AND.ToString());
                             InternalBuildWhere(binaryExp.Right);
                         }
-                    }
+                        else
+                        {
+                            if (binaryExp.Left.NodeType != ExpressionType.Constant)
+                            {
+                                InternalBuildWhere(binaryExp.Left);
+                            }
+                            else if (binaryExp.Right.NodeType != ExpressionType.Constant)
+                            {
+                                InternalBuildWhere(binaryExp.Right);
+                            }
+                        }
 
-                    break;
-                }
-                case ExpressionType.OrElse:
-                {
-                    var binaryExp = (BinaryExpression)expression;
-                    InternalBuildWhere(binaryExp.Left);
-                    _internalStore.Append(RelationType.OR.ToString());
-                    InternalBuildWhere(binaryExp.Right);
-                    break;
-                }
-                case ExpressionType.Call:
-                {
-                    TranslateMethodCall(expression);
-                    break;
-                }
-                case ExpressionType.Constant:
-                {
-                    var binaryExp = (ConstantExpression)expression;
-                    _entityParameters.Add(new EntityParameter(_parameterNameStack.Pop(), binaryExp.Value));
-                    break;
-                }
-                case ExpressionType.Equal:
-                {
-                    var binaryExp = (BinaryExpression)expression;
-                    LogicStatementBuilder(binaryExp, RelationType.EQ);
-                    break;
-                }
-                case ExpressionType.GreaterThan:
-                {
-                    var binaryExp = (BinaryExpression)expression;
-                    LogicStatementBuilder(binaryExp, RelationType.GT);
-                    break;
-                }
-                case ExpressionType.NotEqual:
-                {
-                    var binaryExp = (BinaryExpression)expression;
-                    LogicStatementBuilder(binaryExp, RelationType.NQ);
-                    break;
-                }
-                case ExpressionType.GreaterThanOrEqual:
-                {
-                    var binaryExp = (BinaryExpression)expression;
-                    LogicStatementBuilder(binaryExp, RelationType.GE);
-                    break;
-                }
-                case ExpressionType.LessThan:
-                {
-                    var binaryExp = (BinaryExpression)expression;
-                    LogicStatementBuilder(binaryExp, RelationType.LT);
-                    break;
-                }
-                case ExpressionType.LessThanOrEqual:
-                {
-                    var binaryExp = (BinaryExpression)expression;
-                    LogicStatementBuilder(binaryExp, RelationType.LE);
-                    break;
-                }
-                case ExpressionType.Lambda:
-                {
-                    var lamdbaExp = (LambdaExpression)expression;
-                    if (lamdbaExp.NodeType == ExpressionType.Constant)
-                    {
                         break;
                     }
-
-                    if (lamdbaExp.Body is BinaryExpression)
+                case ExpressionType.OrElse:
                     {
-                        InternalBuildWhere((BinaryExpression)lamdbaExp.Body);
+                        var binaryExp = (BinaryExpression)expression;
+                        InternalBuildWhere(binaryExp.Left);
+                        _internalStore.Append(PredicateType.OR.ToString());
+                        InternalBuildWhere(binaryExp.Right);
+                        break;
                     }
-                    else if (lamdbaExp.Body is MemberExpression)
+                case ExpressionType.Call:
                     {
-                        InternalBuildWhere((MemberExpression)lamdbaExp.Body);
+                        TranslateMethodCall(expression);
+                        break;
                     }
-                    else if (lamdbaExp.Body is MethodCallExpression)
+                case ExpressionType.Constant:
                     {
-                        InternalBuildWhere((MethodCallExpression)lamdbaExp.Body);
+                        var binaryExp = (ConstantExpression)expression;
+                        _entityParameters.Add(new EntityParameter(_parameterNameStack.Pop(), binaryExp.Value));
+                        break;
                     }
-                    else if (lamdbaExp.Body is UnaryExpression)
+                case ExpressionType.Equal:
                     {
-                        InternalBuildWhere((UnaryExpression)lamdbaExp.Body);
+                        var binaryExp = (BinaryExpression)expression;
+                        CreatePredicateStatement(binaryExp, PredicateType.EQ);
+                        break;
                     }
-                    break;
-                }
-                case ExpressionType.MemberAccess:
-                {
-                    var memberExp = (MemberExpression)expression;
-                    if (memberExp.Expression.NodeType == ExpressionType.Parameter)
+                case ExpressionType.GreaterThan:
                     {
-                        if (_relationTypesStack.Count == 0)
+                        var binaryExp = (BinaryExpression)expression;
+                        CreatePredicateStatement(binaryExp, PredicateType.GT);
+                        break;
+                    }
+                case ExpressionType.NotEqual:
+                    {
+                        var binaryExp = (BinaryExpression)expression;
+                        CreatePredicateStatement(binaryExp, PredicateType.NQ);
+                        break;
+                    }
+                case ExpressionType.GreaterThanOrEqual:
+                    {
+                        var binaryExp = (BinaryExpression)expression;
+                        CreatePredicateStatement(binaryExp, PredicateType.GE);
+                        break;
+                    }
+                case ExpressionType.LessThan:
+                    {
+                        var binaryExp = (BinaryExpression)expression;
+                        CreatePredicateStatement(binaryExp, PredicateType.LT);
+                        break;
+                    }
+                case ExpressionType.LessThanOrEqual:
+                    {
+                        var binaryExp = (BinaryExpression)expression;
+                        CreatePredicateStatement(binaryExp, PredicateType.LE);
+                        break;
+                    }
+                case ExpressionType.Lambda:
+                    {
+                        var lamdbaExp = (LambdaExpression)expression;
+                        if (lamdbaExp.NodeType == ExpressionType.Constant)
                         {
-                            if (memberExp.Type == typeof(Boolean))
+                            break;
+                        }
+
+                        if (lamdbaExp.Body is BinaryExpression)
+                        {
+                            InternalBuildWhere((BinaryExpression)lamdbaExp.Body);
+                        }
+                        else if (lamdbaExp.Body is MemberExpression)
+                        {
+                            InternalBuildWhere((MemberExpression)lamdbaExp.Body);
+                        }
+                        else if (lamdbaExp.Body is MethodCallExpression)
+                        {
+                            InternalBuildWhere((MethodCallExpression)lamdbaExp.Body);
+                        }
+                        else if (lamdbaExp.Body is UnaryExpression)
+                        {
+                            InternalBuildWhere((UnaryExpression)lamdbaExp.Body);
+                        }
+                        break;
+                    }
+                case ExpressionType.MemberAccess:
+                    {
+                        var memberExp = (MemberExpression)expression;
+                        if (memberExp.Expression.NodeType == ExpressionType.Parameter)
+                        {
+                            if (_predicateTypeStack.Count == 0)
+                            {
+                                if (memberExp.Type == typeof(Boolean))
+                                {
+                                    var parameterExp = (ParameterExpression)memberExp.Expression;
+                                    var newMember = Expression.MakeMemberAccess(parameterExp, parameterExp.Type.GetMember(memberExp.Member.Name)[0]);
+                                    var newExpression = Expression.Equal(newMember, Expression.Constant(true));
+                                    InternalBuildWhere(newExpression);
+                                }
+                            }
+                            else
                             {
                                 var parameterExp = (ParameterExpression)memberExp.Expression;
-                                var newMember = Expression.MakeMemberAccess(parameterExp, parameterExp.Type.GetMember(memberExp.Member.Name)[0]);
-                                var newExpression = Expression.Equal(newMember, Expression.Constant(true));
-                                InternalBuildWhere(newExpression);
+                                var internalAliasName = "";
+                                if (!_tableAliasMapper.Any(a => a.Key == parameterExp.Type.GetTableName().TableName && a.Value == parameterExp.Type.GetTableName().AliasName))
+                                {
+                                    throw new ArgumentException($@"没有找到{parameterExp.Type.Name}所对应的形参");
+                                }
+                                internalAliasName = $@"{ _tableAliasMapper.Where(w => w.Key == parameterExp.Type.GetTableName().TableName && w.Value == parameterExp.Type.GetTableName().AliasName).FirstOrDefault().Value.ToLower()}.";
+
+                                var databaseConfig = _serviceProvider.GetService<InstanceConfig>();
+                                var newParameterName = Guid.NewGuid().ToString().Replace("-", "");
+                                _internalStore.Append(databaseConfig.CreatePredicate(_predicateTypeStack.Pop(), $@"{internalAliasName}{memberExp.Member.Name}", $"@{newParameterName}"));
+                                _parameterNameStack.Push(newParameterName);
                             }
                         }
                         else
                         {
-                            var parameterExp = (ParameterExpression)memberExp.Expression;
-                            var internalAliasName = "";
-                            if (!_tableAliasMapper.Any(a => a.Key == parameterExp.Type.GetTableName().TableName && a.Value == parameterExp.Type.GetTableName().AliasName))
-                            {
-                                throw new ArgumentException($@"没有找到{parameterExp.Type.Name}所对应的形参");
-                            }
-                            internalAliasName = $@"{ _tableAliasMapper.Where(w => w.Key == parameterExp.Type.GetTableName().TableName && w.Value == parameterExp.Type.GetTableName().AliasName).FirstOrDefault().Value.ToLower()}.";
-
-                            var databaseConfig = _serviceProvider.GetService<InstanceConfig>();
-                            var newParameterName = Guid.NewGuid().ToString().Replace("-", "");
-                            _internalStore.Append(databaseConfig.RelationBuilder(_relationTypesStack.Pop(), $@"{internalAliasName}{memberExp.Member.Name}", $"@{newParameterName}"));
-                            _parameterNameStack.Push(newParameterName);
+                            var getter = Expression.Lambda(memberExp).Compile();
+                            _entityParameters.Add(new EntityParameter(_parameterNameStack.Pop(), getter.DynamicInvoke()));
+                            break;
                         }
-                    }
-                    else
-                    {
-                        var getter = Expression.Lambda(memberExp).Compile();
-                        _entityParameters.Add(new EntityParameter(_parameterNameStack.Pop(), getter.DynamicInvoke()));
                         break;
                     }
-                    break;
-                }
                 case ExpressionType.Not:
-                {
-                    var memberExpression = (MemberExpression)((UnaryExpression)expression).Operand;
-                    var parameterExp = (ParameterExpression)memberExpression.Expression;
-                    var newMember = Expression.MakeMemberAccess(parameterExp, parameterExp.Type.GetMember(memberExpression.Member.Name)[0]);
-                    InternalBuildWhere(Expression.NotEqual(newMember, Expression.Constant(true)));
-                    break;
-                }
+                    {
+                        var memberExpression = (MemberExpression)((UnaryExpression)expression).Operand;
+                        var parameterExp = (ParameterExpression)memberExpression.Expression;
+                        var newMember = Expression.MakeMemberAccess(parameterExp, parameterExp.Type.GetMember(memberExpression.Member.Name)[0]);
+                        InternalBuildWhere(Expression.NotEqual(newMember, Expression.Constant(true)));
+                        break;
+                    }
                 case ExpressionType.Convert:
-                {
-                    var exp = ((UnaryExpression)expression).Operand;
-                    InternalBuildWhere(exp);
-                    break;
-                }
+                    {
+                        var exp = ((UnaryExpression)expression).Operand;
+                        InternalBuildWhere(exp);
+                        break;
+                    }
                 default:
-                {
-                    throw new NotSupportedException($@"暂不支持的表达式操作:{expression.NodeType}");
-                }
+                    {
+                        throw new NotSupportedException($@"暂不支持的表达式操作:{expression.NodeType}");
+                    }
             }
         }
 
@@ -321,24 +321,24 @@ namespace NewLibCore.Data.SQL.Mapper
                 obj = methodCallExp.Object;
             }
 
-            RelationType relationType = default;
+            PredicateType predicateType = default;
             if (methodName == "StartsWith")
             {
-                relationType = RelationType.START_LIKE;
+                predicateType = PredicateType.START_LIKE;
             }
             else if (methodName == "EndsWith")
             {
-                relationType = RelationType.END_LIKE;
+                predicateType = PredicateType.END_LIKE;
             }
             else if (methodName == "Contains")
             {
                 if (argumentType == typeof(String))
                 {
-                    relationType = RelationType.FULL_LIKE;
+                    predicateType = PredicateType.FULL_LIKE;
                 }
                 else if (argumentType.IsCollections())
                 {
-                    relationType = RelationType.IN;
+                    predicateType = PredicateType.IN;
                 }
             }
             else
@@ -346,7 +346,7 @@ namespace NewLibCore.Data.SQL.Mapper
                 throw new Exception("暂不支持的方法");
             }
 
-            _relationTypesStack.Push(relationType);
+            _predicateTypeStack.Push(predicateType);
 
             if (argumentType == typeof(String))
             {
@@ -361,20 +361,20 @@ namespace NewLibCore.Data.SQL.Mapper
         }
 
         /// <summary>
-        /// 逻辑语句构建
+        /// 创建谓词语句
         /// </summary>
         /// <param name="binary">表达式</param>
         /// <param name="relationType">关系类型</param>
-        private void LogicStatementBuilder(BinaryExpression binary, RelationType relationType)
+        private void CreatePredicateStatement(BinaryExpression binary, PredicateType predicateType)
         {
             var binaryExp = binary;
             if (_joinRelation != JoinRelation.NONE)
             {
-                GetJoin(binaryExp, relationType);
+                GetJoin(binaryExp, predicateType);
             }
             else
             {
-                _relationTypesStack.Push(relationType);
+                _predicateTypeStack.Push(predicateType);
 
                 //当表达式的左边和右边同时不为常量或者只有左边为常量的话，则从左到右解析表达式，否则从右到左解析表达式
                 if ((binary.Left.NodeType != ExpressionType.Constant && binary.Right.NodeType != ExpressionType.Constant) || binary.Left.NodeType != ExpressionType.Constant)
@@ -395,7 +395,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// </summary>
         /// <param name="binary">表达式</param>
         /// <param name="relationType">关系类型</param>
-        private void GetJoin(BinaryExpression binary, RelationType relationType)
+        private void GetJoin(BinaryExpression binary, PredicateType predicateType)
         {
             Parameter.Validate(binary);
 
@@ -406,7 +406,7 @@ namespace NewLibCore.Data.SQL.Mapper
                 var (LeftMember, LeftAliasName) = GetLeftMemberAndAliasName(binary);
                 var (RightMember, RightAliasName) = GetRightMemberAndAliasName(binary);
 
-                var relationTemplate = databaseConfig.RelationBuilder(relationType, $"{RightAliasName}.{RightMember.Member.Name}", $"{LeftAliasName}.{LeftMember.Member.Name}");
+                var relationTemplate = databaseConfig.CreatePredicate(predicateType, $"{RightAliasName}.{RightMember.Member.Name}", $"{LeftAliasName}.{LeftMember.Member.Name}");
                 _internalStore.Append(relationTemplate);
             }
             else if (binary.Left.NodeType == ExpressionType.Constant) //表达式左边为常量
@@ -414,14 +414,14 @@ namespace NewLibCore.Data.SQL.Mapper
                 var (RightMember, RightAliasName) = GetRightMemberAndAliasName(binary);
                 var constant = (ConstantExpression)binary.Left;
                 var value = Boolean.TryParse(constant.Value.ToString(), out var result) ? (result ? 1 : 0).ToString() : constant.Value;
-                _internalStore.Append(databaseConfig.RelationBuilder(relationType, value + "", $"{RightAliasName}.{RightMember.Member.Name}"));
+                _internalStore.Append(databaseConfig.CreatePredicate(predicateType, value + "", $"{RightAliasName}.{RightMember.Member.Name}"));
             }
             else if (binary.Right.NodeType == ExpressionType.Constant) //表达式的右边为常量
             {
                 var (LeftMember, LeftAliasName) = GetLeftMemberAndAliasName(binary);
                 var constant = (ConstantExpression)binary.Right;
                 var value = Boolean.TryParse(constant.Value.ToString(), out var result) ? (result ? 1 : 0).ToString() : constant.Value;
-                _internalStore.Append(databaseConfig.RelationBuilder(relationType, $"{LeftAliasName}.{LeftMember.Member.Name}", value + ""));
+                _internalStore.Append(databaseConfig.CreatePredicate(predicateType, $"{LeftAliasName}.{LeftMember.Member.Name}", value + ""));
             }
         }
 

@@ -41,7 +41,7 @@ namespace NewLibCore.Data.SQL.Mapper
             var databaseConfig = ServiceProvider.GetService<InstanceConfig>();
 
             var tableName = typeof(TModel).GetTableName().TableName;
-            var template = String.Format(databaseConfig.AddTemplate, tableName, String.Join(",", propertyInfos.Select(c => c.Key)), String.Join(",", propertyInfos.Select(key => $@"@{key.Key}")), databaseConfig.Extension.Identity);
+            var template = String.Format(databaseConfig.InsertTemplate, tableName, String.Join(",", propertyInfos.Select(c => c.Key)), String.Join(",", propertyInfos.Select(key => $@"@{key.Key}")), databaseConfig.Extension.Identity);
             return ParserResult.CreateResult().Append(template, propertyInfos.Select(c => new EntityParameter(c.Key, c.Value))).Execute(ServiceProvider);
         }
     }
