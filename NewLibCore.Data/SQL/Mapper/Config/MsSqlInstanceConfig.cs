@@ -30,7 +30,7 @@ namespace NewLibCore.Data.SQL.Mapper
             }
         }
 
-        protected override void AppendRelationType()
+        protected override void AppendPredicateType()
         {
             PredicateMapper.Add(PredicateType.FULL_LIKE, "{0} LIKE '%{1}%'");
             PredicateMapper.Add(PredicateType.START_LIKE, "{0} LIKE '{1}%'");

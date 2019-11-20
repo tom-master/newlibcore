@@ -33,7 +33,7 @@ namespace NewLibCore.Data.SQL.Mapper
             PredicateMapper.Clear();
             OrderTypeMapper.Clear();
 
-            InitRelationType();
+            InitPredicateType();
             InitJoinType();
             InitOrderType();
         }
@@ -68,7 +68,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <summary>
         /// 追加关系类型
         /// </summary>
-        protected abstract void AppendRelationType();
+        protected abstract void AppendPredicateType();
 
         /// <summary>
         /// 模板扩展
@@ -120,7 +120,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <summary>
         /// 初始化默认逻辑关系
         /// </summary>
-        private void InitRelationType()
+        private void InitPredicateType()
         {
             PredicateMapper.Add(PredicateType.AND, " {0} AND {1} ");
             PredicateMapper.Add(PredicateType.OR, " {0} OR {1} ");
@@ -131,7 +131,7 @@ namespace NewLibCore.Data.SQL.Mapper
             PredicateMapper.Add(PredicateType.GE, " {0} <= {1} ");
             PredicateMapper.Add(PredicateType.LE, " {0} >= {1} ");
 
-            AppendRelationType();
+            AppendPredicateType();
         }
 
         /// <summary>

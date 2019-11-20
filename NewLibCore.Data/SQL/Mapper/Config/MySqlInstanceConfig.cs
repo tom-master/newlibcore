@@ -3,7 +3,7 @@
 namespace NewLibCore.Data.SQL.Mapper
 {
     /// <summary>
-    /// mysql数据库实例配置
+    /// mysql数据库sql模板配置
     /// </summary>
     internal class MySqlInstanceConfig : InstanceConfig
     {
@@ -15,17 +15,17 @@ namespace NewLibCore.Data.SQL.Mapper
             }
         }
 
-        protected override void AppendRelationType()
+        protected override void AppendPredicateType()
         {
-            LogicRelationMapper.Add(RelationType.FULL_LIKE, "{0} LIKE CONCAT('%',{1},'%')");
-            LogicRelationMapper.Add(RelationType.START_LIKE, "{0} LIKE CONCAT('',{1},'%')");
-            LogicRelationMapper.Add(RelationType.END_LIKE, "{0} LIKE CONCAT('%',{1},'')");
-            LogicRelationMapper.Add(RelationType.IN, "FIND_IN_SET({0},{1})");
+            PredicateMapper.Add(PredicateType.FULL_LIKE, "{0} LIKE CONCAT('%',{1},'%')");
+            PredicateMapper.Add(PredicateType.START_LIKE, "{0} LIKE CONCAT('',{1},'%')");
+            PredicateMapper.Add(PredicateType.END_LIKE, "{0} LIKE CONCAT('%',{1},'')");
+            PredicateMapper.Add(PredicateType.IN, "FIND_IN_SET({0},{1})");
         }
 
-        internal override String RelationBuilder(RelationType relationType, String left, String right)
+        internal override String CreatePredicate(PredicateType predicateType, String left, String right)
         {
-            return String.Format(LogicRelationMapper[relationType], left, right);
+            return String.Format(PredicateMapper[predicateType], left, right);
         }
 
         internal override InstanceExtension Extension
