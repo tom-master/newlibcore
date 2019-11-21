@@ -10,14 +10,14 @@ namespace NewLibCore.Data.SQL.Mapper
     internal abstract class InstanceConfig
     {
         /// <summary>
-        /// 逻辑关系映射
+        /// 谓词关系映射
         /// </summary>
-        protected readonly IDictionary<RelationType, String> LogicRelationMapper = new Dictionary<RelationType, String>();
+        protected readonly IDictionary<PredicateType, String> PredicateMapper = new Dictionary<PredicateType, String>();
 
         /// <summary>
         /// 连接关系映射
         /// </summary>
-        protected readonly IDictionary<JoinRelation, String> JoinRelationMapper = new Dictionary<JoinRelation, String>();
+        protected readonly IDictionary<JoinRelation, String> JoinMapper = new Dictionary<JoinRelation, String>();
 
         /// <summary>
         /// 排序方式映射
@@ -29,8 +29,8 @@ namespace NewLibCore.Data.SQL.Mapper
         /// </summary>
         protected InstanceConfig()
         {
-            LogicRelationMapper.Clear();
-            JoinRelationMapper.Clear();
+            JoinMapper.Clear();
+            PredicateMapper.Clear();
             OrderTypeMapper.Clear();
 
             InitRelationType();
@@ -79,22 +79,27 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <summary>
         /// 创建谓词关系
         /// </summary>
-        /// <param name="relationType">关系的类型</param>
+        /// <param name="predicateType">关系的类型</param>
         /// <param name="left">左语句</param>
         /// <param name="right">右语句</param>
         /// <returns></returns>
-        internal abstract String CreatePredicate(RelationType relationType, String left, String right);
+        internal abstract String CreatePredicate(PredicateType predicateType, String left, String right);
 
         /// <summary>
-        /// 连接语句构建
+        /// 创建连接关系
         /// </summary>
         /// <param name="joinRelation">连接类型</param>
         /// <param name="left">左语句</param>
         /// <param name="right">右语句</param>
         /// <returns></returns>
-        internal String JoinBuilder(JoinRelation joinRelation, String left, String right)
+        internal String CreateJoin(JoinRelation joinRelation, String left, String right)
         {
-            return String.Format(JoinRelationMapper[joinRelation], left, right);
+            if (!JoinMapper.ContainsKey(joinRelation))
+            {
+                throw new ArgumentNullException($@"{joinRelation}不存在");
+            }
+
+            return String.Format(JoinMapper[joinRelation], left, right);
         }
 
         /// <summary>
@@ -103,8 +108,12 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <param name="orderByType">排序方向</param>
         /// <param name="left">左语句</param>
         /// <returns></returns>
-        internal String OrderByBuilder(OrderByType orderByType, String left)
+        internal String CreateOrderBy(OrderByType orderByType, String left)
         {
+            if (!OrderTypeMapper.ContainsKey(orderByType))
+            {
+                throw new ArgumentNullException($@"{orderByType}不存在");
+            }
             return String.Format(OrderTypeMapper[orderByType], left);
         }
 
@@ -113,14 +122,14 @@ namespace NewLibCore.Data.SQL.Mapper
         /// </summary>
         private void InitRelationType()
         {
-            LogicRelationMapper.Add(RelationType.AND, " {0} AND {1} ");
-            LogicRelationMapper.Add(RelationType.OR, " {0} OR {1} ");
-            LogicRelationMapper.Add(RelationType.EQ, " {0} = {1} ");
-            LogicRelationMapper.Add(RelationType.NQ, " {0} <> {1} ");
-            LogicRelationMapper.Add(RelationType.GT, " {0} < {1} ");
-            LogicRelationMapper.Add(RelationType.LT, " {0} > {1} ");
-            LogicRelationMapper.Add(RelationType.GE, " {0} <= {1} ");
-            LogicRelationMapper.Add(RelationType.LE, " {0} >= {1} ");
+            PredicateMapper.Add(PredicateType.AND, " {0} AND {1} ");
+            PredicateMapper.Add(PredicateType.OR, " {0} OR {1} ");
+            PredicateMapper.Add(PredicateType.EQ, " {0} = {1} ");
+            PredicateMapper.Add(PredicateType.NQ, " {0} <> {1} ");
+            PredicateMapper.Add(PredicateType.GT, " {0} < {1} ");
+            PredicateMapper.Add(PredicateType.LT, " {0} > {1} ");
+            PredicateMapper.Add(PredicateType.GE, " {0} <= {1} ");
+            PredicateMapper.Add(PredicateType.LE, " {0} >= {1} ");
 
             AppendRelationType();
         }
@@ -130,10 +139,10 @@ namespace NewLibCore.Data.SQL.Mapper
         /// </summary>
         private void InitJoinType()
         {
-            JoinRelationMapper.Add(JoinRelation.NONE, "");
-            JoinRelationMapper.Add(JoinRelation.INNER, " INNER JOIN {0} AS {1} ON ");
-            JoinRelationMapper.Add(JoinRelation.LEFT, " LEFT JOIN {0} AS {1} ON ");
-            JoinRelationMapper.Add(JoinRelation.RIGHT, " RIGHT JOIN {0} AS {1} ON ");
+            JoinMapper.Add(JoinRelation.NONE, "");
+            JoinMapper.Add(JoinRelation.INNER, " INNER JOIN {0} AS {1} ON ");
+            JoinMapper.Add(JoinRelation.LEFT, " LEFT JOIN {0} AS {1} ON ");
+            JoinMapper.Add(JoinRelation.RIGHT, " RIGHT JOIN {0} AS {1} ON ");
         }
 
         /// <summary>
