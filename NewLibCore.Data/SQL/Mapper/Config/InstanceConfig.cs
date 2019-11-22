@@ -52,7 +52,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <summary>
         /// 添加模板
         /// </summary>
-        internal virtual String AddTemplate
+        internal virtual String InsertTemplate
         {
             get
             {
@@ -71,19 +71,19 @@ namespace NewLibCore.Data.SQL.Mapper
         protected abstract void AppendRelationType();
 
         /// <summary>
-        /// 实例扩展
+        /// 模板扩展
         /// </summary>
         /// <value></value>
         internal virtual InstanceExtension Extension { get; }
 
         /// <summary>
-        /// 逻辑关系构建
+        /// 创建谓词关系
         /// </summary>
         /// <param name="relationType">关系的类型</param>
         /// <param name="left">左语句</param>
         /// <param name="right">右语句</param>
         /// <returns></returns>
-        internal abstract String RelationBuilder(RelationType relationType, String left, String right);
+        internal abstract String CreatePredicate(RelationType relationType, String left, String right);
 
         /// <summary>
         /// 连接语句构建
