@@ -4,8 +4,6 @@ using System.Linq.Expressions;
 using Microsoft.Extensions.DependencyInjection;
 using NewLibCore.Data.SQL.Mapper.Database;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
-using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
-using NewLibCore.Logger;
 using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper
@@ -86,7 +84,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <returns></returns>
         public QueryWrapper<TModel> Query<TModel>() where TModel : new()
         {
-            ExpressionStore expressionStore = new ExpressionStore();
+            var expressionStore = new ExpressionStore();
             expressionStore.AddFrom<TModel>();
             return new QueryWrapper<TModel>(expressionStore, _serviceScope.ServiceProvider);
         }

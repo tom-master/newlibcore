@@ -28,7 +28,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
         internal override RawResult Execute()
         {
-            var sqlResult = TranslateResult.CreateResult();
+            var sqlResult = ParseResult.CreateResult();
             sqlResult.Append(_sql, _parameters);
             return sqlResult.Execute(_serviceProvider);
         }

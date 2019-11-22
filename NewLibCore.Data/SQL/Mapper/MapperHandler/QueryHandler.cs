@@ -5,7 +5,6 @@ using System.Linq.Expressions;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
-using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
 using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper
@@ -38,8 +37,8 @@ namespace NewLibCore.Data.SQL.Mapper
 
             var (Fields, AliasName) = StatementParse(_expressionStore.Select);
 
-            var parser = ExpressionParser.CreateParser(_serviceProvider);
-            var translateResult = TranslateResult.CreateResult();
+            var parser = Parser.CreateParser(_serviceProvider);
+            var translateResult = ParseResult.CreateResult();
 
             var mainTable = _expressionStore.From.AliaNameMapper[0];
 

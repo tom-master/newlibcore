@@ -13,7 +13,7 @@ namespace NewLibCore.Data.SQL.Mapper
     /// <summary>
     /// 存储表达式的翻译后的sql语句
     /// </summary>
-    internal sealed class TranslateResult
+    internal sealed class ParseResult
     {
         private StringBuilder _originSql;
 
@@ -24,7 +24,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <summary>
         /// 初始化一个TranslationResult类的实例
         /// </summary>
-        private TranslateResult()
+        private ParseResult()
         {
             _originSql = new StringBuilder();
             _parameters = new List<EntityParameter>();
@@ -35,16 +35,16 @@ namespace NewLibCore.Data.SQL.Mapper
         /// 创建一个TranslationResult类的实例
         /// </summary>
         /// <returns></returns>
-        internal static TranslateResult CreateResult()
+        internal static ParseResult CreateResult()
         {
-            return new TranslateResult();
+            return new ParseResult();
         }
 
         /// <summary>
         /// 追加一个sql语句和一组EntityParameter对象
         /// </summary>
         /// <param name="entityParameters">参数列表</param>
-        internal TranslateResult Append(String sql, IEnumerable<EntityParameter> entityParameters = null)
+        internal ParseResult Append(String sql, IEnumerable<EntityParameter> entityParameters = null)
         {
             Parameter.Validate(sql);
 

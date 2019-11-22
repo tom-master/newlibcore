@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Data.SQL.Mapper.ExpressionStatment
+namespace NewLibCore.Data.SQL.Mapper
 {
     /// <summary>
     /// 将外部传入的表达式树保存起来

@@ -3,7 +3,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using Microsoft.Extensions.DependencyInjection;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
-using NewLibCore.Data.SQL.Mapper.ExpressionStatment;
 using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper
@@ -46,16 +45,16 @@ namespace NewLibCore.Data.SQL.Mapper
             var (TableName, AliasName) = typeof(TModel).GetTableName();
             var propertys = _modelInstance.GetChangedProperty();
 
-            var translateResult = TranslateResult.CreateResult();
-            var parser = ExpressionParser.CreateParser(_serviceProvider);
+            var translateResult = ParseResult.CreateResult();
+            var parser = Parser.CreateParser(_serviceProvider);
             var databaseConfig = _serviceProvider.GetService<InstanceConfig>();
 
             var expressionStore = new ExpressionStore();
             expressionStore.AddWhere(_filter);
 
             var (sql, parameters) = parser.Parse(expressionStore);
-            translateResult.Append(String.Format(databaseConfig.UpdateTemplate, TableName, AliasName, String.Join(",", propertys.Select(p => $@"{AliasName}.{p.Key}=@{p.Key}"))),propertys.Select(c => new EntityParameter(c.Key, c.Value)));
-            translateResult.Append(sql,parameters);
+            translateResult.Append(String.Format(databaseConfig.UpdateTemplate, TableName, AliasName, String.Join(",", propertys.Select(p => $@"{AliasName}.{p.Key}=@{p.Key}"))), propertys.Select(c => new EntityParameter(c.Key, c.Value)));
+            translateResult.Append(sql, parameters);
             translateResult.Append($@"{RelationType.AND} {AliasName}.IsDeleted=0");
             translateResult.Append($@"{databaseConfig.Extension.RowCount}");
             _modelInstance.Reset();
