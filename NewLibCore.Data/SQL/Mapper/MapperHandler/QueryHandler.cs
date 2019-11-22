@@ -30,48 +30,43 @@ namespace NewLibCore.Data.SQL.Mapper
         internal override RawResult Execute()
         {
             var databaseConfig = ServiceProvider.GetService<InstanceConfig>();
-
-            var (Fields, AliasName) = StatementParse(_expressionStore.Select);
-
-            var parser = Parser.CreateParser(ServiceProvider);
-            var translateResult = ParseResult.CreateResult();
-
             var mainTable = _expressionStore.From.AliaNameMapper[0];
 
-            translateResult.Append(String.Format(databaseConfig.SelectTemplate, Fields, mainTable.Key, mainTable.Value));
+            var parserResult = ParserResult.CreateResult();
+            var (Fields, _) = StatementParse(_expressionStore.Select);
+            parserResult.Append(String.Format(databaseConfig.SelectTemplate, Fields, mainTable.Key, mainTable.Value));
 
-            var (sql, parameters) = parser.Parse(_expressionStore);
-            translateResult.Append(sql, parameters);
-
-            var aliasMapper = _expressionStore.MergeAliasMapper();
+            var (sql, parameters) = Parser.CreateParser(ServiceProvider).ExecuteParser(_expressionStore);
+            parserResult.Append(sql, parameters);
 
             //当出现查询但张表不加Where条件时，则强制将IsDeleted=0添加到后面
             if (_expressionStore.Where == null)
             {
-                translateResult.Append($@"{RelationType.AND.ToString()} {mainTable.Value}.IsDeleted = 0");
+                parserResult.Append($@"{RelationType.AND.ToString()} {mainTable.Value}.IsDeleted = 0");
             }
             else
             {
+                var aliasMapper = _expressionStore.MergeAliasMapper();
                 foreach (var aliasItem in aliasMapper)
                 {
-                    translateResult.Append($@"{RelationType.AND} {aliasItem.Value.ToLower()}.IsDeleted = 0");
+                    parserResult.Append($@"{RelationType.AND} {aliasItem.Value.ToLower()}.IsDeleted = 0");
                 }
             }
             if (_expressionStore.Order != null)
             {
                 var (fields, tableName) = StatementParse(_expressionStore.Order);
                 var orderTemplate = databaseConfig.OrderByBuilder(_expressionStore.Order.OrderBy, $@"{tableName}.{fields}");
-                translateResult.Append(orderTemplate);
+                parserResult.Append(orderTemplate);
             }
 
             if (_expressionStore.Pagination != null)
             {
                 var pageIndex = (_expressionStore.Pagination.Size * (_expressionStore.Pagination.Index - 1)).ToString();
                 var pageSize = _expressionStore.Pagination.Size.ToString();
-                translateResult.Append(databaseConfig.Extension.Page.Replace("{value}", pageIndex).Replace("{pageSize}", pageSize));
+                parserResult.Append(databaseConfig.Extension.Page.Replace("{value}", pageIndex).Replace("{pageSize}", pageSize));
             }
 
-            return translateResult.Execute(ServiceProvider);
+            return parserResult.Execute(ServiceProvider);
         }
 
         /// <summary>

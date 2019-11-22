@@ -17,7 +17,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// 翻译
         /// </summary>
         /// <returns></returns>
-        (String, IList<EntityParameter>) Parse(ExpressionStore expressionStore);
+        (String, IList<EntityParameter>) ExecuteParser(ExpressionStore expressionStore);
     }
 
     /// <summary>
@@ -67,7 +67,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// 翻译
         /// </summary>
         /// <returns></returns>
-        public (String, IList<EntityParameter>) Parse(ExpressionStore expressionStore)
+        public (String, IList<EntityParameter>) ExecuteParser(ExpressionStore expressionStore)
         {
             Parameter.Validate(expressionStore);
 

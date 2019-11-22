@@ -38,25 +38,22 @@ namespace NewLibCore.Data.SQL.Mapper
             {
                 _modelInstance.Validate();
             }
-
-            var (TableName, AliasName) = typeof(TModel).GetTableName();
-            var propertys = _modelInstance.GetChangedProperty();
-
-            var translateResult = ParseResult.CreateResult();
-            var parser = Parser.CreateParser(ServiceProvider);
             var databaseConfig = ServiceProvider.GetService<InstanceConfig>();
-
             var expressionStore = new ExpressionStore();
             expressionStore.AddWhere(_filter);
 
-            var (sql, parameters) = parser.Parse(expressionStore);
-            translateResult.Append(String.Format(databaseConfig.UpdateTemplate, TableName, AliasName, String.Join(",", propertys.Select(p => $@"{AliasName}.{p.Key}=@{p.Key}"))), propertys.Select(c => new EntityParameter(c.Key, c.Value)));
-            translateResult.Append(sql, parameters);
-            translateResult.Append($@"{RelationType.AND} {AliasName}.IsDeleted=0");
-            translateResult.Append($@"{databaseConfig.Extension.RowCount}");
+            var (sql, parameters) = Parser.CreateParser(ServiceProvider).ExecuteParser(expressionStore);
+            var parserResult = ParserResult.CreateResult();
+            var propertys = _modelInstance.GetChangedProperty();
+            var (TableName, AliasName) = typeof(TModel).GetTableName();
+
+            parserResult.Append(String.Format(databaseConfig.UpdateTemplate, TableName, AliasName, String.Join(",", propertys.Select(p => $@"{AliasName}.{p.Key}=@{p.Key}"))), propertys.Select(c => new EntityParameter(c.Key, c.Value)));
+            parserResult.Append(sql, parameters);
+            parserResult.Append($@"{RelationType.AND} {AliasName}.IsDeleted=0");
+            parserResult.Append($@"{databaseConfig.Extension.RowCount}");
             _modelInstance.Reset();
 
-            return translateResult.Execute(ServiceProvider);
+            return parserResult.Execute(ServiceProvider);
         }
     }
 }
