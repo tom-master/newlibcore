@@ -17,20 +17,17 @@ namespace NewLibCore.Data.SQL.Mapper
 
         private readonly Expression<Func<TModel, Boolean>> _filter;
 
-        private readonly IServiceProvider _serviceProvider;
-
         /// <summary>
         /// 初始化一个UpdateHandler类的实例
         /// </summary>
         /// <param name="model">要更新的模型</param>
-        public UpdateHandler(TModel model, Expression<Func<TModel, Boolean>> filter, IServiceProvider serviceProvider)
+        public UpdateHandler(TModel model, Expression<Func<TModel, Boolean>> filter, IServiceProvider serviceProvider) : base(serviceProvider)
         {
             Parameter.Validate(model);
             Parameter.Validate(filter);
 
-            _modelInstance = model;
             _filter = filter;
-            _serviceProvider = serviceProvider;
+            _modelInstance = model;
         }
 
         internal override RawResult Execute()
@@ -46,8 +43,8 @@ namespace NewLibCore.Data.SQL.Mapper
             var propertys = _modelInstance.GetChangedProperty();
 
             var translateResult = ParseResult.CreateResult();
-            var parser = Parser.CreateParser(_serviceProvider);
-            var databaseConfig = _serviceProvider.GetService<InstanceConfig>();
+            var parser = Parser.CreateParser(ServiceProvider);
+            var databaseConfig = ServiceProvider.GetService<InstanceConfig>();
 
             var expressionStore = new ExpressionStore();
             expressionStore.AddWhere(_filter);
@@ -59,7 +56,7 @@ namespace NewLibCore.Data.SQL.Mapper
             translateResult.Append($@"{databaseConfig.Extension.RowCount}");
             _modelInstance.Reset();
 
-            return translateResult.Execute(_serviceProvider);
+            return translateResult.Execute(ServiceProvider);
         }
     }
 }

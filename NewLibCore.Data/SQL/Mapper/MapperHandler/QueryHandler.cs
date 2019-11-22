@@ -17,14 +17,10 @@ namespace NewLibCore.Data.SQL.Mapper
     {
         internal readonly ExpressionStore _expressionStore;
 
-        private readonly IServiceProvider _serviceProvider;
-
-        internal QueryHandler(ExpressionStore expressionStore, IServiceProvider serviceProvider)
+        internal QueryHandler(ExpressionStore expressionStore, IServiceProvider serviceProvider) : base(serviceProvider)
         {
             Parameter.Validate(expressionStore);
-
             _expressionStore = expressionStore;
-            _serviceProvider = serviceProvider;
         }
 
         /// <summary>
@@ -33,11 +29,11 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <returns></returns>
         internal override RawResult Execute()
         {
-            var databaseConfig = _serviceProvider.GetService<InstanceConfig>();
+            var databaseConfig = ServiceProvider.GetService<InstanceConfig>();
 
             var (Fields, AliasName) = StatementParse(_expressionStore.Select);
 
-            var parser = Parser.CreateParser(_serviceProvider);
+            var parser = Parser.CreateParser(ServiceProvider);
             var translateResult = ParseResult.CreateResult();
 
             var mainTable = _expressionStore.From.AliaNameMapper[0];
@@ -75,7 +71,7 @@ namespace NewLibCore.Data.SQL.Mapper
                 translateResult.Append(databaseConfig.Extension.Page.Replace("{value}", pageIndex).Replace("{pageSize}", pageSize));
             }
 
-            return translateResult.Execute(_serviceProvider);
+            return translateResult.Execute(ServiceProvider);
         }
 
         /// <summary>

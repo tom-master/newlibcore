@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using NewLibCore.Data.SQL.Mapper.Database;
+﻿using System;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 
 namespace NewLibCore.Data.SQL.Mapper
@@ -13,9 +12,12 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <summary>
         /// 初始化一个Handler类的实例
         /// </summary>
-        internal Handler()
+        internal Handler(IServiceProvider serviceProvider)
         {
+            ServiceProvider = serviceProvider;
         }
+
+        protected internal IServiceProvider ServiceProvider { get; private set; }
 
         /// <summary>
         /// 执行表达式段的翻译

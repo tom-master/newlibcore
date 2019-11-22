@@ -14,18 +14,14 @@ namespace NewLibCore.Data.SQL.Mapper
     {
         private readonly TModel _instance;
 
-        private readonly IServiceProvider _serviceProvider;
-
         /// <summary>
         /// 初始化一个InsertHandler类的实例
         /// </summary>
         /// <param name="model">要插入的模型</param>
-        internal InsertHandler(TModel model, IServiceProvider serviceProvider)
+        internal InsertHandler(TModel model, IServiceProvider serviceProvider) : base(serviceProvider)
         {
             Parameter.Validate(model);
-
             _instance = model;
-            _serviceProvider = serviceProvider;
         }
 
         /// <summary>
@@ -42,11 +38,11 @@ namespace NewLibCore.Data.SQL.Mapper
 
             var propertyInfos = _instance.GetChangedProperty();
 
-            var databaseConfig = _serviceProvider.GetService<InstanceConfig>();
+            var databaseConfig = ServiceProvider.GetService<InstanceConfig>();
 
             var tableName = typeof(TModel).GetTableName().TableName;
             var template = String.Format(databaseConfig.AddTemplate, tableName, String.Join(",", propertyInfos.Select(c => c.Key)), String.Join(",", propertyInfos.Select(key => $@"@{key.Key}")), databaseConfig.Extension.Identity);
-            return ParseResult.CreateResult().Append(template, propertyInfos.Select(c => new EntityParameter(c.Key, c.Value))).Execute(_serviceProvider);
+            return ParseResult.CreateResult().Append(template, propertyInfos.Select(c => new EntityParameter(c.Key, c.Value))).Execute(ServiceProvider);
         }
     }
 }
