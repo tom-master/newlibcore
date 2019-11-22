@@ -46,8 +46,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// </summary>
         internal IList<JoinExpressionMapper> Joins { get; private set; } = new List<JoinExpressionMapper>();
 
-        internal void AddFrom<TModel>()
-        where TModel : new()
+        internal void AddFrom<TModel>() where TModel : new()
         {
             Expression<Func<Type>> expression = () => typeof(TModel);
             From = new SimpleExpressionMapper
