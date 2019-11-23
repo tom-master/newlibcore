@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using NewLibCore.Data.SQL.Mapper.Cache;
 
 namespace NewLibCore.Data.SQL.Mapper
 {
     /// <summary>
-    /// 数据库实例配置
+    /// 为相应的数据库实例提供对应的模板化SQL
     /// </summary>
     internal abstract class InstanceConfig
     {
@@ -26,7 +25,7 @@ namespace NewLibCore.Data.SQL.Mapper
         protected readonly IDictionary<OrderByType, String> OrderTypeMapper = new Dictionary<OrderByType, String>();
 
         /// <summary>
-        /// 初始化一个InstanceConfig类的实例
+        /// 初始化InstanceConfig类的新实例
         /// </summary>
         protected InstanceConfig()
         {
@@ -38,11 +37,6 @@ namespace NewLibCore.Data.SQL.Mapper
             InitJoinType();
             InitOrderType();
         }
-
-        /// <summary>
-        /// 获取初始化完成的查询缓存对象
-        /// </summary>
-        internal ResultCache Cache { get; private set; }
 
         /// <summary>
         /// 查询模板
@@ -76,7 +70,6 @@ namespace NewLibCore.Data.SQL.Mapper
         /// </summary>
         protected abstract void AppendRelationType();
 
-        
         /// <summary>
         /// 实例扩展
         /// </summary>
