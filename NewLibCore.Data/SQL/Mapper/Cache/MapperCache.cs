@@ -35,14 +35,14 @@ namespace NewLibCore.Data.SQL.Mapper.Cache
         protected internal abstract void Remove(String key);
     }
     /// <summary>
-    /// 缓存sql执行的结果
+    /// 提供对sql查询结果的缓存操作
     /// </summary>
     internal class DefaultResultCache : ResultCache
     {
         protected internal ObjectCache _baseCache;
 
         /// <summary>
-        /// 初始化一个ExecutionResultCache类的实例
+        /// 初始化一个DefaultResultCache类的实例
         /// </summary>
         public DefaultResultCache()
         {
