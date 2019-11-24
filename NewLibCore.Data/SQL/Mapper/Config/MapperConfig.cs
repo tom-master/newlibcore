@@ -23,11 +23,6 @@ namespace NewLibCore.Data.SQL.Mapper
         public static String ConnectionStringName { get; set; }
 
         /// <summary>
-        /// 映射的数据库类型
-        /// </summary>
-        public static MapperType MapperType { get; set; }
-
-        /// <summary>
         /// 日志
         /// </summary>
         public static ILogger Logger
@@ -63,19 +58,39 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <summary>
         /// 事务隔离级别
         /// </summary>
-        public static IsolationLevel TransactionLevel { get; set; }
+        internal static IsolationLevel TransactionLevel { get; set; }
+
+        /// <summary>
+        /// 映射的数据库类型
+        /// </summary>
+        internal static MapperType MapperType { get; set; }
 
         /// <summary>
         /// 初始化默认配置
         /// </summary>
         public static void InitDefaultSetting()
         {
-            MapperType = MapperType.MYSQL;
+            UseMySql();
+            SetTransactionLevel();
             EnableModelValidate = true;
-            TransactionLevel = IsolationLevel.Unspecified;
 
             _logger = () => new DefaultLogger();
             _cache = () => new DefaultResultCache();
+        }
+
+        public static void UseMySql()
+        {
+            MapperType = MapperType.MYSQL;
+        }
+
+        public static void UseMsSql()
+        {
+            MapperType = MapperType.MSSQL;
+        }
+
+        public static void SetTransactionLevel()
+        {
+            TransactionLevel = IsolationLevel.Unspecified;
         }
 
         public static void SetLogger(ILogger logger)
