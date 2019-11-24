@@ -9,7 +9,7 @@ using NewLibCore.Validate;
 namespace NewLibCore.Data.SQL.Mapper
 {
     /// <summary>
-    /// 翻译表达式
+    /// 将Expression解析为对应的SQL谓词
     /// </summary>
     internal interface IParser
     {
@@ -21,7 +21,7 @@ namespace NewLibCore.Data.SQL.Mapper
     }
 
     /// <summary>
-    /// 翻译表达式
+    /// 将Expression解析为对应的SQL谓词
     /// </summary>
     internal class Parser : IParser
     {
@@ -42,10 +42,9 @@ namespace NewLibCore.Data.SQL.Mapper
         private readonly TemplateBase _templateBase;
 
         /// <summary>
-        /// 初始化一个TranslateContext类的实例
+        /// 初始化Parser类的新实例
         /// </summary>
-        /// <param name="statementStore">表达式分解后的对象</param>
-        /// <returns></returns>
+        /// <param name="serviceProvider"></param>
         private Parser(IServiceProvider serviceProvider)
         {
             Parameter.Validate(serviceProvider);
@@ -63,8 +62,9 @@ namespace NewLibCore.Data.SQL.Mapper
         }
 
         /// <summary>
-        /// 初始化一个ExpressionParser类的实例
+        /// 初始化Parser类的新实例
         /// </summary>
+        /// <param name="serviceProvider"></param>
         /// <returns></returns>
         internal static Parser CreateParser(IServiceProvider serviceProvider)
         {
@@ -72,7 +72,7 @@ namespace NewLibCore.Data.SQL.Mapper
         }
 
         /// <summary>
-        /// 翻译
+        /// 执行Expression的解析
         /// </summary>
         /// <returns></returns>
         public (String, IList<EntityParameter>) ExecuteParser(ExpressionStore expressionStore)
@@ -106,7 +106,7 @@ namespace NewLibCore.Data.SQL.Mapper
                     _joinRelation = item.JoinRelation;
 
                     //获取连接类型中的存储的表达式对象进行翻译
-                    InternalBuildWhere(item.Expression);
+                    InternalParser(item.Expression);
                 }
             }
             _internalStore.Append(" WHERE 1=1 ");
@@ -124,7 +124,7 @@ namespace NewLibCore.Data.SQL.Mapper
                 _internalStore.Append(PredicateType.AND.ToString());
 
                 //获取Where类型中的存储的表达式对象进行翻译
-                InternalBuildWhere(lambdaExp);
+                InternalParser(lambdaExp);
             }
             return (_internalStore.ToString(), _entityParameters);
         }
@@ -133,7 +133,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// 根据表达式构建出相应结果
         /// </summary>
         /// <param name="expression">表达式</param>
-        private void InternalBuildWhere(Expression expression)
+        private void InternalParser(Expression expression)
         {
             switch (expression.NodeType)
             {
@@ -143,19 +143,19 @@ namespace NewLibCore.Data.SQL.Mapper
 
                         if (binaryExp.Left.NodeType != ExpressionType.Constant && binaryExp.Right.NodeType != ExpressionType.Constant)
                         {
-                            InternalBuildWhere(binaryExp.Left);
+                            InternalParser(binaryExp.Left);
                             _internalStore.Append(PredicateType.AND.ToString());
-                            InternalBuildWhere(binaryExp.Right);
+                            InternalParser(binaryExp.Right);
                         }
                         else
                         {
                             if (binaryExp.Left.NodeType != ExpressionType.Constant)
                             {
-                                InternalBuildWhere(binaryExp.Left);
+                                InternalParser(binaryExp.Left);
                             }
                             else if (binaryExp.Right.NodeType != ExpressionType.Constant)
                             {
-                                InternalBuildWhere(binaryExp.Right);
+                                InternalParser(binaryExp.Right);
                             }
                         }
 
@@ -164,9 +164,9 @@ namespace NewLibCore.Data.SQL.Mapper
                 case ExpressionType.OrElse:
                     {
                         var binaryExp = (BinaryExpression)expression;
-                        InternalBuildWhere(binaryExp.Left);
+                        InternalParser(binaryExp.Left);
                         _internalStore.Append(PredicateType.OR.ToString());
-                        InternalBuildWhere(binaryExp.Right);
+                        InternalParser(binaryExp.Right);
                         break;
                     }
                 case ExpressionType.Call:
@@ -226,19 +226,19 @@ namespace NewLibCore.Data.SQL.Mapper
 
                         if (lamdbaExp.Body is BinaryExpression)
                         {
-                            InternalBuildWhere((BinaryExpression)lamdbaExp.Body);
+                            InternalParser((BinaryExpression)lamdbaExp.Body);
                         }
                         else if (lamdbaExp.Body is MemberExpression)
                         {
-                            InternalBuildWhere((MemberExpression)lamdbaExp.Body);
+                            InternalParser((MemberExpression)lamdbaExp.Body);
                         }
                         else if (lamdbaExp.Body is MethodCallExpression)
                         {
-                            InternalBuildWhere((MethodCallExpression)lamdbaExp.Body);
+                            InternalParser((MethodCallExpression)lamdbaExp.Body);
                         }
                         else if (lamdbaExp.Body is UnaryExpression)
                         {
-                            InternalBuildWhere((UnaryExpression)lamdbaExp.Body);
+                            InternalParser((UnaryExpression)lamdbaExp.Body);
                         }
                         break;
                     }
@@ -254,7 +254,7 @@ namespace NewLibCore.Data.SQL.Mapper
                                     var parameterExp = (ParameterExpression)memberExp.Expression;
                                     var newMember = Expression.MakeMemberAccess(parameterExp, parameterExp.Type.GetMember(memberExp.Member.Name)[0]);
                                     var newExpression = Expression.Equal(newMember, Expression.Constant(true));
-                                    InternalBuildWhere(newExpression);
+                                    InternalParser(newExpression);
                                 }
                             }
                             else
@@ -285,13 +285,13 @@ namespace NewLibCore.Data.SQL.Mapper
                         var memberExpression = (MemberExpression)((UnaryExpression)expression).Operand;
                         var parameterExp = (ParameterExpression)memberExpression.Expression;
                         var newMember = Expression.MakeMemberAccess(parameterExp, parameterExp.Type.GetMember(memberExpression.Member.Name)[0]);
-                        InternalBuildWhere(Expression.NotEqual(newMember, Expression.Constant(true)));
+                        InternalParser(Expression.NotEqual(newMember, Expression.Constant(true)));
                         break;
                     }
                 case ExpressionType.Convert:
                     {
                         var exp = ((UnaryExpression)expression).Operand;
-                        InternalBuildWhere(exp);
+                        InternalParser(exp);
                         break;
                     }
                 default:
@@ -355,13 +355,13 @@ namespace NewLibCore.Data.SQL.Mapper
 
             if (argumentType == typeof(String))
             {
-                InternalBuildWhere(obj);
-                InternalBuildWhere(argument);
+                InternalParser(obj);
+                InternalParser(argument);
             }
             else if (argumentType.IsCollections())
             {
-                InternalBuildWhere(argument);
-                InternalBuildWhere(obj);
+                InternalParser(argument);
+                InternalParser(obj);
             }
         }
 
@@ -384,13 +384,13 @@ namespace NewLibCore.Data.SQL.Mapper
                 //当表达式的左边和右边同时不为常量或者只有左边为常量的话，则从左到右解析表达式，否则从右到左解析表达式
                 if ((binary.Left.NodeType != ExpressionType.Constant && binary.Right.NodeType != ExpressionType.Constant) || binary.Left.NodeType != ExpressionType.Constant)
                 {
-                    InternalBuildWhere(binaryExp.Left);
-                    InternalBuildWhere(binaryExp.Right);
+                    InternalParser(binaryExp.Left);
+                    InternalParser(binaryExp.Right);
                 }
                 else
                 {
-                    InternalBuildWhere(binaryExp.Right);
-                    InternalBuildWhere(binaryExp.Left);
+                    InternalParser(binaryExp.Right);
+                    InternalParser(binaryExp.Left);
                 }
             }
         }

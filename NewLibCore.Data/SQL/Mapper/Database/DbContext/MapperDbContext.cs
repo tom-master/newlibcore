@@ -11,7 +11,7 @@ using NewLibCore.Validate;
 namespace NewLibCore.Data.SQL.Mapper.Database
 {
     /// <summary>
-    /// sql语句执行
+    /// 执行解析后的SQL
     /// </summary>
     internal sealed class MapperDbContext : MapperDbContextBase
     {
@@ -22,6 +22,9 @@ namespace NewLibCore.Data.SQL.Mapper.Database
 
         private DbTransaction _dataTransaction;
 
+        /// <summary>
+        /// 初始化MapperDbContext类的新实例
+        /// </summary>
         public MapperDbContext()
         {
             Parameter.Validate(MapperConfig.ConnectionStringName);
