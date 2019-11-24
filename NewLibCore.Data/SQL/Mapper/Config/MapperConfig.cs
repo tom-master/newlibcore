@@ -71,7 +71,7 @@ namespace NewLibCore.Data.SQL.Mapper
         public static void InitDefaultSetting()
         {
             UseMySql();
-            SetTransactionLevel();
+            SetTransactionLevel(IsolationLevel.Unspecified);
             EnableModelValidate = true;
 
             _logger = () => new DefaultLogger();
@@ -88,9 +88,9 @@ namespace NewLibCore.Data.SQL.Mapper
             MapperType = MapperType.MSSQL;
         }
 
-        public static void SetTransactionLevel()
+        public static void SetTransactionLevel(IsolationLevel isolationLevel)
         {
-            TransactionLevel = IsolationLevel.Unspecified;
+            TransactionLevel = isolationLevel;
         }
 
         public static void SetLogger(ILogger logger)
