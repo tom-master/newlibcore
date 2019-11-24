@@ -38,7 +38,7 @@ namespace NewLibCore.Data.SQL.Mapper
             {
                 _modelInstance.Validate();
             }
-            var databaseConfig = ServiceProvider.GetService<InstanceConfig>();
+            var templateInstance = ServiceProvider.GetService<TemplateBase>();
             var expressionStore = new ExpressionStore();
             expressionStore.AddWhere(_filter);
 
@@ -47,10 +47,10 @@ namespace NewLibCore.Data.SQL.Mapper
             var propertys = _modelInstance.GetChangedProperty();
             var (TableName, AliasName) = typeof(TModel).GetTableName();
 
-            parserResult.Append(String.Format(databaseConfig.UpdateTemplate, TableName, AliasName, String.Join(",", propertys.Select(p => $@"{AliasName}.{p.Key}=@{p.Key}"))), propertys.Select(c => new EntityParameter(c.Key, c.Value)));
+            parserResult.Append(String.Format(templateInstance.UpdateTemplate, TableName, AliasName, String.Join(",", propertys.Select(p => $@"{AliasName}.{p.Key}=@{p.Key}"))), propertys.Select(c => new EntityParameter(c.Key, c.Value)));
             parserResult.Append(sql, parameters);
             parserResult.Append($@"{PredicateType.AND} {AliasName}.IsDeleted=0");
-            parserResult.Append($@"{databaseConfig.Extension.RowCount}");
+            parserResult.Append($@"{templateInstance.Extension.RowCount}");
             _modelInstance.Reset();
 
             return parserResult.Execute(ServiceProvider);

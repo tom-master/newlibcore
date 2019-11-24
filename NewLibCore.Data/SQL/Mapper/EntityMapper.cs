@@ -21,11 +21,11 @@ namespace NewLibCore.Data.SQL.Mapper
 
             if (MapperConfig.MapperType == MapperType.MSSQL)
             {
-                services = services.AddScoped<InstanceConfig, MsSqlInstanceConfig>();
+                services = services.AddScoped<TemplateBase, MsSqlTemplate>();
             }
             else if (MapperConfig.MapperType == MapperType.MYSQL)
             {
-                services = services.AddScoped<InstanceConfig, MySqlInstanceConfig>();
+                services = services.AddScoped<TemplateBase, MySqlTemplate>();
             }
             var serviceProvider = services.BuildServiceProvider();
             _serviceScope = serviceProvider.CreateScope();

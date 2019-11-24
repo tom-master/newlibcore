@@ -5,7 +5,7 @@ namespace NewLibCore.Data.SQL.Mapper
     /// <summary>
     /// mysql数据库sql模板配置
     /// </summary>
-    internal class MySqlInstanceConfig : InstanceConfig
+    internal class MySqlTemplate : TemplateBase
     {
         internal override String UpdateTemplate
         {

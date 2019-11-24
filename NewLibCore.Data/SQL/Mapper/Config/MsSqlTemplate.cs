@@ -7,7 +7,7 @@ namespace NewLibCore.Data.SQL.Mapper
     /// <summary>
     /// mssql数据库sql模板配置
     /// </summary>
-    internal class MsSqlInstanceConfig : InstanceConfig
+    internal class MsSqlTemplate : TemplateBase
     {
         internal override InstanceExtension Extension
         {

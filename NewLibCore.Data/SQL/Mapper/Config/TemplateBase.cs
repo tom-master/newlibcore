@@ -7,7 +7,7 @@ namespace NewLibCore.Data.SQL.Mapper
     /// <summary>
     /// 为相应的数据库实例提供对应的模板化SQL
     /// </summary>
-    internal abstract class InstanceConfig
+    internal abstract class TemplateBase
     {
         /// <summary>
         /// 谓词关系映射
@@ -25,9 +25,9 @@ namespace NewLibCore.Data.SQL.Mapper
         protected readonly IDictionary<OrderByType, String> OrderTypeMapper = new Dictionary<OrderByType, String>();
 
         /// <summary>
-        /// 初始化InstanceConfig类的新实例
+        /// 初始化TemplateBase类的新实例
         /// </summary>
-        protected InstanceConfig()
+        protected TemplateBase()
         {
             JoinMapper.Clear();
             PredicateMapper.Clear();
