@@ -29,12 +29,11 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <returns></returns>
         internal override RawResult Execute()
         {
-            var templateInstance = ServiceProvider.GetService<TemplateBase>();
             var mainTable = _expressionStore.From.AliaNameMapper[0];
 
             var parserResult = ParserResult.CreateResult();
             var (Fields, _) = StatementParse(_expressionStore.Select);
-            parserResult.Append(String.Format(templateInstance.SelectTemplate, Fields, mainTable.Key, mainTable.Value));
+            parserResult.Append(String.Format(TemplateBase.SelectTemplate, Fields, mainTable.Key, mainTable.Value));
 
             var (sql, parameters) = Parser.CreateParser(ServiceProvider).ExecuteParser(_expressionStore);
             parserResult.Append(sql, parameters);
@@ -55,7 +54,7 @@ namespace NewLibCore.Data.SQL.Mapper
             if (_expressionStore.Order != null)
             {
                 var (fields, tableName) = StatementParse(_expressionStore.Order);
-                var orderTemplate = templateInstance.CreateOrderBy(_expressionStore.Order.OrderBy, $@"{tableName}.{fields}");
+                var orderTemplate = TemplateBase.CreateOrderBy(_expressionStore.Order.OrderBy, $@"{tableName}.{fields}");
                 parserResult.Append(orderTemplate);
             }
 
@@ -63,7 +62,7 @@ namespace NewLibCore.Data.SQL.Mapper
             {
                 var pageIndex = (_expressionStore.Pagination.Size * (_expressionStore.Pagination.Index - 1)).ToString();
                 var pageSize = _expressionStore.Pagination.Size.ToString();
-                parserResult.Append(templateInstance.Extension.Page.Replace("{value}", pageIndex).Replace("{pageSize}", pageSize));
+                parserResult.Append(TemplateBase.Extension.Page.Replace("{value}", pageIndex).Replace("{pageSize}", pageSize));
             }
 
             return parserResult.Execute(ServiceProvider);

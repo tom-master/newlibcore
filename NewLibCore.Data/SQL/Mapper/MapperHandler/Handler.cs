@@ -1,6 +1,6 @@
 ﻿using System;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
-
+using Microsoft.Extensions.DependencyInjection;
 namespace NewLibCore.Data.SQL.Mapper
 {
     /// <summary>
@@ -18,6 +18,18 @@ namespace NewLibCore.Data.SQL.Mapper
         }
 
         protected internal IServiceProvider ServiceProvider { get; private set; }
+
+        protected internal TemplateBase TemplateBase
+        {
+            get
+            {
+                if (ServiceProvider == null)
+                {
+                    throw new Exception($@"{nameof(ServiceProvider)}为空");
+                }
+                return ServiceProvider.GetService<TemplateBase>();
+            }
+        }
 
         /// <summary>
         /// 执行表达式段的翻译
