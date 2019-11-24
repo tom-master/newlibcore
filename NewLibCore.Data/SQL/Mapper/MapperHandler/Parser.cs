@@ -39,6 +39,8 @@ namespace NewLibCore.Data.SQL.Mapper
 
         private readonly IServiceProvider _serviceProvider;
 
+        private readonly TemplateBase _templateBase;
+
         /// <summary>
         /// 初始化一个TranslateContext类的实例
         /// </summary>
@@ -46,10 +48,16 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <returns></returns>
         private Parser(IServiceProvider serviceProvider)
         {
+            Parameter.Validate(serviceProvider);
+
             _serviceProvider = serviceProvider;
+            _templateBase = _serviceProvider.GetService<TemplateBase>();
+
             _internalStore = new StringBuilder();
+
             _parameterNameStack = new Stack<String>();
             _predicateTypeStack = new Stack<PredicateType>();
+
             _entityParameters = new List<EntityParameter>();
             _tableAliasMapper = new List<KeyValuePair<String, String>>();
         }
@@ -71,8 +79,6 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             Parameter.Validate(expressionStore);
 
-            var templateInstance = _serviceProvider.GetService<TemplateBase>();
-
             //获取合并后的表别名
             _tableAliasMapper = expressionStore.MergeAliasMapper();
 
@@ -93,7 +99,7 @@ namespace NewLibCore.Data.SQL.Mapper
                     }
 
                     //获取连接语句的模板
-                    var joinTemplate = templateInstance.CreateJoin(item.JoinRelation, aliasItem.Key, aliasItem.Value.ToLower());
+                    var joinTemplate = _templateBase.CreateJoin(item.JoinRelation, aliasItem.Key, aliasItem.Value.ToLower());
                     _internalStore.Append(joinTemplate);
 
                     //设置相应的连接类型
@@ -261,9 +267,8 @@ namespace NewLibCore.Data.SQL.Mapper
                                 }
                                 internalAliasName = $@"{ _tableAliasMapper.Where(w => w.Key == parameterExp.Type.GetTableName().TableName && w.Value == parameterExp.Type.GetTableName().AliasName).FirstOrDefault().Value.ToLower()}.";
 
-                                var templateInstance = _serviceProvider.GetService<TemplateBase>();
                                 var newParameterName = Guid.NewGuid().ToString().Replace("-", "");
-                                _internalStore.Append(templateInstance.CreatePredicate(_predicateTypeStack.Pop(), $@"{internalAliasName}{memberExp.Member.Name}", $"@{newParameterName}"));
+                                _internalStore.Append(_templateBase.CreatePredicate(_predicateTypeStack.Pop(), $@"{internalAliasName}{memberExp.Member.Name}", $"@{newParameterName}"));
                                 _parameterNameStack.Push(newParameterName);
                             }
                         }
@@ -399,14 +404,13 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             Parameter.Validate(binary);
 
-            var templateInstance = _serviceProvider.GetService<TemplateBase>();
             //表达式左右两边都不为常量时例如 xx.Id==yy.Id
             if (binary.Left.NodeType != ExpressionType.Constant && binary.Right.NodeType != ExpressionType.Constant)
             {
                 var (LeftMember, LeftAliasName) = GetLeftMemberAndAliasName(binary);
                 var (RightMember, RightAliasName) = GetRightMemberAndAliasName(binary);
 
-                var relationTemplate = templateInstance.CreatePredicate(predicateType, $"{RightAliasName}.{RightMember.Member.Name}", $"{LeftAliasName}.{LeftMember.Member.Name}");
+                var relationTemplate = _templateBase.CreatePredicate(predicateType, $"{RightAliasName}.{RightMember.Member.Name}", $"{LeftAliasName}.{LeftMember.Member.Name}");
                 _internalStore.Append(relationTemplate);
             }
             else if (binary.Left.NodeType == ExpressionType.Constant) //表达式左边为常量
@@ -414,14 +418,14 @@ namespace NewLibCore.Data.SQL.Mapper
                 var (RightMember, RightAliasName) = GetRightMemberAndAliasName(binary);
                 var constant = (ConstantExpression)binary.Left;
                 var value = Boolean.TryParse(constant.Value.ToString(), out var result) ? (result ? 1 : 0).ToString() : constant.Value;
-                _internalStore.Append(templateInstance.CreatePredicate(predicateType, value + "", $"{RightAliasName}.{RightMember.Member.Name}"));
+                _internalStore.Append(_templateBase.CreatePredicate(predicateType, value + "", $"{RightAliasName}.{RightMember.Member.Name}"));
             }
             else if (binary.Right.NodeType == ExpressionType.Constant) //表达式的右边为常量
             {
                 var (LeftMember, LeftAliasName) = GetLeftMemberAndAliasName(binary);
                 var constant = (ConstantExpression)binary.Right;
                 var value = Boolean.TryParse(constant.Value.ToString(), out var result) ? (result ? 1 : 0).ToString() : constant.Value;
-                _internalStore.Append(templateInstance.CreatePredicate(predicateType, $"{LeftAliasName}.{LeftMember.Member.Name}", value + ""));
+                _internalStore.Append(_templateBase.CreatePredicate(predicateType, $"{LeftAliasName}.{LeftMember.Member.Name}", value + ""));
             }
         }
 
