@@ -147,8 +147,6 @@ namespace NewLibCore.Data.SQL.Mapper
             return this;
         }
 
-
-
         public QueryWrapper<TModel> Where(Expression<Func<TModel, Boolean>> filter)
         {
             Parameter.Validate(filter);
@@ -229,7 +227,7 @@ namespace NewLibCore.Data.SQL.Mapper
             _expressionStore.AddOrderBy(order, OrderByType.ASC);
             return this;
         }
-
+      
         public TModel FirstOrDefault()
         {
             return RunDiagnosis.Watch(() =>
