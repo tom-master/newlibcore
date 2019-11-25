@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 using NewLibCore.Data.SQL.Mapper.Cache;
@@ -28,7 +27,6 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             _originSql = new StringBuilder();
             _parameters = new List<MapperParameter>();
-
         }
 
         /// <summary>
@@ -61,30 +59,6 @@ namespace NewLibCore.Data.SQL.Mapper
         }
 
         /// <summary>
-        /// 追加一组EntityParameter对象
-        /// </summary>
-        /// <param name="entityParameters">参数列表</param>
-        internal void Append(params MapperParameter[] entityParameters)
-        {
-            Append(entityParameters.ToList());
-        }
-
-        /// <summary>
-        /// 追加一组EntityParameter对象
-        /// </summary>
-        /// <param name="entityParameters">参数列表</param>
-        internal void Append(IEnumerable<MapperParameter> entityParameters)
-        {
-            if (entityParameters != null)
-            {
-                foreach (var item in entityParameters)
-                {
-                    _parameters.Add(item);
-                }
-            }
-        }
-
-        /// <summary>
         /// 执行表达式翻译出的sql语句
         /// </summary>
         /// <param name="executionCore">执行翻译结果的对象</param>
@@ -92,9 +66,9 @@ namespace NewLibCore.Data.SQL.Mapper
         internal RawResult Execute(IServiceProvider serviceProvider)
         {
             var dbContext = serviceProvider.GetService<MapperDbContextBase>();
+            var executeType = dbContext.GetExecuteType(ToString());
 
             var executeResult = GetCache();
-            var executeType = dbContext.GetExecuteType(ToString());
             if (executeResult == null)
             {
                 executeResult = dbContext.RawExecute(ToString(), _parameters);
@@ -131,7 +105,8 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <summary>
         /// 设置缓存
         /// </summary>
-        /// <param name="executeResult">sql执行后原始的执行结果</param>
+        /// <param name="executeType"></param>
+        /// <param name="executeResult"></param>
         private void SetCache(ExecuteType executeType, RawResult executeResult)
         {
             if (executeType != ExecuteType.SELECT)

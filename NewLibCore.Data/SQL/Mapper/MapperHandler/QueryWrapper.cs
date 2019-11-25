@@ -239,12 +239,30 @@ namespace NewLibCore.Data.SQL.Mapper
             });
         }
 
+        public TResult FirstOrDefault<TResult>() where TResult : new()
+        {
+            return RunDiagnosis.Watch(() =>
+            {
+                Handler handler = new QueryHandler<TModel>(_expressionStore, _serviceProvider);
+                return handler.Execute().FirstOrDefault<TResult>();
+            });
+        }
+
         public List<TModel> ToList()
         {
             return RunDiagnosis.Watch(() =>
             {
                 Handler handler = new QueryHandler<TModel>(_expressionStore, _serviceProvider);
                 return handler.Execute().ToList<TModel>();
+            });
+        }
+
+        public List<TResult> ToList<TResult>() where TResult : new()
+        {
+            return RunDiagnosis.Watch(() =>
+            {
+                Handler handler = new QueryHandler<TModel>(_expressionStore, _serviceProvider);
+                return handler.Execute().ToList<TResult>();
             });
         }
 

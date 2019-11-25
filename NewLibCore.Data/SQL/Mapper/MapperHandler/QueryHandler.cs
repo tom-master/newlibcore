@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using Microsoft.Extensions.DependencyInjection;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Validate;
 
@@ -120,6 +119,5 @@ namespace NewLibCore.Data.SQL.Mapper
             }
             return (String.Join(",", anonymousObjFields), modelAliasName.FirstOrDefault());
         }
-
     }
 }

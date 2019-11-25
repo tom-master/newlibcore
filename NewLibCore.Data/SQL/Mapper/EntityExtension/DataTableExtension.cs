@@ -49,14 +49,22 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
                 {
                     var obj = Activator.CreateInstance<T>();
                     var type = obj.GetType();
-                    for (int i = 0; i < dt.Rows.Count; i++)
+                    for (var i = 0; i < dt.Rows.Count; i++)
                     {
                         list.Add((T)ChangeType(dt.Rows[i][0], type));
                     }
                 }
+                else if (typeof(T).Name.Contains("ValueTuple"))
+                {
+                    foreach (DataRow item in dt.Rows)
+                    {
+                        var r = CreateValueTuple(item.ItemArray);
+                        list.Add((T)r);
+                    }
+                }
                 else
                 {
-                    foreach (DataRow dr in dt.Rows)
+                    foreach (DataRow item in dt.Rows)
                     {
                         var obj = Activator.CreateInstance<T>();
                         var type = obj.GetType();
@@ -66,7 +74,7 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
                         {
                             if (dt.Columns.Contains(propertyInfo.Name))
                             {
-                                var value = dr[propertyInfo.Name];
+                                var value = item[propertyInfo.Name];
                                 if (value != DBNull.Value)
                                 {
                                     var fast = new FastProperty(propertyInfo);

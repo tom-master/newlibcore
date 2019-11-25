@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading;
 using NewLibCore.Data.SQL.Mapper;
-using NewLibCore.Validate;
 using Newtonsoft.Json;
 
 namespace NewLibCore.Run
@@ -15,10 +13,10 @@ namespace NewLibCore.Run
             #region 
 
             MapperConfig.InitDefaultSetting();
-            
+
             //MapperConfig.UseMsSql();
             MapperConfig.UseMySql();
-        
+
             MapperConfig.ConnectionStringName = "NewCrmDatabase";
 
 
@@ -37,10 +35,11 @@ namespace NewLibCore.Run
 
             using (var mapper = EntityMapper.CreateMapper())
             {
-                for (int i = 0; i < 20; i++)
-                {
-                    var result = mapper.Query<App>().Select(s => new { s.Id }).ToList();
-                }
+                //for (int i = 0; i < 20; i++)
+                //{
+                var result = mapper.Query<Wallpaper>().Select(s => new { s.Id, s.Source }).ToList<(Int32 Id, WallpaperSource Source)>();
+                Console.WriteLine(JsonConvert.SerializeObject(result));
+                //}
 
                 //var result = mapper.Query<User>().FirstOrDefault();
                 //var result = mapper.Query<User>().ToList();
