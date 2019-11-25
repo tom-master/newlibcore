@@ -4,10 +4,13 @@ using System.Runtime.Caching;
 namespace NewLibCore.Data.SQL.Mapper.Cache
 {
     /// <summary>
-    /// 映射缓存
+    /// 提供对sql查询结果的缓存操作
     /// </summary>
     public abstract class ResultCache
     {
+        /// <summary>
+        /// 初始化ResultCache类的新实例
+        /// </summary>
         public ResultCache() { }
 
         /// <summary>
@@ -28,18 +31,18 @@ namespace NewLibCore.Data.SQL.Mapper.Cache
         /// <summary>
         /// 使一个执行结果缓存失效
         /// </summary>
-        /// <param name="key">缓存键</param>
-        protected internal abstract void CacheInvalid(String key);
+        /// <param name="key"></param>
+        protected internal abstract void Remove(String key);
     }
     /// <summary>
-    /// 缓存sql执行的结果
+    /// 提供对sql查询结果的缓存操作
     /// </summary>
     internal class DefaultResultCache : ResultCache
     {
         protected internal ObjectCache _baseCache;
 
         /// <summary>
-        /// 初始化一个ExecutionResultCache类的实例
+        /// 初始化一个DefaultResultCache类的实例
         /// </summary>
         public DefaultResultCache()
         {
@@ -56,7 +59,7 @@ namespace NewLibCore.Data.SQL.Mapper.Cache
             _baseCache.Add(cacheItem, itemPolicy);
         }
 
-        protected internal override void CacheInvalid(String key)
+        protected internal override void Remove(String key)
         {
             _baseCache.Remove(key);
         }

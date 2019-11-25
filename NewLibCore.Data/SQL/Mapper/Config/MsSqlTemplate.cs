@@ -5,9 +5,9 @@ using System.Data.SqlClient;
 namespace NewLibCore.Data.SQL.Mapper
 {
     /// <summary>
-    /// mssql数据库实例配置
+    /// mssql数据库sql模板配置
     /// </summary>
-    internal class MsSqlInstanceConfig : InstanceConfig
+    internal class MsSqlTemplate : TemplateBase
     {
         internal override InstanceExtension Extension
         {
@@ -30,19 +30,17 @@ namespace NewLibCore.Data.SQL.Mapper
             }
         }
 
-        protected override void AppendRelationType()
+        protected override void AppendPredicateType()
         {
-            LogicRelationMapper.Add(RelationType.FULL_LIKE, "{0} LIKE '%{1}%'");
-            LogicRelationMapper.Add(RelationType.START_LIKE, "{0} LIKE '{1}%'");
-            LogicRelationMapper.Add(RelationType.END_LIKE, "{0} LIKE '%{1}' ");
-            LogicRelationMapper.Add(RelationType.IN, "{0} IN ({1})");
+            PredicateMapper.Add(PredicateType.FULL_LIKE, "{0} LIKE '%{1}%'");
+            PredicateMapper.Add(PredicateType.START_LIKE, "{0} LIKE '{1}%'");
+            PredicateMapper.Add(PredicateType.END_LIKE, "{0} LIKE '%{1}' ");
+            PredicateMapper.Add(PredicateType.IN, "{0} IN ({1})");
         }
 
-      
-
-        internal override String RelationBuilder(RelationType relationType, String left, String right)
+        internal override String CreatePredicate(PredicateType predicateType, String left, String right)
         {
-            return String.Format(LogicRelationMapper[relationType], left, right);
+            return String.Format(PredicateMapper[predicateType], left, right);
         }
     }
 }

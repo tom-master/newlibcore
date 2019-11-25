@@ -6,9 +6,15 @@ using NewLibCore.Data.SQL.Mapper.EntityExtension;
 
 namespace NewLibCore.Data.SQL.Mapper.DbContext
 {
+    /// <summary>
+    /// 执行解析后的SQL
+    /// </summary>
     internal abstract class MapperDbContextBase : IDisposable
     {
-
+        /// <summary>
+        /// 是否使用事物
+        /// </summary>
+        /// <value></value>
         protected internal Boolean UseTransaction { get; set; }
 
         /// <summary>

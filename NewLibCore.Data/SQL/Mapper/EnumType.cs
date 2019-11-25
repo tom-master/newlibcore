@@ -46,9 +46,9 @@ namespace NewLibCore.Data.SQL.Mapper
     }
 
     /// <summary>
-    /// 关系类型
+    /// 谓词类型
     /// </summary>
-    internal enum RelationType
+    internal enum PredicateType
     {
         AND = 1,
         OR = 2,
