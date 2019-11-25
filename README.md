@@ -168,7 +168,7 @@
       var result = mapper.Query<App>().LeftJoin<Member>((a,m)=>a.Id==m.AppId).Page(1,15).ToList();
     
       //返回元组形式的返回值，元组中项的个数需要与Select方法中指定查询的字段的个数一致，且顺序也需一致。
-      var result = mapper.Query<Log>().Select(s => new { s.Id,s.Trace }).ToList<(Int32 Id,String Name)>();
+      var result = mapper.Query<Log>().ToList<(Int32 Id,String Name)>();
       
       //注意：当返回值为元组形式时，需首先调用Select方法将需要返回的字段指定。若整张表的字段不超过8个则可以不用调用Select方法。
       var result = mapper.Query<App>().Select(s => new { s.Id,s.Name }).ToList<(Int32 Id,String Name)>();
