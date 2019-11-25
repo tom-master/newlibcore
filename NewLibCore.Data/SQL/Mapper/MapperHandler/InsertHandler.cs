@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using Microsoft.Extensions.DependencyInjection;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Validate;
 
@@ -37,9 +36,9 @@ namespace NewLibCore.Data.SQL.Mapper
             }
 
             var propertyInfos = _instance.GetChangedProperty();
-            
+
             var insert = String.Format(TemplateBase.InsertTemplate, typeof(TModel).GetTableName().TableName, String.Join(",", propertyInfos.Select(c => c.Key)), String.Join(",", propertyInfos.Select(key => $@"@{key.Key}")), TemplateBase.Extension.Identity);
-            return ParserResult.CreateResult().Append(insert, propertyInfos.Select(c => new EntityParameter(c.Key, c.Value))).Execute(ServiceProvider);
+            return ParserResult.CreateResult().Append(insert, propertyInfos.Select(c => new MapperParameter(c.Key, c.Value))).Execute(ServiceProvider);
         }
     }
 }

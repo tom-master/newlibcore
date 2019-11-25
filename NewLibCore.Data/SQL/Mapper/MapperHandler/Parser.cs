@@ -57,7 +57,7 @@ namespace NewLibCore.Data.SQL.Mapper
             _parameterNameStack = new Stack<String>();
             _predicateTypeStack = new Stack<PredicateType>();
 
-            _entityParameters = new List<EntityParameter>();
+            _entityParameters = new List<MapperParameter>();
             _tableAliasMapper = new List<KeyValuePair<String, String>>();
         }
 
@@ -176,7 +176,7 @@ namespace NewLibCore.Data.SQL.Mapper
                 case ExpressionType.Constant:
                     {
                         var binaryExp = (ConstantExpression)expression;
-                        _entityParameters.Add(new EntityParameter(_parameterNameStack.Pop(), binaryExp.Value));
+                        _entityParameters.Add(new MapperParameter(_parameterNameStack.Pop(), binaryExp.Value));
                         break;
                     }
                 case ExpressionType.Equal:
@@ -274,7 +274,7 @@ namespace NewLibCore.Data.SQL.Mapper
                         else
                         {
                             var getter = Expression.Lambda(memberExp).Compile();
-                            _entityParameters.Add(new EntityParameter(_parameterNameStack.Pop(), getter.DynamicInvoke()));
+                            _entityParameters.Add(new MapperParameter(_parameterNameStack.Pop(), getter.DynamicInvoke()));
                             break;
                         }
                         break;
