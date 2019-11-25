@@ -17,7 +17,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// 翻译
         /// </summary>
         /// <returns></returns>
-        (String, IList<EntityParameter>) ExecuteParser(ExpressionStore expressionStore);
+        (String, IList<MapperParameter>) ExecuteParser(ExpressionStore expressionStore);
     }
 
     /// <summary>
@@ -29,7 +29,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
         private readonly StringBuilder _internalStore;
 
-        private readonly IList<EntityParameter> _entityParameters;
+        private readonly IList<MapperParameter> _entityParameters;
 
         private readonly Stack<String> _parameterNameStack;
 
@@ -57,7 +57,7 @@ namespace NewLibCore.Data.SQL.Mapper
             _parameterNameStack = new Stack<String>();
             _predicateTypeStack = new Stack<PredicateType>();
 
-            _entityParameters = new List<EntityParameter>();
+            _entityParameters = new List<MapperParameter>();
             _tableAliasMapper = new List<KeyValuePair<String, String>>();
         }
 
@@ -75,7 +75,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// 执行Expression的解析
         /// </summary>
         /// <returns></returns>
-        public (String, IList<EntityParameter>) ExecuteParser(ExpressionStore expressionStore)
+        public (String, IList<MapperParameter>) ExecuteParser(ExpressionStore expressionStore)
         {
             Parameter.Validate(expressionStore);
 
@@ -97,7 +97,6 @@ namespace NewLibCore.Data.SQL.Mapper
                     {
                         continue;
                     }
-
                     //获取连接语句的模板
                     var joinTemplate = _templateBase.CreateJoin(item.JoinRelation, aliasItem.Key, aliasItem.Value.ToLower());
                     _internalStore.Append(joinTemplate);
@@ -177,7 +176,7 @@ namespace NewLibCore.Data.SQL.Mapper
                 case ExpressionType.Constant:
                     {
                         var binaryExp = (ConstantExpression)expression;
-                        _entityParameters.Add(new EntityParameter(_parameterNameStack.Pop(), binaryExp.Value));
+                        _entityParameters.Add(new MapperParameter(_parameterNameStack.Pop(), binaryExp.Value));
                         break;
                     }
                 case ExpressionType.Equal:
@@ -275,7 +274,7 @@ namespace NewLibCore.Data.SQL.Mapper
                         else
                         {
                             var getter = Expression.Lambda(memberExp).Compile();
-                            _entityParameters.Add(new EntityParameter(_parameterNameStack.Pop(), getter.DynamicInvoke()));
+                            _entityParameters.Add(new MapperParameter(_parameterNameStack.Pop(), getter.DynamicInvoke()));
                             break;
                         }
                         break;
@@ -430,7 +429,7 @@ namespace NewLibCore.Data.SQL.Mapper
         }
 
         /// <summary>
-        /// 获取左表达式的成员对象和别名
+        /// 获取右表达式的成员对象和别名
         /// </summary>
         /// <param name="binaryExp">表达式</param>
         /// <returns></returns>
@@ -447,7 +446,7 @@ namespace NewLibCore.Data.SQL.Mapper
         }
 
         /// <summary>
-        /// 获取又表达式的成员对象和别名
+        /// 获取左表达式的成员对象和别名
         /// </summary>
         /// <param name="binaryExp">表达式</param>
         /// <returns></returns>

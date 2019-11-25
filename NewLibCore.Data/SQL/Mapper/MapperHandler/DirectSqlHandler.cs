@@ -8,14 +8,14 @@ namespace NewLibCore.Data.SQL.Mapper
     {
         private readonly String _sql;
 
-        private readonly IEnumerable<EntityParameter> _parameters;
+        private readonly IEnumerable<MapperParameter> _parameters;
 
-        public DirectSqlHandler(String sql, IServiceProvider serviceProvider) : base(serviceProvider)
+        public DirectSqlHandler(String sql, IServiceProvider serviceProvider) : this(sql, null, serviceProvider)
         {
-            _sql = sql;
+
         }
 
-        public DirectSqlHandler(String sql, IEnumerable<EntityParameter> parameters, IServiceProvider serviceProvider) : base(serviceProvider)
+        public DirectSqlHandler(String sql, IEnumerable<MapperParameter> parameters, IServiceProvider serviceProvider) : base(serviceProvider)
         {
             _sql = sql;
             _parameters = parameters;

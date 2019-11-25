@@ -1,6 +1,6 @@
 ﻿using System;
-using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using Microsoft.Extensions.DependencyInjection;
+using NewLibCore.Data.SQL.Mapper.EntityExtension;
 namespace NewLibCore.Data.SQL.Mapper
 {
     /// <summary>
@@ -12,13 +12,16 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <summary>
         /// 初始化一个Handler类的实例
         /// </summary>
-        internal Handler(IServiceProvider serviceProvider)
+        protected internal Handler(IServiceProvider serviceProvider)
         {
             ServiceProvider = serviceProvider;
         }
 
         protected internal IServiceProvider ServiceProvider { get; private set; }
 
+        /// <summary>
+        /// SQL模板
+        /// </summary>
         protected internal TemplateBase TemplateBase
         {
             get

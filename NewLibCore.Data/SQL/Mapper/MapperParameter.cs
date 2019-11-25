@@ -12,22 +12,47 @@ namespace NewLibCore.Data.SQL.Mapper
     /// <summary>
     /// 实体参数
     /// </summary>
-    public sealed class EntityParameter
+    public sealed class MapperParameter
     {
-        public EntityParameter(String key, Object value)
+        private readonly Boolean _filterBadContent;
+
+        /// <summary>
+        /// 初始化EntityParameter类的新实例
+        /// </summary>
+        /// <param name="key">占位符</param>
+        /// <param name="value">值</param>
+        /// <param name="filterBadContent">是否过滤非法字符</param>
+        public MapperParameter(String key, Object value, Boolean filterBadContent)
         {
             Parameter.Validate(key);
             Parameter.Validate(value);
 
+            _filterBadContent = filterBadContent;
             Key = $"@{key}";
             Value = ParseValueType(value);
         }
 
+        /// <summary>
+        /// 初始化EntityParameter类的新实例
+        /// </summary>
+        /// <param name="key">占位符</param>
+        /// <param name="value">值</param>
+        public MapperParameter(String key, Object value) : this(key, value, true)
+        {
+
+        }
+
+        /// <summary>
+        /// 占位符
+        /// </summary>
         internal String Key { get; private set; }
 
+        /// <summary>
+        /// 值
+        /// </summary>
         internal Object Value { get; private set; }
 
-        public static implicit operator DbParameter(EntityParameter entityParameter)
+        public static implicit operator DbParameter(MapperParameter entityParameter)
         {
             Parameter.Validate(entityParameter);
 
@@ -63,7 +88,11 @@ namespace NewLibCore.Data.SQL.Mapper
                 var objType = obj.GetType();
                 if (objType == typeof(String))
                 {
-                    return UnlegalChatDetection.FilterBadChat(obj.ToString());
+                    if (_filterBadContent)
+                    {
+                        return UnlegalChatDetection.FilterBadChat(obj.ToString());
+                    }
+                    return obj.ToString();
                 }
 
                 if (objType == typeof(Boolean))

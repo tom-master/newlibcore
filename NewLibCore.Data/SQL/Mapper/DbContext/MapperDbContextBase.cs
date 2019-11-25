@@ -4,7 +4,7 @@ using System.Data;
 using System.Data.Common;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 
-namespace NewLibCore.Data.SQL.Mapper.Database
+namespace NewLibCore.Data.SQL.Mapper.DbContext
 {
     /// <summary>
     /// 执行解析后的SQL
@@ -59,7 +59,7 @@ namespace NewLibCore.Data.SQL.Mapper.Database
         /// <param name="parameters">参数</param>
         /// <param name="commandType"></param>
         /// <returns></returns>
-        protected internal abstract RawResult RawExecute(String sql, IEnumerable<EntityParameter> parameters = null, CommandType commandType = CommandType.Text);
+        protected internal abstract RawResult RawExecute(String sql, IEnumerable<MapperParameter> parameters = null, CommandType commandType = CommandType.Text);
 
         public void Dispose()
         {

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using NewLibCore.Data.SQL.Mapper.Cache;
 
 namespace NewLibCore.Data.SQL.Mapper
 {

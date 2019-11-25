@@ -60,7 +60,7 @@ namespace NewLibCore.Data.SQL.Mapper
         }
 
         /// <summary>
-        /// 将表达式拆分出相应的排序对象
+        /// 添加排序表达式
         /// </summary>
         /// <param name="order">排序条件</param>
         /// <param name="orderByType">排序方向</param>
@@ -77,6 +77,11 @@ namespace NewLibCore.Data.SQL.Mapper
             };
         }
 
+        /// <summary>
+        /// 添加条件表达式
+        /// </summary>
+        /// <typeparam name="TModel1"></typeparam>
+        /// <param name="filter"></param>
         internal void AddWhere<TModel1>(Expression<Func<TModel1, Boolean>> filter) where TModel1 : new()
         {
             Parameter.Validate(filter);
@@ -87,6 +92,12 @@ namespace NewLibCore.Data.SQL.Mapper
             };
         }
 
+        /// <summary>
+        /// 添加条件表达式
+        /// </summary>
+        /// <typeparam name="TModel1"></typeparam>
+        /// <typeparam name="TModel2"></typeparam>
+        /// <param name="filter"></param>
         internal void AddWhere<TModel1, TModel2>(Expression<Func<TModel1, TModel2, Boolean>> filter)
         where TModel1 : new()
         where TModel2 : new()
@@ -99,6 +110,13 @@ namespace NewLibCore.Data.SQL.Mapper
             };
         }
 
+        /// <summary>
+        /// 添加条件表达式
+        /// </summary>
+        /// <typeparam name="TModel1"></typeparam>
+        /// <typeparam name="TModel2"></typeparam>
+        /// <typeparam name="TModel3"></typeparam>
+        /// <param name="filter"></param>
         internal void AddWhere<TModel1, TModel2, TModel3>(Expression<Func<TModel1, TModel2, TModel3, Boolean>> filter)
         where TModel1 : new()
         where TModel2 : new()
@@ -112,6 +130,14 @@ namespace NewLibCore.Data.SQL.Mapper
             };
         }
 
+        /// <summary>
+        /// 添加条件表达式
+        /// </summary>
+        /// <typeparam name="TModel1"></typeparam>
+        /// <typeparam name="TModel2"></typeparam>
+        /// <typeparam name="TModel3"></typeparam>
+        /// <typeparam name="TModel4"></typeparam>
+        /// <param name="filter"></param>
         internal void AddWhere<TModel1, TModel2, TModel3, TModel4>(Expression<Func<TModel1, TModel2, TModel3, TModel4, Boolean>> filter)
         where TModel1 : new()
         where TModel2 : new()
@@ -126,6 +152,15 @@ namespace NewLibCore.Data.SQL.Mapper
             };
         }
 
+        /// <summary>
+        /// 添加条件表达式
+        /// </summary>
+        /// <typeparam name="TModel1"></typeparam>
+        /// <typeparam name="TModel2"></typeparam>
+        /// <typeparam name="TModel3"></typeparam>
+        /// <typeparam name="TModel4"></typeparam>
+        /// <typeparam name="TModel5"></typeparam>
+        /// <param name="filter"></param>
         internal void AddWhere<TModel1, TModel2, TModel3, TModel4, TModel5>(Expression<Func<TModel1, TModel2, TModel3, TModel4, TModel5, Boolean>> filter)
         where TModel1 : new()
         where TModel2 : new()
@@ -141,6 +176,16 @@ namespace NewLibCore.Data.SQL.Mapper
             };
         }
 
+        /// <summary>
+        /// 添加条件表达式
+        /// </summary>
+        /// <typeparam name="TModel1"></typeparam>
+        /// <typeparam name="TModel2"></typeparam>
+        /// <typeparam name="TModel3"></typeparam>
+        /// <typeparam name="TModel4"></typeparam>
+        /// <typeparam name="TModel5"></typeparam>
+        /// <typeparam name="TModel6"></typeparam>
+        /// <param name="filter"></param>
         internal void AddWhere<TModel1, TModel2, TModel3, TModel4, TModel5, TModel6>(Expression<Func<TModel1, TModel2, TModel3, TModel4, TModel5, TModel6, Boolean>> filter)
         where TModel1 : new()
         where TModel2 : new()
@@ -157,6 +202,11 @@ namespace NewLibCore.Data.SQL.Mapper
             };
         }
 
+        /// <summary>
+        /// 添加查询列表达式
+        /// </summary>
+        /// <typeparam name="TModel1"></typeparam>
+        /// <param name="selector"></param>
         internal void AddSelect<TModel1>(Expression<Func<TModel1, dynamic>> selector)
         where TModel1 : new()
         {
@@ -167,6 +217,12 @@ namespace NewLibCore.Data.SQL.Mapper
             };
         }
 
+        /// <summary>
+        /// 添加查询列表达式
+        /// </summary>
+        /// <typeparam name="TModel1"></typeparam>
+        /// <typeparam name="TModel2"></typeparam>
+        /// <param name="selector"></param>
         internal void AddSelect<TModel1, TModel2>(Expression<Func<TModel1, TModel2, dynamic>> selector)
         where TModel1 : new()
         where TModel2 : new()
@@ -178,6 +234,13 @@ namespace NewLibCore.Data.SQL.Mapper
             };
         }
 
+        /// <summary>
+        /// 添加查询列表达式
+        /// </summary>
+        /// <typeparam name="TModel1"></typeparam>
+        /// <typeparam name="TModel2"></typeparam>
+        /// <typeparam name="TModel3"></typeparam>
+        /// <param name="selector"></param>
         internal void AddSelect<TModel1, TModel2, TModel3>(Expression<Func<TModel1, TModel2, TModel3, dynamic>> selector)
         where TModel1 : new()
         where TModel2 : new()
@@ -190,6 +253,14 @@ namespace NewLibCore.Data.SQL.Mapper
             };
         }
 
+        /// <summary>
+        /// 添加查询列表达式
+        /// </summary>
+        /// <typeparam name="TModel1"></typeparam>
+        /// <typeparam name="TModel2"></typeparam>
+        /// <typeparam name="TModel3"></typeparam>
+        /// <typeparam name="TModel4"></typeparam>
+        /// <param name="selector"></param>
         internal void AddSelect<TModel1, TModel2, TModel3, TModel4>(Expression<Func<TModel1, TModel2, TModel3, TModel4, dynamic>> selector)
         where TModel1 : new()
         where TModel2 : new()
@@ -203,6 +274,15 @@ namespace NewLibCore.Data.SQL.Mapper
             };
         }
 
+        /// <summary>
+        /// 添加查询列表达式
+        /// </summary>
+        /// <typeparam name="TModel1"></typeparam>
+        /// <typeparam name="TModel2"></typeparam>
+        /// <typeparam name="TModel3"></typeparam>
+        /// <typeparam name="TModel4"></typeparam>
+        /// <typeparam name="TModel5"></typeparam>
+        /// <param name="selector"></param>
         internal void AddSelect<TModel1, TModel2, TModel3, TModel4, TModel5>(Expression<Func<TModel1, TModel2, TModel3, TModel4, TModel5, dynamic>> selector)
         where TModel1 : new()
         where TModel2 : new()
@@ -218,13 +298,12 @@ namespace NewLibCore.Data.SQL.Mapper
         }
 
         /// <summary>
-        /// 将表达式拆分出相应的连接对象
+        /// 添加连接表达式
         /// </summary>
-        /// <param name="expression">连接表达式</param>
-        /// <param name="joinType">连接类型</param>
-        /// <typeparam name="TModel">主表</typeparam>
-        /// <typeparam name="TJoin">子表</typeparam>
-        /// <returns></returns>
+        /// <typeparam name="TModel"></typeparam>
+        /// <typeparam name="TJoin"></typeparam>
+        /// <param name="expression"></param>
+        /// <param name="joinRelation"></param>
         internal void AddJoin<TModel, TJoin>(Expression<Func<TModel, TJoin, Boolean>> expression, JoinRelation joinRelation) where TModel : new()
             where TJoin : new()
         {
@@ -239,7 +318,7 @@ namespace NewLibCore.Data.SQL.Mapper
         }
 
         /// <summary>
-        /// 将表达式拆分出相应的分页对象
+        /// 添加分页
         /// </summary>
         /// <param name="pageIndex">页索引</param>
         /// <param name="pageSize">页大小</param>
@@ -255,7 +334,7 @@ namespace NewLibCore.Data.SQL.Mapper
         }
 
         /// <summary>
-        /// 合并相应的实体别名
+        /// 合并查询列表达式与条件表达式的别名
         /// </summary>
         /// <returns></returns>
         internal IReadOnlyList<KeyValuePair<String, String>> MergeAliasMapper()

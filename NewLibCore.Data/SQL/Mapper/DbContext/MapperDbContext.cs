@@ -8,7 +8,7 @@ using MySql.Data.MySqlClient;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Data.SQL.Mapper.Database
+namespace NewLibCore.Data.SQL.Mapper.DbContext
 {
     /// <summary>
     /// 执行解析后的SQL
@@ -117,7 +117,7 @@ namespace NewLibCore.Data.SQL.Mapper.Database
             throw new Exception($@"SQL语句执行类型解析失败:{operationType}");
         }
 
-        protected internal override RawResult RawExecute(String sql, IEnumerable<EntityParameter> parameters = null, CommandType commandType = CommandType.Text)
+        protected internal override RawResult RawExecute(String sql, IEnumerable<MapperParameter> parameters = null, CommandType commandType = CommandType.Text)
         {
             try
             {
