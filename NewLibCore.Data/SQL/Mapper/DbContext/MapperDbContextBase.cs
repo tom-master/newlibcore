@@ -4,7 +4,7 @@ using System.Data;
 using System.Data.Common;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 
-namespace NewLibCore.Data.SQL.Mapper.Database
+namespace NewLibCore.Data.SQL.Mapper.DbContext
 {
     internal abstract class MapperDbContextBase : IDisposable
     {
@@ -36,7 +36,6 @@ namespace NewLibCore.Data.SQL.Mapper.Database
         /// 释放资源
         /// </summary>
         /// <param name="disposing"></param>
-
         protected internal abstract void Dispose(Boolean disposing);
 
         /// <summary>
@@ -54,7 +53,7 @@ namespace NewLibCore.Data.SQL.Mapper.Database
         /// <param name="parameters">参数</param>
         /// <param name="commandType"></param>
         /// <returns></returns>
-        protected internal abstract RawResult RawExecute(String sql, IEnumerable<EntityParameter> parameters = null, CommandType commandType = CommandType.Text);
+        protected internal abstract RawResult RawExecute(String sql, IEnumerable<MapperParameter> parameters = null, CommandType commandType = CommandType.Text);
 
         public void Dispose()
         {

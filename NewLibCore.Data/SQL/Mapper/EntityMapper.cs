@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using Microsoft.Extensions.DependencyInjection;
-using NewLibCore.Data.SQL.Mapper.Database;
+using NewLibCore.Data.SQL.Mapper.DbContext;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 using NewLibCore.Validate;
 
@@ -32,7 +32,7 @@ namespace NewLibCore.Data.SQL.Mapper
         }
 
         /// <summary>
-        /// 创建一个实体映射对象
+        /// 初始化EntityMapper类的新实例
         /// </summary>
         /// <returns></returns>
         public static EntityMapper CreateMapper()
@@ -41,7 +41,7 @@ namespace NewLibCore.Data.SQL.Mapper
         }
 
         /// <summary>
-        /// 添加一個TModel
+        /// 添加
         /// </summary>
         /// <param name="model">要新增的对象</param>
         /// <typeparam name="TModel"></typeparam>
@@ -59,7 +59,7 @@ namespace NewLibCore.Data.SQL.Mapper
         }
 
         /// <summary>
-        /// 修改一個TModel
+        /// 修改
         /// </summary>
         /// <param name="model">要修改的对象</param>
         /// <param name="expression">查询条件</param>
@@ -78,7 +78,7 @@ namespace NewLibCore.Data.SQL.Mapper
         }
 
         /// <summary>
-        /// 查询一個TModel
+        /// 查询
         /// </summary>
         /// <typeparam name="TModel"></typeparam>
         /// <returns></returns>
@@ -90,13 +90,13 @@ namespace NewLibCore.Data.SQL.Mapper
         }
 
         /// <summary>
-        /// 执行一個返回列表的sql语句
+        /// 执行原生的SQL语句
         /// </summary>
         /// <param name="sql">sql语句</param>
         /// <param name="parameters">实体参数</param>
         /// <typeparam name="TModel"></typeparam>
         /// <returns></returns>
-        public RawResult SqlQuery(String sql, IEnumerable<EntityParameter> parameters = null)
+        public RawResult SqlQuery(String sql, IEnumerable<MapperParameter> parameters = null)
         {
             Parameter.Validate(sql);
 

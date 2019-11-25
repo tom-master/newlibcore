@@ -47,7 +47,7 @@ namespace NewLibCore.Data.SQL.Mapper
             var propertys = _modelInstance.GetChangedProperty();
             var (TableName, AliasName) = typeof(TModel).GetTableName();
 
-            parserResult.Append(String.Format(databaseConfig.UpdateTemplate, TableName, AliasName, String.Join(",", propertys.Select(p => $@"{AliasName}.{p.Key}=@{p.Key}"))), propertys.Select(c => new EntityParameter(c.Key, c.Value)));
+            parserResult.Append(String.Format(databaseConfig.UpdateTemplate, TableName, AliasName, String.Join(",", propertys.Select(p => $@"{AliasName}.{p.Key}=@{p.Key}"))), propertys.Select(c => new MapperParameter(c.Key, c.Value)));
             parserResult.Append(sql, parameters);
             parserResult.Append($@"{RelationType.AND} {AliasName}.IsDeleted=0");
             parserResult.Append($@"{databaseConfig.Extension.RowCount}");

@@ -17,7 +17,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// 翻译
         /// </summary>
         /// <returns></returns>
-        (String, IList<EntityParameter>) ExecuteParser(ExpressionStore expressionStore);
+        (String, IList<MapperParameter>) ExecuteParser(ExpressionStore expressionStore);
     }
 
     /// <summary>
@@ -29,7 +29,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
         private readonly StringBuilder _internalStore;
 
-        private readonly IList<EntityParameter> _entityParameters;
+        private readonly IList<MapperParameter> _entityParameters;
 
         private readonly Stack<String> _parameterNameStack;
 
@@ -50,7 +50,7 @@ namespace NewLibCore.Data.SQL.Mapper
             _internalStore = new StringBuilder();
             _parameterNameStack = new Stack<String>();
             _relationTypesStack = new Stack<RelationType>();
-            _entityParameters = new List<EntityParameter>();
+            _entityParameters = new List<MapperParameter>();
             _tableAliasMapper = new List<KeyValuePair<String, String>>();
         }
 
@@ -67,11 +67,9 @@ namespace NewLibCore.Data.SQL.Mapper
         /// 翻译
         /// </summary>
         /// <returns></returns>
-        public (String, IList<EntityParameter>) ExecuteParser(ExpressionStore expressionStore)
+        public (String, IList<MapperParameter>) ExecuteParser(ExpressionStore expressionStore)
         {
             Parameter.Validate(expressionStore);
-
-            var databaseConfig = _serviceProvider.GetService<InstanceConfig>();
 
             //获取合并后的表别名
             _tableAliasMapper = expressionStore.MergeAliasMapper();
@@ -91,8 +89,8 @@ namespace NewLibCore.Data.SQL.Mapper
                     {
                         continue;
                     }
-
                     //获取连接语句的模板
+                    var databaseConfig = _serviceProvider.GetService<InstanceConfig>();
                     var joinTemplate = databaseConfig.JoinBuilder(item.JoinRelation, aliasItem.Key, aliasItem.Value.ToLower());
                     _internalStore.Append(joinTemplate);
 
@@ -171,7 +169,7 @@ namespace NewLibCore.Data.SQL.Mapper
                 case ExpressionType.Constant:
                 {
                     var binaryExp = (ConstantExpression)expression;
-                    _entityParameters.Add(new EntityParameter(_parameterNameStack.Pop(), binaryExp.Value));
+                    _entityParameters.Add(new MapperParameter(_parameterNameStack.Pop(), binaryExp.Value));
                     break;
                 }
                 case ExpressionType.Equal:
@@ -254,13 +252,12 @@ namespace NewLibCore.Data.SQL.Mapper
                         else
                         {
                             var parameterExp = (ParameterExpression)memberExp.Expression;
-                            var internalAliasName = "";
                             if (!_tableAliasMapper.Any(a => a.Key == parameterExp.Type.GetTableName().TableName && a.Value == parameterExp.Type.GetTableName().AliasName))
                             {
                                 throw new ArgumentException($@"没有找到{parameterExp.Type.Name}所对应的形参");
                             }
-                            internalAliasName = $@"{ _tableAliasMapper.Where(w => w.Key == parameterExp.Type.GetTableName().TableName && w.Value == parameterExp.Type.GetTableName().AliasName).FirstOrDefault().Value.ToLower()}.";
 
+                            var internalAliasName = $@"{ _tableAliasMapper.Where(w => w.Key == parameterExp.Type.GetTableName().TableName && w.Value == parameterExp.Type.GetTableName().AliasName).FirstOrDefault().Value.ToLower()}.";
                             var databaseConfig = _serviceProvider.GetService<InstanceConfig>();
                             var newParameterName = Guid.NewGuid().ToString().Replace("-", "");
                             _internalStore.Append(databaseConfig.RelationBuilder(_relationTypesStack.Pop(), $@"{internalAliasName}{memberExp.Member.Name}", $"@{newParameterName}"));
@@ -270,7 +267,7 @@ namespace NewLibCore.Data.SQL.Mapper
                     else
                     {
                         var getter = Expression.Lambda(memberExp).Compile();
-                        _entityParameters.Add(new EntityParameter(_parameterNameStack.Pop(), getter.DynamicInvoke()));
+                        _entityParameters.Add(new MapperParameter(_parameterNameStack.Pop(), getter.DynamicInvoke()));
                         break;
                     }
                     break;
@@ -426,7 +423,7 @@ namespace NewLibCore.Data.SQL.Mapper
         }
 
         /// <summary>
-        /// 获取左表达式的成员对象和别名
+        /// 获取右表达式的成员对象和别名
         /// </summary>
         /// <param name="binaryExp">表达式</param>
         /// <returns></returns>
@@ -443,7 +440,7 @@ namespace NewLibCore.Data.SQL.Mapper
         }
 
         /// <summary>
-        /// 获取又表达式的成员对象和别名
+        /// 获取左表达式的成员对象和别名
         /// </summary>
         /// <param name="binaryExp">表达式</param>
         /// <returns></returns>
