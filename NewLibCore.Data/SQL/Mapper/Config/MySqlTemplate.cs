@@ -28,9 +28,10 @@ namespace NewLibCore.Data.SQL.Mapper
             return String.Format(PredicateMapper[predicateType], left, right);
         }
 
-        internal override String Page(Int32 pageIndex, Int32 pageSize, ParserResult parserResult)
+        internal override ParserResult Page(Int32 pageIndex, Int32 pageSize, String orderBy, ParserResult parserResult)
         {
-            return " LIMIT {value},{pageSize} ;";
+            parserResult.Append($@" {orderBy} LIMIT {pageSize * (pageIndex - 1)},{pageSize} ;");
+            return parserResult;
         }
 
         internal override String Identity

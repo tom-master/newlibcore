@@ -46,19 +46,20 @@ namespace NewLibCore.Data.SQL.Mapper
             return String.Format(PredicateMapper[predicateType], left, right);
         }
 
-        internal override String Page(Int32 pageIndex, Int32 pageSize, ParserResult parserResult)
+        internal override ParserResult Page(Int32 pageIndex, Int32 pageSize, String orderBy, ParserResult parserResult)
         {
             var sql = "";
             if (MapperConfig.MsSqlPaginationVersion == MsSqlPaginationVersion.GreaterThan2012)
             {
-                sql = $@" {parserResult} OFFSET ({pageIndex * pageSize}) ROWS FETCH NEXT {pageSize} ROWS ONLY ;";
+                sql = $@" {parserResult} {orderBy} OFFSET ({pageIndex * pageSize}) ROWS FETCH NEXT {pageSize} ROWS ONLY ;";
             }
             else
             {
                 sql = parserResult.ToString();
-                sql = $@" SELECT * FROM ( {sql.Insert(sql.IndexOf(" "), $@" TOP({pageSize}) ROW_NUMBER() OVER(ORDER BY ) AS rownumber,")} ) AS temprow WHERE temprow.rownumber>({pageSize}*({pageIndex}-1))";
+                sql = $@" SELECT * FROM ( {sql.Insert(sql.IndexOf(" "), $@" TOP({pageSize}) ROW_NUMBER() OVER({orderBy}) AS rownumber,")} ) AS temprow WHERE temprow.rownumber>({pageSize}*({pageIndex}-1)) {orderBy}";
             }
-            return sql;
+            parserResult.ClearSql();
+            return parserResult.Append(sql);
         }
     }
 }

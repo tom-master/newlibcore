@@ -50,16 +50,22 @@ namespace NewLibCore.Data.SQL.Mapper
                     parserResult.Append($@"{PredicateType.AND} {aliasItem.Value.ToLower()}.IsDeleted = 0");
                 }
             }
-            if (_expressionStore.Order != null)
+
+            if (_expressionStore.Pagination != null)
+            {
+                if (_expressionStore.Order == null)
+                {
+                    throw new Exception("分页中没有指定排序字段");
+                }
+                var (fields, tableName) = StatementParse(_expressionStore.Order);
+                var orderTemplate = TemplateBase.CreateOrderBy(_expressionStore.Order.OrderBy, $@"{tableName}.{fields}");
+                parserResult = TemplateBase.Page(_expressionStore.Pagination.Index, _expressionStore.Pagination.Size, orderTemplate, parserResult);
+            }
+            else if (_expressionStore.Order != null)
             {
                 var (fields, tableName) = StatementParse(_expressionStore.Order);
                 var orderTemplate = TemplateBase.CreateOrderBy(_expressionStore.Order.OrderBy, $@"{tableName}.{fields}");
                 parserResult.Append(orderTemplate);
-            }
-
-            if (_expressionStore.Pagination != null)
-            {
-                parserResult.Append(TemplateBase.Page(_expressionStore.Pagination.Index, _expressionStore.Pagination.Size, parserResult));
             }
 
             return parserResult.Execute(ServiceProvider);

@@ -81,7 +81,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <value></value>
         internal abstract String RowCount { get; }
 
-        internal abstract String Page(Int32 pageIndex, Int32 pageSize, ParserResult parserResult);
+        internal abstract ParserResult Page(Int32 pageIndex, Int32 pageSize, String orderBy,ParserResult parserResult);
 
         /// <summary>
         /// 创建谓词关系

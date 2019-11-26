@@ -78,11 +78,18 @@ namespace NewLibCore.Data.SQL.Mapper
         }
 
         /// <summary>
-        /// 清空上次使用后留下的数据
+        /// 清空上次使用后留下的语句
         /// </summary>
-        internal void Clear()
+        internal void ClearSql()
         {
             _originSql.Clear();
+        }
+
+        /// <summary>
+        /// 清空上次使用后留下的参数
+        /// </summary>
+        internal void ClearParameter()
+        {
             _parameters.Clear();
         }
 

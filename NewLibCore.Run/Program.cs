@@ -14,8 +14,8 @@ namespace NewLibCore.Run
 
             MapperConfig.InitDefaultSetting();
 
-            //MapperConfig.UseMySql();
-            MapperConfig.UseMsSql();
+            MapperConfig.UseMySql();
+            //MapperConfig.UseMsSql();
 
             MapperConfig.ConnectionStringName = "NewCrmDatabase";
 
@@ -37,7 +37,7 @@ namespace NewLibCore.Run
             {
                 //for (int i = 0; i < 20; i++)
                 //{
-                var result = mapper.Query<App>().Page(1, 10).ToList();
+                var result = mapper.Query<App>().Page(1, 10).ThenByDesc(d => d.AddTime).ToList();
                 Console.WriteLine(JsonConvert.SerializeObject(result));
                 //}
 
