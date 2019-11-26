@@ -28,16 +28,24 @@ namespace NewLibCore.Data.SQL.Mapper
             return String.Format(PredicateMapper[predicateType], left, right);
         }
 
-        internal override InstanceExtension Extension
+        internal override String Page(Int32 pageIndex, Int32 pageSize, ParserResult parserResult)
+        {
+            return " LIMIT {value},{pageSize} ;";
+        }
+
+        internal override String Identity
         {
             get
             {
-                return new InstanceExtension
-                {
-                    Identity = " ; SELECT CAST(@@IDENTITY AS SIGNED) AS c ;",
-                    RowCount = " ; SELECT CAST(ROW_COUNT() AS SIGNED) AS c ;",
-                    Page = " LIMIT {value},{pageSize} ;",
-                };
+                return "; SELECT CAST(@@IDENTITY AS SIGNED) AS c ;";
+            }
+        }
+
+        internal override String RowCount
+        {
+            get
+            {
+                return "; SELECT CAST(ROW_COUNT() AS SIGNED) AS c ;";
             }
         }
     }

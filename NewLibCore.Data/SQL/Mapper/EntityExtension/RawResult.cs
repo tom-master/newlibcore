@@ -54,7 +54,7 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
         /// </summary>
         /// <typeparam name="TResult">原生类型</typeparam>
         /// <returns></returns>
-        public TResult FirstOrDefault<TResult>() where TResult : new()
+        public TResult FirstOrDefault<TResult>() 
         {
             try
             {

@@ -18,7 +18,7 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
         /// <typeparam name="T">期望的类型</typeparam>
         /// <param name="dataTable">sql执行后的原始结果</param>
         /// <returns></returns>
-        internal static List<T> ToList<T>(this DataTable dataTable) where T : new()
+        internal static List<T> ToList<T>(this DataTable dataTable)
         {
             if (dataTable == null || dataTable.Rows.Count == 0)
             {
@@ -34,12 +34,12 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
         /// <typeparam name="T">期望的类型</typeparam>
         /// <param name="dataTable">sql执行后的原始结果</param>
         /// <returns></returns>
-        internal static T FirstOrDefault<T>(this DataTable dataTable) where T : new()
+        internal static T FirstOrDefault<T>(this DataTable dataTable)
         {
             return ToList<T>(dataTable).FirstOrDefault();
         }
 
-        private static List<T> ConvertToList<T>(DataTable dt) where T : new()
+        private static List<T> ConvertToList<T>(DataTable dt)
         {
             try
             {
@@ -47,8 +47,12 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
 
                 if (!typeof(T).IsComplexType())
                 {
-                    var obj = Activator.CreateInstance<T>();
-                    var type = obj.GetType();
+                    var obj = default(T);
+                    if (typeof(T) != typeof(String))
+                    {
+                        obj = Activator.CreateInstance<T>();
+                    }
+                    var type = obj == null ? typeof(T) : obj.GetType();
                     for (var i = 0; i < dt.Rows.Count; i++)
                     {
                         list.Add((T)ChangeType(dt.Rows[i][0], type));

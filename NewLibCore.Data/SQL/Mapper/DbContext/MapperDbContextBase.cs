@@ -4,7 +4,7 @@ using System.Data;
 using System.Data.Common;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
 
-namespace NewLibCore.Data.SQL.Mapper.DbContext
+namespace NewLibCore.Data.SQL.Mapper
 {
     /// <summary>
     /// 执行解析后的SQL

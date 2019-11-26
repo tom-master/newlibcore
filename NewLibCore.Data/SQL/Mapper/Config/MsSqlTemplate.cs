@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Data.Common;
-using System.Data.SqlClient;
 
 namespace NewLibCore.Data.SQL.Mapper
 {
@@ -9,24 +7,29 @@ namespace NewLibCore.Data.SQL.Mapper
     /// </summary>
     internal class MsSqlTemplate : TemplateBase
     {
-        internal override InstanceExtension Extension
-        {
-            get
-            {
-                return new InstanceExtension
-                {
-                    Identity = " SELECT @@IDENTITY ;",
-                    RowCount = " SELECT @@ROWCOUNT ;",
-                    Page = " OFFSET ({value}) ROWS FETCH NEXT {pageSize} ROWS ONLY ;"
-                };
-            }
-        }
+
 
         internal override String UpdateTemplate
         {
             get
             {
                 return "UPDATE {0} SET {1} FROM {2} AS {0} ";
+            }
+        }
+
+        internal override String Identity
+        {
+            get
+            {
+                return " SELECT @@IDENTITY ;";
+            }
+        }
+
+        internal override String RowCount
+        {
+            get
+            {
+                return " SELECT @@ROWCOUNT ;";
             }
         }
 
@@ -41,6 +44,21 @@ namespace NewLibCore.Data.SQL.Mapper
         internal override String CreatePredicate(PredicateType predicateType, String left, String right)
         {
             return String.Format(PredicateMapper[predicateType], left, right);
+        }
+
+        internal override String Page(Int32 pageIndex, Int32 pageSize, ParserResult parserResult)
+        {
+            var sql = "";
+            if (MapperConfig.MsSqlPaginationVersion == MsSqlPaginationVersion.GreaterThan2012)
+            {
+                sql = $@" {parserResult} OFFSET ({pageIndex * pageSize}) ROWS FETCH NEXT {pageSize} ROWS ONLY ;";
+            }
+            else
+            {
+                sql = parserResult.ToString();
+                sql = $@" SELECT * FROM ( {sql.Insert(sql.IndexOf(" "), $@" TOP({pageSize}) ROW_NUMBER() OVER(ORDER BY ) AS rownumber,")} ) AS temprow WHERE temprow.rownumber>({pageSize}*({pageIndex}-1))";
+            }
+            return sql;
         }
     }
 }

@@ -70,10 +70,18 @@ namespace NewLibCore.Data.SQL.Mapper
         protected abstract void AppendPredicateType();
 
         /// <summary>
-        /// 模板扩展
+        /// 自增主键
         /// </summary>
         /// <value></value>
-        internal virtual InstanceExtension Extension { get; }
+        internal abstract String Identity { get; }
+
+        /// <summary>
+        /// 执行受影响的行数
+        /// </summary>
+        /// <value></value>
+        internal abstract String RowCount { get; }
+
+        internal abstract String Page(Int32 pageIndex, Int32 pageSize, ParserResult parserResult);
 
         /// <summary>
         /// 创建谓词关系
@@ -154,27 +162,5 @@ namespace NewLibCore.Data.SQL.Mapper
         }
     }
 
-    /// <summary>
-    /// 数据库实例扩展
-    /// </summary>
-    internal class InstanceExtension
-    {
-        /// <summary>
-        /// 自增主键
-        /// </summary>
-        /// <value></value>
-        public String Identity { get; internal set; }
 
-        /// <summary>
-        /// 执行受影响的行数
-        /// </summary>
-        /// <value></value>
-        public String RowCount { get; internal set; }
-
-        /// <summary>
-        /// 分页 每页条数与多少页
-        /// </summary>
-        /// <value></value>
-        public String Page { get; internal set; }
-    }
 }

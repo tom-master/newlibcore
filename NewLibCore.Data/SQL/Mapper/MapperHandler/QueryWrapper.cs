@@ -83,7 +83,6 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             Parameter.Validate(pageIndex);
             Parameter.Validate(pageSize);
-
             _expressionStore.AddPage(pageIndex, pageSize);
             return this;
         }
@@ -227,7 +226,7 @@ namespace NewLibCore.Data.SQL.Mapper
             _expressionStore.AddOrderBy(order, OrderByType.ASC);
             return this;
         }
-      
+
         public TModel FirstOrDefault()
         {
             return RunDiagnosis.Watch(() =>

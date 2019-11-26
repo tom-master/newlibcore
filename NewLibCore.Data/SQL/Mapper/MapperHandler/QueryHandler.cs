@@ -59,9 +59,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
             if (_expressionStore.Pagination != null)
             {
-                var pageIndex = (_expressionStore.Pagination.Size * (_expressionStore.Pagination.Index - 1)).ToString();
-                var pageSize = _expressionStore.Pagination.Size.ToString();
-                parserResult.Append(TemplateBase.Extension.Page.Replace("{value}", pageIndex).Replace("{pageSize}", pageSize));
+                parserResult.Append(TemplateBase.Page(_expressionStore.Pagination.Index, _expressionStore.Pagination.Size, parserResult));
             }
 
             return parserResult.Execute(ServiceProvider);

@@ -13,6 +13,21 @@ namespace NewLibCore.Data.SQL.Mapper
         INSERT = 3,
     }
 
+    internal enum MsSqlPaginationVersion
+    {
+        None = 1,
+
+        /// <summary>
+        /// 大于2012版本
+        /// </summary>
+        GreaterThan2012 = 2,
+
+        /// <summary>
+        /// 小于2012版本
+        /// </summary>
+        LessThen2012 = 3
+    }
+
     /// <summary>
     /// 数据库类型
     /// </summary>

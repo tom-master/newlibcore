@@ -66,6 +66,11 @@ namespace NewLibCore.Data.SQL.Mapper
         internal static MapperType MapperType { get; set; }
 
         /// <summary>
+        /// mssql的版本
+        /// </summary>
+        internal static MsSqlPaginationVersion MsSqlPaginationVersion { get; set; } = MsSqlPaginationVersion.None;
+
+        /// <summary>
         /// 初始化默认配置
         /// </summary>
         public static void InitDefaultSetting()
