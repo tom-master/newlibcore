@@ -46,7 +46,7 @@ namespace NewLibCore.Data.SQL.Mapper
             return String.Format(PredicateMapper[predicateType], left, right);
         }
 
-        internal override ParserResult Page(Int32 pageIndex, Int32 pageSize, String orderBy, ParserResult parserResult)
+        internal override ParserResult CreatePagination(Int32 pageIndex, Int32 pageSize, String orderBy, ParserResult parserResult)
         {
             var sql = "";
             if (MapperConfig.MsSqlPaginationVersion == MsSqlPaginationVersion.GreaterThan2012)

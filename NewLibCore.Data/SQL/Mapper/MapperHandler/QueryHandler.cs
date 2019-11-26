@@ -59,7 +59,7 @@ namespace NewLibCore.Data.SQL.Mapper
                 }
                 var (fields, tableName) = StatementParse(_expressionStore.Order);
                 var orderTemplate = TemplateBase.CreateOrderBy(_expressionStore.Order.OrderBy, $@"{tableName}.{fields}");
-                parserResult = TemplateBase.Page(_expressionStore.Pagination.Index, _expressionStore.Pagination.Size, orderTemplate, parserResult);
+                parserResult = TemplateBase.CreatePagination(_expressionStore.Pagination.Index, _expressionStore.Pagination.Size, orderTemplate, parserResult);
             }
             else if (_expressionStore.Order != null)
             {

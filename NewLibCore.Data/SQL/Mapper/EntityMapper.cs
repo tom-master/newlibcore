@@ -92,7 +92,6 @@ namespace NewLibCore.Data.SQL.Mapper
                 if (r.IndexOf("Microsoft SQL Server 2012") != -1)
                 {
                     MapperConfig.MsSqlPaginationVersion = MsSqlPaginationVersion.LessThen2012;
-
                 }
                 else
                 {
