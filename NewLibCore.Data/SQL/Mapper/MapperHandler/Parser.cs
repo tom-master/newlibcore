@@ -119,7 +119,7 @@ namespace NewLibCore.Data.SQL.Mapper
                 }
 
                 _joinRelation = JoinRelation.NONE;
-                _internalStore.Append(PredicateType.AND.ToString());
+                _internalStore.Append(PredicateType.AND);
 
                 //获取Where类型中的存储的表达式对象进行翻译
                 InternalParser(lambdaExp);
@@ -142,7 +142,7 @@ namespace NewLibCore.Data.SQL.Mapper
                     if (binaryExp.Left.NodeType != ExpressionType.Constant && binaryExp.Right.NodeType != ExpressionType.Constant)
                     {
                         InternalParser(binaryExp.Left);
-                        _internalStore.Append(PredicateType.AND.ToString());
+                        _internalStore.Append(PredicateType.AND);
                         InternalParser(binaryExp.Right);
                     }
                     else
@@ -163,7 +163,7 @@ namespace NewLibCore.Data.SQL.Mapper
                 {
                     var binaryExp = (BinaryExpression)expression;
                     InternalParser(binaryExp.Left);
-                    _internalStore.Append(PredicateType.OR.ToString());
+                    _internalStore.Append(PredicateType.OR);
                     InternalParser(binaryExp.Right);
                     break;
                 }
@@ -181,37 +181,37 @@ namespace NewLibCore.Data.SQL.Mapper
                 case ExpressionType.Equal:
                 {
                     var binaryExp = (BinaryExpression)expression;
-                    CreatePredicateStatement(binaryExp, PredicateType.EQ);
+                    CreatePredicate(binaryExp, PredicateType.EQ);
                     break;
                 }
                 case ExpressionType.GreaterThan:
                 {
                     var binaryExp = (BinaryExpression)expression;
-                    CreatePredicateStatement(binaryExp, PredicateType.GT);
+                    CreatePredicate(binaryExp, PredicateType.GT);
                     break;
                 }
                 case ExpressionType.NotEqual:
                 {
                     var binaryExp = (BinaryExpression)expression;
-                    CreatePredicateStatement(binaryExp, PredicateType.NQ);
+                    CreatePredicate(binaryExp, PredicateType.NQ);
                     break;
                 }
                 case ExpressionType.GreaterThanOrEqual:
                 {
                     var binaryExp = (BinaryExpression)expression;
-                    CreatePredicateStatement(binaryExp, PredicateType.GE);
+                    CreatePredicate(binaryExp, PredicateType.GE);
                     break;
                 }
                 case ExpressionType.LessThan:
                 {
                     var binaryExp = (BinaryExpression)expression;
-                    CreatePredicateStatement(binaryExp, PredicateType.LT);
+                    CreatePredicate(binaryExp, PredicateType.LT);
                     break;
                 }
                 case ExpressionType.LessThanOrEqual:
                 {
                     var binaryExp = (BinaryExpression)expression;
-                    CreatePredicateStatement(binaryExp, PredicateType.LE);
+                    CreatePredicate(binaryExp, PredicateType.LE);
                     break;
                 }
                 case ExpressionType.Lambda:
@@ -368,7 +368,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// </summary>
         /// <param name="binary">表达式</param>
         /// <param name="relationType">关系类型</param>
-        private void CreatePredicateStatement(BinaryExpression binary, PredicateType predicateType)
+        private void CreatePredicate(BinaryExpression binary, PredicateType predicateType)
         {
             var binaryExp = binary;
             if (_joinRelation != JoinRelation.NONE)
@@ -405,22 +405,22 @@ namespace NewLibCore.Data.SQL.Mapper
             //表达式左右两边都不为常量时例如 xx.Id==yy.Id
             if (binary.Left.NodeType != ExpressionType.Constant && binary.Right.NodeType != ExpressionType.Constant)
             {
-                var (LeftMember, LeftAliasName) = GetLeftMemberAndAliasName(binary);
-                var (RightMember, RightAliasName) = GetRightMemberAndAliasName(binary);
+                var (LeftMember, LeftAliasName) = ParserLeft(binary);
+                var (RightMember, RightAliasName) = ParserRight(binary);
 
                 var relationTemplate = _templateBase.CreatePredicate(predicateType, $"{RightAliasName}.{RightMember.Member.Name}", $"{LeftAliasName}.{LeftMember.Member.Name}");
                 _internalStore.Append(relationTemplate);
             }
             else if (binary.Left.NodeType == ExpressionType.Constant) //表达式左边为常量
             {
-                var (RightMember, RightAliasName) = GetRightMemberAndAliasName(binary);
+                var (RightMember, RightAliasName) = ParserRight(binary);
                 var constant = (ConstantExpression)binary.Left;
                 var value = Boolean.TryParse(constant.Value.ToString(), out var result) ? (result ? 1 : 0).ToString() : constant.Value;
                 _internalStore.Append(_templateBase.CreatePredicate(predicateType, value + "", $"{RightAliasName}.{RightMember.Member.Name}"));
             }
             else if (binary.Right.NodeType == ExpressionType.Constant) //表达式的右边为常量
             {
-                var (LeftMember, LeftAliasName) = GetLeftMemberAndAliasName(binary);
+                var (LeftMember, LeftAliasName) = ParserLeft(binary);
                 var constant = (ConstantExpression)binary.Right;
                 var value = Boolean.TryParse(constant.Value.ToString(), out var result) ? (result ? 1 : 0).ToString() : constant.Value;
                 _internalStore.Append(_templateBase.CreatePredicate(predicateType, $"{LeftAliasName}.{LeftMember.Member.Name}", value + ""));
@@ -432,7 +432,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// </summary>
         /// <param name="binaryExp">表达式</param>
         /// <returns></returns>
-        private (MemberExpression RightMember, String RightAliasName) GetRightMemberAndAliasName(BinaryExpression binaryExp)
+        private (MemberExpression RightMember, String RightAliasName) ParserRight(BinaryExpression binaryExp)
         {
             var rightMember = (MemberExpression)binaryExp.Right;
             var rightParameterExp = (ParameterExpression)rightMember.Expression;
@@ -449,7 +449,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// </summary>
         /// <param name="binaryExp">表达式</param>
         /// <returns></returns>
-        private (MemberExpression LeftMember, String LeftAliasName) GetLeftMemberAndAliasName(BinaryExpression binaryExp)
+        private (MemberExpression LeftMember, String LeftAliasName) ParserLeft(BinaryExpression binaryExp)
         {
             var leftMember = (MemberExpression)binaryExp.Left;
             var leftParameterExp = (ParameterExpression)leftMember.Expression;
