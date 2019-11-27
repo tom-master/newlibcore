@@ -7,7 +7,7 @@ using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper
 {
-    internal class PO
+    internal class ChangedProperty
     {
         internal String DeclaringTypeFullName { get; set; }
 
@@ -23,7 +23,7 @@ namespace NewLibCore.Data.SQL.Mapper
     /// </summary>
     public abstract class PropertyMonitor
     {
-        private readonly IList<PO> _propertys = new List<PO>();
+        private readonly IList<ChangedProperty> _changedPropertys = new List<ChangedProperty>();
 
         /// <summary>
         /// 属性值变更
@@ -39,7 +39,7 @@ namespace NewLibCore.Data.SQL.Mapper
                 throw new ArgumentException($@"属性：{propertyName},不属于类：{GetType().Name}或它的父类");
             }
 
-            _propertys.Add(new PO
+            _changedPropertys.Add(new ChangedProperty
             {
                 DeclaringTypeFullName = propertyInfo.DeclaringType.FullName,
                 PropertyName = propertyName,
@@ -68,7 +68,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <returns></returns>
         internal IReadOnlyList<KeyValuePair<String, Object>> GetChangedProperty()
         {
-            return _propertys.Select(s => new KeyValuePair<String, Object>(s.PropertyName, s.Value)).ToList().AsReadOnly();
+            return _changedPropertys.Select(s => new KeyValuePair<String, Object>(s.PropertyName, s.Value)).ToList().AsReadOnly();
         }
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// </summary>
         protected internal void Validate()
         {
-            foreach (var po in _propertys)
+            foreach (var po in _changedPropertys)
             {
                 if (!po.Validates.Any())
                 {
@@ -139,7 +139,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// </summary>
         internal void Reset()
         {
-            _propertys.Clear();
+            _changedPropertys.Clear();
         }
 
         /// <summary>
@@ -148,7 +148,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <param name="defaultValueAttribute">默认值</param>
         /// <param name="propertyItem">属性项</param>
         /// <param name="rawPropertyValue">原始的属性值</param>
-        private void SetPropertyDefaultValue(DefaultValueAttribute defaultValueAttribute, PO propertyItem, Object rawPropertyValue)
+        private void SetPropertyDefaultValue(DefaultValueAttribute defaultValueAttribute, ChangedProperty propertyItem, Object rawPropertyValue)
         {
             Parameter.Validate(defaultValueAttribute);
             Parameter.Validate(propertyItem);
@@ -165,11 +165,11 @@ namespace NewLibCore.Data.SQL.Mapper
         /// </summary>
         /// <param name="validateBase">特性验证基类</param>
         /// <param name="po">属性项</param>
-        private void ThrowValidateException(PropertyValidate validateBase, PO po)
+        private void ThrowValidateException(PropertyValidate validateBase, ChangedProperty changedProperty)
         {
-            Parameter.Validate(po);
+            Parameter.Validate(changedProperty);
             Parameter.Validate(validateBase);
-            throw new Exception(validateBase.FailReason($@"{po.DeclaringTypeFullName}.{po.PropertyName}"));
+            throw new Exception(validateBase.FailReason($@"{changedProperty.DeclaringTypeFullName}.{changedProperty.PropertyName}"));
         }
 
         /// <summary>
