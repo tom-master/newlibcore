@@ -69,8 +69,7 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
                 throw;
             }
         }
-
-
+        
         public override String ToString()
         {
             return JsonConvert.SerializeObject(_result);

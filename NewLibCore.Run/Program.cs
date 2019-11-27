@@ -132,7 +132,7 @@ namespace NewLibCore.Run
         public String Md5 { get; private set; }
 
         [DefaultValue(typeof(Guid))]
-        public Guid Guid { get; private set; }
+        public Guid? Guid { get; private set; }
 
         /// <summary>
         /// 实例化一个壁纸对象

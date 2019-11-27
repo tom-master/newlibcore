@@ -27,7 +27,7 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
             sw.Start();
             var returnValue = func();
             sw.Stop();
-            MapperConfig.Logger.Info($@"共花费{Math.Round(sw.Elapsed.TotalSeconds, 2)}s");
+            MapperConfig.Logger.Info($@"共花费{Math.Round(sw.Elapsed.TotalSeconds, 4)}秒");
             return returnValue;
         }
 

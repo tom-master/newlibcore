@@ -7,8 +7,6 @@ using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper
 {
-
-
     /// <summary>
     /// 监控实体值变更
     /// </summary>
@@ -39,6 +37,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
             _changedPropertys.Add(new ChangedProperty
             {
+                IsNullable = Nullable.GetUnderlyingType(propertyInfo.PropertyType) != null,
                 DeclaringType = propertyInfo.DeclaringType.FullName,
                 PropertyName = propertyName,
                 Value = new FastProperty(propertyInfo).Get(this),
@@ -84,15 +83,15 @@ namespace NewLibCore.Data.SQL.Mapper
         /// </summary>
         protected internal void Validate()
         {
-            foreach (var po in _changedPropertys)
+            foreach (var changedProperty in _changedPropertys)
             {
-                if (!po.Validates.Any())
+                if (!changedProperty.Validates.Any() || changedProperty.IsNullable)
                 {
                     continue;
                 }
 
-                var validateBases = ValidateAttributeOrder(po.PropertyName, po.Validates);
-                var propertyValue = po.Value;
+                var validateBases = ValidateAttributeOrder(changedProperty.PropertyName, changedProperty.Validates);
+                var propertyValue = changedProperty.Value;
                 for (var i = 0; i < validateBases.Count; i++)
                 {
                     if (validateBases[i] is RequiredAttribute)
@@ -101,31 +100,31 @@ namespace NewLibCore.Data.SQL.Mapper
                         {
                             if (i + 1 >= validateBases.Count)
                             {
-                                ThrowValidateException(validateBases[i + 1], po);
+                                ThrowValidateException(validateBases[i + 1], changedProperty);
                             }
 
                             if (validateBases[i + 1] is DefaultValueAttribute)
                             {
-                                SetPropertyDefaultValue((DefaultValueAttribute)validateBases[i + 1], po, propertyValue);
+                                SetPropertyDefaultValue((DefaultValueAttribute)validateBases[i + 1], changedProperty, propertyValue);
                                 i = i + 1;
                                 continue;
                             }
-                            ThrowValidateException(validateBases[i], po);
+                            ThrowValidateException(validateBases[i], changedProperty);
                         }
                     }
                     else if (validateBases[i] is DefaultValueAttribute)
                     {
                         if (!validateBases[i].IsValidate(propertyValue))
                         {
-                            ThrowValidateException(validateBases[i], po);
+                            ThrowValidateException(validateBases[i], changedProperty);
                         }
-                        SetPropertyDefaultValue((DefaultValueAttribute)validateBases[i], po, propertyValue);
+                        SetPropertyDefaultValue((DefaultValueAttribute)validateBases[i], changedProperty, propertyValue);
                     }
                     else if (validateBases[i] is InputRangeAttribute)
                     {
                         if (!validateBases[i].IsValidate(propertyValue))
                         {
-                            ThrowValidateException(validateBases[i], po);
+                            ThrowValidateException(validateBases[i], changedProperty);
                         }
                     }
                 }
@@ -189,6 +188,8 @@ namespace NewLibCore.Data.SQL.Mapper
 
         private class ChangedProperty
         {
+            internal Boolean IsNullable { get; set; }
+
             internal String DeclaringType { get; set; }
 
             internal String PropertyName { get; set; }
