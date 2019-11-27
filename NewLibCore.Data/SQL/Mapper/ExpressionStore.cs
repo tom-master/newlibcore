@@ -48,13 +48,15 @@ namespace NewLibCore.Data.SQL.Mapper
 
         internal void AddFrom<TModel>() where TModel : new()
         {
-            Expression<Func<Type>> expression = () => typeof(TModel);
+            var modelType = typeof(TModel);
+            Expression<Func<Type>> expression = () => modelType;
+
             From = new SimpleExpressionMapper
             {
                 Expression = expression,
                 AliaNameMapper = new List<KeyValuePair<String, String>>
                 {
-                   new KeyValuePair<String, String>(typeof(TModel).GetTableName().TableName,typeof(TModel).GetTableName().AliasName)
+                   new KeyValuePair<String, String>(modelType.GetTableName().TableName,modelType.GetTableName().AliasName)
                 }
             };
         }
