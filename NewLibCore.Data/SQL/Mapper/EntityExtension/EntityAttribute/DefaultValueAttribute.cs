@@ -1,4 +1,5 @@
 ﻿using System;
+using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper
 {
@@ -23,11 +24,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <param name="value">默认值</param>
         public DefaultValueAttribute(Type type, Object value)
         {
-
-            if (type == null)
-            {
-                throw new ArgumentException($@"{nameof(type)} 不能为空");
-            }
+            Parameter.Validate(type);
 
             if (type.BaseType == typeof(Enum))
             {
@@ -52,18 +49,22 @@ namespace NewLibCore.Data.SQL.Mapper
             }
             else
             {
-                if (type.BaseType == typeof(ValueType))
+                if (type.IsValueType)
                 {
                     if (type == typeof(Boolean))
                     {
                         Value = false;
                     }
-                    else
+                    if (type == typeof(Guid))
+                    {
+                        Value = Guid.NewGuid().ToString();
+                    }
+                    if (type.IsNumeric())
                     {
                         Value = 0;
                     }
                 }
-                else
+                else if (type.IsClass)
                 {
                     if (type == typeof(String))
                     {
@@ -96,9 +97,9 @@ namespace NewLibCore.Data.SQL.Mapper
         /// 默认值
         /// </summary>
         public Object Value { get; private set; }
-         
+
         public override Int32 Order => 2;
-         
+
         public override String FailReason(String fieldName)
         {
             return $@"{fieldName} 的默认值类型转换失败";

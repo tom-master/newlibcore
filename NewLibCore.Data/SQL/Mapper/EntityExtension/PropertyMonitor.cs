@@ -7,16 +7,7 @@ using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper
 {
-    internal class ChangedProperty
-    {
-        internal String DeclaringTypeFullName { get; set; }
 
-        internal String PropertyName { get; set; }
-
-        internal Object Value { get; set; }
-
-        internal PropertyValidate[] Validates { get; set; }
-    }
 
     /// <summary>
     /// 监控实体值变更
@@ -25,23 +16,30 @@ namespace NewLibCore.Data.SQL.Mapper
     {
         private readonly IList<ChangedProperty> _changedPropertys = new List<ChangedProperty>();
 
+        private readonly Type _type;
+
+        internal PropertyMonitor()
+        {
+            _type = GetType();
+        }
+
         /// <summary>
-        /// 属性值变更
+        /// 获取所有出现值变更的属性
         /// </summary>
         /// <param name="propertyName">属性名称</param>
         protected void OnChanged(String propertyName)
         {
             Parameter.Validate(propertyName);
 
-            var propertyInfo = GetType().GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
+            var propertyInfo = _type.GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
             if (propertyInfo == null)
             {
-                throw new ArgumentException($@"属性：{propertyName},不属于类：{GetType().Name}或它的父类");
+                throw new ArgumentException($@"属性：{propertyName},不属于类：{_type.Name}或它的父类");
             }
 
             _changedPropertys.Add(new ChangedProperty
             {
-                DeclaringTypeFullName = propertyInfo.DeclaringType.FullName,
+                DeclaringType = propertyInfo.DeclaringType.FullName,
                 PropertyName = propertyName,
                 Value = new FastProperty(propertyInfo).Get(this),
                 Validates = propertyInfo.GetCustomAttributes<PropertyValidate>(true).ToArray()
@@ -49,11 +47,11 @@ namespace NewLibCore.Data.SQL.Mapper
         }
 
         /// <summary>
-        /// 属性值变更
+        /// 获取所有出现值变更的属性
         /// </summary>
         internal void OnChanged()
         {
-            var propertys = GetType().GetProperties().Where(w => w.GetCustomAttributes<PropertyValidate>().Any() && w.Name != "AddTime" && w.Name != "LastModifyTime");
+            var propertys = _type.GetProperties().Where(w => w.GetCustomAttributes<PropertyValidate>().Any() && w.Name != "AddTime" && w.Name != "LastModifyTime");
             SetAddTime();
             SetUpdateTime();
             foreach (var item in propertys)
@@ -143,7 +141,7 @@ namespace NewLibCore.Data.SQL.Mapper
         }
 
         /// <summary>
-        /// 如果属性值为空并且用默认值特性进行了修饰则设置属性默认值
+        /// 对属性设置默认值
         /// </summary>
         /// <param name="defaultValueAttribute">默认值</param>
         /// <param name="propertyItem">属性项</param>
@@ -154,7 +152,8 @@ namespace NewLibCore.Data.SQL.Mapper
             Parameter.Validate(propertyItem);
 
             var propertyInstanceValue = rawPropertyValue;
-            if (String.IsNullOrEmpty(propertyInstanceValue + "") || (propertyInstanceValue.GetType() == typeof(DateTime) && (DateTime)propertyInstanceValue == default))
+            var propertyInstanceValueType = rawPropertyValue.GetType();
+            if (String.IsNullOrEmpty(propertyInstanceValue + "") || propertyInstanceValueType.IsValueType || propertyInstanceValueType.IsNumeric() || (propertyInstanceValue.GetType() == typeof(DateTime) && (DateTime)propertyInstanceValue == default))
             {
                 propertyItem.Value = defaultValueAttribute.Value;
             }
@@ -169,7 +168,7 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             Parameter.Validate(changedProperty);
             Parameter.Validate(validateBase);
-            throw new Exception(validateBase.FailReason($@"{changedProperty.DeclaringTypeFullName}.{changedProperty.PropertyName}"));
+            throw new Exception(validateBase.FailReason($@"{changedProperty.DeclaringType}.{changedProperty.PropertyName}"));
         }
 
         /// <summary>
@@ -186,6 +185,17 @@ namespace NewLibCore.Data.SQL.Mapper
                 throw new Exception($@"{propertyName} 中使用了多个优先级相同的特性");
             }
             return validates.OrderByDescending(o => o.Order).ToList();
+        }
+
+        private class ChangedProperty
+        {
+            internal String DeclaringType { get; set; }
+
+            internal String PropertyName { get; set; }
+
+            internal Object Value { get; set; }
+
+            internal PropertyValidate[] Validates { get; set; }
         }
     }
 }

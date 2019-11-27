@@ -33,7 +33,7 @@ namespace NewLibCore.Data.SQL.Mapper
             if (MapperConfig.EnableModelValidate)
             {
                 _instance.Validate();
-            }
+            } 
 
             var propertyInfos = _instance.GetChangedProperty();
 

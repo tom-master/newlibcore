@@ -10,7 +10,7 @@ namespace NewLibCore.Run
 
         public static void Main(String[] args)
         {
-            #region 
+            #region  
 
             MapperConfig.InitDefaultSetting();
 
@@ -37,8 +37,9 @@ namespace NewLibCore.Run
             {
                 //for (int i = 0; i < 20; i++)
                 //{
-                var result = mapper.Query<App>().Page(1, 10).ThenByDesc(d => d.AddTime).ToList();
-                Console.WriteLine(JsonConvert.SerializeObject(result));
+                var a = new Wallpaper();
+                a.AA();
+                var r = mapper.Update(a, (a1) => a1.Id == 0);
                 //}
 
                 //var result = mapper.Query<User>().FirstOrDefault();
@@ -97,7 +98,7 @@ namespace NewLibCore.Run
         /// <summary>
         /// 来源
         /// </summary>
-        [Required]
+        [Required, DefaultValue(WallpaperSource.System)]
         public WallpaperSource Source { get; private set; }
 
         /// <summary>
@@ -130,6 +131,9 @@ namespace NewLibCore.Run
         [Required]
         public String Md5 { get; private set; }
 
+        [DefaultValue(typeof(Guid))]
+        public Guid Guid { get; private set; }
+
         /// <summary>
         /// 实例化一个壁纸对象
         /// </summary>
@@ -150,6 +154,10 @@ namespace NewLibCore.Run
 
         }
 
+        public void AA()
+        {
+            OnChanged(nameof(Guid));
+        }
     }
 
     [TableName("newcrm_user_config", "config")]

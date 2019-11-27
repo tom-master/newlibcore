@@ -28,7 +28,7 @@ namespace NewLibCore
                 || type == typeof(UInt64)
                 || type == typeof(Decimal)
                 || type == typeof(Double)
-                || type == typeof(Single);
+                || type == typeof(Single) || type.IsEnum;
         }
 
         public static String ToDescription(this MemberInfo member, Boolean inherit = false)
@@ -87,7 +87,7 @@ namespace NewLibCore
 
         public static Boolean IsCollections(this Type type)
         {
-            var interfaces = type.GetInterfaces(); 
+            var interfaces = type.GetInterfaces();
             return interfaces.Any(w => w == typeof(IEnumerable)) || interfaces.Any(w => w == typeof(ICollection)) || interfaces.Any(w => w == typeof(IList));
         }
     }
