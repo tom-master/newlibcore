@@ -128,6 +128,10 @@
   ```C#
   using(var mapper = EntityMapper.CreateMapper())
   {
+      /**
+       更新操作暂只支持指定字段更新，可在EntityBase子类中调用OnChanged()来通知基类有实体属性值被修改。
+       OnChanged()方法传入被更新的属性名称，例如：OnChanged(nameof(UserName))                
+     */
       var user = mapper.Query<User>().Where(w=>w.Id==4).FirstOrDefault();
       user.ModifyName("test456");
       var success = mapper.Update(user,u=>u.Id==1);
@@ -139,12 +143,16 @@
       {
         '失败'
       }
+      
+      
   }
   ```
   4. 查询操作
   ```C#
   using(var mapper = EntityMapper.CreateMapper())
   {
+      //注：在没有调用Select()方法时进行查询，会将指定表中所有的字段全部查出并返回。
+    
       //查询单表操作
       var result = mapper.Query<User>().FirstOrDefault();
       var result = mapper.Query<User>().ToList();
@@ -165,8 +173,8 @@
       var result = mapper.Query<App>().RightJoin<Member>((a, m) => a.Id == m.AppId).FirstOrDefault();
       var result = mapper.Query<App>().RightJoin<Member>((a, m) => a.Id == m.AppId).ToList();
       
-      //分页查询
-      var result = mapper.Query<App>().LeftJoin<Member>((a,m)=>a.Id==m.AppId).Page(1,15).ToList();
+      //分页查询,如果在查询分页时不指定排序字段则抛出异常
+      var result = mapper.Query<App>().LeftJoin<Member>((a,m)=>a.Id==m.AppId).ThenByDesc(w=>w.AddTime).Page(1,15).ToList();
     
       //返回元组形式的返回值，元组中项的个数需要与Select方法中指定查询的字段的个数一致，且顺序也需一致。
       var result = mapper.Query<Log>().ToList<(Int32 Id,String Name)>();
