@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
-using NewLibCore.Data.SQL.Mapper.EntityExtension;
+using NewLibCore.Data.SQL.Mapper.MapperParser;
+using NewLibCore.Data.SQL.Mapper.Parser;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Data.SQL.Mapper
+namespace NewLibCore.Data.SQL.Mapper.Handler
 {
-    internal class DirectSqlHandler : Handler
+    internal class DirectSqlHandler : HandlerBase
     {
         private readonly String _sql;
 
@@ -24,7 +25,7 @@ namespace NewLibCore.Data.SQL.Mapper
             _parameters = parameters;
         }
 
-        internal override RawResult Execute()
+        internal override ExecuteResult Execute()
         {
             var sqlResult = ParserResult.CreateResult();
             sqlResult.Append(_sql, _parameters);

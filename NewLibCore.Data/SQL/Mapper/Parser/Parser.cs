@@ -4,9 +4,12 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using Microsoft.Extensions.DependencyInjection;
+using NewLibCore.Data.SQL.Mapper.Extension;
+using NewLibCore.Data.SQL.Mapper.Store;
+using NewLibCore.Data.SQL.Mapper.Template;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Data.SQL.Mapper
+namespace NewLibCore.Data.SQL.Mapper.Parser
 {
     /// <summary>
     /// 将Expression解析为对应的SQL谓词

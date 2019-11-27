@@ -2,7 +2,11 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using Microsoft.Extensions.DependencyInjection;
-using NewLibCore.Data.SQL.Mapper.EntityExtension;
+using NewLibCore.Data.SQL.Mapper.Extension;
+using NewLibCore.Data.SQL.Mapper.Handler;
+using NewLibCore.Data.SQL.Mapper.Parser;
+using NewLibCore.Data.SQL.Mapper.Store;
+using NewLibCore.Data.SQL.Mapper.Template;
 using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper
@@ -51,7 +55,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
             return RunDiagnosis.Watch(() =>
             {
-                Handler handler = new InsertHandler<TModel>(model, _serviceScope.ServiceProvider);
+                HandlerBase handler = new InsertHandler<TModel>(model, _serviceScope.ServiceProvider);
                 model.Id = handler.Execute().FirstOrDefault<Int32>();
                 return model;
             });
@@ -71,7 +75,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
             return RunDiagnosis.Watch(() =>
             {
-                Handler handler = new UpdateHandler<TModel>(model, expression, _serviceScope.ServiceProvider);
+                HandlerBase handler = new UpdateHandler<TModel>(model, expression, _serviceScope.ServiceProvider);
                 return handler.Execute().FirstOrDefault<Int32>() > 0;
             });
         }
@@ -109,13 +113,13 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <param name="parameters">实体参数</param>
         /// <typeparam name="TModel"></typeparam>
         /// <returns></returns>
-        public RawResult SqlQuery(String sql, IEnumerable<MapperParameter> parameters = null)
+        public ExecuteResult SqlQuery(String sql, IEnumerable<MapperParameter> parameters = null)
         {
             Parameter.Validate(sql);
 
             return RunDiagnosis.Watch(() =>
             {
-                Handler handler = new DirectSqlHandler(sql, parameters, _serviceScope.ServiceProvider);
+                HandlerBase handler = new DirectSqlHandler(sql, parameters, _serviceScope.ServiceProvider);
                 return handler.Execute();
             });
         }

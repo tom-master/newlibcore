@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 
-namespace NewLibCore.Data.SQL.Mapper
+namespace NewLibCore.Data.SQL.Mapper.Extension
 {
     internal static class EntityTypeExtension
     {

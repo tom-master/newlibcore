@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
-using NewLibCore.Data.SQL.Mapper;
+using NewLibCore.Data.SQL.Mapper.Extension;
+using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.MergeExpression
 {
@@ -12,6 +13,7 @@ namespace NewLibCore.Data.SQL.MergeExpression
     {
         internal DefaultMerge(Expression<Func<T, Boolean>> exp)
         {
+            Parameter.Validate(exp);
             MergeExpression = exp;
         }
     }

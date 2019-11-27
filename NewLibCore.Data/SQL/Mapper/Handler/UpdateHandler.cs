@@ -1,17 +1,19 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
-using Microsoft.Extensions.DependencyInjection;
-using NewLibCore.Data.SQL.Mapper.EntityExtension;
+using NewLibCore.Data.SQL.Mapper.Extension;
+using NewLibCore.Data.SQL.Mapper.MapperParser;
+using NewLibCore.Data.SQL.Mapper.Parser;
+using NewLibCore.Data.SQL.Mapper.Store;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Data.SQL.Mapper
+namespace NewLibCore.Data.SQL.Mapper.Handler
 {
     /// <summary>
     /// 更新处理类
     /// </summary>
     /// <typeparam name="TModel"></typeparam>
-    internal class UpdateHandler<TModel> : Handler where TModel : EntityBase, new()
+    internal class UpdateHandler<TModel> : HandlerBase where TModel : EntityBase, new()
     {
         private readonly TModel _modelInstance;
 
@@ -30,7 +32,7 @@ namespace NewLibCore.Data.SQL.Mapper
             _modelInstance = model;
         }
 
-        internal override RawResult Execute()
+        internal override ExecuteResult Execute()
         {
             _modelInstance.SetUpdateTime();
 
@@ -41,7 +43,7 @@ namespace NewLibCore.Data.SQL.Mapper
             var expressionStore = new ExpressionStore();
             expressionStore.AddWhere(_filter);
 
-            var (sql, parameters) = Parser.CreateParser(ServiceProvider).ExecuteParser(expressionStore);
+            var (sql, parameters) = Parser.Parser.CreateParser(ServiceProvider).ExecuteParser(expressionStore);
             var parserResult = ParserResult.CreateResult();
             var propertys = _modelInstance.GetChangedProperty();
             var (TableName, AliasName) = typeof(TModel).GetTableName();

@@ -1,7 +1,7 @@
 using System;
 using System.Diagnostics;
 
-namespace NewLibCore.Data.SQL.Mapper.EntityExtension
+namespace NewLibCore.Data.SQL.Mapper.Extension
 {
     internal sealed class RunDiagnosis
     {

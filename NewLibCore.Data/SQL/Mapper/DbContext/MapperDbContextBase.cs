@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
-using NewLibCore.Data.SQL.Mapper.EntityExtension;
+using NewLibCore.Data.SQL.Mapper.Parser;
 
 namespace NewLibCore.Data.SQL.Mapper
 {
@@ -58,7 +58,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <param name="parameters">参数</param>
         /// <param name="commandType"></param>
         /// <returns></returns>
-        protected internal abstract RawResult RawExecute(String sql, IEnumerable<MapperParameter> parameters = null);
+        protected internal abstract ExecuteResult RawExecute(String sql, IEnumerable<MapperParameter> parameters = null);
 
         public void Dispose()
         {

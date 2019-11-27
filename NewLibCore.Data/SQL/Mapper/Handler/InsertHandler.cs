@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Linq;
-using NewLibCore.Data.SQL.Mapper.EntityExtension;
+using NewLibCore.Data.SQL.Mapper.Extension;
+using NewLibCore.Data.SQL.Mapper.MapperParser;
+using NewLibCore.Data.SQL.Mapper.Parser;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Data.SQL.Mapper
+namespace NewLibCore.Data.SQL.Mapper.Handler
 {
     /// <summary>
     /// 新增操作处理
     /// </summary>
     /// <typeparam name="TModel"></typeparam>
-    internal class InsertHandler<TModel> : Handler where TModel : EntityBase, new()
+    internal class InsertHandler<TModel> : HandlerBase where TModel : EntityBase, new()
     {
         private readonly TModel _instance;
 
@@ -27,13 +29,13 @@ namespace NewLibCore.Data.SQL.Mapper
         /// 执行插入操作的翻译
         /// </summary>
         /// <returns></returns>
-        internal override RawResult Execute()
+        internal override ExecuteResult Execute()
         {
             _instance.OnChanged();
             if (MapperConfig.EnableModelValidate)
             {
                 _instance.Validate();
-            } 
+            }
 
             var propertyInfos = _instance.GetChangedProperty();
 

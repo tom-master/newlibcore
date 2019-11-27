@@ -1,20 +1,21 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
-using NewLibCore.Data.SQL.Mapper.EntityExtension;
+using NewLibCore.Data.SQL.Mapper.Parser;
+using NewLibCore.Data.SQL.Mapper.Template;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Data.SQL.Mapper
+namespace NewLibCore.Data.SQL.Mapper.Handler
 {
     /// <summary>
     /// 表达式处理基类
     /// </summary>
     /// <typeparam name="TModel"></typeparam>
-    internal abstract class Handler
+    internal abstract class HandlerBase
     {
         /// <summary>
         /// 初始化一个Handler类的实例
         /// </summary>
-        protected internal Handler(IServiceProvider serviceProvider)
+        protected internal HandlerBase(IServiceProvider serviceProvider)
         {
             Parameter.Validate(serviceProvider);
             ServiceProvider = serviceProvider;
@@ -37,6 +38,6 @@ namespace NewLibCore.Data.SQL.Mapper
         /// 执行表达式段的翻译
         /// </summary>
         /// <returns></returns>
-        internal abstract RawResult Execute();
+        internal abstract ExecuteResult Execute();
     }
 }

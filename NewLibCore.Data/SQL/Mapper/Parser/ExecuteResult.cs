@@ -1,23 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
+using NewLibCore.Data.SQL.Mapper.Extension;
 using NewLibCore.Validate;
 using Newtonsoft.Json;
 
-namespace NewLibCore.Data.SQL.Mapper.EntityExtension
+namespace NewLibCore.Data.SQL.Mapper.Parser
 {
     /// <summary>
-    /// 存储未包装过的sql执行结果
+    /// sql语句执行后的结果
     /// </summary>
-    public sealed class RawResult
+    public sealed class ExecuteResult
     {
         private Object _result;
 
         /// <summary>
         /// 初始化一个RawExecuteResult类的实例
         /// </summary>
-        internal RawResult()
+        internal ExecuteResult()
         {
         }
 
@@ -54,7 +54,7 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
         /// </summary>
         /// <typeparam name="TResult">原生类型</typeparam>
         /// <returns></returns>
-        public TResult FirstOrDefault<TResult>() 
+        public TResult FirstOrDefault<TResult>()
         {
             try
             {
@@ -69,7 +69,7 @@ namespace NewLibCore.Data.SQL.Mapper.EntityExtension
                 throw;
             }
         }
-        
+
         public override String ToString()
         {
             return JsonConvert.SerializeObject(_result);

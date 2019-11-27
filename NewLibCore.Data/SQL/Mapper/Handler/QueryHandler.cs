@@ -3,16 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using NewLibCore.Data.SQL.Mapper.EntityExtension;
+using NewLibCore.Data.SQL.Mapper.Extension;
+using NewLibCore.Data.SQL.Mapper.MapperParser;
+using NewLibCore.Data.SQL.Mapper.Parser;
+using NewLibCore.Data.SQL.Mapper.Store;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Data.SQL.Mapper
+namespace NewLibCore.Data.SQL.Mapper.Handler
 {
     /// <summary>
     /// 查询处理类
     /// </summary>
     /// <typeparam name="TModel"></typeparam>
-    internal class QueryHandler<TModel> : Handler where TModel : new()
+    internal class QueryHandler<TModel> : HandlerBase where TModel : new()
     {
         internal readonly ExpressionStore _expressionStore;
 
@@ -26,7 +29,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// 执行查询操作的翻译
         /// </summary>
         /// <returns></returns>
-        internal override RawResult Execute()
+        internal override ExecuteResult Execute()
         {
             var mainTable = _expressionStore.From.AliaNameMapper[0];
 
@@ -34,7 +37,7 @@ namespace NewLibCore.Data.SQL.Mapper
             var (Fields, _) = StatementParse(_expressionStore.Select);
             parserResult.Append(String.Format(TemplateBase.SelectTemplate, Fields, mainTable.Key, mainTable.Value));
 
-            var (sql, parameters) = Parser.CreateParser(ServiceProvider).ExecuteParser(_expressionStore);
+            var (sql, parameters) = Parser.Parser.CreateParser(ServiceProvider).ExecuteParser(_expressionStore);
             parserResult.Append(sql, parameters);
 
             //当出现查询但张表不加Where条件时，则强制将IsDeleted=0添加到后面

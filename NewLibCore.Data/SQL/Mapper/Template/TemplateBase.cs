@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using NewLibCore.Data.SQL.Mapper.MapperParser;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Data.SQL.Mapper
+namespace NewLibCore.Data.SQL.Mapper.Template
 {
     /// <summary>
     /// 为相应的数据库实例提供对应的模板化SQL
@@ -131,7 +132,7 @@ namespace NewLibCore.Data.SQL.Mapper
         internal String CreateOrderBy(OrderByType orderByType, String left)
         {
             Parameter.Validate(orderByType);
-            Parameter.Validate(left); 
+            Parameter.Validate(left);
 
             if (!OrderTypeMapper.ContainsKey(orderByType))
             {
@@ -176,5 +177,5 @@ namespace NewLibCore.Data.SQL.Mapper
             OrderTypeMapper.Add(OrderByType.ASC, " ORDER BY {0} ASC ");
             OrderTypeMapper.Add(OrderByType.DESC, " ORDER BY {0} DESC ");
         }
-    } 
+    }
 }

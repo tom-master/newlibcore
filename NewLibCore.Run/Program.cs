@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using NewLibCore.Data.SQL.Mapper;
+using NewLibCore.Data.SQL.Mapper.Extension;
 using Newtonsoft.Json;
 
 namespace NewLibCore.Run

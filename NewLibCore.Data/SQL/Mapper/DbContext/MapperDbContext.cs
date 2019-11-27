@@ -5,7 +5,8 @@ using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
 using MySql.Data.MySqlClient;
-using NewLibCore.Data.SQL.Mapper.EntityExtension;
+using NewLibCore.Data.SQL.Mapper.Extension;
+using NewLibCore.Data.SQL.Mapper.Parser;
 using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper
@@ -117,7 +118,7 @@ namespace NewLibCore.Data.SQL.Mapper
             throw new Exception($@"SQL语句执行类型解析失败:{operationType}");
         }
 
-        protected internal override RawResult RawExecute(String sql, IEnumerable<MapperParameter> parameters = null)
+        protected internal override ExecuteResult RawExecute(String sql, IEnumerable<MapperParameter> parameters = null)
         {
             try
             {
@@ -139,7 +140,7 @@ namespace NewLibCore.Data.SQL.Mapper
                     RunDiagnosis.Info($@"SQL语句:{sql} 占位符与参数:{(parameters == null || !parameters.Any() ? "" : String.Join($@"{Environment.NewLine}", parameters.Select(s => $@"{s.Key}----{s.Value}")))}");
 
                     var executeType = GetExecuteType(sql);
-                    var executeResult = new RawResult();
+                    var executeResult = new ExecuteResult();
                     if (executeType == ExecuteType.SELECT)
                     {
                         using (var dr = cmd.ExecuteReader())

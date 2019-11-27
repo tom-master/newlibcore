@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using NewLibCore.Data.SQL.Mapper.EntityExtension;
+using NewLibCore.Data.SQL.Mapper.Extension;
+using NewLibCore.Data.SQL.Mapper.Store;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Data.SQL.Mapper
+namespace NewLibCore.Data.SQL.Mapper.Handler
 {
 
     public class QueryWrapper<TModel> where TModel : new()
@@ -231,7 +232,7 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             return RunDiagnosis.Watch(() =>
             {
-                Handler handler = new QueryHandler<TModel>(_expressionStore, _serviceProvider);
+                HandlerBase handler = new QueryHandler<TModel>(_expressionStore, _serviceProvider);
                 return handler.Execute().FirstOrDefault<TModel>();
             });
         }
@@ -240,7 +241,7 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             return RunDiagnosis.Watch(() =>
             {
-                Handler handler = new QueryHandler<TModel>(_expressionStore, _serviceProvider);
+                HandlerBase handler = new QueryHandler<TModel>(_expressionStore, _serviceProvider);
                 return handler.Execute().FirstOrDefault<TResult>();
             });
         }
@@ -249,7 +250,7 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             return RunDiagnosis.Watch(() =>
             {
-                Handler handler = new QueryHandler<TModel>(_expressionStore, _serviceProvider);
+                HandlerBase handler = new QueryHandler<TModel>(_expressionStore, _serviceProvider);
                 return handler.Execute().ToList<TModel>();
             });
         }
@@ -258,7 +259,7 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             return RunDiagnosis.Watch(() =>
             {
-                Handler handler = new QueryHandler<TModel>(_expressionStore, _serviceProvider);
+                HandlerBase handler = new QueryHandler<TModel>(_expressionStore, _serviceProvider);
                 return handler.Execute().ToList<TResult>();
             });
         }
@@ -268,7 +269,7 @@ namespace NewLibCore.Data.SQL.Mapper
             return RunDiagnosis.Watch(() =>
             {
                 Select((a) => "COUNT(*)");
-                Handler handler = new QueryHandler<TModel>(_expressionStore, _serviceProvider);
+                HandlerBase handler = new QueryHandler<TModel>(_expressionStore, _serviceProvider);
                 return handler.Execute().FirstOrDefault<Int32>();
             });
         }

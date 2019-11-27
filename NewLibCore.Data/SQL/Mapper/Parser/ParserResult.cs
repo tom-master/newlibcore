@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 using NewLibCore.Data.SQL.Mapper.Cache;
-using NewLibCore.Data.SQL.Mapper.EntityExtension;
+using NewLibCore.Data.SQL.Mapper.Parser;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Data.SQL.Mapper
+namespace NewLibCore.Data.SQL.Mapper.MapperParser
 {
     /// <summary>
     /// 存储表达式的翻译后的sql语句
@@ -62,7 +62,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// </summary>
         /// <param name="executionCore">执行翻译结果的对象</param>
         /// <returns></returns>
-        internal RawResult Execute(IServiceProvider serviceProvider)
+        internal ExecuteResult Execute(IServiceProvider serviceProvider)
         {
             var dbContext = serviceProvider.GetService<MapperDbContextBase>();
             var executeType = dbContext.GetExecuteType(ToString());
@@ -113,7 +113,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// </summary>
         /// <param name="executeType"></param>
         /// <param name="executeResult"></param>
-        private void SetCache(ExecuteType executeType, RawResult executeResult)
+        private void SetCache(ExecuteType executeType, ExecuteResult executeResult)
         {
             if (executeType != ExecuteType.SELECT)
             {
@@ -130,14 +130,14 @@ namespace NewLibCore.Data.SQL.Mapper
         /// 获取缓存
         /// </summary>
         /// <returns></returns>
-        private RawResult GetCache()
+        private ExecuteResult GetCache()
         {
             if (_queryCache != null)
             {
                 var cacheResult = _queryCache.Get(PrepareCacheKey());
                 if (cacheResult != null)
                 {
-                    return (RawResult)cacheResult;
+                    return (ExecuteResult)cacheResult;
                 }
             }
 

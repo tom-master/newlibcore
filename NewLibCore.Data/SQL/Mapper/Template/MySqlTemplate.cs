@@ -1,7 +1,8 @@
 ﻿using System;
+using NewLibCore.Data.SQL.Mapper.MapperParser;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Data.SQL.Mapper
+namespace NewLibCore.Data.SQL.Mapper.Template
 {
     /// <summary>
     /// mysql数据库sql模板配置

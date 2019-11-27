@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Linq.Expressions;
 using NewLibCore.Data.SQL.Mapper;
-using NewLibCore.Data.SQL.Mapper.EntityExtension;
+using NewLibCore.Data.SQL.Mapper.Extension;
+using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.MergeExpression
 {
@@ -19,6 +20,11 @@ namespace NewLibCore.Data.SQL.MergeExpression
         /// <typeparam name="T"></typeparam>
         public static void And<T>(this Merge<T> left, Expression<Func<T, Boolean>> right) where T : EntityBase
         {
+            Parameter.Validate(left);
+            Parameter.Validate(left.MergeExpression);
+
+            Parameter.Validate(right);
+
             if (left.MergeExpression == null)
             {
                 left.MergeExpression = right;
@@ -42,6 +48,10 @@ namespace NewLibCore.Data.SQL.MergeExpression
         /// <typeparam name="T"></typeparam>
         public static void Or<T>(this Merge<T> left, Expression<Func<T, Boolean>> right) where T : EntityBase
         {
+            Parameter.Validate(left);
+            Parameter.Validate(left.MergeExpression);
+
+            Parameter.Validate(right);
 
             if (left.MergeExpression == null)
             {
@@ -65,6 +75,9 @@ namespace NewLibCore.Data.SQL.MergeExpression
         /// <typeparam name="T"></typeparam>
         public static void Not<T>(this Merge<T> left) where T : EntityBase
         {
+            Parameter.Validate(left);
+            Parameter.Validate(left.MergeExpression);
+
             var lambdaExpression = (LambdaExpression)left.MergeExpression;
             var internalParameter = lambdaExpression.Parameters[0];
             var newExpression = Expression.Not(lambdaExpression.Body);
