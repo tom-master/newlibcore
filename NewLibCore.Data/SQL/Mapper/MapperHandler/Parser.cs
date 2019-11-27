@@ -97,9 +97,8 @@ namespace NewLibCore.Data.SQL.Mapper
                     {
                         continue;
                     }
-                    //获取连接语句的模板
-                    var joinTemplate = _templateBase.CreateJoin(item.JoinRelation, aliasItem.Key, aliasItem.Value.ToLower());
-                    _internalStore.Append(joinTemplate);
+                    //获取连接语句的模板 
+                    _internalStore.Append(_templateBase.CreateJoin(item.JoinRelation, aliasItem.Key, aliasItem.Value.ToLower()));
 
                     //设置相应的连接类型
                     _joinRelation = item.JoinRelation;
