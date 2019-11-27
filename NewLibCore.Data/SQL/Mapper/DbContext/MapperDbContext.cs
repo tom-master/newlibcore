@@ -117,7 +117,7 @@ namespace NewLibCore.Data.SQL.Mapper
             throw new Exception($@"SQL语句执行类型解析失败:{operationType}");
         }
 
-        protected internal override RawResult RawExecute(String sql, IEnumerable<MapperParameter> parameters = null, CommandType commandType = CommandType.Text)
+        protected internal override RawResult RawExecute(String sql, IEnumerable<MapperParameter> parameters = null)
         {
             try
             {
@@ -130,7 +130,7 @@ namespace NewLibCore.Data.SQL.Mapper
                         cmd.Transaction = OpenTransaction();
                     }
 
-                    cmd.CommandType = commandType;
+                    cmd.CommandType = CommandType.Text;
                     cmd.CommandText = sql;
                     if (parameters != null && parameters.Any())
                     {

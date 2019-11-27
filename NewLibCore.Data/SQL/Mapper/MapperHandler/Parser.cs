@@ -136,166 +136,166 @@ namespace NewLibCore.Data.SQL.Mapper
             switch (expression.NodeType)
             {
                 case ExpressionType.AndAlso:
-                    {
-                        var binaryExp = (BinaryExpression)expression;
+                {
+                    var binaryExp = (BinaryExpression)expression;
 
-                        if (binaryExp.Left.NodeType != ExpressionType.Constant && binaryExp.Right.NodeType != ExpressionType.Constant)
+                    if (binaryExp.Left.NodeType != ExpressionType.Constant && binaryExp.Right.NodeType != ExpressionType.Constant)
+                    {
+                        InternalParser(binaryExp.Left);
+                        _internalStore.Append(PredicateType.AND.ToString());
+                        InternalParser(binaryExp.Right);
+                    }
+                    else
+                    {
+                        if (binaryExp.Left.NodeType != ExpressionType.Constant)
                         {
                             InternalParser(binaryExp.Left);
-                            _internalStore.Append(PredicateType.AND.ToString());
+                        }
+                        else if (binaryExp.Right.NodeType != ExpressionType.Constant)
+                        {
                             InternalParser(binaryExp.Right);
                         }
-                        else
-                        {
-                            if (binaryExp.Left.NodeType != ExpressionType.Constant)
-                            {
-                                InternalParser(binaryExp.Left);
-                            }
-                            else if (binaryExp.Right.NodeType != ExpressionType.Constant)
-                            {
-                                InternalParser(binaryExp.Right);
-                            }
-                        }
-
-                        break;
                     }
+
+                    break;
+                }
                 case ExpressionType.OrElse:
-                    {
-                        var binaryExp = (BinaryExpression)expression;
-                        InternalParser(binaryExp.Left);
-                        _internalStore.Append(PredicateType.OR.ToString());
-                        InternalParser(binaryExp.Right);
-                        break;
-                    }
+                {
+                    var binaryExp = (BinaryExpression)expression;
+                    InternalParser(binaryExp.Left);
+                    _internalStore.Append(PredicateType.OR.ToString());
+                    InternalParser(binaryExp.Right);
+                    break;
+                }
                 case ExpressionType.Call:
-                    {
-                        TranslateMethodCall(expression);
-                        break;
-                    }
+                {
+                    ParserMethodCall(expression);
+                    break;
+                }
                 case ExpressionType.Constant:
-                    {
-                        var binaryExp = (ConstantExpression)expression;
-                        _entityParameters.Add(new MapperParameter(_parameterNameStack.Pop(), binaryExp.Value));
-                        break;
-                    }
+                {
+                    var binaryExp = (ConstantExpression)expression;
+                    _entityParameters.Add(new MapperParameter(_parameterNameStack.Pop(), binaryExp.Value));
+                    break;
+                }
                 case ExpressionType.Equal:
-                    {
-                        var binaryExp = (BinaryExpression)expression;
-                        CreatePredicateStatement(binaryExp, PredicateType.EQ);
-                        break;
-                    }
+                {
+                    var binaryExp = (BinaryExpression)expression;
+                    CreatePredicateStatement(binaryExp, PredicateType.EQ);
+                    break;
+                }
                 case ExpressionType.GreaterThan:
-                    {
-                        var binaryExp = (BinaryExpression)expression;
-                        CreatePredicateStatement(binaryExp, PredicateType.GT);
-                        break;
-                    }
+                {
+                    var binaryExp = (BinaryExpression)expression;
+                    CreatePredicateStatement(binaryExp, PredicateType.GT);
+                    break;
+                }
                 case ExpressionType.NotEqual:
-                    {
-                        var binaryExp = (BinaryExpression)expression;
-                        CreatePredicateStatement(binaryExp, PredicateType.NQ);
-                        break;
-                    }
+                {
+                    var binaryExp = (BinaryExpression)expression;
+                    CreatePredicateStatement(binaryExp, PredicateType.NQ);
+                    break;
+                }
                 case ExpressionType.GreaterThanOrEqual:
-                    {
-                        var binaryExp = (BinaryExpression)expression;
-                        CreatePredicateStatement(binaryExp, PredicateType.GE);
-                        break;
-                    }
+                {
+                    var binaryExp = (BinaryExpression)expression;
+                    CreatePredicateStatement(binaryExp, PredicateType.GE);
+                    break;
+                }
                 case ExpressionType.LessThan:
-                    {
-                        var binaryExp = (BinaryExpression)expression;
-                        CreatePredicateStatement(binaryExp, PredicateType.LT);
-                        break;
-                    }
+                {
+                    var binaryExp = (BinaryExpression)expression;
+                    CreatePredicateStatement(binaryExp, PredicateType.LT);
+                    break;
+                }
                 case ExpressionType.LessThanOrEqual:
-                    {
-                        var binaryExp = (BinaryExpression)expression;
-                        CreatePredicateStatement(binaryExp, PredicateType.LE);
-                        break;
-                    }
+                {
+                    var binaryExp = (BinaryExpression)expression;
+                    CreatePredicateStatement(binaryExp, PredicateType.LE);
+                    break;
+                }
                 case ExpressionType.Lambda:
+                {
+                    var lamdbaExp = (LambdaExpression)expression;
+                    if (lamdbaExp.NodeType == ExpressionType.Constant)
                     {
-                        var lamdbaExp = (LambdaExpression)expression;
-                        if (lamdbaExp.NodeType == ExpressionType.Constant)
-                        {
-                            break;
-                        }
-
-                        if (lamdbaExp.Body is BinaryExpression)
-                        {
-                            InternalParser((BinaryExpression)lamdbaExp.Body);
-                        }
-                        else if (lamdbaExp.Body is MemberExpression)
-                        {
-                            InternalParser((MemberExpression)lamdbaExp.Body);
-                        }
-                        else if (lamdbaExp.Body is MethodCallExpression)
-                        {
-                            InternalParser((MethodCallExpression)lamdbaExp.Body);
-                        }
-                        else if (lamdbaExp.Body is UnaryExpression)
-                        {
-                            InternalParser((UnaryExpression)lamdbaExp.Body);
-                        }
                         break;
                     }
-                case ExpressionType.MemberAccess:
+
+                    if (lamdbaExp.Body is BinaryExpression)
                     {
-                        var memberExp = (MemberExpression)expression;
-                        if (memberExp.Expression.NodeType == ExpressionType.Parameter)
+                        InternalParser((BinaryExpression)lamdbaExp.Body);
+                    }
+                    else if (lamdbaExp.Body is MemberExpression)
+                    {
+                        InternalParser((MemberExpression)lamdbaExp.Body);
+                    }
+                    else if (lamdbaExp.Body is MethodCallExpression)
+                    {
+                        InternalParser((MethodCallExpression)lamdbaExp.Body);
+                    }
+                    else if (lamdbaExp.Body is UnaryExpression)
+                    {
+                        InternalParser((UnaryExpression)lamdbaExp.Body);
+                    }
+                    break;
+                }
+                case ExpressionType.MemberAccess:
+                {
+                    var memberExp = (MemberExpression)expression;
+                    if (memberExp.Expression.NodeType == ExpressionType.Parameter)
+                    {
+                        if (_predicateTypeStack.Count == 0)
                         {
-                            if (_predicateTypeStack.Count == 0)
-                            {
-                                if (memberExp.Type == typeof(Boolean))
-                                {
-                                    var parameterExp = (ParameterExpression)memberExp.Expression;
-                                    var newMember = Expression.MakeMemberAccess(parameterExp, parameterExp.Type.GetMember(memberExp.Member.Name)[0]);
-                                    var newExpression = Expression.Equal(newMember, Expression.Constant(true));
-                                    InternalParser(newExpression);
-                                }
-                            }
-                            else
+                            if (memberExp.Type == typeof(Boolean))
                             {
                                 var parameterExp = (ParameterExpression)memberExp.Expression;
-                                var internalAliasName = "";
-                                if (!_tableAliasMapper.Any(a => a.Key == parameterExp.Type.GetTableName().TableName && a.Value == parameterExp.Type.GetTableName().AliasName))
-                                {
-                                    throw new ArgumentException($@"没有找到{parameterExp.Type.Name}所对应的形参");
-                                }
-                                internalAliasName = $@"{ _tableAliasMapper.Where(w => w.Key == parameterExp.Type.GetTableName().TableName && w.Value == parameterExp.Type.GetTableName().AliasName).FirstOrDefault().Value.ToLower()}.";
-
-                                var newParameterName = Guid.NewGuid().ToString().Replace("-", "");
-                                _internalStore.Append(_templateBase.CreatePredicate(_predicateTypeStack.Pop(), $@"{internalAliasName}{memberExp.Member.Name}", $"@{newParameterName}"));
-                                _parameterNameStack.Push(newParameterName);
+                                var newMember = Expression.MakeMemberAccess(parameterExp, parameterExp.Type.GetMember(memberExp.Member.Name)[0]);
+                                var newExpression = Expression.Equal(newMember, Expression.Constant(true));
+                                InternalParser(newExpression);
                             }
                         }
                         else
                         {
-                            var getter = Expression.Lambda(memberExp).Compile();
-                            _entityParameters.Add(new MapperParameter(_parameterNameStack.Pop(), getter.DynamicInvoke()));
-                            break;
+                            var parameterExp = (ParameterExpression)memberExp.Expression;
+                            var internalAliasName = "";
+                            if (!_tableAliasMapper.Any(a => a.Key == parameterExp.Type.GetTableName().TableName && a.Value == parameterExp.Type.GetTableName().AliasName))
+                            {
+                                throw new ArgumentException($@"没有找到{parameterExp.Type.Name}所对应的形参");
+                            }
+                            internalAliasName = $@"{ _tableAliasMapper.Where(w => w.Key == parameterExp.Type.GetTableName().TableName && w.Value == parameterExp.Type.GetTableName().AliasName).FirstOrDefault().Value.ToLower()}.";
+
+                            var newParameterName = Guid.NewGuid().ToString().Replace("-", "");
+                            _internalStore.Append(_templateBase.CreatePredicate(_predicateTypeStack.Pop(), $@"{internalAliasName}{memberExp.Member.Name}", $"@{newParameterName}"));
+                            _parameterNameStack.Push(newParameterName);
                         }
+                    }
+                    else
+                    {
+                        var getter = Expression.Lambda(memberExp).Compile();
+                        _entityParameters.Add(new MapperParameter(_parameterNameStack.Pop(), getter.DynamicInvoke()));
                         break;
                     }
+                    break;
+                }
                 case ExpressionType.Not:
-                    {
-                        var memberExpression = (MemberExpression)((UnaryExpression)expression).Operand;
-                        var parameterExp = (ParameterExpression)memberExpression.Expression;
-                        var newMember = Expression.MakeMemberAccess(parameterExp, parameterExp.Type.GetMember(memberExpression.Member.Name)[0]);
-                        InternalParser(Expression.NotEqual(newMember, Expression.Constant(true)));
-                        break;
-                    }
+                {
+                    var memberExpression = (MemberExpression)((UnaryExpression)expression).Operand;
+                    var parameterExp = (ParameterExpression)memberExpression.Expression;
+                    var newMember = Expression.MakeMemberAccess(parameterExp, parameterExp.Type.GetMember(memberExpression.Member.Name)[0]);
+                    InternalParser(Expression.NotEqual(newMember, Expression.Constant(true)));
+                    break;
+                }
                 case ExpressionType.Convert:
-                    {
-                        var exp = ((UnaryExpression)expression).Operand;
-                        InternalParser(exp);
-                        break;
-                    }
+                {
+                    var exp = ((UnaryExpression)expression).Operand;
+                    InternalParser(exp);
+                    break;
+                }
                 default:
-                    {
-                        throw new NotSupportedException($@"暂不支持的表达式操作:{expression.NodeType}");
-                    }
+                {
+                    throw new NotSupportedException($@"暂不支持的表达式操作:{expression.NodeType}");
+                }
             }
         }
 
@@ -303,7 +303,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// 翻译表达式中的方法调用
         /// </summary>
         /// <param name="expression">表达式</param>
-        private void TranslateMethodCall(Expression expression)
+        private void ParserMethodCall(Expression expression)
         {
             var methodCallExp = (MethodCallExpression)expression;
             var methodName = methodCallExp.Method.Name;

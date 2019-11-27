@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper
 {
@@ -89,7 +90,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <param name="orderBy"></param>
         /// <param name="parserResult"></param>
         /// <returns></returns>
-        internal abstract ParserResult CreatePagination(Int32 pageIndex, Int32 pageSize, String orderBy,ParserResult parserResult);
+        internal abstract ParserResult CreatePagination(Int32 pageIndex, Int32 pageSize, String orderBy, ParserResult parserResult);
 
         /// <summary>
         /// 创建谓词关系
@@ -109,6 +110,10 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <returns></returns>
         internal String CreateJoin(JoinRelation joinRelation, String left, String right)
         {
+            Parameter.Validate(joinRelation);
+            Parameter.Validate(left);
+            Parameter.Validate(right);
+
             if (!JoinMapper.ContainsKey(joinRelation))
             {
                 throw new ArgumentNullException($@"{joinRelation}不存在");
@@ -125,6 +130,9 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <returns></returns>
         internal String CreateOrderBy(OrderByType orderByType, String left)
         {
+            Parameter.Validate(orderByType);
+            Parameter.Validate(left); 
+
             if (!OrderTypeMapper.ContainsKey(orderByType))
             {
                 throw new ArgumentNullException($@"{orderByType}不存在");
@@ -168,7 +176,5 @@ namespace NewLibCore.Data.SQL.Mapper
             OrderTypeMapper.Add(OrderByType.ASC, " ORDER BY {0} ASC ");
             OrderTypeMapper.Add(OrderByType.DESC, " ORDER BY {0} DESC ");
         }
-    }
-
-
+    } 
 }

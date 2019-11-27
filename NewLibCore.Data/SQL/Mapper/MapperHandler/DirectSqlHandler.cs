@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
+using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper
 {
@@ -17,6 +18,8 @@ namespace NewLibCore.Data.SQL.Mapper
 
         public DirectSqlHandler(String sql, IEnumerable<MapperParameter> parameters, IServiceProvider serviceProvider) : base(serviceProvider)
         {
+            Parameter.Validate(sql);
+
             _sql = sql;
             _parameters = parameters;
         }

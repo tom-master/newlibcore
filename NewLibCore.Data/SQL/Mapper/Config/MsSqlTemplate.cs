@@ -1,4 +1,5 @@
 ﻿using System;
+using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper
 {
@@ -7,8 +8,6 @@ namespace NewLibCore.Data.SQL.Mapper
     /// </summary>
     internal class MsSqlTemplate : TemplateBase
     {
-
-
         internal override String UpdateTemplate
         {
             get
@@ -43,11 +42,19 @@ namespace NewLibCore.Data.SQL.Mapper
 
         internal override String CreatePredicate(PredicateType predicateType, String left, String right)
         {
+            Parameter.Validate(predicateType);
+            Parameter.Validate(left);
+            Parameter.Validate(right);
+
             return String.Format(PredicateMapper[predicateType], left, right);
         }
 
         internal override ParserResult CreatePagination(Int32 pageIndex, Int32 pageSize, String orderBy, ParserResult parserResult)
         {
+            Parameter.Validate(pageSize);
+            Parameter.Validate(orderBy);
+            Parameter.Validate(parserResult);
+
             var sql = "";
             if (MapperConfig.MsSqlPaginationVersion == MsSqlPaginationVersion.GreaterThan2012)
             {

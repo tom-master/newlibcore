@@ -1,6 +1,8 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
 using NewLibCore.Data.SQL.Mapper.EntityExtension;
+using NewLibCore.Validate;
+
 namespace NewLibCore.Data.SQL.Mapper
 {
     /// <summary>
@@ -14,6 +16,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// </summary>
         protected internal Handler(IServiceProvider serviceProvider)
         {
+            Parameter.Validate(serviceProvider);
             ServiceProvider = serviceProvider;
         }
 
@@ -26,10 +29,6 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             get
             {
-                if (ServiceProvider == null)
-                {
-                    throw new Exception($@"{nameof(ServiceProvider)}为空");
-                }
                 return ServiceProvider.GetService<TemplateBase>();
             }
         }

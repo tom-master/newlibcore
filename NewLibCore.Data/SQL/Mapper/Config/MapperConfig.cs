@@ -14,7 +14,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
         private static Func<ILogger> _logger = () => null;
 
-        private static Func<ResultCache> _cache = () => null;
+        private static Func<QueryCacheBase> _cache = () => null;
 
         /// <summary>
         /// 连接字符串名称
@@ -37,7 +37,7 @@ namespace NewLibCore.Data.SQL.Mapper
             }
         }
 
-        public static ResultCache Cache
+        internal static QueryCacheBase QueryCache
         {
             get
             {
@@ -80,7 +80,7 @@ namespace NewLibCore.Data.SQL.Mapper
             EnableModelValidate = true;
 
             _logger = () => new DefaultLogger();
-            _cache = () => new DefaultResultCache();
+            _cache = () => new DefaultQueryCache();
         }
 
         public static void UseMySql()
@@ -104,7 +104,7 @@ namespace NewLibCore.Data.SQL.Mapper
             _logger = () => logger;
         }
 
-        public static void SetCache(ResultCache cache)
+        public static void SetCache(QueryCacheBase cache)
         {
             Parameter.Validate(cache);
             _cache = () => cache;

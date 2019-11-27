@@ -17,7 +17,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
         private readonly IList<MapperParameter> _parameters;
 
-        private readonly ResultCache _cache = MapperConfig.Cache;
+        private readonly QueryCacheBase _queryCache = MapperConfig.QueryCache;
 
         /// <summary>
         /// 初始化一个TranslationResult类的实例
@@ -120,9 +120,9 @@ namespace NewLibCore.Data.SQL.Mapper
                 return;
             }
 
-            if (_cache != null)
+            if (_queryCache != null)
             {
-                _cache.Add(PrepareCacheKey(), executeResult);
+                _queryCache.Add(PrepareCacheKey(), executeResult);
             }
         }
 
@@ -132,9 +132,9 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <returns></returns>
         private RawResult GetCache()
         {
-            if (_cache != null)
+            if (_queryCache != null)
             {
-                var cacheResult = _cache.Get(PrepareCacheKey());
+                var cacheResult = _queryCache.Get(PrepareCacheKey());
                 if (cacheResult != null)
                 {
                     return (RawResult)cacheResult;
