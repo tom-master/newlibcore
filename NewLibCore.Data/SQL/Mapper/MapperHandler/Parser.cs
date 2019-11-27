@@ -274,7 +274,6 @@ namespace NewLibCore.Data.SQL.Mapper
                     {
                         var getter = Expression.Lambda(memberExp).Compile();
                         _entityParameters.Add(new MapperParameter(_parameterNameStack.Pop(), getter.DynamicInvoke()));
-                        break;
                     }
                     break;
                 }
