@@ -40,7 +40,7 @@ namespace NewLibCore.Data.SQL.Mapper
             //当出现查询但张表不加Where条件时，则强制将IsDeleted=0添加到后面
             if (_expressionStore.Where == null)
             {
-                parserResult.Append($@"{PredicateType.AND.ToString()} {mainTable.Value}.IsDeleted = 0");
+                parserResult.Append($@"{PredicateType.AND} {mainTable.Value}.IsDeleted = 0");
             }
             else
             {
@@ -83,14 +83,12 @@ namespace NewLibCore.Data.SQL.Mapper
             {
                 var modelType = typeof(TModel);
                 var f = new List<String>();
+                var aliasName = modelType.GetTableName().AliasName;
+                modelAliasName.Add(aliasName);
+                var mainModelPropertys = modelType.GetProperties().Where(w => w.GetCustomAttributes<PropertyValidate>().Any()).ToList();
+                foreach (var item in mainModelPropertys)
                 {
-                    var aliasName = modelType.GetTableName().AliasName;
-                    modelAliasName.Add(aliasName);
-                    var mainModelPropertys = modelType.GetProperties().Where(w => w.GetCustomAttributes<PropertyValidate>().Any()).ToList();
-                    foreach (var item in mainModelPropertys)
-                    {
-                        f.Add($@"{aliasName}.{item.Name}");
-                    }
+                    f.Add($@"{aliasName}.{item.Name}");
                 }
                 return (String.Join(",", f), modelAliasName.FirstOrDefault());
             }
