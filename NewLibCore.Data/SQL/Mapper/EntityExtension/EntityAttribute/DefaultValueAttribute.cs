@@ -55,11 +55,11 @@ namespace NewLibCore.Data.SQL.Mapper
                     {
                         Value = false;
                     }
-                    if (type == typeof(Guid))
+                    else if (type == typeof(Guid))
                     {
                         Value = Guid.NewGuid().ToString();
                     }
-                    if (type.IsNumeric())
+                    else if (type.IsNumeric())
                     {
                         Value = 0;
                     }

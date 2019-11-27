@@ -156,7 +156,7 @@ namespace NewLibCore.Run
 
         public void AA()
         {
-            OnChanged(nameof(Guid));
+            OnChanged(nameof(Source));
         }
     }
 
