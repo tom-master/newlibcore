@@ -48,7 +48,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
             parserResult.Append(String.Format(TemplateBase.UpdateTemplate, TableName, AliasName, String.Join(",", propertys.Select(p => $@"{AliasName}.{p.Key}=@{p.Key}"))), propertys.Select(c => new MapperParameter(c.Key, c.Value)));
             parserResult.Append(sql, parameters);
-            parserResult.Append($@"{PredicateType.AND} {AliasName}.IsDeleted=0");
+            parserResult.Append($@"{PredicateType.AND} {AliasName}.{nameof(_modelInstance.IsDeleted)}=0");
             parserResult.Append($@"{TemplateBase.RowCount}");
             _modelInstance.Reset();
 
