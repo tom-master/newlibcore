@@ -2,8 +2,6 @@
 using System.Linq;
 using System.Linq.Expressions;
 using NewLibCore.Data.SQL.Mapper.Extension;
-using NewLibCore.Data.SQL.Mapper.MapperParser;
-using NewLibCore.Data.SQL.Mapper.Parser;
 using NewLibCore.Data.SQL.Mapper.Store;
 using NewLibCore.Validate;
 
@@ -43,7 +41,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
             var expressionStore = new ExpressionStore();
             expressionStore.AddWhere(_filter);
 
-            var (sql, parameters) = Parser.Parser.CreateParser(ServiceProvider).ExecuteParser(expressionStore);
+            var (sql, parameters) = Parser.CreateParser(ServiceProvider).ExecuteParser(expressionStore);
             var parserResult = ParserResult.CreateResult();
             var propertys = _modelInstance.GetChangedProperty();
             var (TableName, AliasName) = typeof(TModel).GetTableName();

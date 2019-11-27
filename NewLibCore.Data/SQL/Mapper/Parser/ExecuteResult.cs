@@ -5,7 +5,7 @@ using NewLibCore.Data.SQL.Mapper.Extension;
 using NewLibCore.Validate;
 using Newtonsoft.Json;
 
-namespace NewLibCore.Data.SQL.Mapper.Parser
+namespace NewLibCore.Data.SQL.Mapper
 {
     /// <summary>
     /// sql语句执行后的结果

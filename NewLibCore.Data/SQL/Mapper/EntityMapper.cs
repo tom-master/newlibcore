@@ -4,7 +4,6 @@ using System.Linq.Expressions;
 using Microsoft.Extensions.DependencyInjection;
 using NewLibCore.Data.SQL.Mapper.Extension;
 using NewLibCore.Data.SQL.Mapper.Handler;
-using NewLibCore.Data.SQL.Mapper.Parser;
 using NewLibCore.Data.SQL.Mapper.Store;
 using NewLibCore.Data.SQL.Mapper.Template;
 using NewLibCore.Validate;

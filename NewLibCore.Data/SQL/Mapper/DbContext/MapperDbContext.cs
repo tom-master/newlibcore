@@ -6,7 +6,6 @@ using System.Data.SqlClient;
 using System.Linq;
 using MySql.Data.MySqlClient;
 using NewLibCore.Data.SQL.Mapper.Extension;
-using NewLibCore.Data.SQL.Mapper.Parser;
 using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
-using NewLibCore.Data.SQL.Mapper.Parser;
 
 namespace NewLibCore.Data.SQL.Mapper
 {

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Linq;
 using NewLibCore.Data.SQL.Mapper.Extension;
-using NewLibCore.Data.SQL.Mapper.MapperParser;
-using NewLibCore.Data.SQL.Mapper.Parser;
 using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper.Handler

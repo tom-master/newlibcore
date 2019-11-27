@@ -9,7 +9,7 @@ using NewLibCore.Data.SQL.Mapper.Store;
 using NewLibCore.Data.SQL.Mapper.Template;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Data.SQL.Mapper.Parser
+namespace NewLibCore.Data.SQL.Mapper
 {
     /// <summary>
     /// 将Expression解析为对应的SQL谓词

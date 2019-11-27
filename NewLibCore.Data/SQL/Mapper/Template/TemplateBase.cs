@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using NewLibCore.Data.SQL.Mapper.MapperParser;
 using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper.Template

@@ -1,6 +1,5 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
-using NewLibCore.Data.SQL.Mapper.Parser;
 using NewLibCore.Data.SQL.Mapper.Template;
 using NewLibCore.Validate;
 

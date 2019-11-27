@@ -1,5 +1,4 @@
 ﻿using System;
-using NewLibCore.Data.SQL.Mapper.MapperParser;
 using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper.Template
