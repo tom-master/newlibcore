@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper.Template
@@ -100,6 +101,18 @@ namespace NewLibCore.Data.SQL.Mapper.Template
         /// <param name="right">右语句</param>
         /// <returns></returns>
         internal abstract String CreatePredicate(PredicateType predicateType, String left, String right);
+
+        /// <summary>
+        /// 创建参数
+        /// </summary>
+        /// <returns></returns>
+        internal abstract DbParameter CreateParameter();
+
+        /// <summary>
+        /// 创建连接
+        /// </summary>
+        /// <returns></returns>
+        internal abstract DbConnection CreateDbConnection();
 
         /// <summary>
         /// 创建连接关系

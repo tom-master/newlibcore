@@ -15,8 +15,8 @@ namespace NewLibCore.Run
 
             MapperConfig.InitDefaultSetting();
 
-            //MapperConfig.UseMySql();
-            MapperConfig.UseMsSql();
+            MapperConfig.UseMySql();
+            //MapperConfig.UseMsSql();
 
             MapperConfig.ConnectionStringName = "NewCrmDatabase";
 
@@ -36,12 +36,10 @@ namespace NewLibCore.Run
 
             using (var mapper = EntityMapper.CreateMapper())
             {
-                //for (int i = 0; i < 20; i++)
-                //{
-                var a = new Wallpaper();
-                a.AA();
-                var r = mapper.Update(a, (a1) => a1.Id == 0);
-                //}
+                for (int i = 0; i < 5; i++)
+                {
+                    var r = mapper.Query<App>().ToList();
+                }
 
                 //var result = mapper.Query<User>().FirstOrDefault();
                 //var result = mapper.Query<User>().ToList();
@@ -53,7 +51,7 @@ namespace NewLibCore.Run
             }
             #endregion
 
-            //Console.ReadKey();
+            Console.ReadKey();
         }
     }
 

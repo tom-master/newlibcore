@@ -19,7 +19,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
         private EntityMapper()
         {
-            var services = new ServiceCollection().AddScoped<MapperDbContextBase, MapperDbContext>();
+            IServiceCollection services = new ServiceCollection();
 
             if (MapperConfig.MapperType == MapperType.MSSQL)
             {
@@ -29,8 +29,9 @@ namespace NewLibCore.Data.SQL.Mapper
             {
                 services = services.AddScoped<TemplateBase, MySqlTemplate>();
             }
-            var serviceProvider = services.BuildServiceProvider();
-            _serviceScope = serviceProvider.CreateScope();
+            _serviceScope = services.AddScoped<MapperDbContextBase, MapperDbContext>()
+                            .BuildServiceProvider()
+                            .CreateScope();
         }
 
         /// <summary>

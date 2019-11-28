@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Data.Common;
+using System.Data.SqlClient;
 using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper.Template
@@ -67,6 +69,16 @@ namespace NewLibCore.Data.SQL.Mapper.Template
             }
             parserResult.ClearSql();
             return parserResult.Append(sql);
+        }
+
+        internal override DbParameter CreateParameter()
+        {
+            return new SqlParameter();
+        }
+
+        internal override DbConnection CreateDbConnection()
+        {
+            return new SqlConnection(Host.GetHostVar(MapperConfig.ConnectionStringName));
         }
     }
 }

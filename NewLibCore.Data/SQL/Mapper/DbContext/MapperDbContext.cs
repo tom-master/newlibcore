@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Data.SqlClient;
 using System.Linq;
-using MySql.Data.MySqlClient;
+using Microsoft.Extensions.DependencyInjection;
 using NewLibCore.Data.SQL.Mapper.Extension;
+using NewLibCore.Data.SQL.Mapper.Template;
 using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper
@@ -22,25 +22,15 @@ namespace NewLibCore.Data.SQL.Mapper
 
         private DbTransaction _dataTransaction;
 
+        private readonly TemplateBase _templateBase;
+
         /// <summary>
         /// 初始化MapperDbContext类的新实例
         /// </summary>
-        public MapperDbContext()
+        public MapperDbContext(IServiceProvider serviceProvider)
         {
-            Parameter.Validate(MapperConfig.ConnectionStringName);
-
-            if (MapperConfig.MapperType == MapperType.MYSQL)
-            {
-                _connection = new MySqlConnection(Host.GetHostVar(MapperConfig.ConnectionStringName));
-            }
-            else if (MapperConfig.MapperType == MapperType.MSSQL)
-            {
-                _connection = new SqlConnection(Host.GetHostVar(MapperConfig.ConnectionStringName));
-            }
-            else
-            {
-                throw new Exception($@"暂不支持的数据库类型:{MapperConfig.MapperType}");
-            }
+            _templateBase = serviceProvider.GetService<TemplateBase>();
+            _connection = _templateBase.CreateDbConnection();
         }
 
         protected internal override void Commit()
@@ -134,7 +124,7 @@ namespace NewLibCore.Data.SQL.Mapper
                     cmd.CommandText = sql;
                     if (parameters != null && parameters.Any())
                     {
-                        cmd.Parameters.AddRange(parameters.Select(s => (DbParameter)s).ToArray());
+                        cmd.Parameters.AddRange(parameters.Select(s => s.ConvertToDbParameter(_templateBase)).ToArray());
                     }
                     RunDiagnosis.Info($@"SQL语句:{sql} 占位符与参数:{(parameters == null || !parameters.Any() ? "" : String.Join($@"{Environment.NewLine}", parameters.Select(s => $@"{s.Key}----{s.Value}")))}");
 

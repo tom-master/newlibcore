@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Data.Common;
+using MySql.Data.MySqlClient;
 using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper.Template
@@ -41,6 +43,16 @@ namespace NewLibCore.Data.SQL.Mapper.Template
 
             parserResult.Append($@" {orderBy} LIMIT {pageSize * (pageIndex - 1)},{pageSize} ;");
             return parserResult;
+        }
+
+        internal override DbParameter CreateParameter()
+        {
+            return new MySqlParameter();
+        }
+
+        internal override DbConnection CreateDbConnection()
+        {
+            return new MySqlConnection(Host.GetHostVar(MapperConfig.ConnectionStringName));
         }
 
         internal override String Identity

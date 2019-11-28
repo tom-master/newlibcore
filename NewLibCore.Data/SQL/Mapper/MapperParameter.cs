@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
-using System.Data.SqlClient;
 using System.Linq;
-using MySql.Data.MySqlClient;
+using NewLibCore.Data.SQL.Mapper.Template;
 using NewLibCore.Security;
 using NewLibCore.Validate;
 
@@ -52,26 +51,15 @@ namespace NewLibCore.Data.SQL.Mapper
         /// </summary>
         internal Object Value { get; private set; }
 
-        public static implicit operator DbParameter(MapperParameter entityParameter)
+        /// <summary>
+        /// 转换为原生ado.net参数
+        /// </summary>
+        /// <returns></returns>
+        internal DbParameter ConvertToDbParameter(TemplateBase templateBase)
         {
-            Parameter.Validate(entityParameter);
-
-            DbParameter parameter = null;
-            if (MapperConfig.MapperType == MapperType.MSSQL)
-            {
-                parameter = new SqlParameter();
-            }
-            else if (MapperConfig.MapperType == MapperType.MYSQL)
-            {
-                parameter = new MySqlParameter();
-            }
-            else
-            {
-                throw new Exception($@"暂不支持的数据库类型:{MapperConfig.MapperType}");
-            }
-
-            parameter.ParameterName = entityParameter.Key;
-            parameter.Value = entityParameter.Value;
+            var parameter = templateBase.CreateParameter();
+            parameter.ParameterName = Key;
+            parameter.Value = Value;
             return parameter;
         }
 

@@ -4,6 +4,7 @@ using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 using NewLibCore.Data.SQL.Mapper.Cache;
 using NewLibCore.Validate;
+using Newtonsoft.Json;
 
 namespace NewLibCore.Data.SQL.Mapper
 {
@@ -136,6 +137,7 @@ namespace NewLibCore.Data.SQL.Mapper
                 var cacheResult = _queryCache.Get(PrepareCacheKey());
                 if (cacheResult != null)
                 {
+                    MapperConfig.Logger.Info($@"缓存返回:{cacheResult}");
                     return (ExecuteResult)cacheResult;
                 }
             }
