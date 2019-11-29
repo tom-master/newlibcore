@@ -357,7 +357,7 @@ namespace NewLibCore.Data.SQL.Mapper.Store
             {
                 if (groupItem.Count() > 1)
                 {
-                    throw new ArgumentException($@"表:{String.Join(",", groupItem.Select(s => s.Key))}指定相同别名:{groupItem.Key}");
+                    throw new ArgumentException($@"表:{String.Join(",", groupItem.Select(s => s.Key))}指定了相同别名:{groupItem.Key}");
                 }
             }
 

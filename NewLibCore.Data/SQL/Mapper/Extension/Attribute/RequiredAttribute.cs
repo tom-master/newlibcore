@@ -20,6 +20,8 @@ namespace NewLibCore.Data.SQL.Mapper
 
         public override Boolean IsValidate(Object value)
         {
+            Parameter.Validate(value);
+
             var type = value.GetType();
 
             try

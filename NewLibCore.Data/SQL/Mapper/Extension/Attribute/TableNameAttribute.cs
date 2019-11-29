@@ -1,4 +1,6 @@
 using System;
+using NewLibCore.Security;
+using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper
 {
@@ -23,11 +25,22 @@ namespace NewLibCore.Data.SQL.Mapper
         /// </summary>
         /// <param name="name">表名</param>
         /// <param name="aliasName">表别名</param>
-        public TableNameAttribute(String name, String aliasName = default)
+        public TableNameAttribute(String name, String aliasName = "")
         {
-            TableName = name;
-            AliasName = aliasName == default ? name : aliasName;
-        }
+            Parameter.Validate(name);
 
+            UnlegalChatDetection.FilterBadChat(name);
+            TableName = name;
+
+            if (String.IsNullOrEmpty(aliasName))
+            {
+                AliasName = name;
+            }
+            else
+            {
+                UnlegalChatDetection.FilterBadChat(aliasName);
+                AliasName = aliasName;
+            }
+        }
     }
 }
