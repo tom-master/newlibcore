@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using NewLibCore.Data.SQL.Mapper.Store;
 using NewLibCore.Validate;
 
@@ -25,10 +26,9 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         internal override ExecuteResult Execute()
         {
             var mainTable = _expressionStore.From.AliaNameMapper[0];
+            var (Fields, _) = StatementParse(_expressionStore.MergeTypes().ToArray());
 
             var parserResult = ParserResult.CreateResult();
-            var r = _expressionStore.MergeTypes();
-            var (Fields, _) = StatementParse(/*_expressionStore.Select*/);
             parserResult.Append(String.Format(TemplateBase.SelectTemplate, Fields, mainTable.Key, mainTable.Value));
 
             var (sql, parameters) = Parser.CreateParser(ServiceProvider).ExecuteParser(_expressionStore);
