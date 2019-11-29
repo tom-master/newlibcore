@@ -19,8 +19,7 @@ namespace NewLibCore.Run
             //MapperConfig.UseMsSql();
 
             MapperConfig.ConnectionStringName = "NewCrmDatabase";
-
-            var r1 = default(Guid).ToString();
+            
             // for (var i = 0; i < 4; i++)
             // {
             //     var thread = new Thread(new ParameterizedThreadStart((a) =>
@@ -38,7 +37,7 @@ namespace NewLibCore.Run
             {
                 for (var i = 0; i < 1; i++)
                 {
-                    var r = mapper.Query<User>().Include(a => a.Config).Where(w => w.Id == 4).FirstOrDefault();
+                    var r = mapper.Query<User>().Include(a => a.Config).FirstOrDefault();
                 }
 
                 //var result = mapper.Query<User>().FirstOrDefault();

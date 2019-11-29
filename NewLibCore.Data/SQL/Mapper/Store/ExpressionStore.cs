@@ -55,7 +55,7 @@ namespace NewLibCore.Data.SQL.Mapper.Store
         internal void AddFrom<TModel>() where TModel : EntityBase, new()
         {
             var modelType = typeof(TModel);
-            Expression<Func<Type>> expression = () => modelType;
+            Expression<Func<TModel, TModel>> expression = (a) => a;
 
             From = new SimpleExpressionMapper
             {
@@ -95,15 +95,24 @@ namespace NewLibCore.Data.SQL.Mapper.Store
             var parameterType = include.Parameters[0].Type;
             var foreignKeyType = include.Body.Type;
 
-            var propertyInfo = parameterType.GetProperties().FirstOrDefault(w => w.GetCustomAttributes<ForeignKeyAttribute>().Any() && w.GetCustomAttributes<ForeignKeyAttribute>().FirstOrDefault(f => f.ForeignType == foreignKeyType) != null);
+            var foreignKeyPropertyInfo = parameterType.GetProperties().FirstOrDefault(w => w.GetCustomAttributes<ForeignKeyAttribute>().Any() && w.GetCustomAttributes<ForeignKeyAttribute>().FirstOrDefault(f => f.ForeignType == foreignKeyType) != null);
+            if (foreignKeyPropertyInfo == null)
+            {
+                throw new ArgumentException($@"{parameterType.Name}中没有用{nameof(ForeignKeyAttribute)}修饰的属性");
+            }
             var foreignPropertyInfo = foreignKeyType.GetProperties().FirstOrDefault(w => w.GetCustomAttributes<PrimaryKeyAttribute>().Any());
+            if (foreignPropertyInfo == null)
+            {
+                throw new ArgumentException($@"{foreignKeyType.Name}中没有用{nameof(PrimaryKeyAttribute)}修饰的属性");
+            }
 
             var leftParameter = Expression.Parameter(parameterType, parameterType.GetTableName().AliasName);
             var rightParameter = Expression.Parameter(foreignKeyType, foreignKeyType.GetTableName().AliasName);
-            var left = Expression.Property(leftParameter, propertyInfo);
+
+            var left = Expression.Property(leftParameter, foreignKeyPropertyInfo);
             var right = Expression.Property(rightParameter, foreignPropertyInfo);
             var r = Expression.Lambda<Func<TModel, TModel1, Boolean>>(Expression.Equal(left, right), leftParameter, rightParameter);
-            //Expression.Property(Expression.Parameter(parameterType),parameterType.geta)
+
             AddJoin(r, JoinRelation.INNER);
         }
 
@@ -391,6 +400,28 @@ namespace NewLibCore.Data.SQL.Mapper.Store
             }
 
             return newAliasMapper;
+        }
+
+        internal IReadOnlyList<Type> MergeTypes()
+        {
+            var types = new List<Type>();
+            if (From != null)
+            {
+                var r = (From.Expression as LambdaExpression).Parameters[0].Type;
+                types.Add(r);
+            }
+
+            if (Joins.Any())
+            {
+                foreach (var item in Joins)
+                {
+                    foreach (var parameter in (item.Expression as LambdaExpression).Parameters)
+                    {
+                        types.Add(parameter.Type);
+                    }
+                }
+            }
+            return null;
         }
 
         /// <summary>
