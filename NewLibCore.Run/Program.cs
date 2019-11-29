@@ -15,8 +15,8 @@ namespace NewLibCore.Run
 
             MapperConfig.InitDefaultSetting();
 
-            //MapperConfig.UseMySql();
-            MapperConfig.UseMsSql();
+            MapperConfig.UseMySql();
+            //MapperConfig.UseMsSql();
 
             MapperConfig.ConnectionStringName = "NewCrmDatabase";
 
@@ -36,9 +36,9 @@ namespace NewLibCore.Run
 
             using (var mapper = EntityMapper.CreateMapper())
             {
-                for (int i = 0; i < 5; i++)
+                for (var i = 0; i < 1; i++)
                 {
-                    var r = mapper.Query<App>().ToList();
+                    var r = mapper.Query<App>().InnerJoin<Member>((a, m) => a.Id == m.AppId).ToList();
                 }
 
                 //var result = mapper.Query<User>().FirstOrDefault();
@@ -440,7 +440,7 @@ namespace NewLibCore.Run
         }
     }
 
-    [TableName("newcrm_user_member")]
+    [TableName("newcrm_user_member", "a")]
     public partial class Member : EntityBase
     {
         /// <summary>
@@ -904,7 +904,7 @@ namespace NewLibCore.Run
         }
     }
 
-    [TableName("newcrm_app")]
+    [TableName("newcrm_app", "a")]
     public partial class App : EntityBase
     {
         /// <summary>

@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Linq.Expressions;
 using NewLibCore.Data.SQL.Mapper.Extension;
-using NewLibCore.Validate;
 
-namespace NewLibCore.Data.SQL.MergeExpression
+namespace NewLibCore.Data.SQL.Mapper.Filter
 {
     /// <summary>
     /// 默认的合并查询表达式 
@@ -13,7 +12,6 @@ namespace NewLibCore.Data.SQL.MergeExpression
     {
         internal DefaultFilter(Expression<Func<T, Boolean>> filter)
         {
-            Parameter.Validate(filter);
             Filter = filter;
         }
     }

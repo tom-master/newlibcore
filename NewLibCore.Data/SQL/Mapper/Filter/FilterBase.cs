@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 using NewLibCore.Data.SQL.Mapper.Extension;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Data.SQL.MergeExpression
+namespace NewLibCore.Data.SQL.Mapper.Filter
 {
     /// <summary>
     /// 合并作为查询条件的表达式树

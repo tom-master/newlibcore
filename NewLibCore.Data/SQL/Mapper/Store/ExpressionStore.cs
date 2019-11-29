@@ -351,6 +351,16 @@ namespace NewLibCore.Data.SQL.Mapper.Store
                 newAliasMapper.AddRange(Joins.SelectMany(s => s.AliaNameMapper));
             }
             newAliasMapper = newAliasMapper.Select(s => s).Distinct().ToList();
+
+            var sameGroup = newAliasMapper.GroupBy(a => a.Value);
+            foreach (var groupItem in sameGroup)
+            {
+                if (groupItem.Count() > 1)
+                {
+                    throw new ArgumentException($@"表:{String.Join(",", groupItem.Select(s => s.Key))}指定相同别名:{groupItem.Key}");
+                }
+            }
+
             return newAliasMapper;
         }
 

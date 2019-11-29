@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace NewLibCore.Data.SQL.MergeExpression
+namespace NewLibCore.Data.SQL.Mapper.Filter
 {
 
     /// <summary>

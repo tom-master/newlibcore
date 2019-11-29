@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Linq.Expressions;
-using NewLibCore.Data.SQL.Mapper;
 using NewLibCore.Data.SQL.Mapper.Extension;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Data.SQL.MergeExpression
+namespace NewLibCore.Data.SQL.Mapper.Filter
 {
     /// <summary>
     /// 合并扩展
@@ -21,8 +20,6 @@ namespace NewLibCore.Data.SQL.MergeExpression
         public static void And<T>(this FilterBase<T> left, Expression<Func<T, Boolean>> right) where T : EntityBase
         {
             Parameter.Validate(left);
-            Parameter.Validate(left.Filter);
-
             Parameter.Validate(right);
 
             if (left.Filter == null)
@@ -49,8 +46,6 @@ namespace NewLibCore.Data.SQL.MergeExpression
         public static void Or<T>(this FilterBase<T> left, Expression<Func<T, Boolean>> right) where T : EntityBase
         {
             Parameter.Validate(left);
-            Parameter.Validate(left.Filter);
-
             Parameter.Validate(right);
 
             if (left.Filter == null)
