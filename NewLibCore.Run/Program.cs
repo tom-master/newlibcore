@@ -38,7 +38,7 @@ namespace NewLibCore.Run
             {
                 for (var i = 0; i < 1; i++)
                 {
-                    var r = mapper.Query<App>().InnerJoin<Member>((a, m) => a.Id == m.AppId).ToList();
+                    var r = mapper.Query<User>().Include(a => a.Config).Where(w => w.Id == 4).FirstOrDefault();
                 }
 
                 //var result = mapper.Query<User>().FirstOrDefault();
@@ -152,11 +152,6 @@ namespace NewLibCore.Run
         {
 
         }
-
-        public void AA()
-        {
-            OnChanged(nameof(Source));
-        }
     }
 
     [TableName("newcrm_user_config", "config")]
@@ -213,12 +208,10 @@ namespace NewLibCore.Run
         /// <summary>
         /// 壁纸Id
         /// </summary>
-        [Required, ForeignKey]
+        [Required, ForeignKey(typeof(Wallpaper))]
         public Int32 WallpaperId { get; private set; }
 
         public Wallpaper Wallpaper { get; set; }
-
-        public Int32 UserId { get; set; }
 
         /// <summary>
         /// 账户头像是否被更改
@@ -259,7 +252,7 @@ namespace NewLibCore.Run
         public UserRole() { }
     }
 
-    [TableName("newcrm_user", "a")]
+    [TableName("newcrm_user", "user")]
     public partial class User : EntityBase
     {
         /// <summary>
@@ -307,9 +300,8 @@ namespace NewLibCore.Run
         /// <summary>
         /// 配置Id
         /// </summary>
-        [Required, ForeignKey]
+        [Required, ForeignKey(typeof(Config))]
         public Int32 ConfigId { get; private set; }
-
 
         public Config Config { get; set; }
 

@@ -85,7 +85,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// </summary>
         /// <typeparam name="TModel"></typeparam>
         /// <returns></returns>
-        public QueryWrapper<TModel> Query<TModel>() where TModel : new()
+        public QueryWrapper<TModel> Query<TModel>() where TModel : EntityBase, new()
         {
             var expressionStore = new ExpressionStore();
             expressionStore.AddFrom<TModel>();

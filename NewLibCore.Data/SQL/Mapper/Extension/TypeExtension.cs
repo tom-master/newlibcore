@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper.Extension
 {
@@ -12,10 +13,12 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
         /// <returns></returns>
         internal static (String TableName, String AliasName) GetTableName(this Type t)
         {
+            Parameter.Validate(t);
+
             var attrubutes = t.GetCustomAttributes(typeof(TableNameAttribute), true);
             if (!attrubutes.Any())
             {
-                return (t.Name, "");
+                throw new Exception($@"{t.Name}没有被{nameof(TableNameAttribute)}所修饰");
             }
             var attribute = (TableNameAttribute)attrubutes.FirstOrDefault();
             return (attribute.TableName, attribute.AliasName);

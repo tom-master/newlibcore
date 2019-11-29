@@ -8,7 +8,7 @@ using NewLibCore.Validate;
 namespace NewLibCore.Data.SQL.Mapper.Handler
 {
 
-    public class QueryWrapper<TModel> where TModel : new()
+    public class QueryWrapper<TModel> where TModel : EntityBase, new()
     {
         private readonly ExpressionStore _expressionStore;
 
@@ -27,7 +27,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         }
 
         public QueryWrapper<TModel> LeftJoin<TRight>(Expression<Func<TModel, TRight, Boolean>> join)
-        where TRight : new()
+        where TRight : EntityBase, new()
         {
             Parameter.Validate(join);
             _expressionStore.AddJoin(join, JoinRelation.LEFT);
@@ -35,8 +35,8 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         }
 
         public QueryWrapper<TModel> LeftJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> join)
-        where TLeft : new()
-        where TRight : new()
+        where TLeft : EntityBase, new()
+        where TRight : EntityBase, new()
         {
             Parameter.Validate(join);
             _expressionStore.AddJoin(join, JoinRelation.LEFT);
@@ -45,7 +45,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         }
 
         public QueryWrapper<TModel> RightJoin<TRight>(Expression<Func<TModel, TRight, Boolean>> join)
-        where TRight : new()
+        where TRight : EntityBase, new()
         {
             Parameter.Validate(join);
             _expressionStore.AddJoin(join, JoinRelation.LEFT);
@@ -53,8 +53,8 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         }
 
         public QueryWrapper<TModel> RightJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> join)
-        where TLeft : new()
-        where TRight : new()
+        where TLeft : EntityBase, new()
+        where TRight : EntityBase, new()
         {
             Parameter.Validate(join);
             _expressionStore.AddJoin(join, JoinRelation.RIGHT);
@@ -63,7 +63,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         }
 
         public QueryWrapper<TModel> InnerJoin<TRight>(Expression<Func<TModel, TRight, Boolean>> join)
-        where TRight : new()
+        where TRight : EntityBase, new()
         {
             Parameter.Validate(join);
             _expressionStore.AddJoin(join, JoinRelation.INNER);
@@ -71,8 +71,8 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         }
 
         public QueryWrapper<TModel> InnerJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> join)
-        where TLeft : new()
-        where TRight : new()
+        where TLeft : EntityBase, new()
+        where TRight : EntityBase, new()
         {
             Parameter.Validate(join);
             _expressionStore.AddJoin(join, JoinRelation.INNER);
@@ -100,8 +100,8 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         }
 
         public QueryWrapper<TModel> Select<TModel1, TModel2>(Expression<Func<TModel1, TModel2, dynamic>> selector = null)
-        where TModel1 : new()
-        where TModel2 : new()
+        where TModel1 : EntityBase, new()
+        where TModel2 : EntityBase, new()
         {
             if (selector != null)
             {
@@ -110,9 +110,9 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
             return this;
         }
         public QueryWrapper<TModel> Select<TModel1, TModel2, TModel3>(Expression<Func<TModel1, TModel2, TModel3, dynamic>> selector = null)
-        where TModel1 : new()
-        where TModel2 : new()
-        where TModel3 : new()
+        where TModel1 : EntityBase, new()
+        where TModel2 : EntityBase, new()
+        where TModel3 : EntityBase, new()
         {
             if (selector != null)
             {
@@ -122,10 +122,10 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         }
 
         public QueryWrapper<TModel> Select<TModel1, TModel2, TModel3, TModel4>(Expression<Func<TModel1, TModel2, TModel3, TModel4, dynamic>> selector = null)
-        where TModel1 : new()
-        where TModel2 : new()
-        where TModel3 : new()
-        where TModel4 : new()
+        where TModel1 : EntityBase, new()
+        where TModel2 : EntityBase, new()
+        where TModel3 : EntityBase, new()
+        where TModel4 : EntityBase, new()
         {
             if (selector != null)
             {
@@ -135,11 +135,11 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         }
 
         public QueryWrapper<TModel> Select<TModel1, TModel2, TModel3, TModel4, TModel5>(Expression<Func<TModel1, TModel2, TModel3, TModel4, TModel5, dynamic>> selector = null)
-        where TModel1 : new()
-        where TModel2 : new()
-        where TModel3 : new()
-        where TModel4 : new()
-        where TModel5 : new()
+        where TModel1 : EntityBase, new()
+        where TModel2 : EntityBase, new()
+        where TModel3 : EntityBase, new()
+        where TModel4 : EntityBase, new()
+        where TModel5 : EntityBase, new()
         {
             if (selector != null)
             {
@@ -156,7 +156,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         }
 
         public QueryWrapper<TModel> Where<TModel1>(Expression<Func<TModel1, Boolean>> filter)
-                where TModel1 : new()
+        where TModel1 : EntityBase, new()
         {
             Parameter.Validate(filter);
             _expressionStore.AddWhere(filter);
@@ -164,7 +164,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         }
 
         public QueryWrapper<TModel> Where<TModel1>(Expression<Func<TModel, TModel1, Boolean>> filter)
-        where TModel1 : new()
+        where TModel1 : EntityBase, new()
         {
             Parameter.Validate(filter);
             _expressionStore.AddWhere(filter);
@@ -172,8 +172,8 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         }
 
         public QueryWrapper<TModel> Where<TModel1, TModel2>(Expression<Func<TModel, TModel1, TModel2, Boolean>> filter)
-        where TModel1 : new()
-        where TModel2 : new()
+        where TModel1 : EntityBase, new()
+        where TModel2 : EntityBase, new()
         {
             Parameter.Validate(filter);
             _expressionStore.AddWhere(filter);
@@ -182,9 +182,9 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
 
 
         public QueryWrapper<TModel> Where<TModel1, TModel2, TModel3>(Expression<Func<TModel, TModel1, TModel2, TModel3, Boolean>> filter)
-        where TModel1 : new()
-        where TModel2 : new()
-        where TModel3 : new()
+        where TModel1 : EntityBase, new()
+        where TModel2 : EntityBase, new()
+        where TModel3 : EntityBase, new()
         {
             Parameter.Validate(filter);
             _expressionStore.AddWhere(filter);
@@ -192,10 +192,10 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         }
 
         public QueryWrapper<TModel> Where<TModel1, TModel2, TModel3, TModel4>(Expression<Func<TModel, TModel1, TModel2, TModel3, TModel4, Boolean>> filter)
-        where TModel1 : new()
-        where TModel2 : new()
-        where TModel3 : new()
-        where TModel4 : new()
+        where TModel1 : EntityBase, new()
+        where TModel2 : EntityBase, new()
+        where TModel3 : EntityBase, new()
+        where TModel4 : EntityBase, new()
         {
             Parameter.Validate(filter);
             _expressionStore.AddWhere(filter);
@@ -204,11 +204,11 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
 
 
         public QueryWrapper<TModel> Where<TModel1, TModel2, TModel3, TModel4, TModel5>(Expression<Func<TModel, TModel1, TModel2, TModel3, TModel4, TModel5, Boolean>> filter)
-        where TModel1 : new()
-        where TModel2 : new()
-        where TModel3 : new()
-        where TModel4 : new()
-        where TModel5 : new()
+        where TModel1 : EntityBase, new()
+        where TModel2 : EntityBase, new()
+        where TModel3 : EntityBase, new()
+        where TModel4 : EntityBase, new()
+        where TModel5 : EntityBase, new()
         {
             Parameter.Validate(filter);
             _expressionStore.AddWhere(filter);
@@ -226,6 +226,14 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         {
             Parameter.Validate(order);
             _expressionStore.AddOrderBy(order, OrderByType.ASC);
+            return this;
+        }
+
+        public QueryWrapper<TModel> Include<TModel1>(Expression<Func<TModel, TModel1>> include)
+        where TModel1 : EntityBase, new()
+        {
+            Parameter.Validate(include);
+            _expressionStore.AddInclude(include);
             return this;
         }
 
