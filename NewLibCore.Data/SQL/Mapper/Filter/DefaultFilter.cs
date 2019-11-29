@@ -9,12 +9,12 @@ namespace NewLibCore.Data.SQL.MergeExpression
     /// 默认的合并查询表达式 
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    internal class DefaultMerge<T> : Merge<T> where T : EntityBase
+    internal class DefaultFilter<T> : FilterBase<T> where T : EntityBase
     {
-        internal DefaultMerge(Expression<Func<T, Boolean>> exp)
+        internal DefaultFilter(Expression<Func<T, Boolean>> filter)
         {
-            Parameter.Validate(exp);
-            MergeExpression = exp;
+            Parameter.Validate(filter);
+            Filter = filter;
         }
     }
 }

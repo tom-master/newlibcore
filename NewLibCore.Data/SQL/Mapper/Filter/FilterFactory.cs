@@ -15,9 +15,9 @@ namespace NewLibCore.Data.SQL.MergeExpression
         /// <param name="exp"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static Merge<T> Create<T>(Expression<Func<T, Boolean>> exp = default) where T : EntityBase
+        public static FilterBase<T> Create<T>(Expression<Func<T, Boolean>> filter = default) where T : EntityBase
         {
-            return new DefaultMerge<T>(exp == null ? a => true : exp);
+            return new DefaultFilter<T>(filter ?? (a => true));
         }
     }
 }

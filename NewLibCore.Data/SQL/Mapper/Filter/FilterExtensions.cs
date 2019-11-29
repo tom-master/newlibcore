@@ -9,7 +9,7 @@ namespace NewLibCore.Data.SQL.MergeExpression
     /// <summary>
     /// 合并扩展
     /// </summary>
-    public static class MergeExtensions
+    public static class FilterExtensions
     {
 
         /// <summary>
@@ -18,26 +18,26 @@ namespace NewLibCore.Data.SQL.MergeExpression
         /// <param name="left"></param>
         /// <param name="right"></param>
         /// <typeparam name="T"></typeparam>
-        public static void And<T>(this Merge<T> left, Expression<Func<T, Boolean>> right) where T : EntityBase
+        public static void And<T>(this FilterBase<T> left, Expression<Func<T, Boolean>> right) where T : EntityBase
         {
             Parameter.Validate(left);
-            Parameter.Validate(left.MergeExpression);
+            Parameter.Validate(left.Filter);
 
             Parameter.Validate(right);
 
-            if (left.MergeExpression == null)
+            if (left.Filter == null)
             {
-                left.MergeExpression = right;
+                left.Filter = right;
                 return;
             }
 
             var type = typeof(T);
             var internalParameter = Expression.Parameter(type, type.GetTableName().AliasName);
             var parameterVister = new ParameterVisitor(internalParameter);
-            var leftBody = parameterVister.Replace(left.MergeExpression.Body);
+            var leftBody = parameterVister.Replace(left.Filter.Body);
             var rightBody = parameterVister.Replace(right.Body);
             var newExpression = Expression.AndAlso(leftBody, rightBody);
-            left.MergeExpression = Expression.Lambda<Func<T, Boolean>>(newExpression, internalParameter);
+            left.Filter = Expression.Lambda<Func<T, Boolean>>(newExpression, internalParameter);
         }
 
         /// <summary>
@@ -46,26 +46,26 @@ namespace NewLibCore.Data.SQL.MergeExpression
         /// <param name="left"></param>
         /// <param name="right"></param>
         /// <typeparam name="T"></typeparam>
-        public static void Or<T>(this Merge<T> left, Expression<Func<T, Boolean>> right) where T : EntityBase
+        public static void Or<T>(this FilterBase<T> left, Expression<Func<T, Boolean>> right) where T : EntityBase
         {
             Parameter.Validate(left);
-            Parameter.Validate(left.MergeExpression);
+            Parameter.Validate(left.Filter);
 
             Parameter.Validate(right);
 
-            if (left.MergeExpression == null)
+            if (left.Filter == null)
             {
-                left.MergeExpression = right;
+                left.Filter = right;
                 return;
             }
 
             var type = typeof(T);
             var internalParameter = Expression.Parameter(type, type.GetTableName().AliasName);
             var parameterVister = new ParameterVisitor(internalParameter);
-            var leftBody = parameterVister.Replace(left.MergeExpression.Body);
+            var leftBody = parameterVister.Replace(left.Filter.Body);
             var rightBody = parameterVister.Replace(right.Body);
             var orExpression = Expression.OrElse(leftBody, rightBody);
-            left.MergeExpression = Expression.Lambda<Func<T, Boolean>>(orExpression, internalParameter);
+            left.Filter = Expression.Lambda<Func<T, Boolean>>(orExpression, internalParameter);
         }
 
         /// <summary>
@@ -73,15 +73,15 @@ namespace NewLibCore.Data.SQL.MergeExpression
         /// </summary>
         /// <param name="left"></param>
         /// <typeparam name="T"></typeparam>
-        public static void Not<T>(this Merge<T> left) where T : EntityBase
+        public static void Not<T>(this FilterBase<T> left) where T : EntityBase
         {
             Parameter.Validate(left);
-            Parameter.Validate(left.MergeExpression);
+            Parameter.Validate(left.Filter);
 
-            var lambdaExpression = (LambdaExpression)left.MergeExpression;
+            var lambdaExpression = (LambdaExpression)left.Filter;
             var internalParameter = lambdaExpression.Parameters[0];
             var newExpression = Expression.Not(lambdaExpression.Body);
-            left.MergeExpression = Expression.Lambda<Func<T, Boolean>>(newExpression, internalParameter);
+            left.Filter = Expression.Lambda<Func<T, Boolean>>(newExpression, internalParameter);
         }
     }
 }
