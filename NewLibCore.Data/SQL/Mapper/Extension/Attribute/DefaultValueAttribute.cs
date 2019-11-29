@@ -57,7 +57,7 @@ namespace NewLibCore.Data.SQL.Mapper
                     }
                     else if (type == typeof(Guid))
                     {
-                        Value = Guid.NewGuid().ToString();
+                        Value = default(Guid);
                     }
                     else if (type.IsNumeric())
                     {

@@ -20,7 +20,7 @@ namespace NewLibCore.Run
 
             MapperConfig.ConnectionStringName = "NewCrmDatabase";
 
-
+            var r1 = default(Guid).ToString();
             // for (var i = 0; i < 4; i++)
             // {
             //     var thread = new Thread(new ParameterizedThreadStart((a) =>
