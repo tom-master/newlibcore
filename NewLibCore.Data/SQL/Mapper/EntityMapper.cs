@@ -89,20 +89,6 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             var expressionStore = new ExpressionStore();
             expressionStore.AddFrom<TModel>();
-
-            if (MapperConfig.MapperType == MapperType.MSSQL && MapperConfig.MsSqlPaginationVersion == MsSqlPaginationVersion.None)
-            {
-                var r = SqlQuery("SELECT @@VERSION").FirstOrDefault<String>();
-                if (r.IndexOf("Microsoft SQL Server 2012") != -1)
-                {
-                    MapperConfig.MsSqlPaginationVersion = MsSqlPaginationVersion.LessThen2012;
-                }
-                else
-                {
-                    MapperConfig.MsSqlPaginationVersion = MsSqlPaginationVersion.GreaterThan2012;
-                }
-            }
-
             return new QueryWrapper<TModel>(expressionStore, _serviceScope.ServiceProvider);
         }
 

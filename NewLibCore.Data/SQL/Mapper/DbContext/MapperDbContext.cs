@@ -57,6 +57,25 @@ namespace NewLibCore.Data.SQL.Mapper
             {
                 RunDiagnosis.Info("开启连接");
                 _connection.Open();
+                try
+                {
+                    if (MapperConfig.MapperType == MapperType.MSSQL && MapperConfig.MsSqlPaginationVersion == MsSqlPaginationVersion.None)
+                    {
+                        var version = Int32.Parse(_connection.ServerVersion.Substring(0, _connection.ServerVersion.IndexOf(".")));
+                        if (version <= 11)
+                        {
+                            MapperConfig.MsSqlPaginationVersion = MsSqlPaginationVersion.LessThen2012;
+                        }
+                        else
+                        {
+                            MapperConfig.MsSqlPaginationVersion = MsSqlPaginationVersion.GreaterThan2012;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MapperConfig.Logger.Error($@"获取mssql版本失败:{ex}");
+                }
             }
         }
 

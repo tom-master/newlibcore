@@ -85,6 +85,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
             Parameter.Validate(pageIndex);
             Parameter.Validate(pageSize);
             _expressionStore.AddPage(pageIndex, pageSize);
+
             return this;
         }
 
