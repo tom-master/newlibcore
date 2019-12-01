@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
+using NewLibCore.Data.SQL.Mapper.Extension;
 using NewLibCore.Data.SQL.Mapper.Store;
 using NewLibCore.Validate;
 
@@ -26,7 +30,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         internal override ExecuteResult Execute()
         {
             var mainTable = _expressionStore.From.AliaNameMapper[0];
-            var (Fields, _) = StatementParse(_expressionStore.MergeTypes().ToArray());
+            var (Fields, _) = ParseSelect();
 
             var parserResult = ParserResult.CreateResult();
             parserResult.Append(String.Format(TemplateBase.SelectTemplate, Fields, mainTable.Key, mainTable.Value));
@@ -34,8 +38,8 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
             var (sql, parameters) = Parser.CreateParser(ServiceProvider).ExecuteParser(_expressionStore);
             parserResult.Append(sql, parameters);
 
-            //当出现查询但张表不加Where条件时，则强制将IsDeleted=0添加到后面
-            if (_expressionStore.Where == null)
+            //当出现查询不加Where条件或调用Include方法时，则强制将IsDeleted=0添加到后面
+            if (_expressionStore.Where == null && !_expressionStore.MergeAliasMapper().Any())
             {
                 parserResult.Append($@"{PredicateType.AND} {mainTable.Value}.IsDeleted = 0");
             }
@@ -54,13 +58,13 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
                 {
                     throw new Exception("分页中没有指定排序字段");
                 }
-                var (fields, tableName) = StatementParse(/*_expressionStore.Order*/);
+                var (fields, tableName) = ParseOrder();
                 var orderTemplate = TemplateBase.CreateOrderBy(_expressionStore.Order.OrderBy, $@"{tableName}.{fields}");
                 parserResult = TemplateBase.CreatePagination(_expressionStore.Pagination.Index, _expressionStore.Pagination.Size, orderTemplate, parserResult);
             }
             else if (_expressionStore.Order != null)
             {
-                var (fields, tableName) = StatementParse(/*_expressionStore.Order*/);
+                var (fields, tableName) = ParseOrder();
                 var orderTemplate = TemplateBase.CreateOrderBy(_expressionStore.Order.OrderBy, $@"{tableName}.{fields}");
                 parserResult.Append(orderTemplate);
             }
@@ -68,58 +72,48 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
             return parserResult.Execute(ServiceProvider);
         }
 
-        /// <summary>
-        ///判断表达式语句类型并转换为相应的sql
-        /// </summary>
-        /// <param name="expressionMapper">表达式分解后的对象</param>
-        /// <returns></returns>
-        private static (String Fields, String AliasName) StatementParse(params Type[] types)
+        private (String Fields, String AliasName) ParseOrder()
         {
+            var modelAliasName = new List<String>();
+            var fields = (LambdaExpression)_expressionStore.Order.Expression;
+            var aliasName = fields.Parameters[0].Type.GetTableName().AliasName;
+            if (fields.Body.NodeType == ExpressionType.Constant)
+            {
+                var constant = (ConstantExpression)fields.Body;
+                return (constant.Value + "", aliasName);
+            }
 
-
+            if (fields.Body.NodeType == ExpressionType.MemberAccess)
+            {
+                var members = (fields.Body as MemberExpression);
+                return (members.Member.Name, aliasName);
+            }
             return ("", "");
-            //var modelAliasName = new List<String>();
-            //if (expressionMapperBase == null) //如果表达式语句为空则表示需要翻译为SELECT a.xxx,a.xxx,a.xxx 类型的语句
-            //{
-            //    var modelType = typeof(TModel);
-            //    var f = new List<String>();
-            //    var aliasName = modelType.GetTableName().AliasName;
-            //    modelAliasName.Add(aliasName);
-            //    var mainModelPropertys = modelType.GetProperties().Where(w => w.GetCustomAttributes<PropertyValidate>().Any()).ToList();
-            //    foreach (var item in mainModelPropertys)
-            //    {
-            //        f.Add($@"{aliasName}.{item.Name}");
-            //    }
-            //    return (String.Join(",", f), modelAliasName.FirstOrDefault());
-            //}
+        }
 
-            //var fields = (LambdaExpression)expressionMapperBase.Expression;
-            //foreach (var item in fields.Parameters)
-            //{
-            //    modelAliasName.Add(item.Type.GetTableName().AliasName);
-            //}
+        private (String Fields, String AliasName) ParseSelect()
+        {
+            if (_expressionStore.Select != null)
+            {
+                var modelAliasName = new List<String>();
+                var fields = (LambdaExpression)_expressionStore.Select.Expression;
+                modelAliasName.AddRange(fields.Parameters.Select(s => s.Type.GetTableName().AliasName));
 
-            //if (fields.Body.NodeType == ExpressionType.Constant)
-            //{
-            //    var constant = (ConstantExpression)fields.Body;
-            //    return (constant.Value + "", modelAliasName.FirstOrDefault());
-            //}
 
-            //if (fields.Body.NodeType == ExpressionType.MemberAccess)
-            //{
-            //    var members = (fields.Body as MemberExpression);
-            //    return (members.Member.Name, modelAliasName.FirstOrDefault());
-            //}
+                var anonymousObjFields = new List<String>();
+                var bodyArguments = (fields.Body as NewExpression).Arguments;
+                foreach (var item in bodyArguments)
+                {
+                    var member = (MemberExpression)item;
+                    var fieldName = ((ParameterExpression)member.Expression).Type.GetTableName().AliasName;
+                    anonymousObjFields.Add($@"{fieldName}.{member.Member.Name}");
+                }
+                return (String.Join(",", anonymousObjFields), modelAliasName.FirstOrDefault());
+            }
 
-            //var anonymousObjFields = new List<String>();
-            //var bodyArguments = (fields.Body as NewExpression).Arguments;
-            //foreach (var item in bodyArguments)
-            //{
-            //    var member = (MemberExpression)item;
-            //    var fieldName = ((ParameterExpression)member.Expression).Type.GetTableName().AliasName;
-            //    anonymousObjFields.Add($@"{fieldName}.{member.Member.Name}");
-            //}
-            //return (String.Join(",", anonymousObjFields), modelAliasName.FirstOrDefault());
+            var types = _expressionStore.MergeTypes().ToArray();
+            var propertys = types.SelectMany(s => s.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic).Where(w => w.GetCustomAttributes<PropertyValidate>().Any()).Select(s1 => $@"{s.GetTableName().AliasName}.{s1.Name}")).ToList();
+            return (String.Join(",", propertys), "");
         }
     }
 }

@@ -421,7 +421,7 @@ namespace NewLibCore.Data.SQL.Mapper.Store
                     }
                 }
             }
-            return types;
+            return types.Distinct().ToList();
         }
 
         /// <summary>

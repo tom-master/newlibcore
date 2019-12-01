@@ -99,6 +99,16 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
             return this;
         }
 
+        public QueryWrapper<TModel> Select<TModel1>(Expression<Func<TModel, TModel1, dynamic>> selector = null)
+        where TModel1 : EntityBase, new()
+        {
+            if (selector != null)
+            {
+                _expressionStore.AddSelect(selector);
+            }
+            return this;
+        }
+
         public QueryWrapper<TModel> Select<TModel1, TModel2>(Expression<Func<TModel1, TModel2, dynamic>> selector = null)
         where TModel1 : EntityBase, new()
         where TModel2 : EntityBase, new()
