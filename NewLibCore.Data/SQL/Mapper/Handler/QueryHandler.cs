@@ -30,26 +30,16 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         internal override ExecuteResult Execute()
         {
             var mainTable = _expressionStore.From.AliaNameMapper[0];
-            var (Fields, _) = ParseSelect();
-
             var parserResult = ParserResult.CreateResult();
-            parserResult.Append(String.Format(TemplateBase.SelectTemplate, Fields, mainTable.Key, mainTable.Value));
+            parserResult.Append(String.Format(TemplateBase.SelectTemplate, ParseSelect(), mainTable.Key, mainTable.Value));
 
             var (sql, parameters) = Parser.CreateParser(ServiceProvider).ExecuteParser(_expressionStore);
             parserResult.Append(sql, parameters);
 
-            //当出现查询不加Where条件或调用Include方法时，则强制将IsDeleted=0添加到后面
-            if (_expressionStore.Where == null && !_expressionStore.MergeAliasMapper().Any())
+            var aliasMapper = _expressionStore.MergeAliasMapper();
+            foreach (var aliasItem in aliasMapper)
             {
-                parserResult.Append($@"{PredicateType.AND} {mainTable.Value}.IsDeleted = 0");
-            }
-            else
-            {
-                var aliasMapper = _expressionStore.MergeAliasMapper();
-                foreach (var aliasItem in aliasMapper)
-                {
-                    parserResult.Append($@"{PredicateType.AND} {aliasItem.Value.ToLower()}.IsDeleted = 0");
-                }
+                parserResult.Append($@"{PredicateType.AND} {aliasItem.Value.ToLower()}.IsDeleted = 0");
             }
 
             if (_expressionStore.Pagination != null)
@@ -91,15 +81,13 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
             return ("", "");
         }
 
-        private (String Fields, String AliasName) ParseSelect()
+        private String ParseSelect()
         {
             if (_expressionStore.Select != null)
             {
-                var modelAliasName = new List<String>();
                 var fields = (LambdaExpression)_expressionStore.Select.Expression;
-                modelAliasName.AddRange(fields.Parameters.Select(s => s.Type.GetTableName().AliasName));
 
-
+                var modelAliasNames = fields.Parameters.Select(s => s.Type.GetTableName().AliasName);
                 var anonymousObjFields = new List<String>();
                 var bodyArguments = (fields.Body as NewExpression).Arguments;
                 foreach (var item in bodyArguments)
@@ -108,12 +96,12 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
                     var fieldName = ((ParameterExpression)member.Expression).Type.GetTableName().AliasName;
                     anonymousObjFields.Add($@"{fieldName}.{member.Member.Name}");
                 }
-                return (String.Join(",", anonymousObjFields), modelAliasName.FirstOrDefault());
+                return String.Join(",", anonymousObjFields);
             }
 
             var types = _expressionStore.MergeTypes().ToArray();
             var propertys = types.SelectMany(s => s.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic).Where(w => w.GetCustomAttributes<PropertyValidate>().Any()).Select(s1 => $@"{s.GetTableName().AliasName}.{s1.Name}")).ToList();
-            return (String.Join(",", propertys), "");
+            return String.Join(",", propertys);
         }
     }
 }

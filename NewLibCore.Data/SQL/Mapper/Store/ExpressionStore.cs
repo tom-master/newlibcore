@@ -388,6 +388,10 @@ namespace NewLibCore.Data.SQL.Mapper.Store
             {
                 newAliasMapper.AddRange(Joins.SelectMany(s => s.AliaNameMapper));
             }
+            if (Include != null)
+            {
+                newAliasMapper.AddRange(Include.AliaNameMapper);
+            }
             newAliasMapper = newAliasMapper.Select(s => s).Distinct().ToList();
 
             var sameGroup = newAliasMapper.GroupBy(a => a.Value);

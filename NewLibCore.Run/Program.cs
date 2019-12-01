@@ -37,7 +37,7 @@ namespace NewLibCore.Run
             {
                 for (var i = 0; i < 1; i++)
                 {
-                    var r = mapper.Query<User>().Include(a => a.Config).Select<Config>((a, b) => a.AddTime).ThenByDesc(t => t.AddTime).ToList();
+                    var r = mapper.Query<User>().Include(w => w.Config).Select<Config>((a, b) => new { a.Name, b.UserFace }).ThenByDesc(t => t.AddTime).ToList();
                 }
 
                 //var result = mapper.Query<User>().FirstOrDefault();
@@ -50,7 +50,7 @@ namespace NewLibCore.Run
             }
             #endregion
 
-            Console.ReadKey();
+            Console.Read();
         }
     }
 
