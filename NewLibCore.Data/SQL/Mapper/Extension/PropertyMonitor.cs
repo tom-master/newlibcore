@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using NewLibCore.Data.SQL.Mapper.Extension;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Data.SQL.Mapper.Extension
+namespace NewLibCore.Data.SQL.Mapper
 {
     /// <summary>
     /// 监控实体值变更

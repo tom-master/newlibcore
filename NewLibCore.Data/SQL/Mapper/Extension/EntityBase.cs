@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NewLibCore.Data.SQL.Mapper.Extension
+namespace NewLibCore.Data.SQL.Mapper
 {
     /// <summary>
     /// 实体基类
