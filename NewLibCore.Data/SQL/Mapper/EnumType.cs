@@ -8,35 +8,52 @@ namespace NewLibCore.Data.SQL.Mapper
     {
         NONE = 0,
 
+        /// <summary>
+        /// 选择
+        /// </summary>
         SELECT = 1,
 
+        /// <summary>
+        /// 更新
+        /// </summary>
         UPDATE = 2,
 
+        /// <summary>
+        /// 插入
+        /// </summary>
         INSERT = 3,
     }
 
     internal enum MsSqlPaginationVersion
     {
-        None = 1,
+        NONE = 1,
 
         /// <summary>
         /// 大于2012版本
         /// </summary>
-        GreaterThan2012 = 2,
+        GREATERTHAN2012 = 2,
 
         /// <summary>
         /// 小于2012版本
         /// </summary>
-        LessThen2012 = 3
+        LESSTHEN2012 = 3
     }
 
     /// <summary>
     /// 数据库类型
     /// </summary>
-    public enum MapperType
+    internal enum MapperType
     {
         NONE = 0,
+
+        /// <summary>
+        /// mssql
+        /// </summary>
         MSSQL = 1,
+
+        /// <summary>
+        /// mysql
+        /// </summary>
         MYSQL = 2
     }
 
@@ -45,7 +62,14 @@ namespace NewLibCore.Data.SQL.Mapper
     /// </summary>
     internal enum OrderByType
     {
+        /// <summary>
+        /// 升序
+        /// </summary>
         ASC = 1,
+
+        /// <summary>
+        /// 降序
+        /// </summary>
         DESC = 2
     }
 
@@ -55,10 +79,30 @@ namespace NewLibCore.Data.SQL.Mapper
     internal enum JoinRelation
     {
         NONE = 0,
+
+        /// <summary>
+        /// 内连接
+        /// </summary>
         INNER = 1,
+
+        /// <summary>
+        /// 左连接
+        /// </summary>
         LEFT = 2,
+
+        /// <summary>
+        /// 右连接
+        /// </summary>
         RIGHT = 3,
+
+        /// <summary>
+        /// 交叉连接
+        /// </summary>
         CROSS = 4,
+
+        /// <summary>
+        /// 自连接
+        /// </summary>
         SEIF = 5
     }
 

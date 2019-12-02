@@ -95,11 +95,15 @@ namespace NewLibCore.Data.SQL.Mapper.Store
             var parameterType = include.Parameters[0].Type;
             var foreignKeyType = include.Body.Type;
 
-            var foreignKeyPropertyInfo = parameterType.GetProperties(BindingFlags.Instance | BindingFlags.Public).FirstOrDefault(w => w.GetCustomAttributes<ForeignKeyAttribute>().Any() && w.GetCustomAttributes<ForeignKeyAttribute>().FirstOrDefault(f => f.ForeignType == foreignKeyType) != null);
+            //找到模型中用ForeignKeyAttribute修饰的外键
+            var foreignKeyPropertyInfo = parameterType.GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                .FirstOrDefault(w => w.GetCustomAttributes<ForeignKeyAttribute>().FirstOrDefault(f => f.ForeignType == foreignKeyType) != null);
             if (foreignKeyPropertyInfo == null)
             {
                 throw new ArgumentException($@"{parameterType.Name}中没有用{nameof(ForeignKeyAttribute)}修饰的属性");
             }
+
+            //找到对应外键的表用PrimaryKeyAttribute修饰的主键
             var foreignPropertyInfo = foreignKeyType.GetProperties(BindingFlags.Instance | BindingFlags.Public).FirstOrDefault(w => w.GetCustomAttributes<PrimaryKeyAttribute>().Any());
             if (foreignPropertyInfo == null)
             {
@@ -111,9 +115,9 @@ namespace NewLibCore.Data.SQL.Mapper.Store
 
             var left = Expression.Property(leftParameter, foreignKeyPropertyInfo);
             var right = Expression.Property(rightParameter, foreignPropertyInfo);
-            var r = Expression.Lambda<Func<TModel, TModel1, Boolean>>(Expression.Equal(left, right), leftParameter, rightParameter);
 
-            AddJoin(r, JoinRelation.INNER);
+            var includeExpression = Expression.Lambda<Func<TModel, TModel1, Boolean>>(Expression.Equal(left, right), leftParameter, rightParameter);
+            AddJoin(includeExpression, JoinRelation.LEFT);
         }
 
         /// <summary>

@@ -14,10 +14,10 @@ namespace NewLibCore.Run
 
             MapperConfig.InitDefaultSetting();
 
-            MapperConfig.UseMySql();
+            //MapperConfig.UseMySql();
             //MapperConfig.UseMsSql();
 
-            MapperConfig.ConnectionStringName = "NewCrmDatabase";
+            MapperConfig.ConnectionStringName = "NewCrmDatabase1";
 
             // for (var i = 0; i < 4; i++)
             // {
@@ -34,10 +34,9 @@ namespace NewLibCore.Run
 
             using (var mapper = EntityMapper.CreateMapper())
             {
-                for (var i = 0; i < 2; i++)
+                for (var i = 0; i < 10; i++)
                 {
-                    //var r = mapper.Query<User>().Include(w => w.Config).Select<Config>((a, b) => new { a.Name, b.UserFace }).ThenByDesc(t => t.AddTime).ToList();
-                    var r = mapper.SqlQuery("SELECT * FROM newcrm_user AS a ORDER BY a.AddTime DESC;");
+                    var r = mapper.Query<User>().Include(w => w.Config).ThenByDesc(t => t.AddTime).ToList();
                 }
 
                 //var result = mapper.Query<User>().FirstOrDefault();

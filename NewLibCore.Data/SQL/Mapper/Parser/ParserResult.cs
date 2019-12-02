@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Extensions.DependencyInjection;
-using NewLibCore.Data.SQL.Mapper.Cache;
+using NewLibCore.Data.SQL.Mapper.Component.Cache;
 using NewLibCore.Validate;
-using Newtonsoft.Json;
 
 namespace NewLibCore.Data.SQL.Mapper
 {

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Data;
-using NewLibCore.Data.SQL.Mapper.Cache;
+using NewLibCore.Data.SQL.Mapper.Component.Cache;
 using NewLibCore.Logger;
 using NewLibCore.Validate;
 
@@ -37,6 +37,9 @@ namespace NewLibCore.Data.SQL.Mapper
             }
         }
 
+        /// <summary>
+        /// 查询结果缓存
+        /// </summary>
         internal static QueryCacheBase QueryCache
         {
             get
@@ -68,7 +71,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <summary>
         /// mssql的版本
         /// </summary>
-        internal static MsSqlPaginationVersion MsSqlPaginationVersion { get; set; } = MsSqlPaginationVersion.None;
+        internal static MsSqlPaginationVersion MsSqlPaginationVersion { get; set; } = MsSqlPaginationVersion.NONE;
 
         /// <summary>
         /// 初始化默认配置
@@ -83,27 +86,45 @@ namespace NewLibCore.Data.SQL.Mapper
             _cache = () => new DefaultQueryCache();
         }
 
+        /// <summary>
+        /// 切换为mysql
+        /// </summary>
         public static void UseMySql()
         {
             MapperType = MapperType.MYSQL;
         }
 
+        /// <summary>
+        /// 切换为mssql
+        /// </summary>
         public static void UseMsSql()
         {
             MapperType = MapperType.MSSQL;
         }
 
+        /// <summary>
+        /// 设置事务隔离级别
+        /// </summary>
+        /// <param name="isolationLevel"></param>
         public static void SetTransactionLevel(IsolationLevel isolationLevel)
         {
             TransactionLevel = isolationLevel;
         }
 
+        /// <summary>
+        /// 设置自定义日志记录组件
+        /// </summary>
+        /// <param name="logger"></param>
         public static void SetLogger(ILogger logger)
         {
             Parameter.Validate(logger);
             _logger = () => logger;
         }
 
+        /// <summary>
+        /// 设置自定义查询缓存组件
+        /// </summary>
+        /// <param name="cache"></param>
         public static void SetCache(QueryCacheBase cache)
         {
             Parameter.Validate(cache);

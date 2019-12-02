@@ -58,7 +58,7 @@ namespace NewLibCore.Data.SQL.Mapper.Template
             Parameter.Validate(parserResult);
 
             var sql = "";
-            if (MapperConfig.MsSqlPaginationVersion == MsSqlPaginationVersion.GreaterThan2012)
+            if (MapperConfig.MsSqlPaginationVersion == MsSqlPaginationVersion.GREATERTHAN2012)
             {
                 sql = $@" {parserResult} {orderBy} OFFSET ({pageIndex * pageSize}) ROWS FETCH NEXT {pageSize} ROWS ONLY ;";
             }

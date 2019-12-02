@@ -60,16 +60,16 @@ namespace NewLibCore.Data.SQL.Mapper
                 _connection.Open();
                 try
                 {
-                    if (MapperConfig.MapperType == MapperType.MSSQL && MapperConfig.MsSqlPaginationVersion == MsSqlPaginationVersion.None)
+                    if (MapperConfig.MapperType == MapperType.MSSQL && MapperConfig.MsSqlPaginationVersion == MsSqlPaginationVersion.NONE)
                     {
                         var version = Int32.Parse(_connection.ServerVersion.Substring(0, _connection.ServerVersion.IndexOf(".")));
                         if (version <= 11)
                         {
-                            MapperConfig.MsSqlPaginationVersion = MsSqlPaginationVersion.LessThen2012;
+                            MapperConfig.MsSqlPaginationVersion = MsSqlPaginationVersion.LESSTHEN2012;
                         }
                         else
                         {
-                            MapperConfig.MsSqlPaginationVersion = MsSqlPaginationVersion.GreaterThan2012;
+                            MapperConfig.MsSqlPaginationVersion = MsSqlPaginationVersion.GREATERTHAN2012;
                         }
                     }
                 }
