@@ -41,7 +41,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
             var expressionStore = new ExpressionStore();
             expressionStore.AddWhere(_filter);
 
-            var (sql, parameters) = Parser.CreateParser(ServiceProvider).ExecuteParser(expressionStore);
+            var (sql, parameters) = Parser.CreateParser(ServiceProvider).ExecuteParse(expressionStore);
             var parserResult = ParserResult.CreateResult();
             var propertys = _modelInstance.GetChangedProperty();
             var (TableName, AliasName) = typeof(TModel).GetTableName();

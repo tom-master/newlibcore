@@ -33,7 +33,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
             var parserResult = ParserResult.CreateResult();
             parserResult.Append(String.Format(TemplateBase.SelectTemplate, ParseSelect(), mainTable.Key, mainTable.Value));
 
-            var (sql, parameters) = Parser.CreateParser(ServiceProvider).ExecuteParser(_expressionStore);
+            var (sql, parameters) = Parser.CreateParser(ServiceProvider).ExecuteParse(_expressionStore);
             parserResult.Append(sql, parameters);
 
             var aliasMapper = _expressionStore.MergeAliasMapper();
@@ -67,11 +67,6 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
             var modelAliasName = new List<String>();
             var fields = (LambdaExpression)_expressionStore.Order.Expression;
             var aliasName = fields.Parameters[0].Type.GetTableName().AliasName;
-            if (fields.Body.NodeType == ExpressionType.Constant)
-            {
-                var constant = (ConstantExpression)fields.Body;
-                return (constant.Value + "", aliasName);
-            }
 
             if (fields.Body.NodeType == ExpressionType.MemberAccess)
             {
