@@ -251,8 +251,8 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         {
             return RunDiagnosis.Watch(() =>
             {
-                HandlerBase handler = new QueryHandler<TModel>(_expressionStore, _serviceProvider);
-                return handler.Execute().FirstOrDefault<TModel>();
+                HandlerBase handler = new QueryHandler(_expressionStore, _serviceProvider);
+                return handler.Process().FirstOrDefault<TModel>();
             });
         }
 
@@ -260,8 +260,8 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         {
             return RunDiagnosis.Watch(() =>
             {
-                HandlerBase handler = new QueryHandler<TModel>(_expressionStore, _serviceProvider);
-                return handler.Execute().FirstOrDefault<TResult>();
+                HandlerBase handler = new QueryHandler(_expressionStore, _serviceProvider);
+                return handler.Process().FirstOrDefault<TResult>();
             });
         }
 
@@ -269,8 +269,8 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         {
             return RunDiagnosis.Watch(() =>
             {
-                HandlerBase handler = new QueryHandler<TModel>(_expressionStore, _serviceProvider);
-                return handler.Execute().ToList<TModel>();
+                HandlerBase handler = new QueryHandler(_expressionStore, _serviceProvider);
+                return handler.Process().ToList<TModel>();
             });
         }
 
@@ -278,8 +278,8 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         {
             return RunDiagnosis.Watch(() =>
             {
-                HandlerBase handler = new QueryHandler<TModel>(_expressionStore, _serviceProvider);
-                return handler.Execute().ToList<TResult>();
+                HandlerBase handler = new QueryHandler(_expressionStore, _serviceProvider);
+                return handler.Process().ToList<TResult>();
             });
         }
 
@@ -288,8 +288,8 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
             return RunDiagnosis.Watch(() =>
             {
                 Select((a) => "COUNT(*)");
-                HandlerBase handler = new QueryHandler<TModel>(_expressionStore, _serviceProvider);
-                return handler.Execute().FirstOrDefault<Int32>();
+                HandlerBase handler = new QueryHandler(_expressionStore, _serviceProvider);
+                return handler.Process().FirstOrDefault<Int32>();
             });
         }
     }

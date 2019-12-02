@@ -13,7 +13,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
     /// <typeparam name="TModel"></typeparam>
     internal class UpdateHandler<TModel> : HandlerBase where TModel : EntityBase, new()
     {
-        private readonly TModel _modelInstance;
+        private readonly TModel _instance;
 
         private readonly Expression<Func<TModel, Boolean>> _filter;
 
@@ -27,30 +27,29 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
             Parameter.Validate(filter);
 
             _filter = filter;
-            _modelInstance = model;
+            _instance = model;
         }
 
-        internal override ExecuteResult Execute()
+        protected override ExecuteResult Execute()
         {
-            _modelInstance.SetUpdateTime();
+            _instance.SetUpdateTime();
 
             if (MapperConfig.EnableModelValidate)
             {
-                _modelInstance.Validate();
+                _instance.Validate();
             }
             var expressionStore = new ExpressionStore();
             expressionStore.AddWhere(_filter);
 
             var (sql, parameters) = Parser.CreateParser(ServiceProvider).ExecuteParse(expressionStore);
             var parserResult = ParserResult.CreateResult();
-            var propertys = _modelInstance.GetChangedProperty();
-            var (TableName, AliasName) = typeof(TModel).GetTableName();
-
+            var propertys = _instance.GetChangedProperty();
+            var (TableName, AliasName) = _instance.GetType().GetTableName();
             parserResult.Append(String.Format(TemplateBase.UpdateTemplate, TableName, AliasName, String.Join(",", propertys.Select(p => $@"{AliasName}.{p.Key}=@{p.Key}"))), propertys.Select(c => new MapperParameter(c.Key, c.Value)));
             parserResult.Append(sql, parameters);
-            parserResult.Append($@"{PredicateType.AND} {AliasName}.{nameof(_modelInstance.IsDeleted)}=0");
+            parserResult.Append($@"{PredicateType.AND} {AliasName}.{nameof(_instance.IsDeleted)}=0");
             parserResult.Append($@"{TemplateBase.RowCount}");
-            _modelInstance.Reset();
+            _instance.Reset();
 
             return parserResult.Execute(ServiceProvider);
         }

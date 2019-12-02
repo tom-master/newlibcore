@@ -27,7 +27,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         /// 执行插入操作的翻译
         /// </summary>
         /// <returns></returns>
-        internal override ExecuteResult Execute()
+        protected override ExecuteResult Execute()
         {
             _instance.OnChanged();
             if (MapperConfig.EnableModelValidate)
@@ -37,7 +37,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
 
             var propertyInfos = _instance.GetChangedProperty();
 
-            var insert = String.Format(TemplateBase.InsertTemplate, typeof(TModel).GetTableName().TableName, String.Join(",", propertyInfos.Select(c => c.Key)), String.Join(",", propertyInfos.Select(key => $@"@{key.Key}")), TemplateBase.Identity);
+            var insert = String.Format(TemplateBase.InsertTemplate, _instance.GetType().GetTableName().TableName, String.Join(",", propertyInfos.Select(c => c.Key)), String.Join(",", propertyInfos.Select(key => $@"@{key.Key}")), TemplateBase.Identity);
             return ParserResult.CreateResult().Append(insert, propertyInfos.Select(c => new MapperParameter(c.Key, c.Value))).Execute(ServiceProvider);
         }
     }

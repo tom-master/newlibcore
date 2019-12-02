@@ -12,8 +12,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
     /// <summary>
     /// 查询处理类
     /// </summary>
-    /// <typeparam name="TModel"></typeparam>
-    internal class QueryHandler<TModel> : HandlerBase where TModel : new()
+    internal class QueryHandler : HandlerBase
     {
         internal readonly ExpressionStore _expressionStore;
 
@@ -27,7 +26,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         /// 执行查询操作的翻译
         /// </summary>
         /// <returns></returns>
-        internal override ExecuteResult Execute()
+        protected override ExecuteResult Execute()
         {
             var mainTable = _expressionStore.From.AliaNameMapper[0];
             var parserResult = ParserResult.CreateResult();

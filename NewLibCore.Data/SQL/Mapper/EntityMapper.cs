@@ -56,7 +56,7 @@ namespace NewLibCore.Data.SQL.Mapper
             return RunDiagnosis.Watch(() =>
             {
                 HandlerBase handler = new InsertHandler<TModel>(model, _serviceScope.ServiceProvider);
-                model.Id = handler.Execute().FirstOrDefault<Int32>();
+                model.Id = handler.Process().FirstOrDefault<Int32>();
                 return model;
             });
         }
@@ -76,7 +76,7 @@ namespace NewLibCore.Data.SQL.Mapper
             return RunDiagnosis.Watch(() =>
             {
                 HandlerBase handler = new UpdateHandler<TModel>(model, expression, _serviceScope.ServiceProvider);
-                return handler.Execute().FirstOrDefault<Int32>() > 0;
+                return handler.Process().FirstOrDefault<Int32>() > 0;
             });
         }
 
@@ -106,7 +106,7 @@ namespace NewLibCore.Data.SQL.Mapper
             return RunDiagnosis.Watch(() =>
             {
                 HandlerBase handler = new DirectSqlHandler(sql, parameters, _serviceScope.ServiceProvider);
-                return handler.Execute();
+                return handler.Process();
             });
         }
 

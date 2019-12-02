@@ -14,18 +14,18 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         /// <summary>
         /// 初始化一个Handler类的实例
         /// </summary>
-        protected internal HandlerBase(IServiceProvider serviceProvider)
+        internal HandlerBase(IServiceProvider serviceProvider)
         {
             Parameter.Validate(serviceProvider);
             ServiceProvider = serviceProvider;
         }
 
-        protected internal IServiceProvider ServiceProvider { get; private set; }
+        protected IServiceProvider ServiceProvider { get; }
 
         /// <summary>
         /// SQL模板
         /// </summary>
-        protected internal TemplateBase TemplateBase
+        protected TemplateBase TemplateBase
         {
             get
             {
@@ -33,10 +33,15 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
             }
         }
 
+        internal ExecuteResult Process()
+        {
+            return Execute();
+        }
+
         /// <summary>
         /// 执行表达式段的翻译
         /// </summary>
         /// <returns></returns>
-        internal abstract ExecuteResult Execute();
+        protected abstract ExecuteResult Execute();
     }
 }

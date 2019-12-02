@@ -23,7 +23,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
             _parameters = parameters;
         }
 
-        internal override ExecuteResult Execute()
+        protected override ExecuteResult Execute()
         {
             var sqlResult = ParserResult.CreateResult();
             sqlResult.Append(_sql, _parameters);
