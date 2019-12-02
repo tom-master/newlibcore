@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
+using NewLibCore.Data.SQL.Mapper.Extension;
 using NewLibCore.Data.SQL.Mapper.Template;
 using NewLibCore.Security;
 using NewLibCore.Validate;
@@ -107,14 +108,14 @@ namespace NewLibCore.Data.SQL.Mapper
                         }
                     }
                     var ex = $@"无法转换的类型{objType.Name}";
-                    MapperConfig.Logger.Error(ex);
+                    RunDiagnosis.Error(ex);
                     throw new Exception(ex);
                 }
                 return obj;
             }
             catch (Exception ex)
             {
-                MapperConfig.Logger.Error(ex.ToString());
+                RunDiagnosis.Error(ex.ToString());
                 throw;
             }
         }

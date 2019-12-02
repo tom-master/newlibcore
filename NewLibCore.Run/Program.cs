@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using NewLibCore.Data.SQL.Mapper;
 using NewLibCore.Data.SQL.Mapper.Validate;
 using Newtonsoft.Json;
@@ -35,10 +36,14 @@ namespace NewLibCore.Run
 
             using (var mapper = EntityMapper.CreateMapper())
             {
-                for (var i = 0; i < 10; i++)
+                var sw = new Stopwatch();
+                sw.Start();
+                for (var i = 0; i < 10000; i++)
                 {
-                    var r = mapper.Query<User>().Include(w => w.Config).ThenByDesc(t => t.AddTime).ToList();
+                    mapper.Query<User>().ToList();
                 }
+                sw.Stop();
+                Console.WriteLine($@"共花费{Math.Round(sw.Elapsed.TotalSeconds, 4)}秒");
 
                 //var result = mapper.Query<User>().FirstOrDefault();
                 //var result = mapper.Query<User>().ToList();

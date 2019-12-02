@@ -75,7 +75,7 @@ namespace NewLibCore.Data.SQL.Mapper
                 }
                 catch (Exception ex)
                 {
-                    MapperConfig.Logger.Error($@"获取mssql版本失败:{ex}");
+                    RunDiagnosis.Error($@"获取mssql版本失败:{ex}");
                 }
             }
         }

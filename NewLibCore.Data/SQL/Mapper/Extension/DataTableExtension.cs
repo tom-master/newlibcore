@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using Newtonsoft.Json;
 
 namespace NewLibCore.Data.SQL.Mapper.Extension
 {
@@ -43,6 +44,9 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
         {
             try
             {
+
+              
+
                 var list = new List<T>();
 
                 if (!typeof(T).IsComplexType())

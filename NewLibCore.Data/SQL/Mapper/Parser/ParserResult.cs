@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 using NewLibCore.Data.SQL.Mapper.Component.Cache;
+using NewLibCore.Data.SQL.Mapper.Extension;
 using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper
@@ -136,7 +137,7 @@ namespace NewLibCore.Data.SQL.Mapper
                 var cacheResult = _queryCache.Get(PrepareCacheKey());
                 if (cacheResult != null)
                 {
-                    MapperConfig.Logger.Info($@"缓存返回:{cacheResult}");
+                    RunDiagnosis.Info($@"缓存返回:{cacheResult}");
                     return (ExecuteResult)cacheResult;
                 }
             }

@@ -12,7 +12,7 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
 
         private static void CurrentDomain_UnhandledException(Object sender, UnhandledExceptionEventArgs e)
         {
-            MapperConfig.Logger.Error(((Exception)e.ExceptionObject).Message);
+            Error(((Exception)e.ExceptionObject).Message);
         }
 
         /// <summary>
@@ -27,7 +27,7 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
             sw.Start();
             var returnValue = func();
             sw.Stop();
-            MapperConfig.Logger.Info($@"共花费{Math.Round(sw.Elapsed.TotalSeconds, 4)}秒");
+            Info($@"共花费{Math.Round(sw.Elapsed.TotalSeconds, 4)}秒");
             return returnValue;
         }
 
