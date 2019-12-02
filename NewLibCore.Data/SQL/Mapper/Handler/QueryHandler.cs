@@ -73,7 +73,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
                 var members = (fields.Body as MemberExpression);
                 return (members.Member.Name, aliasName);
             }
-            return ("", "");
+            throw new Exception("不支持的ORDER BY 表达式");
         }
 
         private String ParseSelect()
