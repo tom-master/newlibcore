@@ -93,8 +93,8 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
                 return String.Join(",", anonymousObjFields);
             }
 
-            var types = _expressionStore.MergeTypes().ToArray();
-            var propertys = types.SelectMany(s => s.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic).Where(w => w.GetCustomAttributes<PropertyValidate>().Any()).Select(s1 => $@"{s.GetTableName().AliasName}.{s1.Name}")).ToList();
+            var types = _expressionStore.MergeParameterTypes();
+            var propertys = types.SelectMany(s => s.GetProperties(BindingFlags.Instance | BindingFlags.Public).Where(w => w.GetCustomAttributes<PropertyValidate>().Any()).Select(s1 => $@"{s.GetTableName().AliasName}.{s1.Name}")).ToList();
             return String.Join(",", propertys);
         }
     }

@@ -50,7 +50,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// </summary>
         internal void OnChanged()
         {
-            var propertys = _type.GetProperties().Where(w => w.GetCustomAttributes<PropertyValidate>().Any() && w.Name != "AddTime" && w.Name != "LastModifyTime");
+            var propertys = _type.GetProperties(BindingFlags.Instance | BindingFlags.Public).Where(w => w.GetCustomAttributes<PropertyValidate>().Any() && w.Name != "AddTime" && w.Name != "LastModifyTime");
             SetAddTime();
             SetUpdateTime();
             foreach (var item in propertys)

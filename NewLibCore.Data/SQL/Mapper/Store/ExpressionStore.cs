@@ -95,12 +95,12 @@ namespace NewLibCore.Data.SQL.Mapper.Store
             var parameterType = include.Parameters[0].Type;
             var foreignKeyType = include.Body.Type;
 
-            var foreignKeyPropertyInfo = parameterType.GetProperties().FirstOrDefault(w => w.GetCustomAttributes<ForeignKeyAttribute>().Any() && w.GetCustomAttributes<ForeignKeyAttribute>().FirstOrDefault(f => f.ForeignType == foreignKeyType) != null);
+            var foreignKeyPropertyInfo = parameterType.GetProperties(BindingFlags.Instance | BindingFlags.Public).FirstOrDefault(w => w.GetCustomAttributes<ForeignKeyAttribute>().Any() && w.GetCustomAttributes<ForeignKeyAttribute>().FirstOrDefault(f => f.ForeignType == foreignKeyType) != null);
             if (foreignKeyPropertyInfo == null)
             {
                 throw new ArgumentException($@"{parameterType.Name}中没有用{nameof(ForeignKeyAttribute)}修饰的属性");
             }
-            var foreignPropertyInfo = foreignKeyType.GetProperties().FirstOrDefault(w => w.GetCustomAttributes<PrimaryKeyAttribute>().Any());
+            var foreignPropertyInfo = foreignKeyType.GetProperties(BindingFlags.Instance | BindingFlags.Public).FirstOrDefault(w => w.GetCustomAttributes<PrimaryKeyAttribute>().Any());
             if (foreignPropertyInfo == null)
             {
                 throw new ArgumentException($@"{foreignKeyType.Name}中没有用{nameof(PrimaryKeyAttribute)}修饰的属性");
@@ -406,7 +406,11 @@ namespace NewLibCore.Data.SQL.Mapper.Store
             return newAliasMapper;
         }
 
-        internal IReadOnlyList<Type> MergeTypes()
+        /// <summary>
+        /// 合并返回表达式的参数类型
+        /// </summary>
+        /// <returns></returns>
+        internal IReadOnlyList<Type> MergeParameterTypes()
         {
             var types = new List<Type>();
             if (From != null)
