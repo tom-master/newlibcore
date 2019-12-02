@@ -2,7 +2,7 @@ using System;
 using NewLibCore.Security;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Data.SQL.Mapper
+namespace NewLibCore.Data.SQL.Mapper.Validate
 {
     /// <summary>
     /// 标记被修饰的类为数据库中的一个表

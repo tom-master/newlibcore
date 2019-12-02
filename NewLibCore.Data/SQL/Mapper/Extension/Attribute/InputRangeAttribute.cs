@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NewLibCore.Data.SQL.Mapper
+namespace NewLibCore.Data.SQL.Mapper.Validate
 {
     /// <summary>
     /// 标记被修饰的属性有输入范围

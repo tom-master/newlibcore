@@ -1,7 +1,7 @@
 ﻿using System;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Data.SQL.Mapper
+namespace NewLibCore.Data.SQL.Mapper.Validate
 {
     /// <summary>
     /// 标记被修饰的属性不能为空

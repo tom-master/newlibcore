@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using NewLibCore.Data.SQL.Mapper.Validate;
 using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper.Extension

@@ -1,4 +1,5 @@
 ﻿using System;
+using NewLibCore.Data.SQL.Mapper.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper
 {
