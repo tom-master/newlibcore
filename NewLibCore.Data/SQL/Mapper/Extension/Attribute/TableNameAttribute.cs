@@ -7,7 +7,7 @@ namespace NewLibCore.Data.SQL.Mapper.Validate
     /// <summary>
     /// 标记被修饰的类为数据库中的一个表
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
     public class TableNameAttribute : Attribute
     {
         /// <summary>

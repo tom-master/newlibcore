@@ -5,7 +5,7 @@ namespace NewLibCore.Data.SQL.Mapper.Validate
     /// <summary>
     /// 基本的属性验证类
     /// </summary>
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple = true, Inherited = true)]
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
     public abstract class PropertyValidate : Attribute
     {
         /// <summary>

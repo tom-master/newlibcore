@@ -18,7 +18,7 @@ namespace NewLibCore.Run
             //MapperConfig.UseMySql();
             //MapperConfig.UseMsSql();
 
-            MapperConfig.ConnectionStringName = "NewCrmDatabase1";
+            MapperConfig.ConnectionStringName = "NewCrmDatabase";
 
             // for (var i = 0; i < 4; i++)
             // {
