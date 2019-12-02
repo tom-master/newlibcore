@@ -6,6 +6,8 @@ namespace NewLibCore.Data.SQL.Mapper
     /// </summary>
     internal enum ExecuteType
     {
+        NONE = 0,
+
         SELECT = 1,
 
         UPDATE = 2,

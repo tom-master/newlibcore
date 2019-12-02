@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using NewLibCore.Data.SQL.Mapper;
-using NewLibCore.Data.SQL.Mapper.Extension;
 using Newtonsoft.Json;
 
 namespace NewLibCore.Run
@@ -35,9 +34,10 @@ namespace NewLibCore.Run
 
             using (var mapper = EntityMapper.CreateMapper())
             {
-                for (var i = 0; i < 1; i++)
+                for (var i = 0; i < 2; i++)
                 {
-                    var r = mapper.Query<User>().Include(w => w.Config).Select<Config>((a, b) => new { a.Name, b.UserFace }).ThenByDesc(t => t.AddTime).ToList();
+                    //var r = mapper.Query<User>().Include(w => w.Config).Select<Config>((a, b) => new { a.Name, b.UserFace }).ThenByDesc(t => t.AddTime).ToList();
+                    var r = mapper.SqlQuery("SELECT * FROM newcrm_user AS a ORDER BY a.AddTime DESC;");
                 }
 
                 //var result = mapper.Query<User>().FirstOrDefault();

@@ -15,6 +15,7 @@ namespace NewLibCore.Data.SQL.Mapper
     /// </summary>
     internal sealed class MapperDbContext : MapperDbContextBase
     {
+        private ExecuteType _executeType;
 
         private Boolean _disposed = false;
 
@@ -117,9 +118,14 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             Parameter.Validate(sql);
 
+            if (_executeType != ExecuteType.NONE)
+            {
+                return _executeType;
+            }
             var operationType = sql.Substring(0, sql.IndexOf(" "));
             if (Enum.TryParse<ExecuteType>(operationType, out var executeType))
             {
+                _executeType = executeType;
                 return executeType;
             }
 
