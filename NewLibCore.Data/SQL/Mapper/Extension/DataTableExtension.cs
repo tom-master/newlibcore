@@ -45,7 +45,13 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
             try
             {
 
-              
+                var key = MD.GetMD5(JsonConvert.SerializeObject(dt));
+
+                var result = MapperConfig.QueryCache.Get(key);
+                if (result != null)
+                {
+                    return (List<T>)result;
+                }
 
                 var list = new List<T>();
 
@@ -93,6 +99,9 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
                         list.Add(obj);
                     }
                 }
+
+                MapperConfig.QueryCache.Add(key, list);
+
                 return list;
             }
             catch (Exception ex)
