@@ -29,8 +29,10 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         /// <returns></returns>
         protected override ExecuteResult Execute()
         {
+
             var mainTable = _expressionStore.From.AliaNameMapper[0];
             ParserResult.Append(String.Format(TemplateBase.SelectTemplate, ParseSelect(), mainTable.Key, mainTable.Value));
+            return new ExecuteResult();
 
             var (sql, parameters) = Parser.ExecuteParse(_expressionStore);
             ParserResult.Append(sql, parameters);
@@ -84,7 +86,6 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
             {
                 var fields = (LambdaExpression)_expressionStore.Select.Expression;
 
-                var modelAliasNames = fields.Parameters.Select(s => s.Type.GetTableName().AliasName);
                 var anonymousObjFields = new List<String>();
                 var bodyArguments = (fields.Body as NewExpression).Arguments;
                 foreach (var item in bodyArguments)
@@ -97,7 +98,8 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
             }
 
             var types = _expressionStore.MergeParameterTypes();
-            var propertys = types.SelectMany(s => s.GetProperties(BindingFlags.Instance | BindingFlags.Public).Where(w => w.GetCustomAttributes<PropertyValidate>().Any()).Select(s1 => $@"{s.GetTableName().AliasName}.{s1.Name}")).ToList();
+            var propertys = types.SelectMany(s => s.GetProperties(BindingFlags.Instance | BindingFlags.Public)
+            .Where(w => w.GetCustomAttributes<PropertyValidate>().Any()).Select(s1 => $@"{s.GetTableName().AliasName}.{s1.Name}"));
             return String.Join(",", propertys);
         }
     }
