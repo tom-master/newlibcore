@@ -38,7 +38,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
             var propertyInfos = _instance.GetChangedProperty();
 
             var insert = String.Format(TemplateBase.InsertTemplate, _instance.GetType().GetTableName().TableName, String.Join(",", propertyInfos.Select(c => c.Key)), String.Join(",", propertyInfos.Select(key => $@"@{key.Key}")), TemplateBase.Identity);
-            return ParserResult.CreateResult().Append(insert, propertyInfos.Select(c => new MapperParameter(c.Key, c.Value))).Execute(ServiceProvider);
+            return ParserResult.Append(insert, propertyInfos.Select(c => new MapperParameter(c.Key, c.Value))).Execute(ServiceProvider);
         }
     }
 }

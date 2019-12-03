@@ -35,14 +35,13 @@ namespace NewLibCore.Data.SQL.Mapper.Template
             return String.Format(PredicateMapper[predicateType], left, right);
         }
 
-        internal override ParserResult CreatePagination(Int32 pageIndex, Int32 pageSize, String orderBy, ParserResult parserResult)
+        internal override String CreatePagination(Int32 pageIndex, Int32 pageSize, String orderBy,String rawSql)
         {
             Parameter.Validate(pageSize);
             Parameter.Validate(orderBy);
-            Parameter.Validate(parserResult);
+            Parameter.Validate(rawSql);
 
-            parserResult.Append($@" {orderBy} LIMIT {pageSize * (pageIndex - 1)},{pageSize} ;");
-            return parserResult;
+            return $@"{rawSql} {orderBy} LIMIT {pageSize * (pageIndex - 1)},{pageSize} ;";
         }
 
         internal override DbParameter CreateParameter()

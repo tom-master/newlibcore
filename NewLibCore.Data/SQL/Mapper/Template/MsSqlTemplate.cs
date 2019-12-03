@@ -51,24 +51,23 @@ namespace NewLibCore.Data.SQL.Mapper.Template
             return String.Format(PredicateMapper[predicateType], left, right);
         }
 
-        internal override ParserResult CreatePagination(Int32 pageIndex, Int32 pageSize, String orderBy, ParserResult parserResult)
+        internal override String CreatePagination(Int32 pageIndex, Int32 pageSize, String orderBy, String rawSql)
         {
             Parameter.Validate(pageSize);
             Parameter.Validate(orderBy);
-            Parameter.Validate(parserResult);
+            Parameter.Validate(rawSql);
 
             var sql = "";
             if (MapperConfig.MsSqlPaginationVersion == MsSqlPaginationVersion.GREATERTHAN2012)
             {
-                sql = $@" {parserResult} {orderBy} OFFSET ({pageIndex * pageSize}) ROWS FETCH NEXT {pageSize} ROWS ONLY ;";
+                sql = $@" {rawSql} {orderBy} OFFSET ({pageIndex * pageSize}) ROWS FETCH NEXT {pageSize} ROWS ONLY ;";
             }
             else
             {
-                sql = parserResult.ToString();
+                sql = rawSql;
                 sql = $@" SELECT * FROM ( {sql.Insert(sql.IndexOf(" "), $@" TOP({pageSize}) ROW_NUMBER() OVER({orderBy}) AS rownumber,")} ) AS temprow WHERE temprow.rownumber>({pageSize}*({pageIndex}-1)) {orderBy}";
             }
-            parserResult.ClearSql();
-            return parserResult.Append(sql);
+            return sql;
         }
 
         internal override DbParameter CreateParameter()

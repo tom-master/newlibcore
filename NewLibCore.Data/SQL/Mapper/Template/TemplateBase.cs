@@ -89,9 +89,9 @@ namespace NewLibCore.Data.SQL.Mapper.Template
         /// <param name="pageIndex"></param>
         /// <param name="pageSize"></param>
         /// <param name="orderBy"></param>
-        /// <param name="parserResult"></param>
+        /// <param name="rawSql"></param>
         /// <returns></returns>
-        internal abstract ParserResult CreatePagination(Int32 pageIndex, Int32 pageSize, String orderBy, ParserResult parserResult);
+        internal abstract String CreatePagination(Int32 pageIndex, Int32 pageSize, String orderBy, String rawSql);
 
         /// <summary>
         /// 创建谓词关系

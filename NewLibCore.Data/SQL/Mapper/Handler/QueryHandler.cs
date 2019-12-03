@@ -15,7 +15,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
     /// </summary>
     internal class QueryHandler : HandlerBase
     {
-        internal readonly ExpressionStore _expressionStore;
+        private readonly ExpressionStore _expressionStore;
 
         internal QueryHandler(ExpressionStore expressionStore, IServiceProvider serviceProvider) : base(serviceProvider)
         {
@@ -30,16 +30,15 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         protected override ExecuteResult Execute()
         {
             var mainTable = _expressionStore.From.AliaNameMapper[0];
-            var parserResult = ParserResult.CreateResult();
-            parserResult.Append(String.Format(TemplateBase.SelectTemplate, ParseSelect(), mainTable.Key, mainTable.Value));
+            ParserResult.Append(String.Format(TemplateBase.SelectTemplate, ParseSelect(), mainTable.Key, mainTable.Value));
 
-            var (sql, parameters) = Parser.CreateParser(ServiceProvider).ExecuteParse(_expressionStore);
-            parserResult.Append(sql, parameters);
+            var (sql, parameters) = Parser.ExecuteParse(_expressionStore);
+            ParserResult.Append(sql, parameters);
 
             var aliasMapper = _expressionStore.MergeAliasMapper();
             foreach (var aliasItem in aliasMapper)
             {
-                parserResult.Append($@"{PredicateType.AND} {aliasItem.Value.ToLower()}.IsDeleted = 0");
+                ParserResult.Append($@"{PredicateType.AND} {aliasItem.Value.ToLower()}.IsDeleted = 0");
             }
 
             if (_expressionStore.Pagination != null)
@@ -50,16 +49,19 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
                 }
                 var (fields, tableName) = ParseOrder();
                 var orderTemplate = TemplateBase.CreateOrderBy(_expressionStore.Order.OrderBy, $@"{tableName}.{fields}");
-                parserResult = TemplateBase.CreatePagination(_expressionStore.Pagination.Index, _expressionStore.Pagination.Size, orderTemplate, parserResult);
+
+                var newSql = TemplateBase.CreatePagination(_expressionStore.Pagination.Index, _expressionStore.Pagination.Size, orderTemplate, ParserResult.ToString());
+                ParserResult.ClearSql();
+                ParserResult.Append(newSql);
             }
             else if (_expressionStore.Order != null)
             {
                 var (fields, tableName) = ParseOrder();
                 var orderTemplate = TemplateBase.CreateOrderBy(_expressionStore.Order.OrderBy, $@"{tableName}.{fields}");
-                parserResult.Append(orderTemplate);
+                ParserResult.Append(orderTemplate);
             }
 
-            return parserResult.Execute(ServiceProvider);
+            return ParserResult.Execute(ServiceProvider);
         }
 
         private (String Fields, String AliasName) ParseOrder()

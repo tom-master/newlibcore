@@ -38,7 +38,7 @@ namespace NewLibCore.Run
             {
                 var sw = new Stopwatch();
                 sw.Start();
-                for (var i = 0; i < 10000; i++)
+                for (var i = 0; i < 5000; i++)
                 {
                     mapper.Query<User>().ToList();
                 }

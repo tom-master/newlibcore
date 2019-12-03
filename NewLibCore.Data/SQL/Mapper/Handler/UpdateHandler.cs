@@ -41,17 +41,16 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
             var expressionStore = new ExpressionStore();
             expressionStore.AddWhere(_filter);
 
-            var (sql, parameters) = Parser.CreateParser(ServiceProvider).ExecuteParse(expressionStore);
-            var parserResult = ParserResult.CreateResult();
+            var (sql, parameters) = Parser.ExecuteParse(expressionStore);
             var propertys = _instance.GetChangedProperty();
             var (TableName, AliasName) = _instance.GetType().GetTableName();
-            parserResult.Append(String.Format(TemplateBase.UpdateTemplate, TableName, AliasName, String.Join(",", propertys.Select(p => $@"{AliasName}.{p.Key}=@{p.Key}"))), propertys.Select(c => new MapperParameter(c.Key, c.Value)));
-            parserResult.Append(sql, parameters);
-            parserResult.Append($@"{PredicateType.AND} {AliasName}.{nameof(_instance.IsDeleted)}=0");
-            parserResult.Append($@"{TemplateBase.RowCount}");
+            ParserResult.Append(String.Format(TemplateBase.UpdateTemplate, TableName, AliasName, String.Join(",", propertys.Select(p => $@"{AliasName}.{p.Key}=@{p.Key}"))), propertys.Select(c => new MapperParameter(c.Key, c.Value)));
+            ParserResult.Append(sql, parameters);
+            ParserResult.Append($@"{PredicateType.AND} {AliasName}.{nameof(_instance.IsDeleted)}=0");
+            ParserResult.Append($@"{TemplateBase.RowCount}");
             _instance.Reset();
 
-            return parserResult.Execute(ServiceProvider);
+            return ParserResult.Execute(ServiceProvider);
         }
     }
 }
