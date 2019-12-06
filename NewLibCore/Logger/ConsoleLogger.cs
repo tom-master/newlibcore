@@ -32,7 +32,6 @@ namespace NewLibCore.Logger
 
         private void Write(LoggerLevel level, String message)
         {
-            return;
             ConsoleColor consoleColor = default;
             switch (level)
             {
