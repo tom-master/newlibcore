@@ -40,20 +40,17 @@ namespace NewLibCore.Data.SQL.Mapper
 
         private IReadOnlyList<KeyValuePair<String, String>> _tableAliasMapper;
 
-        private readonly IServiceProvider _serviceProvider;
-
         private readonly TemplateBase _templateBase;
 
         /// <summary>
         /// 初始化Parser类的新实例
         /// </summary>
-        /// <param name="serviceProvider"></param>
-        public Parser(IServiceProvider serviceProvider)
+        /// <param name="templateBase"></param>
+        public Parser(TemplateBase templateBase)
         {
-            Parameter.Validate(serviceProvider);
-
-            _serviceProvider = serviceProvider;
-            _templateBase = _serviceProvider.GetService<TemplateBase>();
+            Parameter.Validate(templateBase);
+ 
+            _templateBase = templateBase;
 
             _internalStore = new StringBuilder();
 

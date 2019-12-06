@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.Extensions.DependencyInjection;
 using NewLibCore.Data.SQL.Mapper.Component.Cache;
 using NewLibCore.Data.SQL.Mapper.Extension;
 using NewLibCore.Validate;
@@ -15,7 +14,7 @@ namespace NewLibCore.Data.SQL.Mapper
     {
         private StringBuilder _originSql;
 
-        private readonly IServiceProvider _serviceProvider;
+        private readonly MapperDbContextBase _mapperDbContextBase;
 
         private readonly IList<MapperParameter> _parameters;
 
@@ -24,9 +23,9 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <summary>
         /// 初始化一个TranslationResult类的实例
         /// </summary>
-        public ParserResult(IServiceProvider serviceProvider)
+        public ParserResult(MapperDbContextBase mapperDbContextBase)
         {
-            _serviceProvider = serviceProvider;
+            _mapperDbContextBase = mapperDbContextBase;
 
             _originSql = new StringBuilder();
             _parameters = new List<MapperParameter>();
@@ -60,7 +59,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <returns></returns>
         internal ExecuteResult Execute()
         {
-            var dbContext = _serviceProvider.GetService<MapperDbContextBase>();
+            var dbContext = _mapperDbContextBase;
             var executeType = dbContext.GetExecuteType(ToString());
 
             var executeResult = GetCache();

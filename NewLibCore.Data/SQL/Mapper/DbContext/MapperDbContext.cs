@@ -28,10 +28,10 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <summary>
         /// 初始化MapperDbContext类的新实例
         /// </summary>
-        public MapperDbContext(IServiceProvider serviceProvider)
+        public MapperDbContext(TemplateBase templateBase)
         {
-            _templateBase = serviceProvider.GetService<TemplateBase>();
-            _connection = _templateBase.CreateDbConnection();
+            _templateBase = templateBase;
+            _connection = templateBase.CreateDbConnection();
         }
 
         protected internal override void Commit()
