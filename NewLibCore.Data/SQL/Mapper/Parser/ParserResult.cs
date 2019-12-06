@@ -15,6 +15,8 @@ namespace NewLibCore.Data.SQL.Mapper
     {
         private StringBuilder _originSql;
 
+        private readonly IServiceProvider _serviceProvider;
+
         private readonly IList<MapperParameter> _parameters;
 
         private readonly QueryCacheBase _queryCache = MapperConfig.QueryCache;
@@ -22,20 +24,14 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <summary>
         /// 初始化一个TranslationResult类的实例
         /// </summary>
-        private ParserResult()
+        public ParserResult(IServiceProvider serviceProvider)
         {
+            _serviceProvider = serviceProvider;
+
             _originSql = new StringBuilder();
             _parameters = new List<MapperParameter>();
         }
 
-        /// <summary>
-        /// 创建一个TranslationResult类的实例
-        /// </summary>
-        /// <returns></returns>
-        internal static ParserResult CreateResult()
-        {
-            return new ParserResult();
-        }
 
         /// <summary>
         /// 追加一个sql语句和一组EntityParameter对象
@@ -62,9 +58,9 @@ namespace NewLibCore.Data.SQL.Mapper
         /// </summary>
         /// <param name="executionCore">执行翻译结果的对象</param>
         /// <returns></returns>
-        internal ExecuteResult Execute(IServiceProvider serviceProvider)
+        internal ExecuteResult Execute()
         {
-            var dbContext = serviceProvider.GetService<MapperDbContextBase>();
+            var dbContext = _serviceProvider.GetService<MapperDbContextBase>();
             var executeType = dbContext.GetExecuteType(ToString());
 
             var executeResult = GetCache();

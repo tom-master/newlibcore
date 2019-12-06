@@ -48,7 +48,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// 初始化Parser类的新实例
         /// </summary>
         /// <param name="serviceProvider"></param>
-        private Parser(IServiceProvider serviceProvider)
+        public Parser(IServiceProvider serviceProvider)
         {
             Parameter.Validate(serviceProvider);
 
@@ -64,15 +64,6 @@ namespace NewLibCore.Data.SQL.Mapper
             _tableAliasMapper = new List<KeyValuePair<String, String>>();
         }
 
-        /// <summary>
-        /// 初始化Parser类的新实例
-        /// </summary>
-        /// <param name="serviceProvider"></param>
-        /// <returns></returns>
-        internal static Parser CreateParser(IServiceProvider serviceProvider)
-        {
-            return new Parser(serviceProvider);
-        }
 
         /// <summary>
         /// 执行Expression的解析

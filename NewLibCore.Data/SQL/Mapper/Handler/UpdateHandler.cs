@@ -50,7 +50,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
             ParserResult.Append($@"{TemplateBase.RowCount}");
             _instance.Reset();
 
-            return ParserResult.Execute(ServiceProvider);
+            return ParserResult.Execute();
         }
     }
 }

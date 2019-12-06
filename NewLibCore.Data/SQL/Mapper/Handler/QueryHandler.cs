@@ -62,7 +62,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
                 ParserResult.Append(orderTemplate);
             }
 
-            return ParserResult.Execute(ServiceProvider);
+            return ParserResult.Execute();
         }
 
         private (String Fields, String AliasName) ParseOrder()

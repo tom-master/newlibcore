@@ -11,9 +11,11 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
     /// <typeparam name="TModel"></typeparam>
     internal abstract class HandlerBase
     {
-        private readonly Parser _parser;
+        private readonly IParser _parser;
 
         private readonly ParserResult _parserResult;
+
+        private readonly IServiceProvider _serviceProvider;
 
         /// <summary>
         /// 初始化一个Handler类的实例
@@ -21,12 +23,11 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         internal HandlerBase(IServiceProvider serviceProvider)
         {
             Parameter.Validate(serviceProvider);
-            ServiceProvider = serviceProvider;
-            _parserResult = ParserResult.CreateResult();
-            _parser = Parser.CreateParser(serviceProvider);
+            _serviceProvider = serviceProvider;
+            _parserResult = serviceProvider.GetService<ParserResult>();
+            _parser = serviceProvider.GetService<IParser>();
         }
 
-        protected IServiceProvider ServiceProvider { get; }
 
         /// <summary>
         /// SQL模板
@@ -35,7 +36,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         {
             get
             {
-                return ServiceProvider.GetService<TemplateBase>();
+                return _serviceProvider.GetService<TemplateBase>();
             }
         }
 
@@ -47,7 +48,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
             }
         }
 
-        protected Parser Parser
+        protected IParser Parser
         {
             get
             {
@@ -66,6 +67,6 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         /// <returns></returns>
         protected abstract ExecuteResult Execute();
 
-        
+
     }
 }

@@ -29,9 +29,13 @@ namespace NewLibCore.Data.SQL.Mapper
             {
                 services = services.AddScoped<TemplateBase, MySqlTemplate>();
             }
-            _serviceScope = services.AddScoped<MapperDbContextBase, MapperDbContext>()
-                            .BuildServiceProvider()
-                            .CreateScope();
+
+            services = services.AddScoped<MapperDbContextBase, MapperDbContext>();
+
+            services = services.AddTransient<IParser, Parser>();
+            services = services.AddTransient<ParserResult>();
+            
+            _serviceScope = services.BuildServiceProvider().CreateScope();
         }
 
         /// <summary>
