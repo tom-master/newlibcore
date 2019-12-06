@@ -141,8 +141,7 @@ namespace NewLibCore.Data.SQL.Mapper
                     return (ExecuteResult)cacheResult;
                 }
             }
-
-            return default;
+            return null;
         }
 
         /// <summary>

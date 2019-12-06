@@ -32,8 +32,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
 
             var mainTable = _expressionStore.From.AliaNameMapper[0];
             ParserResult.Append(String.Format(TemplateBase.SelectTemplate, ParseSelect(), mainTable.Key, mainTable.Value));
-            return new ExecuteResult();
-
+        
             var (sql, parameters) = Parser.ExecuteParse(_expressionStore);
             ParserResult.Append(sql, parameters);
 
@@ -98,8 +97,11 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
             }
 
             var types = _expressionStore.MergeParameterTypes();
+
+            var tableNames = types.Select(s => new KeyValuePair<String, String>(s.Name, s.GetTableName().AliasName)).ToList();
             var propertys = types.SelectMany(s => s.GetProperties(BindingFlags.Instance | BindingFlags.Public)
-            .Where(w => w.GetCustomAttributes<PropertyValidate>().Any()).Select(s1 => $@"{s.GetTableName().AliasName}.{s1.Name}"));
+            .Where(w => w.GetCustomAttributes<PropertyValidate>().Any())
+            .Select(s1 => $@"{tableNames.FirstOrDefault(w => w.Key == s.Name).Value}.{s1.Name}"));
             return String.Join(",", propertys);
         }
     }
