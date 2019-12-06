@@ -48,6 +48,7 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
                 var result = MapperConfig.QueryCache.Get(key);
                 if (result != null)
                 {
+                    RunDiagnosis.Info($@"获取DataTable缓存:{JsonConvert.SerializeObject(result)}");
                     return (List<T>)result;
                 }
 

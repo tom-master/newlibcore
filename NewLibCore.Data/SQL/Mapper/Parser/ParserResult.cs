@@ -137,10 +137,11 @@ namespace NewLibCore.Data.SQL.Mapper
                 var cacheResult = _queryCache.Get(PrepareCacheKey());
                 if (cacheResult != null)
                 {
-                    RunDiagnosis.Info($@"缓存返回:{cacheResult}");
+                    RunDiagnosis.Info($@"SQL查询缓存返回:{cacheResult}");
                     return (ExecuteResult)cacheResult;
                 }
             }
+            RunDiagnosis.Warn($@"SQL查询缓存为NULL,将进行实际的SQL查询");
             return null;
         }
 
