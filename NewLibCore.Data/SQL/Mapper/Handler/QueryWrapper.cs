@@ -267,13 +267,16 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
 
         public List<TModel> ToList()
         {
-            return RunDiagnosis.Watch(() =>
-            {
-                HandlerBase handler = new QueryHandler(_expressionStore, _serviceProvider);
-                // handler.Process();
-                // return default(List<TModel>);
-                return handler.Process().ToList<TModel>();
-            });
+            HandlerBase handler = new QueryHandler(_expressionStore, _serviceProvider);
+            //handler.Process();
+            return default(List<TModel>);
+            // return RunDiagnosis.Watch(() =>
+            // {
+            //     HandlerBase handler = new QueryHandler(_expressionStore, _serviceProvider);
+            //     handler.Process();
+            //     return default(List<TModel>);
+            //     // return handler.Process().ToList<TModel>();
+            // });
         }
 
         public List<TResult> ToList<TResult>() where TResult : new()

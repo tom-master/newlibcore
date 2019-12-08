@@ -40,7 +40,7 @@ namespace NewLibCore.Run
                 sw.Start();
                 for (var i = 0; i < 1000; i++)
                 {
-                    mapper.Query<User>().ToList();
+                    mapper.Query<User>().Include(d=>d.Config).ToList();
                 }
                 sw.Stop();
                 Console.WriteLine($@"共花费{Math.Round(sw.Elapsed.TotalSeconds, 4)}秒");
@@ -54,6 +54,7 @@ namespace NewLibCore.Run
                 //var result = mapper.Query<App>().RightJoin<Member>((a, m) => a.Id == m.AppId).ToList();
             }
             #endregion
+            
 
             Console.Read();
         }

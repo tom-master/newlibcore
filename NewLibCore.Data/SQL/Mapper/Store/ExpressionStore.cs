@@ -98,14 +98,15 @@ namespace NewLibCore.Data.SQL.Mapper.Store
 
             //找到模型中用ForeignKeyAttribute修饰的外键
             var foreignKeyPropertyInfo = parameterType.GetProperties(BindingFlags.Instance | BindingFlags.Public)
-                .FirstOrDefault(w => w.GetCustomAttributes<ForeignKeyAttribute>().FirstOrDefault(f => f.ForeignType == foreignKeyType) != null);
+                .FirstOrDefault(w => w.GetCustomAttributes<ForeignKeyAttribute>().Any(f => f.ForeignType == foreignKeyType));
             if (foreignKeyPropertyInfo == null)
             {
                 throw new ArgumentException($@"{parameterType.Name}中没有用{nameof(ForeignKeyAttribute)}修饰的属性");
             }
 
             //找到对应外键的表用PrimaryKeyAttribute修饰的主键
-            var foreignPropertyInfo = foreignKeyType.GetProperties(BindingFlags.Instance | BindingFlags.Public).FirstOrDefault(w => w.GetCustomAttributes<PrimaryKeyAttribute>().Any());
+            var foreignPropertyInfo = foreignKeyType.GetProperties(BindingFlags.Instance | BindingFlags.Public)
+            .FirstOrDefault(w => w.GetCustomAttributes<PrimaryKeyAttribute>().Any());
             if (foreignPropertyInfo == null)
             {
                 throw new ArgumentException($@"{foreignKeyType.Name}中没有用{nameof(PrimaryKeyAttribute)}修饰的属性");
@@ -132,7 +133,7 @@ namespace NewLibCore.Data.SQL.Mapper.Store
             Where = new SimpleExpressionMapper
             {
                 Expression = filter,
-                AliaNameMapper = ParseToAliasNames(filter)
+                AliaNameMapper = ParseToAliasNames(((LambdaExpression)filter).Parameters)
             };
         }
 
@@ -150,7 +151,7 @@ namespace NewLibCore.Data.SQL.Mapper.Store
             Where = new SimpleExpressionMapper
             {
                 Expression = filter,
-                AliaNameMapper = ParseToAliasNames(filter)
+                AliaNameMapper = ParseToAliasNames(((LambdaExpression)filter).Parameters)
             };
         }
 
@@ -170,7 +171,7 @@ namespace NewLibCore.Data.SQL.Mapper.Store
             Where = new SimpleExpressionMapper
             {
                 Expression = filter,
-                AliaNameMapper = ParseToAliasNames(filter)
+                AliaNameMapper = ParseToAliasNames(((LambdaExpression)filter).Parameters)
             };
         }
 
@@ -192,7 +193,7 @@ namespace NewLibCore.Data.SQL.Mapper.Store
             Where = new SimpleExpressionMapper
             {
                 Expression = filter,
-                AliaNameMapper = ParseToAliasNames(filter)
+                AliaNameMapper = ParseToAliasNames(((LambdaExpression)filter).Parameters)
             };
         }
 
@@ -216,7 +217,7 @@ namespace NewLibCore.Data.SQL.Mapper.Store
             Where = new SimpleExpressionMapper
             {
                 Expression = filter,
-                AliaNameMapper = ParseToAliasNames(filter)
+                AliaNameMapper = ParseToAliasNames(((LambdaExpression)filter).Parameters)
             };
         }
 
@@ -242,7 +243,7 @@ namespace NewLibCore.Data.SQL.Mapper.Store
             Where = new SimpleExpressionMapper
             {
                 Expression = filter,
-                AliaNameMapper = ParseToAliasNames(filter)
+                AliaNameMapper = ParseToAliasNames(((LambdaExpression)filter).Parameters)
             };
         }
 
@@ -357,7 +358,7 @@ namespace NewLibCore.Data.SQL.Mapper.Store
             {
                 Expression = expression,
                 JoinRelation = joinRelation,
-                AliaNameMapper = ParseToAliasNames(expression),
+                AliaNameMapper = ParseToAliasNames(((LambdaExpression)expression).Parameters),
                 MainTable = typeof(TModel).GetTableName().TableName
             });
         }
@@ -442,9 +443,15 @@ namespace NewLibCore.Data.SQL.Mapper.Store
         /// </summary>
         /// <param name="expression">表达式</param>
         /// <returns></returns>
-        private IReadOnlyList<KeyValuePair<String, String>> ParseToAliasNames(Expression expression)
+        private IReadOnlyList<KeyValuePair<String, String>> ParseToAliasNames(IReadOnlyList<ParameterExpression> parameters)
         {
-            return ((LambdaExpression)expression).Parameters.Select(s => new KeyValuePair<String, String>(s.Type.GetTableName().TableName, s.Type.GetTableName().AliasName)).ToList();
+            var list = new List<KeyValuePair<String, String>>();
+            foreach (var item in parameters)
+            {
+                var type = item.Type.GetTableName();
+                list.Add(new KeyValuePair<String, String>(type.TableName, type.AliasName));
+            }
+            return list.ToList();
         }
     }
 }
