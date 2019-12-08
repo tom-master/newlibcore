@@ -32,7 +32,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
 
             var mainTable = _expressionStore.From.AliaNameMapper[0];
             ParserResult.Append(String.Format(TemplateBase.SelectTemplate, ParseSelect(), mainTable.Key, mainTable.Value));
-        
+
             var (sql, parameters) = Parser.ExecuteParse(_expressionStore);
             ParserResult.Append(sql, parameters);
 

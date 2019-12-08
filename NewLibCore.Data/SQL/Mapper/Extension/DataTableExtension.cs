@@ -85,6 +85,7 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
 
                         foreach (var propertyInfo in propertys)
                         {
+                            var r = dt.Columns.OfType<DataColumn>();
                             if (dt.Columns.Contains(propertyInfo.Name))
                             {
                                 var value = item[propertyInfo.Name];
