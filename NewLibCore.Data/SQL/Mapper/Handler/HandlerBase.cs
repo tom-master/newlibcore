@@ -13,7 +13,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
     {
         private readonly IParser _parser;
 
-        private readonly ParserResult _parserResult;
+        private readonly ResultExecutor _resultExecutor;
 
         private readonly TemplateBase _templateBase;
 
@@ -26,7 +26,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
 
             _parser = serviceProvider.GetService<IParser>();
             _templateBase = serviceProvider.GetService<TemplateBase>();
-            _parserResult = serviceProvider.GetService<ParserResult>();
+            _resultExecutor = serviceProvider.GetService<ResultExecutor>();
         }
 
 
@@ -41,11 +41,11 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
             }
         }
 
-        protected ParserResult ParserResult
+        protected ResultExecutor ResultExecutor
         {
             get
             {
-                return _parserResult;
+                return _resultExecutor;
             }
         }
 

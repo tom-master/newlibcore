@@ -49,13 +49,13 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
                 throw new Exception("没有获取到值发生变更的属性");
             }
             var (tableName, aliasName) = _instance.GetType().GetTableName();
-            ParserResult.Append(String.Format(Template.Update, tableName, aliasName, String.Join(",", propertys.Select(p => $@"{aliasName}.{p.Key}=@{p.Key}"))), propertys.Select(c => new MapperParameter(c.Key, c.Value)));
-            ParserResult.Append(sql, parameters);
-            ParserResult.Append($@"{PredicateType.AND} {aliasName}.{nameof(_instance.IsDeleted)}=0");
-            ParserResult.Append($@"{Template.RowCount}");
+            ResultExecutor.Append(String.Format(Template.Update, tableName, aliasName, String.Join(",", propertys.Select(p => $@"{aliasName}.{p.Key}=@{p.Key}"))), propertys.Select(c => new MapperParameter(c.Key, c.Value)));
+            ResultExecutor.Append(sql, parameters);
+            ResultExecutor.Append($@"{PredicateType.AND} {aliasName}.{nameof(_instance.IsDeleted)}=0");
+            ResultExecutor.Append($@"{Template.RowCount}");
             _instance.Reset();
 
-            return ParserResult.Execute();
+            return ResultExecutor.Execute();
         }
     }
 }

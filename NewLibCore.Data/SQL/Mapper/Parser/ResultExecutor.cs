@@ -8,9 +8,9 @@ using NewLibCore.Validate;
 namespace NewLibCore.Data.SQL.Mapper
 {
     /// <summary>
-    /// 存储表达式的翻译后的sql语句
+    /// 执行Expression翻译后的sql语句
     /// </summary>
-    internal sealed class ParserResult
+    internal sealed class ResultExecutor
     {
         private StringBuilder _originSql;
 
@@ -24,7 +24,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// 初始化一个ParserResult类的实例
         /// </summary>
         /// <param name="mapperDbContextBase"></param>
-        public ParserResult(MapperDbContextBase mapperDbContextBase)
+        public ResultExecutor(MapperDbContextBase mapperDbContextBase)
         {
             _mapperDbContextBase = mapperDbContextBase;
 
@@ -39,7 +39,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <param name="sql"></param>
         /// <param name="entityParameters"></param>
         /// <returns></returns>
-        internal ParserResult Append(String sql, IEnumerable<MapperParameter> entityParameters = null)
+        internal ResultExecutor Append(String sql, IEnumerable<MapperParameter> entityParameters = null)
         {
             Parameter.Validate(sql);
 
