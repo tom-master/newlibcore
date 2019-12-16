@@ -7,6 +7,7 @@ using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper
 {
+
     /// <summary>
     /// 执行Expression翻译后的sql语句
     /// </summary>
@@ -14,14 +15,14 @@ namespace NewLibCore.Data.SQL.Mapper
     {
         private StringBuilder _originSql;
 
-        private readonly MapperDbContextBase _mapperDbContextBase;
-
         private readonly IList<MapperParameter> _parameters;
+
+        private readonly MapperDbContextBase _mapperDbContextBase;
 
         private readonly QueryCacheBase _queryCache = MapperConfig.QueryCache;
 
         /// <summary>
-        /// 初始化一个ParserResult类的实例
+        /// 初始化一个ResultExecutor类的实例
         /// </summary>
         /// <param name="mapperDbContextBase"></param>
         public ResultExecutor(MapperDbContextBase mapperDbContextBase)
@@ -39,7 +40,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <param name="sql"></param>
         /// <param name="entityParameters"></param>
         /// <returns></returns>
-        internal ResultExecutor Append(String sql, IEnumerable<MapperParameter> entityParameters = null)
+        internal void AppendResult(String sql, IEnumerable<MapperParameter> entityParameters = null)
         {
             Parameter.Validate(sql);
 
@@ -51,8 +52,6 @@ namespace NewLibCore.Data.SQL.Mapper
                     _parameters.Add(item);
                 }
             }
-
-            return this;
         }
 
         /// <summary>

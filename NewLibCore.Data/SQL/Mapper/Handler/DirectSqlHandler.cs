@@ -25,7 +25,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
 
         protected override ExecuteResult Execute()
         {
-            ResultExecutor.Append(_sql, _parameters);
+            ResultExecutor.AppendResult(_sql, _parameters);
             return ResultExecutor.Execute();
         }
     }

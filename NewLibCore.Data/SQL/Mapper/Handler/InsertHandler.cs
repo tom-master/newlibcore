@@ -41,7 +41,8 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
                 throw new Exception("没有获取到值发生变更的属性");
             }
             var insert = String.Format(Template.Insert, _instance.GetType().GetTableName().TableName, String.Join(",", propertys.Select(c => c.Key)), String.Join(",", propertys.Select(key => $@"@{key.Key}")), Template.Identity);
-            return ResultExecutor.Append(insert, propertys.Select(c => new MapperParameter(c.Key, c.Value))).Execute();
+            ResultExecutor.AppendResult(insert, propertys.Select(c => new MapperParameter(c.Key, c.Value)));
+            return ResultExecutor.Execute();
         }
     }
 }
