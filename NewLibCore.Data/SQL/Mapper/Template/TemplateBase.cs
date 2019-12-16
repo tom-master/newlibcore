@@ -114,11 +114,6 @@ namespace NewLibCore.Data.SQL.Mapper.Template
         /// <returns></returns>
         internal abstract DbConnection CreateDbConnection();
 
-        internal virtual String FormatField(String rawField)
-        {
-            return rawField;
-        }
-
         /// <summary>
         /// 创建连接关系
         /// </summary>
