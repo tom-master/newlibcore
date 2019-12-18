@@ -53,12 +53,9 @@ namespace NewLibCore.Data.SQL.Mapper.Template
         /// <summary>
         /// 添加模板
         /// </summary>
-        internal virtual String Insert
+        internal virtual String CreateInsert(String tableName, String field, String placeHolder)
         {
-            get
-            {
-                return "INSERT {0} ({1}) VALUES({2}) {3}";
-            }
+            return String.Format("INSERT {0} ({1}) VALUES({2}) {3}", tableName, field, placeHolder, Identity);
         }
 
         /// <summary>

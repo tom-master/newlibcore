@@ -38,19 +38,23 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
             {
                 _instance.Validate();
             }
-            
+
             var expressionStore = new ExpressionStore();
             expressionStore.AddWhere(_filter);
 
-            var (sql, parameters) = Parser.ExecuteParse(expressionStore);
             var propertys = _instance.GetChangedPropertys();
             if (!propertys.Any())
             {
                 throw new Exception("没有获取到值发生变更的属性");
             }
             var (tableName, aliasName) = _instance.GetType().GetTableName();
-            ResultExecutor.AppendResult(String.Format(Template.Update, tableName, aliasName, String.Join(",", propertys.Select(p => $@"{aliasName}.{p.Key}=@{p.Key}"))), propertys.Select(c => new MapperParameter(c.Key, c.Value)));
-            ResultExecutor.AppendResult(sql, parameters);
+            var updateFields = String.Join(",", propertys.Select(p => $@"{aliasName}.{p.Key}=@{p.Key}"));
+            var parameters = propertys.Select(c => new MapperParameter(c.Key, c.Value));
+
+            ResultExecutor.AppendResult(String.Format(Template.Update, tableName, aliasName, updateFields), parameters);
+            
+            var (whereSql, whereParameters) = Parser.Execute(expressionStore);
+            ResultExecutor.AppendResult(whereSql, whereParameters);
             ResultExecutor.AppendResult($@"{PredicateType.AND} {aliasName}.{nameof(_instance.IsDeleted)}=0");
             ResultExecutor.AppendResult($@"{Template.RowCount}");
             _instance.Reset();

@@ -20,7 +20,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// 翻译
         /// </summary>
         /// <returns></returns>
-        (String, IList<MapperParameter>) ExecuteParse(ExpressionStore expressionStore);
+        (String, IList<MapperParameter>) Execute(ExpressionStore expressionStore);
     }
 
     /// <summary>
@@ -67,7 +67,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// </summary>
         /// <param name="expressionStore"></param>
         /// <returns></returns>
-        public (String, IList<MapperParameter>) ExecuteParse(ExpressionStore expressionStore)
+        public (String, IList<MapperParameter>) Execute(ExpressionStore expressionStore)
         {
             Parameter.Validate(expressionStore);
 
