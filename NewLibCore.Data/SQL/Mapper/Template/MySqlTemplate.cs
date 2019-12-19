@@ -10,12 +10,9 @@ namespace NewLibCore.Data.SQL.Mapper.Template
     /// </summary>
     internal class MySqlTemplate : TemplateBase
     {
-        internal override String Update
+        internal override String CreateUpdate(String tableName, String aliasName, String field)
         {
-            get
-            {
-                return "UPDATE {0} AS {1} SET {2} ";
-            }
+            return String.Format("UPDATE {0} AS {1} SET {2} ", tableName, aliasName, field);
         }
 
         protected override void AppendPredicateType()
@@ -35,7 +32,7 @@ namespace NewLibCore.Data.SQL.Mapper.Template
             return String.Format(PredicateMapper[predicateType], left, right);
         }
 
-        internal override String CreatePagination(Int32 pageIndex, Int32 pageSize, String orderBy,String rawSql)
+        internal override String CreatePagination(Int32 pageIndex, Int32 pageSize, String orderBy, String rawSql)
         {
             Parameter.Validate(pageSize);
             Parameter.Validate(orderBy);

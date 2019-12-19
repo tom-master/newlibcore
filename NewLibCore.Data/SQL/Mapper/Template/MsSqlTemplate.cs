@@ -10,12 +10,9 @@ namespace NewLibCore.Data.SQL.Mapper.Template
     /// </summary>
     internal class MsSqlTemplate : TemplateBase
     {
-        internal override String Update
+        internal override String CreateUpdate(String tableName, String aliasName, String field)
         {
-            get
-            {
-                return "UPDATE {0} SET {1} FROM {2} AS {0} ";
-            }
+            return String.Format("UPDATE {0} SET {1} FROM {2} AS {0} ", aliasName, field, tableName);
         }
 
         internal override String Identity

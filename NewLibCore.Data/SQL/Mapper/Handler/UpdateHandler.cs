@@ -50,8 +50,8 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
             var (tableName, aliasName) = _instance.GetType().GetTableName();
             var updateFields = String.Join(",", propertys.Select(p => $@"{aliasName}.{p.Key}=@{p.Key}"));
             var parameters = propertys.Select(c => new MapperParameter(c.Key, c.Value));
-
-            ResultExecutor.AppendResult(String.Format(Template.Update, tableName, aliasName, updateFields), parameters);
+            var update = Template.CreateUpdate(tableName,aliasName,updateFields);
+            ResultExecutor.AppendResult(update, parameters);
             
             var (whereSql, whereParameters) = Parser.Execute(expressionStore);
             ResultExecutor.AppendResult(whereSql, whereParameters);

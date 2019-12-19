@@ -61,7 +61,7 @@ namespace NewLibCore.Data.SQL.Mapper.Template
         /// <summary>
         /// 更新模板
         /// </summary>
-        internal abstract String Update { get; }
+        internal abstract String CreateUpdate(String tableName,String aliasName,String field);
 
         /// <summary>
         /// 追加关系类型
