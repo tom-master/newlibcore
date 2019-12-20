@@ -51,9 +51,9 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
             var updateFields = String.Join(",", propertys.Select(p => $@"{aliasName}.{p.Key}=@{p.Key}"));
             var parameters = propertys.Select(c => new MapperParameter(c.Key, c.Value));
             var update = Template.CreateUpdate(tableName,aliasName,updateFields);
-            ResultExecutor.AppendResult(update, parameters);
-            
             var (whereSql, whereParameters) = Parser.Execute(expressionStore);
+            
+            ResultExecutor.AppendResult(update, parameters);
             ResultExecutor.AppendResult(whereSql, whereParameters);
             ResultExecutor.AppendResult($@"{PredicateType.AND} {aliasName}.{nameof(_instance.IsDeleted)}=0");
             ResultExecutor.AppendResult($@"{Template.RowCount}");

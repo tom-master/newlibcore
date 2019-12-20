@@ -42,12 +42,10 @@ namespace NewLibCore.Data.SQL.Mapper.Template
         /// <summary>
         /// 查询模板
         /// </summary>
-        internal virtual String Select
+        internal virtual String CreateSelect(String field, String tableName, String aliasName)
         {
-            get
-            {
-                return "SELECT {0} FROM {1} AS {2} ";
-            }
+            //"SELECT {0} FROM {1} AS {2} "
+            return String.Format("SELECT {0} FROM {1} AS {2} ", field, tableName, aliasName);
         }
 
         /// <summary>
@@ -61,7 +59,7 @@ namespace NewLibCore.Data.SQL.Mapper.Template
         /// <summary>
         /// 更新模板
         /// </summary>
-        internal abstract String CreateUpdate(String tableName,String aliasName,String field);
+        internal abstract String CreateUpdate(String tableName, String aliasName, String field);
 
         /// <summary>
         /// 追加关系类型
