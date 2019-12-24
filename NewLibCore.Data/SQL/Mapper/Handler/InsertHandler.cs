@@ -35,10 +35,13 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
                 _instance.Validate();
             }
 
-            var propertyInfos = _instance.GetChangedProperty();
-
-            var insert = String.Format(TemplateBase.InsertTemplate, _instance.GetType().GetTableName().TableName, String.Join(",", propertyInfos.Select(c => c.Key)), String.Join(",", propertyInfos.Select(key => $@"@{key.Key}")), TemplateBase.Identity);
-            return ParserResult.Append(insert, propertyInfos.Select(c => new MapperParameter(c.Key, c.Value))).Execute();
+            var propertys = _instance.GetChangedPropertys();
+            if (!propertys.Any())
+            {
+                throw new Exception("没有获取到值发生变更的属性");
+            }
+            var insert = String.Format(TemplateBase.InsertTemplate, _instance.GetType().GetTableName().TableName, String.Join(",", propertys.Select(c => c.Key)), String.Join(",", propertys.Select(key => $@"@{key.Key}")), TemplateBase.Identity);
+            return ParserResult.Append(insert, propertys.Select(c => new MapperParameter(c.Key, c.Value))).Execute();
         }
     }
 }

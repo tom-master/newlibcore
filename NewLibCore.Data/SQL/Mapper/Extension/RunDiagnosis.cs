@@ -27,12 +27,19 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
         /// <returns></returns>
         internal static TModel Watch<TModel>(Func<TModel> func)
         {
-            var sw = new Stopwatch();
-            sw.Start();
-            var returnValue = func();
-            sw.Stop();
-            Info($@"共花费{Math.Round(sw.Elapsed.TotalSeconds, 4)}秒");
-            return returnValue;
+            try
+            {
+                var sw = new Stopwatch();
+                sw.Start();
+                var returnValue = func();
+                sw.Stop();
+                Info($@"共花费{Math.Round(sw.Elapsed.TotalSeconds, 4)}秒");
+                return returnValue;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         internal static void Info(String message)

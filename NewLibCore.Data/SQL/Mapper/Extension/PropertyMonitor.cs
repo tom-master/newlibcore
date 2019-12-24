@@ -64,7 +64,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// 获取值发生变更的属性
         /// </summary>
         /// <returns></returns>
-        internal IReadOnlyList<KeyValuePair<String, Object>> GetChangedProperty()
+        internal IReadOnlyList<KeyValuePair<String, Object>> GetChangedPropertys()
         {
             return _changedPropertys.Select(s => new KeyValuePair<String, Object>(s.PropertyName, s.Value)).ToList().AsReadOnly();
         }

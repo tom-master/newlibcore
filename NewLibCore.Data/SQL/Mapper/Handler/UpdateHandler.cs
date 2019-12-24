@@ -42,7 +42,11 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
             expressionStore.AddWhere(_filter);
 
             var (sql, parameters) = Parser.ExecuteParse(expressionStore);
-            var propertys = _instance.GetChangedProperty();
+            var propertys = _instance.GetChangedPropertys();
+            if (!propertys.Any())
+            {
+                throw new Exception("没有获取到值发生变更的属性");
+            }
             var (TableName, AliasName) = _instance.GetType().GetTableName();
             ParserResult.Append(String.Format(TemplateBase.UpdateTemplate, TableName, AliasName, String.Join(",", propertys.Select(p => $@"{AliasName}.{p.Key}=@{p.Key}"))), propertys.Select(c => new MapperParameter(c.Key, c.Value)));
             ParserResult.Append(sql, parameters);
