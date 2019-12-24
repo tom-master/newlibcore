@@ -64,6 +64,10 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
             return ParserResult.Execute();
         }
 
+        /// <summary>
+        /// 解析出排序字段
+        /// </summary>
+        /// <returns></returns>
         private (String Fields, String AliasName) ParseOrder()
         {
             var modelAliasName = new List<String>();
@@ -78,6 +82,10 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
             throw new Exception("不支持的ORDER BY 表达式");
         }
 
+        /// <summary>
+        /// 解析出Select字段
+        /// </summary>
+        /// <returns></returns>
         private String ParseSelect()
         {
             if (_expressionStore.Select != null)

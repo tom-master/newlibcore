@@ -21,8 +21,9 @@ namespace NewLibCore.Data.SQL.Mapper
         private readonly QueryCacheBase _queryCache = MapperConfig.QueryCache;
 
         /// <summary>
-        /// 初始化一个TranslationResult类的实例
+        /// 初始化一个ParserResult类的实例
         /// </summary>
+        /// <param name="mapperDbContextBase"></param>
         public ParserResult(MapperDbContextBase mapperDbContextBase)
         {
             _mapperDbContextBase = mapperDbContextBase;
@@ -35,7 +36,9 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <summary>
         /// 追加一个sql语句和一组EntityParameter对象
         /// </summary>
-        /// <param name="entityParameters">参数列表</param>
+        /// <param name="sql"></param>
+        /// <param name="entityParameters"></param>
+        /// <returns></returns>
         internal ParserResult Append(String sql, IEnumerable<MapperParameter> entityParameters = null)
         {
             Parameter.Validate(sql);
@@ -55,7 +58,6 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <summary>
         /// 执行表达式翻译出的sql语句
         /// </summary>
-        /// <param name="executionCore">执行翻译结果的对象</param>
         /// <returns></returns>
         internal ExecuteResult Execute()
         {

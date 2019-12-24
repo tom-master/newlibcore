@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Data;
+using Microsoft.Extensions.DependencyInjection;
 using NewLibCore.Data.SQL.Mapper.Component.Cache;
+using NewLibCore.Data.SQL.Mapper.Template;
 using NewLibCore.Logger;
 using NewLibCore.Validate;
 

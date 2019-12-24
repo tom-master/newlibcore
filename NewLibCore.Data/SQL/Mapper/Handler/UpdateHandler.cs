@@ -47,10 +47,10 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
             {
                 throw new Exception("没有获取到值发生变更的属性");
             }
-            var (TableName, AliasName) = _instance.GetType().GetTableName();
-            ParserResult.Append(String.Format(TemplateBase.UpdateTemplate, TableName, AliasName, String.Join(",", propertys.Select(p => $@"{AliasName}.{p.Key}=@{p.Key}"))), propertys.Select(c => new MapperParameter(c.Key, c.Value)));
+            var (tableName, aliasName) = _instance.GetType().GetTableName();
+            ParserResult.Append(String.Format(TemplateBase.UpdateTemplate, tableName, aliasName, String.Join(",", propertys.Select(p => $@"{aliasName}.{p.Key}=@{p.Key}"))), propertys.Select(c => new MapperParameter(c.Key, c.Value)));
             ParserResult.Append(sql, parameters);
-            ParserResult.Append($@"{PredicateType.AND} {AliasName}.{nameof(_instance.IsDeleted)}=0");
+            ParserResult.Append($@"{PredicateType.AND} {aliasName}.{nameof(_instance.IsDeleted)}=0");
             ParserResult.Append($@"{TemplateBase.RowCount}");
             _instance.Reset();
 

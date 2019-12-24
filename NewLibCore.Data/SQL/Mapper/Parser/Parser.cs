@@ -49,7 +49,7 @@ namespace NewLibCore.Data.SQL.Mapper
         public Parser(TemplateBase templateBase)
         {
             Parameter.Validate(templateBase);
- 
+
             _templateBase = templateBase;
 
             _internalStore = new StringBuilder();
@@ -65,6 +65,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <summary>
         /// 执行Expression的解析
         /// </summary>
+        /// <param name="expressionStore"></param>
         /// <returns></returns>
         public (String, IList<MapperParameter>) ExecuteParse(ExpressionStore expressionStore)
         {
