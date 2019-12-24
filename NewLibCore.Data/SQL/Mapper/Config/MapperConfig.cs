@@ -53,6 +53,12 @@ namespace NewLibCore.Data.SQL.Mapper
         }
 
         /// <summary>
+        /// 是否在出现异常时抛出异常
+        /// </summary>
+        /// <value></value>
+        public static Boolean ThrowException { get; set; } = true;
+
+        /// <summary>
         /// 启用模型验证
         /// </summary>
         /// <value></value>

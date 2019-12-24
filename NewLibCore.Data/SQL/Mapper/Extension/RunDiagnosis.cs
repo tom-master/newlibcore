@@ -13,6 +13,10 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
         private static void CurrentDomain_UnhandledException(Object sender, UnhandledExceptionEventArgs e)
         {
             Error(((Exception)e.ExceptionObject).Message);
+            if (MapperConfig.ThrowException)
+            {
+                throw (Exception)e.ExceptionObject;
+            }
         }
 
         /// <summary>
@@ -23,11 +27,11 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
         /// <returns></returns>
         internal static TModel Watch<TModel>(Func<TModel> func)
         {
-            // var sw = new Stopwatch();
-            // sw.Start();
+            var sw = new Stopwatch();
+            sw.Start();
             var returnValue = func();
-            // sw.Stop();
-            // Info($@"共花费{Math.Round(sw.Elapsed.TotalSeconds, 4)}秒");
+            sw.Stop();
+            Info($@"共花费{Math.Round(sw.Elapsed.TotalSeconds, 4)}秒");
             return returnValue;
         }
 
