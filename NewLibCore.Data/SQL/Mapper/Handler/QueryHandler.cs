@@ -29,7 +29,6 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         /// <returns></returns>
         protected override ExecuteResult Execute()
         {
-
             var mainTable = _expressionStore.From.AliaNameMapper[0];
             ParserResult.Append(String.Format(TemplateBase.SelectTemplate, ParseSelect(), mainTable.Key, mainTable.Value));
 
