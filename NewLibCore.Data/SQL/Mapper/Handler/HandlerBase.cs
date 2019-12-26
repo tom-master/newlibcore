@@ -15,8 +15,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
 
         private readonly ParserResult _parserResult;
 
-        private readonly IServiceProvider _serviceProvider;
-
+        private readonly TemplateBase _templateBase;
 
         /// <summary>
         /// 初始化一个Handler类的实例
@@ -24,9 +23,10 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         internal HandlerBase(IServiceProvider serviceProvider)
         {
             Parameter.Validate(serviceProvider);
-            _serviceProvider = serviceProvider;
-            _parserResult = serviceProvider.GetService<ParserResult>();
+
+            _templateBase = serviceProvider.GetService<TemplateBase>();
             _parser = serviceProvider.GetService<IParser>();
+            _parserResult = serviceProvider.GetService<ParserResult>();
         }
 
 
@@ -37,7 +37,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         {
             get
             {
-                return _serviceProvider.GetService<TemplateBase>();
+                return _templateBase;
             }
         }
 
