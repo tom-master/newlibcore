@@ -66,7 +66,5 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         /// </summary>
         /// <returns></returns>
         protected abstract ExecuteResult Execute();
-
-
     }
 }
