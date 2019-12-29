@@ -38,6 +38,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
             {
                 _instance.Validate();
             }
+            
             var expressionStore = new ExpressionStore();
             expressionStore.AddWhere(_filter);
 
