@@ -14,7 +14,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         {
 
         }
-
+ 
         public DirectSqlHandler(String sql, IEnumerable<MapperParameter> parameters, IServiceProvider serviceProvider) : base(serviceProvider)
         {
             Parameter.Validate(sql);
