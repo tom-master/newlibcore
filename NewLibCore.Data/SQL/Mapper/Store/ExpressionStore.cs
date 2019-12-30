@@ -196,7 +196,7 @@ namespace NewLibCore.Data.SQL.Mapper.Store
                 AliaNameMapper = ParseToAliasNames(((LambdaExpression)filter).Parameters)
             };
         }
-
+ 
         /// <summary>
         /// 添加条件表达式
         /// </summary>
