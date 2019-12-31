@@ -203,7 +203,7 @@ namespace NewLibCore.Data.SQL.Mapper.Store
         /// <typeparam name="TModel1"></typeparam>
         /// <typeparam name="TModel2"></typeparam>
         /// <typeparam name="TModel3"></typeparam>
-        /// <typeparam name="TModel4"></typeparam>
+        /// <typeparam name="TModel4"></typeparam> 
         /// <typeparam name="TModel5"></typeparam>
         /// <param name="filter"></param>
         internal void AddWhere<TModel1, TModel2, TModel3, TModel4, TModel5>(Expression<Func<TModel1, TModel2, TModel3, TModel4, TModel5, Boolean>> filter)
