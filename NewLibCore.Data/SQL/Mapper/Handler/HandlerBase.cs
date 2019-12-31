@@ -24,8 +24,8 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         {
             Parameter.Validate(serviceProvider);
 
-            _templateBase = serviceProvider.GetService<TemplateBase>();
             _parser = serviceProvider.GetService<IParser>();
+            _templateBase = serviceProvider.GetService<TemplateBase>();
             _parserResult = serviceProvider.GetService<ParserResult>();
         }
 
