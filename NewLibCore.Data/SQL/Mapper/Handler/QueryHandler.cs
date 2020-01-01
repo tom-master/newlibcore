@@ -30,7 +30,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         protected override ExecuteResult Execute()
         {
             var mainTable = _store.From.AliaNameMapper[0];
-            ParserResult.Append(String.Format(Template.SelectTemplate, ParseSelect(), mainTable.Key, mainTable.Value));
+            ParserResult.Append(String.Format(Template.Select, ParseSelect(), mainTable.Key, mainTable.Value));
 
             var (sql, parameters) = Parser.ExecuteParse(_store);
             ParserResult.Append(sql, parameters);

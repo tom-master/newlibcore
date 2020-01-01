@@ -42,7 +42,7 @@ namespace NewLibCore.Data.SQL.Mapper.Template
         /// <summary>
         /// 查询模板
         /// </summary>
-        internal virtual String SelectTemplate
+        internal virtual String Select
         {
             get
             {
@@ -53,7 +53,7 @@ namespace NewLibCore.Data.SQL.Mapper.Template
         /// <summary>
         /// 添加模板
         /// </summary>
-        internal virtual String InsertTemplate
+        internal virtual String Insert
         {
             get
             {
@@ -64,7 +64,7 @@ namespace NewLibCore.Data.SQL.Mapper.Template
         /// <summary>
         /// 更新模板
         /// </summary>
-        internal abstract String UpdateTemplate { get; }
+        internal abstract String Update { get; }
 
         /// <summary>
         /// 追加关系类型

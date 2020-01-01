@@ -10,7 +10,7 @@ namespace NewLibCore.Data.SQL.Mapper.Template
     /// </summary>
     internal class MsSqlTemplate : TemplateBase
     {
-        internal override String UpdateTemplate
+        internal override String Update
         {
             get
             {
