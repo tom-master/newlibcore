@@ -46,9 +46,12 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
 
             var insert = Template.CreateInsert(tableName, insertFields, placeHolders);
             var parameters = propertys.Select(c => new MapperParameter(c.Key, c.Value));
-            
-            ParserResult.Append(insert, parameters);
-            return ParserResult.Execute();
+            var result = ParserExecutor.Parse(new ParseModel
+            {
+                Sql = insert,
+                Parameters = parameters
+            });
+            return result.Execute();
         }
     }
 }

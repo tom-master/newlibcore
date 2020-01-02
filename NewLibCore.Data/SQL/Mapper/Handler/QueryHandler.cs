@@ -30,10 +30,12 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         protected override ExecuteResult Execute()
         {
             var mainTable = _store.From.AliaNameMapper[0];
-           ParserResult.Append(Template.CreateSelect(ParseSelect(), mainTable.Key, mainTable.Value));
 
-            var (sql, parameters) = Parser.Execute(_store);
-            ParserResult.Append(sql, parameters);
+            var result = ParserExecutor.Parse(new ParseModel
+            {
+                Sql = Template.CreateSelect(ParseSelect(), mainTable.Key, mainTable.Value),
+                ExpressionStore = _store
+            });
 
             var aliasMapper = _store.MergeAliasMapper();
             foreach (var aliasItem in aliasMapper)

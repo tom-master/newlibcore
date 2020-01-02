@@ -35,23 +35,35 @@ namespace NewLibCore.Data.SQL.Mapper
 
 
         /// <summary>
-        /// 追加一个sql语句和一组EntityParameter对象
+        /// 追加一个sql语句
         /// </summary>
         /// <param name="sql"></param>
         /// <param name="entityParameters"></param>
         /// <returns></returns>
-        internal void Append(String sql, IEnumerable<MapperParameter> entityParameters = null)
+        internal void Append(String sql)
         {
             Parameter.Validate(sql);
-
             _originSql.Append($@" {sql} ");
-            if (entityParameters != null)
+        }
+
+        /// <summary>
+        /// 追加一组参数
+        /// </summary>
+        /// <param name="parameters"></param>
+        internal void Append(params MapperParameter[] parameters)
+        {
+            Parameter.Validate(parameters);
+
+            foreach (var item in parameters)
             {
-                foreach (var item in entityParameters)
-                {
-                    _parameters.Add(item);
-                }
+                _parameters.Add(item);
             }
+        }
+
+        internal void Append(String sql, params MapperParameter[] parameters)
+        {
+            Append(sql);
+            Append(parameters);
         }
 
         /// <summary>

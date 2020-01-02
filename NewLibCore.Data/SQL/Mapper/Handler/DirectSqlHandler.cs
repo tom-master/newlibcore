@@ -14,7 +14,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         {
 
         }
- 
+
         public DirectSqlHandler(String sql, IEnumerable<MapperParameter> parameters, IServiceProvider serviceProvider) : base(serviceProvider)
         {
             Parameter.Validate(sql);
@@ -25,8 +25,13 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
 
         protected override ExecuteResult Execute()
         {
-            ParserResult.Append(_sql, _parameters);
-            return ParserResult.Execute();
+
+            var result = ParserExecutor.Parse(new ParseModel
+            {
+                Sql = _sql,
+                Parameters = _parameters
+            });
+            return result.Execute();
         }
     }
 }

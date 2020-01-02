@@ -32,9 +32,9 @@ namespace NewLibCore.Data.SQL.Mapper
 
             services = services.AddScoped<MapperDbContextBase, MapperDbContext>();
 
-            services = services.AddTransient<IParser, Parser>();
+            services = services.AddTransient<ParserExecutor, DefaultParserExecutor>();
             services = services.AddTransient<ParserResult>();
-            
+
             _serviceScope = services.BuildServiceProvider().CreateScope();
         }
 

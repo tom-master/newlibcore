@@ -39,8 +39,8 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
                 _instance.Validate();
             }
 
-            var expressionStore = new ExpressionStore();
-            expressionStore.AddWhere(_filter);
+            var store = new ExpressionStore();
+            store.AddWhere(_filter);
 
             var propertys = _instance.GetChangedPropertys();
             if (!propertys.Any())
@@ -50,16 +50,20 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
             var (tableName, aliasName) = _instance.GetType().GetTableName();
             var updateFields = String.Join(",", propertys.Select(p => $@"{aliasName}.{p.Key}=@{p.Key}"));
             var parameters = propertys.Select(c => new MapperParameter(c.Key, c.Value));
-            var update = Template.CreateUpdate(tableName,aliasName,updateFields);
-            var (whereSql, whereParameters) = Parser.Execute(expressionStore);
+            var update = Template.CreateUpdate(tableName, aliasName, updateFields);
 
-            ParserResult.Append(update, parameters);
-            ParserResult.Append(whereSql, whereParameters);
-            ParserResult.Append($@"{PredicateType.AND} {aliasName}.{nameof(_instance.IsDeleted)}=0");
-            ParserResult.Append($@"{Template.RowCount}");
+            var result = ParserExecutor.Parse(new ParseModel
+            {
+                Sql = update,
+                Parameters = parameters,
+                ExpressionStore = store
+            });
+
+            result.Append($@"{PredicateType.AND} {aliasName}.{nameof(_instance.IsDeleted)}=0");
+            result.Append($@"{Template.RowCount}");
             _instance.Reset();
 
-            return ParserResult.Execute();
+            return result.Execute();
         }
     }
 }

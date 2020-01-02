@@ -11,7 +11,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
     /// <typeparam name="TModel"></typeparam>
     internal abstract class HandlerBase
     {
-        private readonly IParser _parser;
+        private readonly ParserExecutor _parserExecutor;
 
         private readonly ParserResult _parserResult;
 
@@ -24,7 +24,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         {
             Parameter.Validate(serviceProvider);
 
-            _parser = serviceProvider.GetService<IParser>();
+            _parserExecutor = serviceProvider.GetService<ParserExecutor>();
             _templateBase = serviceProvider.GetService<TemplateBase>();
             _parserResult = serviceProvider.GetService<ParserResult>();
         }
@@ -49,11 +49,11 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
             }
         }
 
-        protected IParser Parser
+        protected ParserExecutor ParserExecutor
         {
             get
             {
-                return _parser;
+                return _parserExecutor;
             }
         }
 
