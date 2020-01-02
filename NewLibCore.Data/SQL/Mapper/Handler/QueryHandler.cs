@@ -15,12 +15,12 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
     /// </summary>
     internal class QueryHandler : HandlerBase
     {
-        private readonly ExpressionStore _expressionStore;
+        private readonly ExpressionStore _store;
 
-        internal QueryHandler(ExpressionStore expressionStore, IServiceProvider serviceProvider) : base(serviceProvider)
+        internal QueryHandler(ExpressionStore store, IServiceProvider serviceProvider) : base(serviceProvider)
         {
-            Parameter.Validate(expressionStore);
-            _expressionStore = expressionStore;
+            Parameter.Validate(store);
+            _store = store;
         }
 
         /// <summary>
@@ -29,35 +29,35 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         /// <returns></returns>
         protected override ExecuteResult Execute()
         {
-            var mainTable = _expressionStore.From.AliaNameMapper[0];
-            ParserResult.Append(String.Format(TemplateBase.SelectTemplate, ParseSelect(), mainTable.Key, mainTable.Value));
+            var mainTable = _store.From.AliaNameMapper[0];
+            ParserResult.Append(String.Format(Template.SelectTemplate, ParseSelect(), mainTable.Key, mainTable.Value));
 
-            var (sql, parameters) = Parser.ExecuteParse(_expressionStore);
+            var (sql, parameters) = Parser.ExecuteParse(_store);
             ParserResult.Append(sql, parameters);
 
-            var aliasMapper = _expressionStore.MergeAliasMapper();
+            var aliasMapper = _store.MergeAliasMapper();
             foreach (var aliasItem in aliasMapper)
             {
                 ParserResult.Append($@"{PredicateType.AND} {aliasItem.Value.ToLower()}.IsDeleted = 0");
             }
 
-            if (_expressionStore.Pagination != null)
+            if (_store.Pagination != null)
             {
-                if (_expressionStore.Order == null)
+                if (_store.Order == null)
                 {
                     throw new Exception("分页中没有指定排序字段");
                 }
                 var (fields, tableName) = ParseOrder();
-                var orderTemplate = TemplateBase.CreateOrderBy(_expressionStore.Order.OrderBy, $@"{tableName}.{fields}");
+                var orderTemplate = Template.CreateOrderBy(_store.Order.OrderBy, $@"{tableName}.{fields}");
 
-                var newSql = TemplateBase.CreatePagination(_expressionStore.Pagination.Index, _expressionStore.Pagination.Size, orderTemplate, ParserResult.ToString());
+                var newSql = Template.CreatePagination(_store.Pagination.Index, _store.Pagination.Size, orderTemplate, ParserResult.ToString());
                 ParserResult.ClearSql();
                 ParserResult.Append(newSql);
             }
-            else if (_expressionStore.Order != null)
+            else if (_store.Order != null)
             {
                 var (fields, tableName) = ParseOrder();
-                var orderTemplate = TemplateBase.CreateOrderBy(_expressionStore.Order.OrderBy, $@"{tableName}.{fields}");
+                var orderTemplate = Template.CreateOrderBy(_store.Order.OrderBy, $@"{tableName}.{fields}");
                 ParserResult.Append(orderTemplate);
             }
 
@@ -71,7 +71,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         private (String Fields, String AliasName) ParseOrder()
         {
             var modelAliasName = new List<String>();
-            var fields = (LambdaExpression)_expressionStore.Order.Expression;
+            var fields = (LambdaExpression)_store.Order.Expression;
             var aliasName = fields.Parameters[0].Type.GetTableName().AliasName;
 
             if (fields.Body.NodeType == ExpressionType.MemberAccess)
@@ -88,9 +88,9 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         /// <returns></returns>
         private String ParseSelect()
         {
-            if (_expressionStore.Select != null)
+            if (_store.Select != null)
             {
-                var fields = (LambdaExpression)_expressionStore.Select.Expression;
+                var fields = (LambdaExpression)_store.Select.Expression;
 
                 var anonymousObjFields = new List<String>();
                 var bodyArguments = (fields.Body as NewExpression).Arguments;
@@ -103,7 +103,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
                 return String.Join(",", anonymousObjFields);
             }
 
-            var types = _expressionStore.MergeParameterTypes();
+            var types = _store.MergeParameterTypes();
 
             var tableNames = types.Select(s => new KeyValuePair<String, String>(s.Name, s.GetTableName().AliasName)).ToList();
             var propertys = types.SelectMany(s => s.GetProperties(BindingFlags.Instance | BindingFlags.Public)

@@ -40,7 +40,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
             {
                 throw new Exception("没有获取到值发生变更的属性");
             }
-            var insert = String.Format(TemplateBase.InsertTemplate, _instance.GetType().GetTableName().TableName, String.Join(",", propertys.Select(c => c.Key)), String.Join(",", propertys.Select(key => $@"@{key.Key}")), TemplateBase.Identity);
+            var insert = String.Format(Template.InsertTemplate, _instance.GetType().GetTableName().TableName, String.Join(",", propertys.Select(c => c.Key)), String.Join(",", propertys.Select(key => $@"@{key.Key}")), Template.Identity);
             return ParserResult.Append(insert, propertys.Select(c => new MapperParameter(c.Key, c.Value))).Execute();
         }
     }

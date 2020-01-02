@@ -33,7 +33,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         /// <summary>
         /// SQL模板
         /// </summary>
-        protected TemplateBase TemplateBase
+        protected TemplateBase Template
         {
             get
             {
