@@ -47,8 +47,8 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
             var insert = Template.CreateInsert(tableName, insertFields, placeHolders);
             var parameters = propertys.Select(c => new MapperParameter(c.Key, c.Value));
             
-            ResultExecutor.AppendResult(insert, parameters);
-            return ResultExecutor.Execute();
+            ParserResult.Append(insert, parameters);
+            return ParserResult.Execute();
         }
     }
 }

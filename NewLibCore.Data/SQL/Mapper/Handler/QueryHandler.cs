@@ -30,15 +30,15 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         protected override ExecuteResult Execute()
         {
             var mainTable = _store.From.AliaNameMapper[0];
-            ResultExecutor.AppendResult(Template.CreateSelect(ParseSelect(), mainTable.Key, mainTable.Value));
+           ParserResult.Append(Template.CreateSelect(ParseSelect(), mainTable.Key, mainTable.Value));
 
             var (sql, parameters) = Parser.Execute(_store);
-            ResultExecutor.AppendResult(sql, parameters);
+            ParserResult.Append(sql, parameters);
 
             var aliasMapper = _store.MergeAliasMapper();
             foreach (var aliasItem in aliasMapper)
             {
-                ResultExecutor.AppendResult($@"{PredicateType.AND} {aliasItem.Value.ToLower()}.IsDeleted = 0");
+                ParserResult.Append($@"{PredicateType.AND} {aliasItem.Value.ToLower()}.IsDeleted = 0");
             }
 
             if (_store.Pagination != null)
@@ -50,18 +50,18 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
                 var (fields, tableName) = ParseOrder();
                 var orderTemplate = Template.CreateOrderBy(_store.Order.OrderBy, $@"{tableName}.{fields}");
 
-                var newSql = Template.CreatePagination(_store.Pagination.Index, _store.Pagination.Size, orderTemplate, ResultExecutor.ToString());
-                ResultExecutor.ClearSql();
-                ResultExecutor.AppendResult(newSql);
+                var newSql = Template.CreatePagination(_store.Pagination.Index, _store.Pagination.Size, orderTemplate, ParserResult.ToString());
+                ParserResult.ClearSql();
+                ParserResult.Append(newSql);
             }
             else if (_store.Order != null)
             {
                 var (fields, tableName) = ParseOrder();
                 var orderTemplate = Template.CreateOrderBy(_store.Order.OrderBy, $@"{tableName}.{fields}");
-                ResultExecutor.AppendResult(orderTemplate);
+                ParserResult.Append(orderTemplate);
             }
 
-            return ResultExecutor.Execute();
+            return ParserResult.Execute();
         }
 
         /// <summary>

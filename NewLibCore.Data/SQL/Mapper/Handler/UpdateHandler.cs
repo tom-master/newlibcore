@@ -52,14 +52,14 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
             var parameters = propertys.Select(c => new MapperParameter(c.Key, c.Value));
             var update = Template.CreateUpdate(tableName,aliasName,updateFields);
             var (whereSql, whereParameters) = Parser.Execute(expressionStore);
-            
-            ResultExecutor.AppendResult(update, parameters);
-            ResultExecutor.AppendResult(whereSql, whereParameters);
-            ResultExecutor.AppendResult($@"{PredicateType.AND} {aliasName}.{nameof(_instance.IsDeleted)}=0");
-            ResultExecutor.AppendResult($@"{Template.RowCount}");
+
+            ParserResult.Append(update, parameters);
+            ParserResult.Append(whereSql, whereParameters);
+            ParserResult.Append($@"{PredicateType.AND} {aliasName}.{nameof(_instance.IsDeleted)}=0");
+            ParserResult.Append($@"{Template.RowCount}");
             _instance.Reset();
 
-            return ResultExecutor.Execute();
+            return ParserResult.Execute();
         }
     }
 }

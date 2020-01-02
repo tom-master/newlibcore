@@ -11,7 +11,7 @@ namespace NewLibCore.Data.SQL.Mapper
     /// <summary>
     /// 执行Expression翻译后的sql语句
     /// </summary>
-    internal sealed class ResultExecutor
+    internal sealed class ParserResult
     {
         private StringBuilder _originSql;
 
@@ -25,7 +25,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// 初始化一个ResultExecutor类的实例
         /// </summary>
         /// <param name="mapperDbContextBase"></param>
-        public ResultExecutor(MapperDbContextBase mapperDbContextBase)
+        public ParserResult(MapperDbContextBase mapperDbContextBase)
         {
             _mapperDbContextBase = mapperDbContextBase;
 
@@ -40,7 +40,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <param name="sql"></param>
         /// <param name="entityParameters"></param>
         /// <returns></returns>
-        internal void AppendResult(String sql, IEnumerable<MapperParameter> entityParameters = null)
+        internal void Append(String sql, IEnumerable<MapperParameter> entityParameters = null)
         {
             Parameter.Validate(sql);
 
