@@ -40,7 +40,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
             var aliasMapper = _store.MergeAliasMapper();
             foreach (var aliasItem in aliasMapper)
             {
-                ParserResult.Append($@"{PredicateType.AND} {aliasItem.Value.ToLower()}.IsDeleted = 0");
+                result.Append($@"{PredicateType.AND} {aliasItem.Value.ToLower()}.IsDeleted = 0");
             }
 
             if (_store.Pagination != null)
@@ -52,18 +52,18 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
                 var (fields, tableName) = ParseOrder();
                 var orderTemplate = Template.CreateOrderBy(_store.Order.OrderBy, $@"{tableName}.{fields}");
 
-                var newSql = Template.CreatePagination(_store.Pagination.Index, _store.Pagination.Size, orderTemplate, ParserResult.ToString());
-                ParserResult.ClearSql();
-                ParserResult.Append(newSql);
+                var newSql = Template.CreatePagination(_store.Pagination.Index, _store.Pagination.Size, orderTemplate, result.ToString());
+                result.ClearSql();
+                result.Append(newSql);
             }
             else if (_store.Order != null)
             {
                 var (fields, tableName) = ParseOrder();
                 var orderTemplate = Template.CreateOrderBy(_store.Order.OrderBy, $@"{tableName}.{fields}");
-                ParserResult.Append(orderTemplate);
+                result.Append(orderTemplate);
             }
 
-            return ParserResult.Execute();
+            return result.Execute();
         }
 
         /// <summary>

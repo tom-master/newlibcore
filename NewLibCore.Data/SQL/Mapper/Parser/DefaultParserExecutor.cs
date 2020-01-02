@@ -26,14 +26,12 @@ namespace NewLibCore.Data.SQL.Mapper
     /// </summary>
     internal abstract class ParserExecutor
     {
-
         private readonly ParserResult _parserResult;
 
         internal ParserExecutor(ParserResult parserResult)
         {
             _parserResult = parserResult;
         }
-
 
         /// <summary>
         /// 翻译
@@ -43,8 +41,18 @@ namespace NewLibCore.Data.SQL.Mapper
 
         internal ParserResult Parse(ParseModel parseModel)
         {
+            Parameter.Validate(parseModel);
+            Parameter.Validate(parseModel.Sql);
 
-            _parserResult.Append(parseModel.Sql, parseModel.Parameters.ToArray());
+            if (parseModel.Parameters != null)
+            {
+                _parserResult.Append(parseModel.Sql, parseModel.Parameters.ToArray());
+            }
+            else
+            {
+                _parserResult.Append(parseModel.Sql);
+            }
+
 
             if (parseModel.ExpressionStore != null)
             {
