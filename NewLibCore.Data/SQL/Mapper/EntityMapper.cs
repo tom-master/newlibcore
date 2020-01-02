@@ -79,7 +79,9 @@ namespace NewLibCore.Data.SQL.Mapper
 
             return RunDiagnosis.Watch(() =>
             {
-                HandlerBase handler = new UpdateHandler<TModel>(model, expression, _serviceScope.ServiceProvider);
+                var expressionStore = new ExpressionStore();
+                expressionStore.AddWhere(expression);
+                HandlerBase handler = new UpdateHandler<TModel>(model, expressionStore, _serviceScope.ServiceProvider);
                 return handler.Process().FirstOrDefault<Int32>() > 0;
             });
         }

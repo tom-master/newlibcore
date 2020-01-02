@@ -15,18 +15,18 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
     {
         private readonly TModel _instance;
 
-        private readonly Expression<Func<TModel, Boolean>> _filter;
+        private readonly ExpressionStore _expressionStore;
 
         /// <summary>
         /// 初始化一个UpdateHandler类的实例
         /// </summary>
         /// <param name="model">要更新的模型</param>
-        public UpdateHandler(TModel model, Expression<Func<TModel, Boolean>> filter, IServiceProvider serviceProvider) : base(serviceProvider)
+        public UpdateHandler(TModel model, ExpressionStore expressionStore, IServiceProvider serviceProvider) : base(serviceProvider)
         {
             Parameter.Validate(model);
-            Parameter.Validate(filter);
+            Parameter.Validate(expressionStore);
 
-            _filter = filter;
+            _expressionStore = expressionStore;
             _instance = model;
         }
 
@@ -38,9 +38,6 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
             {
                 _instance.Validate();
             }
-
-            var store = new ExpressionStore();
-            store.AddWhere(_filter);
 
             var propertys = _instance.GetChangedPropertys();
             if (!propertys.Any())
@@ -56,7 +53,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
             {
                 Sql = update,
                 Parameters = parameters,
-                ExpressionStore = store
+                ExpressionStore = _expressionStore
             });
 
             result.Append($@"{PredicateType.AND} {aliasName}.{nameof(_instance.IsDeleted)}=0");
