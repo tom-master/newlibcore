@@ -38,10 +38,13 @@ namespace NewLibCore.Run
             {
                 var sw = new Stopwatch();
                 sw.Start();
-                for (var i = 0; i < 2000; i++)
-                {
-                    mapper.Query<User>().Include(d=>d.Config).ToList();
-                }
+
+                var user = new User("xiaofan","xiaofan@.1");
+                mapper.Add(user);
+                // for (var i = 0; i < 2000; i++)
+                // {
+                //     mapper.Query<User>().Include(d=>d.Config).ToList();
+                // }
                 sw.Stop();
                 Console.WriteLine($@"共花费{Math.Round(sw.Elapsed.TotalSeconds, 4)}秒");
 
@@ -305,7 +308,7 @@ namespace NewLibCore.Run
         /// <summary>
         /// 配置Id
         /// </summary>
-        [Required, ForeignKey(typeof(Config))]
+        [ForeignKey(typeof(Config))]
         public Int32 ConfigId { get; private set; }
 
         public Config Config { get; set; }

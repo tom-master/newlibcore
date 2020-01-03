@@ -20,12 +20,12 @@ namespace NewLibCore.Data.SQL.Mapper.Validate
 
         public override Boolean IsValidate(Object value)
         {
-            Parameter.Validate(value);
-
-            var type = value.GetType();
-
             try
             {
+                Parameter.Validate(value);
+
+                var type = value.GetType();
+
                 if (type.IsValueType && type.IsNumeric())
                 {
                     Parameter.Validate((ValueType)value);

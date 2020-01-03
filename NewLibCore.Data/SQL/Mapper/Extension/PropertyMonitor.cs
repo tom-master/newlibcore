@@ -30,7 +30,7 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             Parameter.Validate(propertyName);
 
-            var propertyInfo = _type.GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
+            var propertyInfo = _type.GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance);
             if (propertyInfo == null)
             {
                 throw new ArgumentException($@"属性：{propertyName},不属于类：{_type.Name}或它的父类");
@@ -101,7 +101,7 @@ namespace NewLibCore.Data.SQL.Mapper
                         {
                             if (i + 1 >= validateBases.Count)
                             {
-                                ThrowValidateException(validateBases[i + 1], changedProperty);
+                                ThrowValidateException(validateBases[i], changedProperty);
                             }
 
                             if (validateBases[i + 1] is DefaultValueAttribute)
