@@ -11,7 +11,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
     /// 更新处理类
     /// </summary>
     /// <typeparam name="TModel"></typeparam>
-    internal class UpdateHandler<TModel> : HandlerBase where TModel : EntityBase, new()
+    internal class UpdateHandler<TModel> : HandlerBase where TModel : PropertyMonitor, new()
     {
         private readonly TModel _instance;
 
@@ -56,7 +56,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
                 ExpressionStore = _expressionStore
             });
 
-            result.Append($@"{PredicateType.AND} {aliasName}.{nameof(_instance.IsDeleted)}=0");
+            result.Append($@"{PredicateType.AND} {aliasName}.IsDeleted=0");
             result.Append($@"{Template.RowCount}");
             _instance.Reset();
 
