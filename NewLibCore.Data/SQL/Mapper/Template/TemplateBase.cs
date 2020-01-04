@@ -44,7 +44,6 @@ namespace NewLibCore.Data.SQL.Mapper.Template
         /// </summary>
         internal virtual String CreateSelect(String field, String tableName, String aliasName)
         {
-            //"SELECT {0} FROM {1} AS {2} "
             return String.Format("SELECT {0} FROM {1} AS {2} ", field, tableName, aliasName);
         }
 
