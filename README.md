@@ -71,7 +71,7 @@
     }
     ```
  * 数据实体基类
-   > EntityBase:只有数据实体继承与EntityBase后才会被EntityMapper类库所识别    
+   > EntityBase:只有数据实体继承于EntityBase后才会被EntityMapper类库所识别    
    ```C#
    public class UserEntity:EntityBase
    {
