@@ -35,7 +35,7 @@
     public String UserName { get; set; }
     
     /// <summary>
-    /// DefaultValue可根据被修饰的属性的类型来确定默认值,0或NULL
+    /// DefaultValue可根据被修饰的属性的类型来确定默认值,0或NULL或Guid类型默认值:00000000-0000-0000-0000-000000000000
     /// </summary>
     [DefaultValue(typeof(String))]
     public String UserName { get; set; }
