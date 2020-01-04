@@ -39,8 +39,12 @@ namespace NewLibCore.Data.SQL.Mapper.Template
             Parameter.Validate(orderBy);
             Parameter.Validate(rawSql);
 
-            return $@"{rawSql} AND {Key}>{pagination.LastKey} {orderBy} LIMIT {pagination.Size} ;";
-            //return $@"{rawSql} {orderBy} LIMIT {pageSize * (pageIndex - 1)},{pageSize} ;";
+            if (pagination.MaxKey > 0)
+            {
+                return $@"{rawSql} AND {Key}>{pagination.MaxKey} {orderBy} LIMIT {pagination.Size} ;";
+            }
+            
+            return $@"{rawSql} {orderBy} LIMIT {pagination.Size * (pagination.Index - 1)},{pagination.Size} ;";
         }
 
         internal override DbParameter CreateParameter()

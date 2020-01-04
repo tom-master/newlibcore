@@ -104,7 +104,6 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
                 }
 
                 MapperConfig.QueryCache.Add(key, list);
-
                 return list;
             }
             catch (Exception ex)

@@ -80,11 +80,11 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
             return this;
         }
 
-        public QueryWrapper<TModel> Page(Int32 pageIndex, Int32 pageSize)
+        public QueryWrapper<TModel> Page(Int32 pageIndex, Int32 pageSize, Int32 maxKey = 0)
         {
             Parameter.Validate(pageIndex);
             Parameter.Validate(pageSize);
-            _expressionStore.AddPage(pageIndex, pageSize);
+            _expressionStore.AddPage(pageIndex, pageSize, maxKey);
 
             return this;
         }
