@@ -42,12 +42,11 @@ namespace NewLibCore.Run
                 // var user = new User("xiaofan","xiaofan@.1");
                 // mapper.Add(user);
 
-                var a = mapper.Query<User>().FirstOrDefault();
-
-                // for (var i = 0; i < 2000; i++)
-                // {
-                //     mapper.Query<User>().Include(d=>d.Config).ToList();
-                // }
+                //var a = mapper.Query<User>().FirstOrDefault();
+                for (var i = 0; i < 2000; i++)
+                {
+                    mapper.Query<User>().ToList();
+                }
 
                 sw.Stop();
                 Console.WriteLine($@"共花费{Math.Round(sw.Elapsed.TotalSeconds, 4)}秒");
