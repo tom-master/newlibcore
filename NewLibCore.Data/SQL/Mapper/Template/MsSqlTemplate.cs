@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.Common;
 using System.Data.SqlClient;
+using NewLibCore.Data.SQL.Mapper.Store;
 using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper.Template
@@ -48,21 +49,21 @@ namespace NewLibCore.Data.SQL.Mapper.Template
             return String.Format(PredicateMapper[predicateType], left, right);
         }
 
-        internal override String CreatePagination(Int32 pageIndex, Int32 pageSize, String orderBy, String rawSql)
+        internal override String CreatePagination(PaginationExpressionMapper pagination, String orderBy, String rawSql)
         {
-            Parameter.Validate(pageSize);
+            Parameter.Validate(pagination.Size);
             Parameter.Validate(orderBy);
             Parameter.Validate(rawSql);
 
             var sql = "";
             if (MapperConfig.MsSqlPaginationVersion == MsSqlPaginationVersion.GREATERTHAN2012)
             {
-                sql = $@" {rawSql} {orderBy} OFFSET ({pageIndex * pageSize}) ROWS FETCH NEXT {pageSize} ROWS ONLY ;";
+                sql = $@" {rawSql} {orderBy} OFFSET ({pagination.Index * pagination.Size}) ROWS FETCH NEXT {pagination.Size} ROWS ONLY ;";
             }
             else
             {
                 sql = rawSql;
-                sql = $@" SELECT * FROM ( {sql.Insert(sql.IndexOf(" "), $@" TOP({pageSize}) ROW_NUMBER() OVER({orderBy}) AS rownumber,")} ) AS temprow WHERE temprow.rownumber>({pageSize}*({pageIndex}-1)) {orderBy}";
+                sql = $@" SELECT * FROM ( {sql.Insert(sql.IndexOf(" "), $@" TOP({pagination.Size}) ROW_NUMBER() OVER({orderBy}) AS rownumber,")} ) AS temprow WHERE temprow.rownumber>({pagination.Size}*({pagination.Index}-1)) {orderBy}";
             }
             return sql;
         }

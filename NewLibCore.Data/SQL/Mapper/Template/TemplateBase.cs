@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Linq;
+using System.Reflection;
+using NewLibCore.Data.SQL.Mapper.Store;
+using NewLibCore.Data.SQL.Mapper.Validate;
 using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper.Template
@@ -10,6 +14,17 @@ namespace NewLibCore.Data.SQL.Mapper.Template
     /// </summary>
     internal abstract class TemplateBase
     {
+
+        protected String Key
+        {
+            get
+            {
+                return typeof(EntityBase)
+                .GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                .ToList().FirstOrDefault(w => w.GetCustomAttributes<PrimaryKeyAttribute>().Any()).Name;
+            }
+        }
+
         /// <summary>
         /// 谓词关系映射
         /// </summary>
@@ -85,7 +100,7 @@ namespace NewLibCore.Data.SQL.Mapper.Template
         /// <param name="orderBy"></param>
         /// <param name="rawSql"></param>
         /// <returns></returns>
-        internal abstract String CreatePagination(Int32 pageIndex, Int32 pageSize, String orderBy, String rawSql);
+        internal abstract String CreatePagination(PaginationExpressionMapper pagination, String orderBy, String rawSql);
 
         /// <summary>
         /// 创建谓词关系

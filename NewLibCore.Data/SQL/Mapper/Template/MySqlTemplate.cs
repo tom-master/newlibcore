@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.Common;
 using MySql.Data.MySqlClient;
+using NewLibCore.Data.SQL.Mapper.Store;
 using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper.Template
@@ -32,13 +33,14 @@ namespace NewLibCore.Data.SQL.Mapper.Template
             return String.Format(PredicateMapper[predicateType], left, right);
         }
 
-        internal override String CreatePagination(Int32 pageIndex, Int32 pageSize, String orderBy, String rawSql)
+        internal override String CreatePagination(PaginationExpressionMapper pagination, String orderBy, String rawSql)
         {
-            Parameter.Validate(pageSize);
+            Parameter.Validate(pagination.Size);
             Parameter.Validate(orderBy);
             Parameter.Validate(rawSql);
 
-            return $@"{rawSql} {orderBy} LIMIT {pageSize * (pageIndex - 1)},{pageSize} ;";
+            return $@"{rawSql} AND {Key}>{pagination.LastKey} {orderBy} LIMIT {pagination.Size} ;";
+            //return $@"{rawSql} {orderBy} LIMIT {pageSize * (pageIndex - 1)},{pageSize} ;";
         }
 
         internal override DbParameter CreateParameter()

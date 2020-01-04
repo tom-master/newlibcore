@@ -52,7 +52,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
                 var (fields, tableName) = ParseOrder();
                 var orderTemplate = Template.CreateOrderBy(_store.Order.OrderBy, $@"{tableName}.{fields}");
 
-                var newSql = Template.CreatePagination(_store.Pagination.Index, _store.Pagination.Size, orderTemplate, result.ToString());
+                var newSql = Template.CreatePagination( _store.Pagination, orderTemplate, result.ToString());
                 result.ClearSql();
                 result.Append(newSql);
             }
