@@ -21,28 +21,28 @@ namespace NewLibCore.Data.SQL.Mapper
         /// </summary>
         /// <value></value>
         [PrimaryKey]
-        public Int32 Id { get; internal set; }
+        public dynamic Id { get; set; }
 
         /// <summary>
         /// 是否删除
         /// </summary>
         /// <value></value>
         [DefaultValue(typeof(Boolean))]
-        public Boolean IsDeleted { get; internal set; }
+        public Boolean IsDeleted { get; set; }
 
         /// <summary>
         /// 添加时间
         /// </summary>
         /// <value></value>
         [DateTimeDefaultValue]
-        public DateTime AddTime { get; internal set; }
+        public DateTime AddTime { get; set; }
 
         /// <summary>
         /// 更新时间
         /// </summary>
         /// <value></value>
         [DateTimeDefaultValue]
-        public DateTime LastModifyTime { get; internal set; }
+        public DateTime LastModifyTime { get; set; }
 
         /// <summary>
         /// 删除一个对象

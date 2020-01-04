@@ -77,15 +77,18 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
                 }
                 else
                 {
+
+                    IList<PropertyInfo> propertiesCache = null;
                     foreach (DataRow item in dt.Rows)
                     {
                         var obj = Activator.CreateInstance<T>();
-                        var type = obj.GetType();
-                        var propertys = type.GetProperties(BindingFlags.Instance | BindingFlags.Public);
-
-                        foreach (var propertyInfo in propertys)
+                        if (propertiesCache == null)
                         {
-                            var r = dt.Columns.OfType<DataColumn>();
+                            propertiesCache = obj.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public);
+                        }
+
+                        foreach (var propertyInfo in propertiesCache)
+                        {
                             if (dt.Columns.Contains(propertyInfo.Name))
                             {
                                 var value = item[propertyInfo.Name];
