@@ -19,6 +19,12 @@ namespace NewLibCore.Data.SQL.Mapper
     public sealed class EntityMapper : IDisposable
     {
 
+        private static ILogger _logger;
+
+        private static QueryCacheBase _queryCacheBase;
+
+        private IServiceScope _serviceScope;
+
         /// <summary>
         /// 连接字符串名称
         /// </summary>
@@ -51,9 +57,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// mssql的版本
         /// </summary>
         internal static MsSqlPaginationVersion MsSqlPaginationVersion { get; set; } = MsSqlPaginationVersion.NONE;
-
-        private IServiceScope _serviceScope;
-
+ 
         /// <summary>
         /// 初始化默认配置
         /// </summary>
@@ -81,9 +85,11 @@ namespace NewLibCore.Data.SQL.Mapper
             }
 
             services = services.AddScoped<MapperDbContextBase, MapperDbContext>();
-            services = services.AddScoped<QueryCacheBase, DefaultQueryCache>();
-            services = services.AddScoped<ILogger, DefaultLogger>();
-            services = services.AddScoped<RunDiagnosis>();
+
+            services = _queryCacheBase == null ? services.AddScoped<QueryCacheBase, DefaultQueryCache>() : services.AddScoped(_queryCacheBase.GetType());
+            services = _logger == null ? services.AddScoped<ILogger, DefaultLogger>() : services.AddScoped(_logger.GetType());
+
+            services = services.AddSingleton<RunDiagnosis>();
 
             services = services.AddTransient<ParserExecutor, DefaultParserExecutor>();
             services = services.AddTransient<ParserResult>();
@@ -123,6 +129,7 @@ namespace NewLibCore.Data.SQL.Mapper
         public static void SetLogger(ILogger logger)
         {
             Parameter.Validate(logger);
+            _logger = logger;
         }
 
         /// <summary>
@@ -132,6 +139,7 @@ namespace NewLibCore.Data.SQL.Mapper
         public static void SetCache(QueryCacheBase cache)
         {
             Parameter.Validate(cache);
+            _queryCacheBase = cache;
         }
 
         private EntityMapper()
