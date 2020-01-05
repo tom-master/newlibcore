@@ -62,10 +62,11 @@ namespace NewLibCore.Data.SQL.Mapper
             UseMySql();
             SetTransactionLevel(IsolationLevel.Unspecified);
             EnableModelValidate = true;
-
-
         }
 
+        /// <summary>
+        /// 初始化依赖注入
+        /// </summary>
         private void InitDi()
         {
             IServiceCollection services = new ServiceCollection();
