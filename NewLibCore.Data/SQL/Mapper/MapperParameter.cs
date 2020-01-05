@@ -108,14 +108,11 @@ namespace NewLibCore.Data.SQL.Mapper
                         }
                     }
                     var ex = $@"无法转换的类型{objType.Name}";
-                    RunDiagnosis.Error(ex);
-                    throw new Exception(ex);
                 }
                 return obj;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                RunDiagnosis.Error(ex.ToString());
                 throw;
             }
         }

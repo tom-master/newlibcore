@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using Microsoft.Extensions.DependencyInjection;
 using NewLibCore.Data.SQL.Mapper.Extension;
 using NewLibCore.Data.SQL.Mapper.Store;
 using NewLibCore.Validate;
@@ -10,6 +11,8 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
 
     public class QueryWrapper<TModel> where TModel : EntityBase, new()
     {
+        private readonly RunDiagnosis _diagnosis;
+
         private readonly ExpressionStore _expressionStore;
 
         private readonly IServiceProvider _serviceProvider;
@@ -18,6 +21,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         {
             _expressionStore = expressionStore;
             _serviceProvider = serviceProvider;
+            _diagnosis = _serviceProvider.GetService<RunDiagnosis>();
         }
 
         public QueryWrapper<TModel> Query()
@@ -249,7 +253,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
 
         public TModel FirstOrDefault()
         {
-            return RunDiagnosis.Watch(() =>
+            return _diagnosis.Watch(() =>
             {
                 HandlerBase handler = new QueryHandler(_expressionStore, _serviceProvider);
                 return handler.Process().FirstOrDefault<TModel>();
@@ -258,7 +262,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
 
         public TResult FirstOrDefault<TResult>() where TResult : new()
         {
-            return RunDiagnosis.Watch(() =>
+            return _diagnosis.Watch(() =>
             {
                 HandlerBase handler = new QueryHandler(_expressionStore, _serviceProvider);
                 return handler.Process().FirstOrDefault<TResult>();
@@ -267,7 +271,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
 
         public List<TModel> ToList()
         {
-            return RunDiagnosis.Watch(() =>
+            return _diagnosis.Watch(() =>
             {
                 HandlerBase handler = new QueryHandler(_expressionStore, _serviceProvider);
                 return handler.Process().ToList<TModel>();
@@ -276,7 +280,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
 
         public List<TResult> ToList<TResult>() where TResult : new()
         {
-            return RunDiagnosis.Watch(() =>
+            return _diagnosis.Watch(() =>
             {
                 HandlerBase handler = new QueryHandler(_expressionStore, _serviceProvider);
                 return handler.Process().ToList<TResult>();
@@ -285,7 +289,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
 
         public Int32 Count()
         {
-            return RunDiagnosis.Watch(() =>
+            return _diagnosis.Watch(() =>
             {
                 Select((a) => "COUNT(*)");
                 HandlerBase handler = new QueryHandler(_expressionStore, _serviceProvider);

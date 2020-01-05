@@ -97,7 +97,6 @@ namespace NewLibCore.Data.SQL.Mapper
             var result = _queryCacheBase.Get(key);
             if (result != null)
             {
-                RunDiagnosis.Info($@"获取DataTable缓存:{JsonConvert.SerializeObject(result)}");
                 return (List<T>)result;
             }
             return null;

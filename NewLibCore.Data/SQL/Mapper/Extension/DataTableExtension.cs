@@ -32,7 +32,7 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
         private static List<T> ConvertToList<T>(DataTable dt)
         {
             try
-            { 
+            {
                 var list = new List<T>();
 
                 if (!typeof(T).IsComplexType())
@@ -82,13 +82,12 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
                         }
                         list.Add(obj);
                     }
-                } 
+                }
 
                 return list;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                RunDiagnosis.Error($@"{typeof(T).Name}转换失败:{ex}");
                 throw;
             }
         }

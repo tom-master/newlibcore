@@ -37,7 +37,6 @@ namespace NewLibCore.Data.SQL.Mapper
             services = services.AddScoped<ILogger, DefaultLogger>();
             services = services.AddScoped<RunDiagnosis>();
 
-
             services = services.AddTransient<ParserExecutor, DefaultParserExecutor>();
             services = services.AddTransient<ParserResult>();
 
@@ -64,7 +63,7 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             Parameter.Validate(model);
 
-            return RunDiagnosis.Watch(() =>
+            return _serviceScope.ServiceProvider.GetService<RunDiagnosis>().Watch(() =>
             {
                 HandlerBase handler = new InsertHandler<TModel>(model, _serviceScope.ServiceProvider);
                 model.Id = handler.Process().FirstOrDefault<Int32>();
@@ -84,7 +83,7 @@ namespace NewLibCore.Data.SQL.Mapper
             Parameter.Validate(model);
             Parameter.Validate(expression);
 
-            return RunDiagnosis.Watch(() =>
+            return _serviceScope.ServiceProvider.GetService<RunDiagnosis>().Watch(() =>
             {
                 var expressionStore = new ExpressionStore();
                 expressionStore.AddWhere(expression);
@@ -116,7 +115,7 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             Parameter.Validate(sql);
 
-            return RunDiagnosis.Watch(() =>
+            return _serviceScope.ServiceProvider.GetService<RunDiagnosis>().Watch(() =>
             {
                 HandlerBase handler = new DirectSqlHandler(sql, parameters, _serviceScope.ServiceProvider);
                 return handler.Process();
