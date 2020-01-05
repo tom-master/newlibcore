@@ -41,9 +41,9 @@ namespace NewLibCore.Data.SQL.Mapper.Template
 
             if (pagination.MaxKey > 0)
             {
-                return $@"{rawSql} AND {Key}>{pagination.MaxKey} {orderBy} LIMIT {pagination.Size} ;";
+                return $@"{rawSql} AND {PrimaryKey}>{pagination.MaxKey} {orderBy} LIMIT {pagination.Size} ;";
             }
-            
+
             return $@"{rawSql} {orderBy} LIMIT {pagination.Size * (pagination.Index - 1)},{pagination.Size} ;";
         }
 

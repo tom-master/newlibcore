@@ -14,8 +14,7 @@ namespace NewLibCore.Data.SQL.Mapper.Template
     /// </summary>
     internal abstract class TemplateBase
     {
-
-        protected String Key
+        internal String PrimaryKey
         {
             get
             {

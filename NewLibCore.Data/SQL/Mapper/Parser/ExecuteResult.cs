@@ -46,7 +46,6 @@ namespace NewLibCore.Data.SQL.Mapper
             {
                 throw;
             }
-
         }
 
         /// <summary>

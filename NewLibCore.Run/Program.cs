@@ -43,7 +43,7 @@ namespace NewLibCore.Run
                 // mapper.Add(user);
 
                 //var a = mapper.Query<User>().FirstOrDefault();
-                for (var i = 0; i < 2000; i++)
+                for (var i = 0; i < 1; i++)
                 {
                     mapper.Query<User>().ToList();
                 }

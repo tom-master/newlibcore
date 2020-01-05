@@ -161,6 +161,17 @@ namespace NewLibCore.Data.SQL.Mapper
                         {
                             var dataTable = new DataTable("tmpDt");
                             dataTable.Load(dr, LoadOption.Upsert);
+
+                            if (MapperConfig.MapperType == MapperType.MYSQL)
+                            {
+                                if (dataTable.Columns.Contains(_templateBase.PrimaryKey))
+                                {
+                                    var defaultView = dataTable.DefaultView;
+                                    defaultView.Sort = $@"{_templateBase.PrimaryKey} desc";
+                                    var r = defaultView.ToTable().Rows[0][_templateBase.PrimaryKey];
+                                    MapperConfig.QueryCache.Add("mysql-max-primarykey", r);
+                                }
+                            }
                             executeResult.SaveRawResult(dataTable);
                         }
                     }
