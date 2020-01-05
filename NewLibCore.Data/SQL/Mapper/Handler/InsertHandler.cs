@@ -30,7 +30,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         protected override ExecuteResult Execute()
         {
             _instance.OnChanged();
-            if (MapperConfig.EnableModelValidate)
+            if (EntityMapper.EnableModelValidate)
             {
                 _instance.Validate();
             }

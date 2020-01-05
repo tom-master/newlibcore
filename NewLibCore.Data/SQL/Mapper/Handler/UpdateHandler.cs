@@ -34,7 +34,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         {
             _instance.SetUpdateTime();
 
-            if (MapperConfig.EnableModelValidate)
+            if (EntityMapper.EnableModelValidate)
             {
                 _instance.Validate();
             }

@@ -56,7 +56,7 @@ namespace NewLibCore.Data.SQL.Mapper.Template
             Parameter.Validate(rawSql);
 
             var sql = "";
-            if (MapperConfig.MsSqlPaginationVersion == MsSqlPaginationVersion.GREATERTHAN2012)
+            if (EntityMapper.MsSqlPaginationVersion == MsSqlPaginationVersion.GREATERTHAN2012)
             {
                 sql = $@" {rawSql} {orderBy} OFFSET ({pagination.Index * pagination.Size}) ROWS FETCH NEXT {pagination.Size} ROWS ONLY ;";
             }
@@ -75,7 +75,7 @@ namespace NewLibCore.Data.SQL.Mapper.Template
 
         internal override DbConnection CreateDbConnection()
         {
-            return new SqlConnection(Host.GetHostVar(MapperConfig.ConnectionStringName));
+            return new SqlConnection(Host.GetHostVar(EntityMapper.ConnectionStringName));
         }
     }
 }

@@ -67,16 +67,16 @@ namespace NewLibCore.Data.SQL.Mapper
                 _connection.Open();
                 try
                 {
-                    if (MapperConfig.MapperType == MapperType.MSSQL && MapperConfig.MsSqlPaginationVersion == MsSqlPaginationVersion.NONE)
+                    if (EntityMapper.MapperType == MapperType.MSSQL && EntityMapper.MsSqlPaginationVersion == MsSqlPaginationVersion.NONE)
                     {
                         var version = Int32.Parse(_connection.ServerVersion.Substring(0, _connection.ServerVersion.IndexOf(".")));
                         if (version <= 11)
                         {
-                            MapperConfig.MsSqlPaginationVersion = MsSqlPaginationVersion.LESSTHEN2012;
+                            EntityMapper.MsSqlPaginationVersion = MsSqlPaginationVersion.LESSTHEN2012;
                         }
                         else
                         {
-                            MapperConfig.MsSqlPaginationVersion = MsSqlPaginationVersion.GREATERTHAN2012;
+                            EntityMapper.MsSqlPaginationVersion = MsSqlPaginationVersion.GREATERTHAN2012;
                         }
                     }
                 }
@@ -91,7 +91,7 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             if (_dataTransaction == null)
             {
-                _dataTransaction = _connection.BeginTransaction(MapperConfig.TransactionLevel);
+                _dataTransaction = _connection.BeginTransaction(EntityMapper.TransactionLevel);
                 _diagnosis.Info("开启事务");
             }
             return _dataTransaction;
@@ -169,7 +169,7 @@ namespace NewLibCore.Data.SQL.Mapper
                             var dataTable = new DataTable("tmpDt");
                             dataTable.Load(dr, LoadOption.Upsert);
 
-                            if (MapperConfig.MapperType == MapperType.MYSQL)
+                            if (EntityMapper.MapperType == MapperType.MYSQL)
                             {
                                 if (dataTable.Columns.Contains(_templateBase.PrimaryKey))
                                 {

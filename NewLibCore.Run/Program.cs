@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading;
 using NewLibCore.Data.SQL.Mapper;
 using NewLibCore.Data.SQL.Mapper.Validate;
 using Newtonsoft.Json;
@@ -14,51 +15,51 @@ namespace NewLibCore.Run
         {
             #region  
 
-            MapperConfig.InitDefaultSetting();
+            EntityMapper.InitDefaultSetting();
 
-            //MapperConfig.UseMySql();
-            //MapperConfig.UseMsSql();
+            //EntityMapper.UseMySql();
+            //EntityMapper.UseMsSql();
 
-            MapperConfig.ConnectionStringName = "NewCrmDatabase";
+            EntityMapper.ConnectionStringName = "NewCrmDatabase";
 
-            // for (var i = 0; i < 4; i++)
-            // {
-            //     var thread = new Thread(new ParameterizedThreadStart((a) =>
-            //     {
-            //         using (var mapper = EntityMapper.CreateMapper())
-            //         {
-            //             var result = mapper.Query<User>().FirstOrDefault();
-            //             Console.WriteLine(JsonConvert.SerializeObject(result));
-            //         }
-            //     }));
-            //     thread.Start();
-            // }
-
-            using (var mapper = EntityMapper.CreateMapper())
+            for (var i = 0; i < 4; i++)
             {
-                var sw = new Stopwatch();
-                sw.Start();
-
-                // var user = new User("xiaofan","xiaofan@.1");
-                // mapper.Add(user);
-
-                //var a = mapper.Query<User>().FirstOrDefault();
-                for (var i = 0; i < 2000; i++)
+                var thread = new Thread(new ParameterizedThreadStart((a) =>
                 {
-                    mapper.Query<User>().ToList();
-                }
-
-                sw.Stop();
-                Console.WriteLine($@"共花费{Math.Round(sw.Elapsed.TotalSeconds, 4)}秒");
-
-                //var result = mapper.Query<User>().FirstOrDefault();
-                //var result = mapper.Query<User>().ToList();
-                //var result = mapper.Query<User>().Select(u => new { u.Id, u.Name, u.LoginPassword }).FirstOrDefault();
-                //var result = mapper.Query<User>().Select(u => new { u.Id, u.Name, u.LoginPassword }).ToList();
-                //var result = mapper.Query<Config>().InnerJoin<User>((c, u) => c.UserId == u.Id).FirstOrDefault();
-                //var result = mapper.Query<Config>().InnerJoin<User>((c, u) => c.UserId == u.Id).ToList();
-                //var result = mapper.Query<App>().RightJoin<Member>((a, m) => a.Id == m.AppId).ToList();
+                    using (var mapper = EntityMapper.CreateMapper())
+                    {
+                        var result = mapper.Query<User>().FirstOrDefault();
+                        Console.WriteLine(JsonConvert.SerializeObject(result));
+                    }
+                }));
+                thread.Start();
             }
+
+            // using (var mapper = EntityMapper.CreateMapper())
+            // {
+            //     var sw = new Stopwatch();
+            //     sw.Start();
+
+            //     // var user = new User("xiaofan","xiaofan@.1");
+            //     // mapper.Add(user);
+
+            //     //var a = mapper.Query<User>().FirstOrDefault();
+            //     for (var i = 0; i < 2000; i++)
+            //     {
+            //         mapper.Query<User>().ToList();
+            //     }
+
+            //     sw.Stop();
+            //     Console.WriteLine($@"共花费{Math.Round(sw.Elapsed.TotalSeconds, 4)}秒");
+
+            //     //var result = mapper.Query<User>().FirstOrDefault();
+            //     //var result = mapper.Query<User>().ToList();
+            //     //var result = mapper.Query<User>().Select(u => new { u.Id, u.Name, u.LoginPassword }).FirstOrDefault();
+            //     //var result = mapper.Query<User>().Select(u => new { u.Id, u.Name, u.LoginPassword }).ToList();
+            //     //var result = mapper.Query<Config>().InnerJoin<User>((c, u) => c.UserId == u.Id).FirstOrDefault();
+            //     //var result = mapper.Query<Config>().InnerJoin<User>((c, u) => c.UserId == u.Id).ToList();
+            //     //var result = mapper.Query<App>().RightJoin<Member>((a, m) => a.Id == m.AppId).ToList();
+            // }
             #endregion
 
 

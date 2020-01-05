@@ -54,7 +54,7 @@ namespace NewLibCore.Data.SQL.Mapper.Template
 
         internal override DbConnection CreateDbConnection()
         {
-            return new MySqlConnection(Host.GetHostVar(MapperConfig.ConnectionStringName));
+            return new MySqlConnection(Host.GetHostVar(EntityMapper.ConnectionStringName));
         }
 
         internal override String Identity

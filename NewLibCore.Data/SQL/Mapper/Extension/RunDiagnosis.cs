@@ -17,7 +17,7 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
         private void CurrentDomain_UnhandledException(Object sender, UnhandledExceptionEventArgs e)
         {
             _logger.Error(((Exception)e.ExceptionObject).Message);
-            if (MapperConfig.ThrowException)
+            if (EntityMapper.ThrowException)
             {
                 throw (Exception)e.ExceptionObject;
             }
