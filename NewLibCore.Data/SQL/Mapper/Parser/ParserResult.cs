@@ -19,18 +19,19 @@ namespace NewLibCore.Data.SQL.Mapper
 
         private readonly MapperDbContextBase _mapperDbContextBase;
 
-        private readonly QueryCacheBase _queryCache = MapperConfig.QueryCache;
+        private readonly QueryCacheBase _queryCacheBase;
 
         /// <summary>
         /// 初始化一个ResultExecutor类的实例
         /// </summary>
         /// <param name="mapperDbContextBase"></param>
-        public ParserResult(MapperDbContextBase mapperDbContextBase)
+        public ParserResult(MapperDbContextBase mapperDbContextBase, QueryCacheBase queryCacheBase)
         {
-            _mapperDbContextBase = mapperDbContextBase;
-
             _originSql = new StringBuilder();
             _parameters = new List<MapperParameter>();
+
+            _queryCacheBase = queryCacheBase;
+            _mapperDbContextBase = mapperDbContextBase;
         }
 
 
@@ -128,9 +129,9 @@ namespace NewLibCore.Data.SQL.Mapper
                 return;
             }
 
-            if (_queryCache != null)
+            if (_queryCacheBase != null)
             {
-                _queryCache.Add(PrepareCacheKey(), executeResult);
+                _queryCacheBase.Add(PrepareCacheKey(), executeResult);
             }
         }
 
@@ -140,9 +141,9 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <returns></returns>
         private ExecuteResult GetCache()
         {
-            if (_queryCache != null)
+            if (_queryCacheBase != null)
             {
-                var cacheResult = _queryCache.Get(PrepareCacheKey());
+                var cacheResult = _queryCacheBase.Get(PrepareCacheKey());
                 if (cacheResult != null)
                 {
                     RunDiagnosis.Info($@"SQL查询缓存返回:{cacheResult}");

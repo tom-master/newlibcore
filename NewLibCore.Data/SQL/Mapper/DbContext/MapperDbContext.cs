@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
-using Microsoft.Extensions.DependencyInjection;
+using NewLibCore.Data.SQL.Mapper.Component.Cache;
 using NewLibCore.Data.SQL.Mapper.Extension;
 using NewLibCore.Data.SQL.Mapper.Template;
 using NewLibCore.Validate;
@@ -25,13 +25,16 @@ namespace NewLibCore.Data.SQL.Mapper
 
         private readonly TemplateBase _templateBase;
 
+        private readonly QueryCacheBase _queryCacheBase;
+
         /// <summary>
         /// 初始化MapperDbContext类的新实例
         /// </summary>
-        public MapperDbContext(TemplateBase templateBase)
+        public MapperDbContext(TemplateBase templateBase, QueryCacheBase queryCacheBase)
         {
             _templateBase = templateBase;
             _connection = templateBase.CreateDbConnection();
+            _queryCacheBase = queryCacheBase;
         }
 
         protected internal override void Commit()
@@ -154,7 +157,7 @@ namespace NewLibCore.Data.SQL.Mapper
                     RunDiagnosis.Info($@"SQL语句:{sql} 占位符与参数:{(parameters == null || !parameters.Any() ? "" : String.Join($@"{Environment.NewLine}", parameters.Select(s => $@"{s.Key}----{s.Value}")))}");
 
                     var executeType = GetExecuteType(sql);
-                    var executeResult = new ExecuteResult();
+                    var executeResult = new ExecuteResult(_queryCacheBase);
                     if (executeType == ExecuteType.SELECT)
                     {
                         using (var dr = cmd.ExecuteReader())
@@ -169,7 +172,7 @@ namespace NewLibCore.Data.SQL.Mapper
                                     var defaultView = dataTable.DefaultView;
                                     defaultView.Sort = $@"{_templateBase.PrimaryKey} desc";
                                     var r = defaultView.ToTable().Rows[0][_templateBase.PrimaryKey];
-                                    MapperConfig.QueryCache.Add("mysql-max-primarykey", r);
+                                    _queryCacheBase.Add("mysql-max-primarykey", r);
                                 }
                             }
                             executeResult.SaveRawResult(dataTable);

@@ -29,29 +29,10 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
             return ConvertToList<T>(dataTable);
         }
 
-        /// <summary>
-        /// 获取单值
-        /// </summary>
-        /// <typeparam name="T">期望的类型</typeparam>
-        /// <param name="dataTable">sql执行后的原始结果</param>
-        /// <returns></returns>
-        internal static T FirstOrDefault<T>(this DataTable dataTable)
-        {
-            return ToList<T>(dataTable).FirstOrDefault();
-        }
-
         private static List<T> ConvertToList<T>(DataTable dt)
         {
             try
-            {
-                var key = MD.GetMD5(JsonConvert.SerializeObject(dt));
-                var result = MapperConfig.QueryCache.Get(key);
-                if (result != null)
-                {
-                    RunDiagnosis.Info($@"获取DataTable缓存:{JsonConvert.SerializeObject(result)}");
-                    return (List<T>)result;
-                }
-
+            { 
                 var list = new List<T>();
 
                 if (!typeof(T).IsComplexType())
@@ -101,9 +82,8 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
                         }
                         list.Add(obj);
                     }
-                }
+                } 
 
-                MapperConfig.QueryCache.Add(key, list);
                 return list;
             }
             catch (Exception ex)

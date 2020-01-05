@@ -1,18 +1,22 @@
 using System;
 using System.Diagnostics;
+using NewLibCore.Logger;
 
 namespace NewLibCore.Data.SQL.Mapper.Extension
 {
-    internal sealed class RunDiagnosis
+    internal class RunDiagnosis
     {
-        static RunDiagnosis()
+        private ILogger _logger;
+
+        public RunDiagnosis(ILogger logger)
         {
+            _logger = logger;
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
         }
 
-        private static void CurrentDomain_UnhandledException(Object sender, UnhandledExceptionEventArgs e)
+        private void CurrentDomain_UnhandledException(Object sender, UnhandledExceptionEventArgs e)
         {
-            Error(((Exception)e.ExceptionObject).Message);
+            _logger.Error(((Exception)e.ExceptionObject).Message);
             if (MapperConfig.ThrowException)
             {
                 throw (Exception)e.ExceptionObject;
@@ -25,7 +29,7 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
         /// <param name="func"></param>
         /// <typeparam name="TModel"></typeparam>
         /// <returns></returns>
-        internal static TModel Watch<TModel>(Func<TModel> func)
+        internal TModel Watch<TModel>(Func<TModel> func)
         {
             try
             {
@@ -33,7 +37,7 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
                 sw.Start();
                 var returnValue = func();
                 sw.Stop();
-                Info($@"共花费{Math.Round(sw.Elapsed.TotalSeconds, 4)}秒");
+                _logger.Info($@"共花费{Math.Round(sw.Elapsed.TotalSeconds, 4)}秒");
                 return returnValue;
             }
             catch (Exception)
@@ -42,29 +46,29 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
             }
         }
 
-        internal static void Info(String message)
+        internal void Info(String message)
         {
-            MapperConfig.Logger.Info(message);
+            _logger.Info(message);
         }
 
-        internal static void Error(String message)
+        internal void Error(String message)
         {
-            MapperConfig.Logger.Error(message);
+            _logger.Error(message);
         }
 
-        internal static void Debug(String message)
+        internal void Debug(String message)
         {
-            MapperConfig.Logger.Debug(message);
+            _logger.Debug(message);
         }
 
-        internal static void Fail(String message)
+        internal void Fail(String message)
         {
-            MapperConfig.Logger.Fail(message);
+            _logger.Fail(message);
         }
 
-        internal static void Warn(String message)
+        internal void Warn(String message)
         {
-            MapperConfig.Logger.Warn(message);
+            _logger.Warn(message);
         }
     }
 }

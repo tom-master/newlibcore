@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
+using NewLibCore.Data.SQL.Mapper.Component.Cache;
 using NewLibCore.Data.SQL.Mapper.Extension;
 using NewLibCore.Validate;
 using Newtonsoft.Json;
@@ -13,12 +15,14 @@ namespace NewLibCore.Data.SQL.Mapper
     public sealed class ExecuteResult
     {
         private Object _result;
+        private readonly QueryCacheBase _queryCacheBase;
 
         /// <summary>
         /// 初始化一个RawExecuteResult类的实例
         /// </summary>
-        internal ExecuteResult()
+        internal ExecuteResult(QueryCacheBase queryCacheBase)
         {
+            _queryCacheBase = queryCacheBase;
         }
 
         /// <summary>
@@ -40,7 +44,16 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             try
             {
-                return ((DataTable)_result).ToList<TResult>();
+                var key = ToString();
+                var cache = GetCache<TResult>(key);
+                if (cache != null)
+                {
+                    return cache;
+                }
+
+                var result = ((DataTable)_result).ToList<TResult>();
+                SetCache(key, result);
+                return result;
             }
             catch (System.Exception)
             {
@@ -61,12 +74,38 @@ namespace NewLibCore.Data.SQL.Mapper
                 {
                     return (TResult)Convert.ChangeType(_result, typeof(TResult));
                 }
-                return ((DataTable)_result).FirstOrDefault<TResult>();
+
+                var key = ToString();
+                var cache = GetCache<TResult>(key);
+                if (cache != null)
+                {
+                    return cache.FirstOrDefault();
+                }
+
+                var result = ((DataTable)_result).ToList<TResult>().FirstOrDefault();
+                SetCache(key, result);
+                return result;
             }
             catch (Exception)
             {
                 throw;
             }
+        }
+
+        private List<T> GetCache<T>(String key)
+        {
+            var result = _queryCacheBase.Get(key);
+            if (result != null)
+            {
+                RunDiagnosis.Info($@"获取DataTable缓存:{JsonConvert.SerializeObject(result)}");
+                return (List<T>)result;
+            }
+            return null;
+        }
+
+        private void SetCache(String key, Object value)
+        {
+            _queryCacheBase.Add(key, value);
         }
 
         public override String ToString()

@@ -13,46 +13,11 @@ namespace NewLibCore.Data.SQL.Mapper
     /// </summary>
     public class MapperConfig
     {
-
-        private static Func<ILogger> _logger = () => null;
-
-        private static Func<QueryCacheBase> _cache = () => null;
-
         /// <summary>
         /// 连接字符串名称
         /// </summary>
         /// <value></value>
         public static String ConnectionStringName { get; set; }
-
-        /// <summary>
-        /// 日志
-        /// </summary>
-        public static ILogger Logger
-        {
-            get
-            {
-                if (_logger == null)
-                {
-                    throw new Exception();
-                }
-                return _logger();
-            }
-        }
-
-        /// <summary>
-        /// 查询结果缓存
-        /// </summary>
-        internal static QueryCacheBase QueryCache
-        {
-            get
-            {
-                if (_cache == null)
-                {
-                    throw new Exception();
-                }
-                return _cache();
-            }
-        }
 
         /// <summary>
         /// 是否在出现异常时抛出异常
@@ -89,9 +54,6 @@ namespace NewLibCore.Data.SQL.Mapper
             UseMySql();
             SetTransactionLevel(IsolationLevel.Unspecified);
             EnableModelValidate = true;
-
-            _logger = () => new DefaultLogger();
-            _cache = () => new DefaultQueryCache();
         }
 
         /// <summary>
@@ -125,8 +87,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <param name="logger"></param>
         public static void SetLogger(ILogger logger)
         {
-            Parameter.Validate(logger);
-            _logger = () => logger;
+            Parameter.Validate(logger); 
         }
 
         /// <summary>
@@ -135,8 +96,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <param name="cache"></param>
         public static void SetCache(QueryCacheBase cache)
         {
-            Parameter.Validate(cache);
-            _cache = () => cache;
+            Parameter.Validate(cache); 
         }
     }
 }

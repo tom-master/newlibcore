@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using Microsoft.Extensions.DependencyInjection;
+using NewLibCore.Data.SQL.Mapper.Component.Cache;
 using NewLibCore.Data.SQL.Mapper.Extension;
 using NewLibCore.Data.SQL.Mapper.Handler;
 using NewLibCore.Data.SQL.Mapper.Store;
 using NewLibCore.Data.SQL.Mapper.Template;
+using NewLibCore.Logger;
 using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper
@@ -31,9 +33,14 @@ namespace NewLibCore.Data.SQL.Mapper
             }
 
             services = services.AddScoped<MapperDbContextBase, MapperDbContext>();
+            services = services.AddScoped<QueryCacheBase, DefaultQueryCache>();
+            services = services.AddScoped<ILogger, DefaultLogger>();
+            services = services.AddScoped<RunDiagnosis>();
+
 
             services = services.AddTransient<ParserExecutor, DefaultParserExecutor>();
             services = services.AddTransient<ParserResult>();
+
 
             _serviceScope = services.BuildServiceProvider().CreateScope();
         }
