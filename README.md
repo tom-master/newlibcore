@@ -90,29 +90,29 @@
   1.初始化EntityMapper的默认设置和实例
   ```C#
   /// <summary>
-  /// 初始化EntityConfig的默认设置:mysql实体映射，将查询缓存保存在内存中，将日志输出到控制台，事物隔离级别未指定
+  /// 初始化EntityMapper的默认设置:mysql实体映射，将查询缓存保存在内存中，将日志输出到控制台，事物隔离级别未指定
   /// </summary>
-  MapperConfig.InitDefaultSetting();
+  EntityMapper.InitDefaultSetting();
   
   /// <summary>
   /// 设置连接字符串
   /// </summary>
-  MapperConfig.ConnectionStringName = "NewDbContext";
+  EntityMapper.ConnectionStringName = "NewDbContext";
   
   //使用mysql的实体映射
-  MapperConfig.UseMySql();
+  EntityMapper.UseMySql();
   
   //使用mssql的实体映射
-  MapperConfig.UseMsSql();
+  EntityMapper.UseMsSql();
   
   //设置自定义的查询结果缓存
-  MapperConfig.SetCache(new CustomCache());
+  EntityMapper.SetCache(new CustomCache());
   
   //设置自定义的保存日志记录的方式
-  MapperConfig.SetLogger(new FileLogger());
+  EntityMapper.SetLogger(new FileLogger());
   
   //设置 当使用事物时，事物将运行在指定的隔离级别
-  MapperConfig.SetTransactionLevel(IsolationLevel.Unspecified);
+  EntityMapper.SetTransactionLevel(IsolationLevel.Unspecified);
   
   //初始化EntityMapper类的新实例
   var mapper = EntityMapper.CreateMapper();
