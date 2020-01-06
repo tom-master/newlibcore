@@ -1,35 +1,28 @@
 using System;
 using System.Collections.Generic;
+using NewLibCore.Data.SQL.Mapper.Template;
 using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper.Handler
 {
-    internal class DirectSqlHandler : HandlerBase
+    internal class DirectSqlHandler
     {
-        private readonly String _sql;
+        private readonly TemplateBase _templateBase;
 
-        private readonly IEnumerable<MapperParameter> _parameters;
+        private readonly ParserExecutor _parserExecutor;
 
-        public DirectSqlHandler(String sql, IServiceProvider serviceProvider) : this(sql, null, serviceProvider)
+        public DirectSqlHandler(TemplateBase templateBase, ParserExecutor parserExecutor)
         {
-
+            Parameter.Validate(templateBase);
+            Parameter.Validate(parserExecutor);
         }
 
-        public DirectSqlHandler(String sql, IEnumerable<MapperParameter> parameters, IServiceProvider serviceProvider) : base(serviceProvider)
+        internal ExecuteResult Execute(String sql, params MapperParameter[] parameters)
         {
-            Parameter.Validate(sql);
-
-            _sql = sql;
-            _parameters = parameters;
-        }
-
-        protected override ExecuteResult Execute()
-        {
-
-            var result = ParserExecutor.Parse(new ParseModel
+            var result = _parserExecutor.Parse(new ParseModel
             {
-                Sql = _sql,
-                Parameters = _parameters
+                Sql = sql,
+                Parameters = parameters
             });
             return result.Execute();
         }

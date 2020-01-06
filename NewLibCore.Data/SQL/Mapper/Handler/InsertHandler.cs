@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using NewLibCore.Data.SQL.Mapper.Extension;
+using NewLibCore.Data.SQL.Mapper.Template;
 using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper.Handler
@@ -9,44 +10,49 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
     /// 新增操作处理
     /// </summary>
     /// <typeparam name="TModel"></typeparam>
-    internal class InsertHandler<TModel> : HandlerBase where TModel : EntityBase, new()
+    internal class InsertHandler
     {
-        private readonly TModel _instance;
+        private readonly TemplateBase _templateBase;
+
+        private readonly ParserExecutor _parserExecutor;
 
         /// <summary>
         /// 初始化一个InsertHandler类的实例
         /// </summary>
         /// <param name="model">要插入的模型</param>
-        internal InsertHandler(TModel model, IServiceProvider serviceProvider) : base(serviceProvider)
+        public InsertHandler(TemplateBase templateBase, ParserExecutor parserExecutor)
         {
-            Parameter.Validate(model);
-            _instance = model;
+            Parameter.Validate(templateBase);
+            Parameter.Validate(parserExecutor);
+
+            _templateBase = templateBase;
+            _parserExecutor = parserExecutor;
         }
 
         /// <summary>
         /// 执行插入操作的翻译
         /// </summary>
         /// <returns></returns>
-        protected override ExecuteResult Execute()
+        internal ExecuteResult Execute<TModel>(TModel instance) where TModel : EntityBase, new()
         {
-            _instance.OnChanged();
+            instance.OnChanged();
             if (EntityMapper.EnableModelValidate)
             {
-                _instance.Validate();
+                instance.Validate();
             }
 
-            var propertys = _instance.GetChangedPropertys();
+            var propertys = instance.GetChangedPropertys();
             if (!propertys.Any())
             {
                 throw new Exception("没有获取到值发生变更的属性");
             }
             var insertFields = String.Join(",", propertys.Select(c => c.Key));
             var placeHolders = String.Join(",", propertys.Select(key => $@"@{key.Key}"));
-            var (tableName, _) = _instance.GetType().GetTableName();
+            var (tableName, _) = instance.GetType().GetTableName();
 
-            var insert = Template.CreateInsert(tableName, insertFields, placeHolders);
+            var insert = _templateBase.CreateInsert(tableName, insertFields, placeHolders);
             var parameters = propertys.Select(c => new MapperParameter(c.Key, c.Value));
-            var result = ParserExecutor.Parse(new ParseModel
+            var result = _parserExecutor.Parse(new ParseModel
             {
                 Sql = insert,
                 Parameters = parameters
