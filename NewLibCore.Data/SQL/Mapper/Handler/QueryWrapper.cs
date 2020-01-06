@@ -96,11 +96,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
             Parameter.Validate(pageIndex);
             Parameter.Validate(pageSize);
 
-            var maxKey = _queryCacheBase.Get("mysql-max-primarykey");
-            if ((Int32)maxKey == 0)
-            {
-                maxKey = 0;
-            }
+            var maxKey = _queryCacheBase.Get<Int32>("mysql-max-primarykey");
             _expressionStore.AddPage(pageIndex, pageSize, (Int32)maxKey);
 
             return this;
