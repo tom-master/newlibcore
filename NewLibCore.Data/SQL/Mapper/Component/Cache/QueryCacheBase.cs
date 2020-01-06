@@ -25,9 +25,10 @@ namespace NewLibCore.Data.SQL.Mapper.Component.Cache
         /// <summary>
         /// 获取一个执行结果缓存
         /// </summary>
-        /// <param name="key">缓存键</param>
+        /// <param name="key"></param>
+        /// <typeparam name="TResult"></typeparam>
         /// <returns></returns>
-        public abstract Object Get(String key);
+        public abstract TResult Get<TResult>(String key);
 
         /// <summary>
         /// 使一个执行结果缓存失效

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using Microsoft.Extensions.DependencyInjection;
+using NewLibCore.Data.SQL.Mapper.Component.Cache;
 using NewLibCore.Data.SQL.Mapper.Extension;
 using NewLibCore.Data.SQL.Mapper.Store;
 using NewLibCore.Validate;
@@ -17,11 +18,17 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
 
         private readonly IServiceProvider _serviceProvider;
 
+        private readonly QueryCacheBase _queryCacheBase;
+
         internal QueryWrapper(ExpressionStore expressionStore, IServiceProvider serviceProvider)
         {
+            Parameter.Validate(expressionStore);
+            Parameter.Validate(serviceProvider);
+
             _expressionStore = expressionStore;
             _serviceProvider = serviceProvider;
             _diagnosis = _serviceProvider.GetService<RunDiagnosis>();
+            _queryCacheBase = _serviceProvider.GetService<QueryCacheBase>();
         }
 
         public QueryWrapper<TModel> Query()
@@ -84,11 +91,17 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
             return this;
         }
 
-        public QueryWrapper<TModel> Page(Int32 pageIndex, Int32 pageSize, Int32 maxKey = 0)
+        public QueryWrapper<TModel> Page(Int32 pageIndex, Int32 pageSize)
         {
             Parameter.Validate(pageIndex);
             Parameter.Validate(pageSize);
-            _expressionStore.AddPage(pageIndex, pageSize, maxKey);
+
+            var maxKey = _queryCacheBase.Get("mysql-max-primarykey");
+            if ((Int32)maxKey == 0)
+            {
+                maxKey = 0;
+            }
+            _expressionStore.AddPage(pageIndex, pageSize, (Int32)maxKey);
 
             return this;
         }

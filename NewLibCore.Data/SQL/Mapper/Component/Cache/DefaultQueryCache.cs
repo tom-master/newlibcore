@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.Caching;
 using NewLibCore.Validate;
+using Newtonsoft.Json;
 
 namespace NewLibCore.Data.SQL.Mapper.Component.Cache
 {
@@ -38,10 +39,15 @@ namespace NewLibCore.Data.SQL.Mapper.Component.Cache
             _baseCache.Remove(key);
         }
 
-        public override Object Get(String key)
+        public override TResult Get<TResult>(String key)
         {
             Parameter.Validate(key);
-            return _baseCache.Get(key);
+            var result = _baseCache.Get(key);
+            if (result == null)
+            {
+                return default(TResult);
+            }
+            return JsonConvert.DeserializeObject<TResult>(key);
         }
     }
 }
