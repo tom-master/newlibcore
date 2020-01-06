@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using Microsoft.Extensions.DependencyInjection;
 using NewLibCore.Data.SQL.Mapper.Component.Cache;
 using NewLibCore.Data.SQL.Mapper.Extension;
 using NewLibCore.Data.SQL.Mapper.Store;
@@ -16,19 +15,22 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
 
         private readonly ExpressionStore _expressionStore;
 
-        private readonly IServiceProvider _serviceProvider;
-
         private readonly QueryCacheBase _queryCacheBase;
 
-        internal QueryWrapper(ExpressionStore expressionStore, IServiceProvider serviceProvider)
+        private readonly QueryHandler _queryHandler;
+
+        internal QueryWrapper(ExpressionStore expressionStore, RunDiagnosis runDiagnosis, QueryCacheBase queryCacheBase, QueryHandler queryHandler)
         {
             Parameter.Validate(expressionStore);
-            Parameter.Validate(serviceProvider);
+            Parameter.Validate(runDiagnosis);
+            Parameter.Validate(queryCacheBase);
+            Parameter.Validate(queryHandler);
 
             _expressionStore = expressionStore;
-            _serviceProvider = serviceProvider;
-            _diagnosis = _serviceProvider.GetService<RunDiagnosis>();
-            _queryCacheBase = _serviceProvider.GetService<QueryCacheBase>();
+
+            _diagnosis = runDiagnosis;
+            _queryCacheBase = queryCacheBase;
+            _queryHandler = queryHandler;
         }
 
         public QueryWrapper<TModel> Query()
@@ -264,8 +266,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         {
             return _diagnosis.Watch(() =>
             {
-                HandlerBase handler = new QueryHandler(_expressionStore, _serviceProvider);
-                return handler.Process().FirstOrDefault<TModel>();
+                return _queryHandler.Execute(_expressionStore).FirstOrDefault<TModel>();
             });
         }
 
@@ -273,8 +274,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         {
             return _diagnosis.Watch(() =>
             {
-                HandlerBase handler = new QueryHandler(_expressionStore, _serviceProvider);
-                return handler.Process().FirstOrDefault<TResult>();
+                return _queryHandler.Execute(_expressionStore).FirstOrDefault<TResult>();
             });
         }
 
@@ -282,8 +282,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         {
             return _diagnosis.Watch(() =>
             {
-                HandlerBase handler = new QueryHandler(_expressionStore, _serviceProvider);
-                return handler.Process().ToList<TModel>();
+                return _queryHandler.Execute(_expressionStore).ToList<TModel>();
             });
         }
 
@@ -291,8 +290,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         {
             return _diagnosis.Watch(() =>
             {
-                HandlerBase handler = new QueryHandler(_expressionStore, _serviceProvider);
-                return handler.Process().ToList<TResult>();
+                return _queryHandler.Execute(_expressionStore).ToList<TResult>();
             });
         }
 
@@ -301,8 +299,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
             return _diagnosis.Watch(() =>
             {
                 Select((a) => "COUNT(*)");
-                HandlerBase handler = new QueryHandler(_expressionStore, _serviceProvider);
-                return handler.Process().FirstOrDefault<Int32>();
+                return _queryHandler.Execute(_expressionStore).FirstOrDefault<Int32>();
             });
         }
     }

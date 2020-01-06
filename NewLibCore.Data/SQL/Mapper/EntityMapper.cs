@@ -57,7 +57,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// mssql的版本
         /// </summary>
         internal static MsSqlPaginationVersion MsSqlPaginationVersion { get; set; } = MsSqlPaginationVersion.NONE;
- 
+
         /// <summary>
         /// 初始化默认配置
         /// </summary>
@@ -168,8 +168,8 @@ namespace NewLibCore.Data.SQL.Mapper
 
             return _serviceScope.ServiceProvider.GetService<RunDiagnosis>().Watch(() =>
             {
-                HandlerBase handler = new InsertHandler<TModel>(model, _serviceScope.ServiceProvider);
-                model.Id = handler.Process().FirstOrDefault<Int32>();
+                var handler = _serviceScope.ServiceProvider.GetService<InsertHandler>();
+                model.Id = handler.Execute(model).FirstOrDefault<Int32>();
                 return model;
             });
         }
@@ -190,8 +190,8 @@ namespace NewLibCore.Data.SQL.Mapper
             {
                 var expressionStore = new ExpressionStore();
                 expressionStore.AddWhere(expression);
-                HandlerBase handler = new UpdateHandler<TModel>(model, expressionStore, _serviceScope.ServiceProvider);
-                return handler.Process().FirstOrDefault<Int32>() > 0;
+                var handler = _serviceScope.ServiceProvider.GetService<UpdateHandler>();
+                return handler.Execute(model, expressionStore).FirstOrDefault<Int32>() > 0;
             });
         }
 
@@ -204,7 +204,12 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             var expressionStore = new ExpressionStore();
             expressionStore.AddFrom<TModel>();
-            return new QueryWrapper<TModel>(expressionStore, _serviceScope.ServiceProvider);
+
+            var diagnosis = _serviceScope.ServiceProvider.GetService<RunDiagnosis>();
+            var queryCacheBase = _serviceScope.ServiceProvider.GetService<QueryCacheBase>();
+            var queryHandler = _serviceScope.ServiceProvider.GetService<QueryHandler>();
+
+            return new QueryWrapper<TModel>(expressionStore, diagnosis, queryCacheBase, queryHandler);
         }
 
         /// <summary>
@@ -214,14 +219,14 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <param name="parameters">实体参数</param>
         /// <typeparam name="TModel"></typeparam>
         /// <returns></returns>
-        public ExecuteResult SqlQuery(String sql, IEnumerable<MapperParameter> parameters = null)
+        public ExecuteResult SqlQuery(String sql, params MapperParameter[] parameters)
         {
             Parameter.Validate(sql);
 
             return _serviceScope.ServiceProvider.GetService<RunDiagnosis>().Watch(() =>
             {
-                HandlerBase handler = new DirectSqlHandler(sql, parameters, _serviceScope.ServiceProvider);
-                return handler.Process();
+                var handler = _serviceScope.ServiceProvider.GetService<DirectSqlHandler>();
+                return handler.Execute(sql, parameters);
             });
         }
 

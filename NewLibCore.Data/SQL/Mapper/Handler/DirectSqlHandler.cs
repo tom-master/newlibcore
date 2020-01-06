@@ -15,6 +15,9 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         {
             Parameter.Validate(templateBase);
             Parameter.Validate(parserExecutor);
+
+            _templateBase = templateBase;
+            _parserExecutor = parserExecutor;
         }
 
         internal ExecuteResult Execute(String sql, params MapperParameter[] parameters)
