@@ -94,10 +94,10 @@ namespace NewLibCore.Data.SQL.Mapper
 
         private List<T> GetCache<T>(String key)
         {
-            var result = _queryCacheBase.Get(key);
+            var result = _queryCacheBase.Get<List<T>>(key);
             if (result != null)
             {
-                return (List<T>)result;
+                return result;
             }
             return null;
         }

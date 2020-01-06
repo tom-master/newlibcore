@@ -143,10 +143,10 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             if (_queryCacheBase != null)
             {
-                var cacheResult = _queryCacheBase.Get(PrepareCacheKey());
+                var cacheResult = _queryCacheBase.Get<ExecuteResult>(PrepareCacheKey());
                 if (cacheResult != null)
                 {
-                    return (ExecuteResult)cacheResult;
+                    return cacheResult;
                 }
             }
             return null;
