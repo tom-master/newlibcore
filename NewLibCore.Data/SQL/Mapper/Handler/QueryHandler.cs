@@ -20,7 +20,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
 
         private readonly ParserExecutor _parserExecutor;
 
-        internal QueryHandler(TemplateBase templateBase, ParserExecutor parserExecutor)
+        public QueryHandler(TemplateBase templateBase, ParserExecutor parserExecutor)
         {
             Parameter.Validate(templateBase);
             Parameter.Validate(parserExecutor);

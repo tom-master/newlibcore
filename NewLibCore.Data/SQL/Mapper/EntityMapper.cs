@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Linq.Expressions;
 using Microsoft.Extensions.DependencyInjection;
@@ -93,6 +92,9 @@ namespace NewLibCore.Data.SQL.Mapper
 
             services = services.AddTransient<ParserExecutor, DefaultParserExecutor>();
             services = services.AddTransient<ParserResult>();
+            services = services.AddTransient<DirectSqlHandler>();
+            services = services.AddTransient<QueryHandler>();
+            services = services.AddTransient<UpdateHandler>();
 
             _serviceScope = services.BuildServiceProvider().CreateScope();
         }

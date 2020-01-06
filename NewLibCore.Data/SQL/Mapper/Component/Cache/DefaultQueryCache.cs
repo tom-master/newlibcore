@@ -47,7 +47,7 @@ namespace NewLibCore.Data.SQL.Mapper.Component.Cache
             {
                 return default(TResult);
             }
-            return JsonConvert.DeserializeObject<TResult>(key);
+            return (TResult)result;
         }
     }
 }
