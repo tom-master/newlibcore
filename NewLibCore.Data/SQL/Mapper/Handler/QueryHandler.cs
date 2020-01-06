@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using NewLibCore.Data.SQL.Mapper.Extension;
 using NewLibCore.Data.SQL.Mapper.Store;
+using NewLibCore.Data.SQL.Mapper.Template;
 using NewLibCore.Data.SQL.Mapper.Validate;
 using NewLibCore.Validate;
 
@@ -13,53 +14,58 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
     /// <summary>
     /// 查询处理类
     /// </summary>
-    internal class QueryHandler : HandlerBase
+    internal class QueryHandler
     {
-        private readonly ExpressionStore _store;
+        private readonly TemplateBase _templateBase;
 
-        internal QueryHandler(ExpressionStore store, IServiceProvider serviceProvider) : base(serviceProvider)
+        private readonly ParserExecutor _parserExecutor;
+
+        internal QueryHandler(TemplateBase templateBase, ParserExecutor parserExecutor)
         {
-            Parameter.Validate(store);
-            _store = store;
+            Parameter.Validate(templateBase);
+            Parameter.Validate(parserExecutor);
+
+            _templateBase = templateBase;
+            _parserExecutor = parserExecutor;
         }
 
         /// <summary>
         /// 执行查询操作的翻译
         /// </summary>
         /// <returns></returns>
-        protected override ExecuteResult Execute()
+        internal ExecuteResult Execute(ExpressionStore store)
         {
-            var mainTable = _store.From.AliaNameMapper[0];
+            var mainTable = store.From.AliaNameMapper[0];
 
-            var result = ParserExecutor.Parse(new ParseModel
+            var result = _parserExecutor.Parse(new ParseModel
             {
-                Sql = Template.CreateSelect(ParseSelect(), mainTable.Key, mainTable.Value),
-                ExpressionStore = _store
+                Sql = _templateBase.CreateSelect(ParseSelect(store), mainTable.Key, mainTable.Value),
+                ExpressionStore = store
             });
 
-            var aliasMapper = _store.MergeAliasMapper();
+            var aliasMapper = store.MergeAliasMapper();
             foreach (var aliasItem in aliasMapper)
             {
                 result.Append($@"{PredicateType.AND} {aliasItem.Value.ToLower()}.IsDeleted = 0");
             }
 
-            if (_store.Pagination != null)
+            if (store.Pagination != null)
             {
-                if (_store.Order == null)
+                if (store.Order == null)
                 {
                     throw new Exception("分页中没有指定排序字段");
                 }
-                var (fields, tableName) = ParseOrder();
-                var orderTemplate = Template.CreateOrderBy(_store.Order.OrderBy, $@"{tableName}.{fields}");
+                var (fields, tableName) = ParseOrder(store);
+                var orderTemplate = _templateBase.CreateOrderBy(store.Order.OrderBy, $@"{tableName}.{fields}");
 
-                var newSql = Template.CreatePagination( _store.Pagination, orderTemplate, result.ToString());
+                var newSql = _templateBase.CreatePagination(store.Pagination, orderTemplate, result.ToString());
                 result.ClearSql();
                 result.Append(newSql);
             }
-            else if (_store.Order != null)
+            else if (store.Order != null)
             {
-                var (fields, tableName) = ParseOrder();
-                var orderTemplate = Template.CreateOrderBy(_store.Order.OrderBy, $@"{tableName}.{fields}");
+                var (fields, tableName) = ParseOrder(store);
+                var orderTemplate = _templateBase.CreateOrderBy(store.Order.OrderBy, $@"{tableName}.{fields}");
                 result.Append(orderTemplate);
             }
 
@@ -70,10 +76,10 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         /// 解析出排序字段
         /// </summary>
         /// <returns></returns>
-        private (String Fields, String AliasName) ParseOrder()
+        private (String Fields, String AliasName) ParseOrder(ExpressionStore store)
         {
             var modelAliasName = new List<String>();
-            var fields = (LambdaExpression)_store.Order.Expression;
+            var fields = (LambdaExpression)store.Order.Expression;
             var aliasName = fields.Parameters[0].Type.GetTableName().AliasName;
 
             if (fields.Body.NodeType == ExpressionType.MemberAccess)
@@ -88,11 +94,11 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         /// 解析出Select字段
         /// </summary>
         /// <returns></returns>
-        private String ParseSelect()
+        private String ParseSelect(ExpressionStore store)
         {
-            if (_store.Select != null)
+            if (store.Select != null)
             {
-                var fields = (LambdaExpression)_store.Select.Expression;
+                var fields = (LambdaExpression)store.Select.Expression;
 
                 var anonymousObjFields = new List<String>();
                 var bodyArguments = (fields.Body as NewExpression).Arguments;
@@ -105,7 +111,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
                 return String.Join(",", anonymousObjFields);
             }
 
-            var types = _store.MergeParameterTypes();
+            var types = store.MergeParameterTypes();
 
             var tableNames = types.Select(s => new KeyValuePair<String, String>(s.Name, s.GetTableName().AliasName)).ToList();
             var propertys = types.SelectMany(s => s.GetProperties(BindingFlags.Instance | BindingFlags.Public)
