@@ -73,7 +73,9 @@ namespace NewLibCore.Data.SQL.Mapper
         private void InitDi()
         {
             IServiceCollection services = new ServiceCollection();
-
+            
+            #region scoped
+            
             if (MapperType == MapperType.MSSQL)
             {
                 services = services.AddScoped<TemplateBase, MsSqlTemplate>();
@@ -84,18 +86,40 @@ namespace NewLibCore.Data.SQL.Mapper
             }
 
             services = services.AddScoped<MapperDbContextBase, MapperDbContext>();
-
-            services = _queryCacheBase == null ? services.AddScoped<QueryCacheBase, DefaultQueryCache>() : services.AddScoped(_queryCacheBase.GetType());
-            services = _logger == null ? services.AddScoped<ILogger, DefaultLogger>() : services.AddScoped(_logger.GetType());
-
-            services = services.AddSingleton<RunDiagnosis>();
-
-            services = services.AddTransient<ParserExecutor, DefaultParserExecutor>();
-            services = services.AddTransient<ParserResult>();
-
             services = services.AddScoped<DirectSqlHandler>();
             services = services.AddScoped<QueryHandler>();
             services = services.AddScoped<UpdateHandler>();
+            #endregion
+
+            #region singleton
+
+            if (_queryCacheBase == null)
+            {
+                services = services.AddSingleton<QueryCacheBase, DefaultQueryCache>();
+            }
+            else
+            {
+                services = services.AddSingleton(_queryCacheBase.GetType());
+            }
+
+            if (_logger == null)
+            {
+                services = services.AddSingleton<ILogger, DefaultLogger>();
+            }
+            else
+            {
+                services = services.AddSingleton(_logger.GetType());
+            }
+
+            services = services.AddSingleton<RunDiagnosis>();
+            #endregion
+
+            #region transient
+
+            services = services.AddTransient<ParserExecutor, DefaultParserExecutor>();
+            services = services.AddTransient<ParserResult>();
+            #endregion
+
 
             _serviceScope = services.BuildServiceProvider().CreateScope();
         }
