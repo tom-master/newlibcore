@@ -44,9 +44,9 @@ namespace NewLibCore.Run
                 // mapper.Add(user);
 
                 //var a = mapper.Query<User>().FirstOrDefault();
-                for (var i = 0; i < 2000; i++)
+                for (var i = 0; i < 10; i++)
                 {
-                    mapper.Query<User>().ToList();
+                    var r = mapper.Query<User>().ToList();
                 }
 
                 sw.Stop();
@@ -60,6 +60,7 @@ namespace NewLibCore.Run
                 //var result = mapper.Query<Config>().InnerJoin<User>((c, u) => c.UserId == u.Id).ToList();
                 //var result = mapper.Query<App>().RightJoin<Member>((a, m) => a.Id == m.AppId).ToList();
             }
+
             #endregion
 
 

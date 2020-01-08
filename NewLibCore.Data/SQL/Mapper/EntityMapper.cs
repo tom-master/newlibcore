@@ -22,7 +22,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
         private static QueryCacheBase _queryCacheBase;
 
-        private IServiceScope _serviceScope;
+        private IServiceProvider _serviceProvider;
 
         /// <summary>
         /// 连接字符串名称
@@ -73,9 +73,9 @@ namespace NewLibCore.Data.SQL.Mapper
         private void InitDi()
         {
             IServiceCollection services = new ServiceCollection();
-            
+
             #region scoped
-            
+
             if (MapperType == MapperType.MSSQL)
             {
                 services = services.AddScoped<TemplateBase, MsSqlTemplate>();
@@ -86,9 +86,7 @@ namespace NewLibCore.Data.SQL.Mapper
             }
 
             services = services.AddScoped<MapperDbContextBase, MapperDbContext>();
-            services = services.AddScoped<DirectSqlHandler>();
-            services = services.AddScoped<QueryHandler>();
-            services = services.AddScoped<UpdateHandler>();
+
             #endregion
 
             #region singleton
@@ -118,10 +116,15 @@ namespace NewLibCore.Data.SQL.Mapper
 
             services = services.AddTransient<ParserExecutor, DefaultParserExecutor>();
             services = services.AddTransient<ParserResult>();
+
+            services = services.AddTransient<DirectSqlHandler>();
+            services = services.AddTransient<QueryHandler>();
+            services = services.AddTransient<UpdateHandler>();
+
             #endregion
 
 
-            _serviceScope = services.BuildServiceProvider().CreateScope();
+            _serviceProvider = services.BuildServiceProvider();
         }
 
         /// <summary>
@@ -193,9 +196,9 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             Parameter.Validate(model);
 
-            return _serviceScope.ServiceProvider.GetService<RunDiagnosis>().Watch(() =>
+            return _serviceProvider.GetService<RunDiagnosis>().Watch(() =>
             {
-                var handler = _serviceScope.ServiceProvider.GetService<InsertHandler>();
+                var handler = _serviceProvider.GetService<InsertHandler>();
                 model.Id = handler.Execute(model).FirstOrDefault<Int32>();
                 return model;
             });
@@ -213,11 +216,11 @@ namespace NewLibCore.Data.SQL.Mapper
             Parameter.Validate(model);
             Parameter.Validate(expression);
 
-            return _serviceScope.ServiceProvider.GetService<RunDiagnosis>().Watch(() =>
+            return _serviceProvider.GetService<RunDiagnosis>().Watch(() =>
             {
                 var expressionStore = new ExpressionStore();
                 expressionStore.AddWhere(expression);
-                var handler = _serviceScope.ServiceProvider.GetService<UpdateHandler>();
+                var handler = _serviceProvider.GetService<UpdateHandler>();
                 return handler.Execute(model, expressionStore).FirstOrDefault<Int32>() > 0;
             });
         }
@@ -232,9 +235,9 @@ namespace NewLibCore.Data.SQL.Mapper
             var expressionStore = new ExpressionStore();
             expressionStore.AddFrom<TModel>();
 
-            var diagnosis = _serviceScope.ServiceProvider.GetService<RunDiagnosis>();
-            var queryCacheBase = _serviceScope.ServiceProvider.GetService<QueryCacheBase>();
-            var queryHandler = _serviceScope.ServiceProvider.GetService<QueryHandler>();
+            var diagnosis = _serviceProvider.GetService<RunDiagnosis>();
+            var queryCacheBase = _serviceProvider.GetService<QueryCacheBase>();
+            var queryHandler = _serviceProvider.GetService<QueryHandler>();
 
             return new QueryWrapper<TModel>(expressionStore, diagnosis, queryCacheBase, queryHandler);
         }
@@ -250,26 +253,26 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             Parameter.Validate(sql);
 
-            return _serviceScope.ServiceProvider.GetService<RunDiagnosis>().Watch(() =>
+            return _serviceProvider.GetService<RunDiagnosis>().Watch(() =>
             {
-                var handler = _serviceScope.ServiceProvider.GetService<DirectSqlHandler>();
+                var handler = _serviceProvider.GetService<DirectSqlHandler>();
                 return handler.Execute(sql, parameters);
             });
         }
 
         public void Commit()
         {
-            _serviceScope.ServiceProvider.GetService<MapperDbContextBase>().Commit();
+            _serviceProvider.GetService<MapperDbContextBase>().Commit();
         }
 
         public void Rollback()
         {
-            _serviceScope.ServiceProvider.GetService<MapperDbContextBase>().Rollback();
+            _serviceProvider.GetService<MapperDbContextBase>().Rollback();
         }
 
         public void OpenTransaction()
         {
-            _serviceScope.ServiceProvider.GetService<MapperDbContextBase>().UseTransaction = true;
+            _serviceProvider.GetService<MapperDbContextBase>().UseTransaction = true;
         }
 
         /// <summary>
@@ -277,7 +280,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// </summary>
         public void Dispose()
         {
-            _serviceScope.Dispose();
+            (_serviceProvider as ServiceProvider).Dispose();
         }
     }
 }

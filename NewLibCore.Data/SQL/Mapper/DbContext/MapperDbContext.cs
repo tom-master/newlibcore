@@ -39,6 +39,8 @@ namespace NewLibCore.Data.SQL.Mapper
             _connection = templateBase.CreateDbConnection();
             _queryCacheBase = queryCacheBase;
             _diagnosis = diagnosis;
+
+            Console.WriteLine(Guid.NewGuid().ToString());
         }
 
         protected internal override void Commit()
