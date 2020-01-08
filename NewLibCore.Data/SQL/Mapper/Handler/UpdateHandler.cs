@@ -12,28 +12,21 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
     /// 更新处理类
     /// </summary>
     /// <typeparam name="TModel"></typeparam>
-    internal class UpdateHandler
-    { 
-        private readonly TemplateBase _templateBase;
-
-        private readonly ParserExecutor _parserExecutor;
+    internal class UpdateHandler : HandlerBase
+    {
 
         /// <summary>
         /// 初始化一个UpdateHandler类的实例
         /// </summary>
         /// <param name="templateBase"></param>
         /// <param name="parserExecutor"></param>
-        public UpdateHandler(TemplateBase templateBase, ParserExecutor parserExecutor)
+        public UpdateHandler(TemplateBase templateBase, ParserExecutor parserExecutor) : base(templateBase, parserExecutor)
         {
-            Parameter.Validate(templateBase);
-            Parameter.Validate(parserExecutor);
-
-            _templateBase = templateBase;
-            _parserExecutor = parserExecutor;
         }
 
-        internal ExecuteResult Execute<TModel>(TModel instance, ExpressionStore expressionStore) where TModel : EntityBase, new()
+        protected override ExecuteResult Execute(ExpressionStore store)
         {
+            var instance = store.Model;
             instance.SetUpdateTime();
 
             if (EntityMapper.EnableModelValidate)
@@ -55,7 +48,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
             {
                 Sql = update,
                 Parameters = parameters,
-                ExpressionStore = expressionStore
+                ExpressionStore = store
             });
 
             result.Append($@"{PredicateType.AND} {aliasName}.IsDeleted=0");

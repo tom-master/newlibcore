@@ -1,0 +1,30 @@
+using System;
+using NewLibCore.Data.SQL.Mapper.Store;
+using NewLibCore.Data.SQL.Mapper.Template;
+using NewLibCore.Validate;
+
+namespace NewLibCore.Data.SQL.Mapper.Handler
+{
+    internal abstract class HandlerBase
+    {
+        protected readonly TemplateBase _templateBase;
+
+        protected readonly ParserExecutor _parserExecutor;
+
+        protected HandlerBase(TemplateBase templateBase, ParserExecutor parserExecutor)
+        {
+            Parameter.Validate(templateBase);
+            Parameter.Validate(parserExecutor);
+
+            _templateBase = templateBase;
+            _parserExecutor = parserExecutor;
+        }
+
+        internal ExecuteResult Process(ExpressionStore store)
+        {
+            return Execute(store);
+        }
+
+        protected abstract ExecuteResult Execute(ExpressionStore store);
+    }
+}

@@ -55,6 +55,12 @@ namespace NewLibCore.Data.SQL.Mapper.Store
         internal DirectExpressionMapper Direct { get; private set; }
 
         /// <summary>
+        /// 存储单个模型实例
+        /// </summary>
+        /// <value></value>
+        internal EntityBase Model { get; private set; }
+
+        /// <summary>
         /// 连接语句对象列表
         /// </summary>
         internal IList<JoinExpressionMapper> Joins { get; private set; } = new List<JoinExpressionMapper>();
@@ -395,12 +401,17 @@ namespace NewLibCore.Data.SQL.Mapper.Store
         {
             Parameter.Validate(sql);
 
-            Expression<Func<String, String>> expression = (a) => sql;
             Direct = new DirectExpressionMapper
             {
-                Expression = expression,
+                Sql = sql,
                 Parameters = parameters
             };
+        }
+
+        internal void AddModel<TModel>(TModel model) where TModel : EntityBase, new()
+        {
+            Parameter.Validate(model);
+            Model = model;
         }
 
         /// <summary>

@@ -198,8 +198,11 @@ namespace NewLibCore.Data.SQL.Mapper
 
             return _serviceProvider.GetService<RunDiagnosis>().Watch(() =>
             {
+                var store = new ExpressionStore();
+                store.AddModel(model);
+
                 var handler = _serviceProvider.GetService<InsertHandler>();
-                model.Id = handler.Execute(model).FirstOrDefault<Int32>();
+                model.Id = handler.Process(store).FirstOrDefault<Int32>();
                 return model;
             });
         }
@@ -218,10 +221,11 @@ namespace NewLibCore.Data.SQL.Mapper
 
             return _serviceProvider.GetService<RunDiagnosis>().Watch(() =>
             {
-                var expressionStore = new ExpressionStore();
-                expressionStore.AddWhere(expression);
+                var store = new ExpressionStore();
+                store.AddWhere(expression);
+                store.AddModel(model);
                 var handler = _serviceProvider.GetService<UpdateHandler>();
-                return handler.Execute(model, expressionStore).FirstOrDefault<Int32>() > 0;
+                return handler.Process(store).FirstOrDefault<Int32>() > 0;
             });
         }
 
@@ -255,8 +259,11 @@ namespace NewLibCore.Data.SQL.Mapper
 
             return _serviceProvider.GetService<RunDiagnosis>().Watch(() =>
             {
+                var store = new ExpressionStore();
+                store.AddDirectSql(sql, parameters);
+                
                 var handler = _serviceProvider.GetService<DirectSqlHandler>();
-                return handler.Execute(sql, parameters);
+                return handler.Process(store);
             });
         }
 

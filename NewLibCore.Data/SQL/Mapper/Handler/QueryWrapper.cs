@@ -13,20 +13,20 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
     {
         private readonly RunDiagnosis _diagnosis;
 
-        private readonly ExpressionStore _expressionStore;
+        private readonly ExpressionStore _store;
 
         private readonly QueryCacheBase _queryCacheBase;
 
         private readonly QueryHandler _queryHandler;
 
-        internal QueryWrapper(ExpressionStore expressionStore, RunDiagnosis runDiagnosis, QueryCacheBase queryCacheBase, QueryHandler queryHandler)
+        internal QueryWrapper(ExpressionStore store, RunDiagnosis runDiagnosis, QueryCacheBase queryCacheBase, QueryHandler queryHandler)
         {
-            Parameter.Validate(expressionStore);
+            Parameter.Validate(store);
             Parameter.Validate(runDiagnosis);
             Parameter.Validate(queryCacheBase);
             Parameter.Validate(queryHandler);
 
-            _expressionStore = expressionStore;
+            _store = store;
 
             _diagnosis = runDiagnosis;
             _queryCacheBase = queryCacheBase;
@@ -35,7 +35,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
 
         public QueryWrapper<TModel> Query()
         {
-            _expressionStore.AddFrom<TModel>();
+            _store.AddFrom<TModel>();
             return this;
         }
 
@@ -43,7 +43,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         where TRight : EntityBase, new()
         {
             Parameter.Validate(join);
-            _expressionStore.AddJoin(join, JoinRelation.LEFT);
+            _store.AddJoin(join, JoinRelation.LEFT);
             return this;
         }
 
@@ -52,7 +52,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         where TRight : EntityBase, new()
         {
             Parameter.Validate(join);
-            _expressionStore.AddJoin(join, JoinRelation.LEFT);
+            _store.AddJoin(join, JoinRelation.LEFT);
 
             return this;
         }
@@ -61,7 +61,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         where TRight : EntityBase, new()
         {
             Parameter.Validate(join);
-            _expressionStore.AddJoin(join, JoinRelation.LEFT);
+            _store.AddJoin(join, JoinRelation.LEFT);
             return this;
         }
 
@@ -70,7 +70,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         where TRight : EntityBase, new()
         {
             Parameter.Validate(join);
-            _expressionStore.AddJoin(join, JoinRelation.RIGHT);
+            _store.AddJoin(join, JoinRelation.RIGHT);
 
             return this;
         }
@@ -79,7 +79,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         where TRight : EntityBase, new()
         {
             Parameter.Validate(join);
-            _expressionStore.AddJoin(join, JoinRelation.INNER);
+            _store.AddJoin(join, JoinRelation.INNER);
             return this;
         }
 
@@ -88,7 +88,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         where TRight : EntityBase, new()
         {
             Parameter.Validate(join);
-            _expressionStore.AddJoin(join, JoinRelation.INNER);
+            _store.AddJoin(join, JoinRelation.INNER);
 
             return this;
         }
@@ -99,7 +99,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
             Parameter.Validate(pageSize);
 
             var maxKey = _queryCacheBase.Get<Int32>("mysql-max-primarykey");
-            _expressionStore.AddPage(pageIndex, pageSize, (Int32)maxKey);
+            _store.AddPage(pageIndex, pageSize, (Int32)maxKey);
 
             return this;
         }
@@ -108,7 +108,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         {
             if (selector != null)
             {
-                _expressionStore.AddSelect(selector);
+                _store.AddSelect(selector);
             }
 
             return this;
@@ -119,7 +119,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         {
             if (selector != null)
             {
-                _expressionStore.AddSelect(selector);
+                _store.AddSelect(selector);
             }
             return this;
         }
@@ -130,7 +130,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         {
             if (selector != null)
             {
-                _expressionStore.AddSelect(selector);
+                _store.AddSelect(selector);
             }
             return this;
         }
@@ -141,7 +141,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         {
             if (selector != null)
             {
-                _expressionStore.AddSelect(selector);
+                _store.AddSelect(selector);
             }
             return this;
         }
@@ -154,7 +154,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         {
             if (selector != null)
             {
-                _expressionStore.AddSelect(selector);
+                _store.AddSelect(selector);
             }
             return this;
         }
@@ -168,7 +168,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         {
             if (selector != null)
             {
-                _expressionStore.AddSelect(selector);
+                _store.AddSelect(selector);
             }
             return this;
         }
@@ -176,7 +176,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         public QueryWrapper<TModel> Where(Expression<Func<TModel, Boolean>> filter)
         {
             Parameter.Validate(filter);
-            _expressionStore.AddWhere(filter);
+            _store.AddWhere(filter);
             return this;
         }
 
@@ -184,7 +184,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         where TModel1 : EntityBase, new()
         {
             Parameter.Validate(filter);
-            _expressionStore.AddWhere(filter);
+            _store.AddWhere(filter);
             return this;
         }
 
@@ -192,7 +192,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         where TModel1 : EntityBase, new()
         {
             Parameter.Validate(filter);
-            _expressionStore.AddWhere(filter);
+            _store.AddWhere(filter);
             return this;
         }
 
@@ -201,7 +201,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         where TModel2 : EntityBase, new()
         {
             Parameter.Validate(filter);
-            _expressionStore.AddWhere(filter);
+            _store.AddWhere(filter);
             return this;
         }
 
@@ -212,7 +212,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         where TModel3 : EntityBase, new()
         {
             Parameter.Validate(filter);
-            _expressionStore.AddWhere(filter);
+            _store.AddWhere(filter);
             return this;
         }
 
@@ -223,7 +223,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         where TModel4 : EntityBase, new()
         {
             Parameter.Validate(filter);
-            _expressionStore.AddWhere(filter);
+            _store.AddWhere(filter);
             return this;
         }
 
@@ -236,21 +236,21 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         where TModel5 : EntityBase, new()
         {
             Parameter.Validate(filter);
-            _expressionStore.AddWhere(filter);
+            _store.AddWhere(filter);
             return this;
         }
 
         public QueryWrapper<TModel> ThenByDesc<TKey>(Expression<Func<TModel, TKey>> order)
         {
             Parameter.Validate(order);
-            _expressionStore.AddOrderBy(order, OrderByType.DESC);
+            _store.AddOrderBy(order, OrderByType.DESC);
             return this;
         }
 
         public QueryWrapper<TModel> ThenByAsc<TKey>(Expression<Func<TModel, TKey>> order)
         {
             Parameter.Validate(order);
-            _expressionStore.AddOrderBy(order, OrderByType.ASC);
+            _store.AddOrderBy(order, OrderByType.ASC);
             return this;
         }
 
@@ -258,7 +258,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         where TModel1 : EntityBase, new()
         {
             Parameter.Validate(include);
-            _expressionStore.AddInclude(include);
+            _store.AddInclude(include);
             return this;
         }
 
@@ -266,7 +266,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         {
             return _diagnosis.Watch(() =>
             {
-                return _queryHandler.Execute(_expressionStore).FirstOrDefault<TModel>();
+                return _queryHandler.Process(_store).FirstOrDefault<TModel>();
             });
         }
 
@@ -274,7 +274,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         {
             return _diagnosis.Watch(() =>
             {
-                return _queryHandler.Execute(_expressionStore).FirstOrDefault<TResult>();
+                return _queryHandler.Process(_store).FirstOrDefault<TResult>();
             });
         }
 
@@ -282,7 +282,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         {
             return _diagnosis.Watch(() =>
             {
-                return _queryHandler.Execute(_expressionStore).ToList<TModel>();
+                return _queryHandler.Process(_store).ToList<TModel>();
             });
         }
 
@@ -290,7 +290,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         {
             return _diagnosis.Watch(() =>
             {
-                return _queryHandler.Execute(_expressionStore).ToList<TResult>();
+                return _queryHandler.Process(_store).ToList<TResult>();
             });
         }
 
@@ -299,7 +299,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
             return _diagnosis.Watch(() =>
             {
                 Select((a) => "COUNT(*)");
-                return _queryHandler.Execute(_expressionStore).FirstOrDefault<Int32>();
+                return _queryHandler.Process(_store).FirstOrDefault<Int32>();
             });
         }
     }

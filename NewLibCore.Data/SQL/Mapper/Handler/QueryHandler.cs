@@ -14,26 +14,18 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
     /// <summary>
     /// 查询处理类
     /// </summary>
-    internal class QueryHandler
+    internal class QueryHandler : HandlerBase
     {
-        private readonly TemplateBase _templateBase;
 
-        private readonly ParserExecutor _parserExecutor;
-
-        public QueryHandler(TemplateBase templateBase, ParserExecutor parserExecutor)
+        public QueryHandler(TemplateBase templateBase, ParserExecutor parserExecutor) : base(templateBase, parserExecutor)
         {
-            Parameter.Validate(templateBase);
-            Parameter.Validate(parserExecutor);
-
-            _templateBase = templateBase;
-            _parserExecutor = parserExecutor;
         }
 
         /// <summary>
         /// 执行查询操作的翻译
         /// </summary>
         /// <returns></returns>
-        internal ExecuteResult Execute(ExpressionStore store)
+        protected override ExecuteResult Execute(ExpressionStore store)
         {
             var mainTable = store.From.AliaNameMapper[0];
 

@@ -53,9 +53,19 @@ namespace NewLibCore.Data.SQL.Mapper.Store
 
     }
 
-    internal class DirectExpressionMapper : ExpressionMapperBase
+    internal class DirectExpressionMapper
     {
+        internal String Sql { get; set; }
         internal IEnumerable<MapperParameter> Parameters { get; set; }
     }
-        
+
+    internal class M
+    {
+        internal EntityBase Model { get; private set; }
+
+        internal void AddModel<TModel>(TModel model) where TModel : EntityBase, new()
+        {
+            Model = model;
+        }
+    }
 }

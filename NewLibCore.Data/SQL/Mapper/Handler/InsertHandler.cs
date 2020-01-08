@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using NewLibCore.Data.SQL.Mapper.Extension;
+using NewLibCore.Data.SQL.Mapper.Store;
 using NewLibCore.Data.SQL.Mapper.Template;
 using NewLibCore.Validate;
 
@@ -10,31 +11,19 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
     /// 新增操作处理
     /// </summary>
     /// <typeparam name="TModel"></typeparam>
-    internal class InsertHandler
+    internal class InsertHandler : HandlerBase
     {
-        private readonly TemplateBase _templateBase;
-
-        private readonly ParserExecutor _parserExecutor;
-
         /// <summary>
         /// 初始化一个InsertHandler类的实例
         /// </summary>
         /// <param name="model">要插入的模型</param>
-        public InsertHandler(TemplateBase templateBase, ParserExecutor parserExecutor)
+        public InsertHandler(TemplateBase templateBase, ParserExecutor parserExecutor) : base(templateBase, parserExecutor)
         {
-            Parameter.Validate(templateBase);
-            Parameter.Validate(parserExecutor);
-
-            _templateBase = templateBase;
-            _parserExecutor = parserExecutor;
         }
 
-        /// <summary>
-        /// 执行插入操作的翻译
-        /// </summary>
-        /// <returns></returns>
-        internal ExecuteResult Execute<TModel>(TModel instance) where TModel : EntityBase, new()
+        protected override ExecuteResult Execute(ExpressionStore store)
         {
+            var instance = store.Model;
             instance.OnChanged();
             if (EntityMapper.EnableModelValidate)
             {
