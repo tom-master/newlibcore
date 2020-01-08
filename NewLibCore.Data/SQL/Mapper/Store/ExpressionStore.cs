@@ -49,6 +49,12 @@ namespace NewLibCore.Data.SQL.Mapper.Store
         internal PaginationExpressionMapper Pagination { get; private set; }
 
         /// <summary>
+        /// sql语句对象
+        /// </summary>
+        /// <value></value>
+        internal DirectExpressionMapper Direct { get; private set; }
+
+        /// <summary>
         /// 连接语句对象列表
         /// </summary>
         internal IList<JoinExpressionMapper> Joins { get; private set; } = new List<JoinExpressionMapper>();
@@ -196,7 +202,7 @@ namespace NewLibCore.Data.SQL.Mapper.Store
                 AliaNameMapper = ParseToAliasNames(((LambdaExpression)filter).Parameters)
             };
         }
- 
+
         /// <summary>
         /// 添加条件表达式
         /// </summary>
@@ -368,7 +374,7 @@ namespace NewLibCore.Data.SQL.Mapper.Store
         /// </summary>
         /// <param name="pageIndex">页索引</param>
         /// <param name="pageSize">页大小</param>
-        internal void AddPage(Int32 pageIndex, Int32 pageSize,Int32 maxKey)
+        internal void AddPage(Int32 pageIndex, Int32 pageSize, Int32 maxKey)
         {
             Parameter.Validate(pageIndex);
             Parameter.Validate(pageSize);
@@ -377,6 +383,23 @@ namespace NewLibCore.Data.SQL.Mapper.Store
                 Index = pageIndex,
                 Size = pageSize,
                 MaxKey = maxKey
+            };
+        }
+
+        /// <summary>
+        /// 添加一个sql语句
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="parameters"></param>
+        internal void AddDirectSql(String sql, params MapperParameter[] parameters)
+        {
+            Parameter.Validate(sql);
+
+            Expression<Func<String, String>> expression = (a) => sql;
+            Direct = new DirectExpressionMapper
+            {
+                Expression = expression,
+                Parameters = parameters
             };
         }
 

@@ -52,4 +52,10 @@ namespace NewLibCore.Data.SQL.Mapper.Store
     {
 
     }
+
+    internal class DirectExpressionMapper : ExpressionMapperBase
+    {
+        internal IEnumerable<MapperParameter> Parameters { get; set; }
+    }
+        
 }
