@@ -117,9 +117,9 @@ namespace NewLibCore.Data.SQL.Mapper
             services = services.AddTransient<ParserExecutor, DefaultParserExecutor>();
             services = services.AddTransient<ParserResult>();
 
-            services = services.AddTransient<DirectSqlHandler>();
-            services = services.AddTransient<QueryHandler>();
-            services = services.AddTransient<UpdateHandler>();
+            services = services.AddTransient<HandlerBase, DirectSqlHandler>();
+            services = services.AddTransient<HandlerBase, QueryHandler>();
+            services = services.AddTransient<HandlerBase, UpdateHandler>();
 
             #endregion
 
@@ -261,7 +261,7 @@ namespace NewLibCore.Data.SQL.Mapper
             {
                 var store = new ExpressionStore();
                 store.AddDirectSql(sql, parameters);
-                
+
                 var handler = _serviceProvider.GetService<DirectSqlHandler>();
                 return handler.Process(store);
             });
