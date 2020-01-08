@@ -92,9 +92,10 @@ namespace NewLibCore.Data.SQL.Mapper
 
             services = services.AddTransient<ParserExecutor, DefaultParserExecutor>();
             services = services.AddTransient<ParserResult>();
-            services = services.AddTransient<DirectSqlHandler>();
-            services = services.AddTransient<QueryHandler>();
-            services = services.AddTransient<UpdateHandler>();
+
+            services = services.AddScoped<DirectSqlHandler>();
+            services = services.AddScoped<QueryHandler>();
+            services = services.AddScoped<UpdateHandler>();
 
             _serviceScope = services.BuildServiceProvider().CreateScope();
         }
