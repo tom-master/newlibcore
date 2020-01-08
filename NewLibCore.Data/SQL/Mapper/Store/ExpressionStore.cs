@@ -9,6 +9,33 @@ using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper.Store
 {
+
+    internal static class ExpressionStoreExtension
+    {
+
+
+        /// <summary>
+        /// 添加一个sql语句
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="parameters"></param>
+        internal static void AddDirectSql(this ExpressionStore store, String sql, params MapperParameter[] parameters)
+        {
+            Parameter.Validate(sql);
+            store.Direct = new DirectExpressionMapper
+            {
+                Sql = sql,
+                Parameters = parameters
+            };
+        }
+
+        internal static void AddModel<TModel>(this ExpressionStore store, TModel model) where TModel : EntityBase, new()
+        {
+            Parameter.Validate(model);
+            store.Model = model;
+        }
+    }
+
     /// <summary>
     /// 将外部传入的表达式树保存起来
     /// </summary>
@@ -52,13 +79,13 @@ namespace NewLibCore.Data.SQL.Mapper.Store
         /// sql语句对象
         /// </summary>
         /// <value></value>
-        internal DirectExpressionMapper Direct { get; private set; }
+        internal DirectExpressionMapper Direct { get; set; }
 
         /// <summary>
         /// 存储单个模型实例
         /// </summary>
         /// <value></value>
-        internal EntityBase Model { get; private set; }
+        internal EntityBase Model { get; set; }
 
         /// <summary>
         /// 连接语句对象列表
@@ -390,28 +417,6 @@ namespace NewLibCore.Data.SQL.Mapper.Store
                 Size = pageSize,
                 MaxKey = maxKey
             };
-        }
-
-        /// <summary>
-        /// 添加一个sql语句
-        /// </summary>
-        /// <param name="sql"></param>
-        /// <param name="parameters"></param>
-        internal void AddDirectSql(String sql, params MapperParameter[] parameters)
-        {
-            Parameter.Validate(sql);
-
-            Direct = new DirectExpressionMapper
-            {
-                Sql = sql,
-                Parameters = parameters
-            };
-        }
-
-        internal void AddModel<TModel>(TModel model) where TModel : EntityBase, new()
-        {
-            Parameter.Validate(model);
-            Model = model;
         }
 
         /// <summary>
