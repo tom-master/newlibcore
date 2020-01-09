@@ -11,6 +11,8 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
 
         protected readonly ParserExecutor _parserExecutor;
 
+        internal virtual String CurrentId { get { return GetType().Name; } }
+
         protected HandlerBase(TemplateBase templateBase, ParserExecutor parserExecutor)
         {
             Parameter.Validate(templateBase);

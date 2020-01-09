@@ -30,7 +30,7 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             Parameter.Validate(mapperDbContextBase);
             Parameter.Validate(queryCacheBase);
-            
+
             _originSql = new StringBuilder();
             _parameters = new List<MapperParameter>();
 
@@ -77,13 +77,16 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <returns></returns>
         internal ExecuteResult Execute()
         {
-            var dbContext = _mapperDbContextBase;
-            var executeType = dbContext.GetExecuteType(ToString());
 
             var executeResult = GetCache();
             if (executeResult == null)
             {
-                executeResult = dbContext.RawExecute(ToString(), _parameters);
+                var sql = ToString();
+                
+                var dbContext = _mapperDbContextBase;
+                executeResult = dbContext.RawExecute(sql, _parameters);
+                var executeType = dbContext.GetExecuteType(sql);
+
                 SetCache(executeType, executeResult);
             }
 

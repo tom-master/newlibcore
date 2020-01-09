@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Linq;
 using System.Linq.Expressions;
 using Microsoft.Extensions.DependencyInjection;
 using NewLibCore.Data.SQL.Mapper.Component.Cache;
@@ -201,7 +202,7 @@ namespace NewLibCore.Data.SQL.Mapper
                 var store = new ExpressionStore();
                 store.AddModel(model);
 
-                var handler = _serviceProvider.GetService<InsertHandler>();
+                var handler = _serviceProvider.GetServices<HandlerBase>().FirstOrDefault(w => w.CurrentId == nameof(InsertHandler));
                 model.Id = handler.Process(store).FirstOrDefault<Int32>();
                 return model;
             });
@@ -224,7 +225,7 @@ namespace NewLibCore.Data.SQL.Mapper
                 var store = new ExpressionStore();
                 store.AddWhere(expression);
                 store.AddModel(model);
-                var handler = _serviceProvider.GetService<UpdateHandler>();
+                var handler = _serviceProvider.GetServices<HandlerBase>().FirstOrDefault(w => w.CurrentId == nameof(UpdateHandler));
                 return handler.Process(store).FirstOrDefault<Int32>() > 0;
             });
         }
@@ -241,7 +242,8 @@ namespace NewLibCore.Data.SQL.Mapper
 
             var diagnosis = _serviceProvider.GetService<RunDiagnosis>();
             var queryCacheBase = _serviceProvider.GetService<QueryCacheBase>();
-            var queryHandler = _serviceProvider.GetService<QueryHandler>();
+            var queryHandler = _serviceProvider.GetServices<HandlerBase>()
+            .FirstOrDefault(w => w.CurrentId == nameof(QueryHandler));
 
             return new QueryWrapper<TModel>(expressionStore, diagnosis, queryCacheBase, queryHandler);
         }
@@ -262,7 +264,7 @@ namespace NewLibCore.Data.SQL.Mapper
                 var store = new ExpressionStore();
                 store.AddDirectSql(sql, parameters);
 
-                var handler = _serviceProvider.GetService<DirectSqlHandler>();
+                var handler = _serviceProvider.GetServices<HandlerBase>().FirstOrDefault(w => w.CurrentId == nameof(DirectSqlHandler));
                 return handler.Process(store);
             });
         }

@@ -17,20 +17,20 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
 
         private readonly QueryCacheBase _queryCacheBase;
 
-        private readonly QueryHandler _queryHandler;
+        private readonly HandlerBase _handlerBase;
 
-        internal QueryWrapper(ExpressionStore store, RunDiagnosis runDiagnosis, QueryCacheBase queryCacheBase, QueryHandler queryHandler)
+        internal QueryWrapper(ExpressionStore store, RunDiagnosis runDiagnosis, QueryCacheBase queryCacheBase, HandlerBase handlerBase)
         {
             Parameter.Validate(store);
             Parameter.Validate(runDiagnosis);
             Parameter.Validate(queryCacheBase);
-            Parameter.Validate(queryHandler);
+            Parameter.Validate(handlerBase);
 
             _store = store;
 
             _diagnosis = runDiagnosis;
             _queryCacheBase = queryCacheBase;
-            _queryHandler = queryHandler;
+            _handlerBase = handlerBase;
         }
 
         public QueryWrapper<TModel> Query()
@@ -266,7 +266,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         {
             return _diagnosis.Watch(() =>
             {
-                return _queryHandler.Process(_store).FirstOrDefault<TModel>();
+                return _handlerBase.Process(_store).FirstOrDefault<TModel>();
             });
         }
 
@@ -274,7 +274,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         {
             return _diagnosis.Watch(() =>
             {
-                return _queryHandler.Process(_store).FirstOrDefault<TResult>();
+                return _handlerBase.Process(_store).FirstOrDefault<TResult>();
             });
         }
 
@@ -282,7 +282,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         {
             return _diagnosis.Watch(() =>
             {
-                return _queryHandler.Process(_store).ToList<TModel>();
+                return _handlerBase.Process(_store).ToList<TModel>();
             });
         }
 
@@ -290,7 +290,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         {
             return _diagnosis.Watch(() =>
             {
-                return _queryHandler.Process(_store).ToList<TResult>();
+                return _handlerBase.Process(_store).ToList<TResult>();
             });
         }
 
@@ -299,7 +299,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
             return _diagnosis.Watch(() =>
             {
                 Select((a) => "COUNT(*)");
-                return _queryHandler.Process(_store).FirstOrDefault<Int32>();
+                return _handlerBase.Process(_store).FirstOrDefault<Int32>();
             });
         }
     }
