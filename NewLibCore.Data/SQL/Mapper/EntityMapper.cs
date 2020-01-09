@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
@@ -202,7 +204,7 @@ namespace NewLibCore.Data.SQL.Mapper
                 var store = new ExpressionStore();
                 store.AddModel(model);
 
-                var handler = _serviceProvider.GetServices<HandlerBase>().FirstOrDefault(w => w.CurrentId == nameof(InsertHandler));
+                var handler = FindHandler(_serviceProvider.GetServices<HandlerBase>(), nameof(InsertHandler));
                 model.Id = handler.Process(store).FirstOrDefault<Int32>();
                 return model;
             });
@@ -225,7 +227,7 @@ namespace NewLibCore.Data.SQL.Mapper
                 var store = new ExpressionStore();
                 store.AddWhere(expression);
                 store.AddModel(model);
-                var handler = _serviceProvider.GetServices<HandlerBase>().FirstOrDefault(w => w.CurrentId == nameof(UpdateHandler));
+                var handler = FindHandler(_serviceProvider.GetServices<HandlerBase>(), nameof(UpdateHandler));
                 return handler.Process(store).FirstOrDefault<Int32>() > 0;
             });
         }
@@ -242,8 +244,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
             var diagnosis = _serviceProvider.GetService<RunDiagnosis>();
             var queryCacheBase = _serviceProvider.GetService<QueryCacheBase>();
-            var queryHandler = _serviceProvider.GetServices<HandlerBase>()
-            .FirstOrDefault(w => w.CurrentId == nameof(QueryHandler));
+            var queryHandler = FindHandler(_serviceProvider.GetServices<HandlerBase>(), nameof(QueryHandler));
 
             return new QueryWrapper<TModel>(expressionStore, diagnosis, queryCacheBase, queryHandler);
         }
@@ -264,7 +265,7 @@ namespace NewLibCore.Data.SQL.Mapper
                 var store = new ExpressionStore();
                 store.AddDirectSql(sql, parameters);
 
-                var handler = _serviceProvider.GetServices<HandlerBase>().FirstOrDefault(w => w.CurrentId == nameof(DirectSqlHandler));
+                var handler = FindHandler(_serviceProvider.GetServices<HandlerBase>(), nameof(DirectSqlHandler));
                 return handler.Process(store);
             });
         }
@@ -290,6 +291,18 @@ namespace NewLibCore.Data.SQL.Mapper
         public void Dispose()
         {
             (_serviceProvider as ServiceProvider).Dispose();
+        }
+
+        private HandlerBase FindHandler(IEnumerable<HandlerBase> source, String target)
+        {
+            Parameter.Validate(source);
+            Parameter.Validate(target);
+            var result = source.FirstOrDefault(w => w.CurrentId == target);
+            if (result != null)
+            {
+                return result;
+            }
+            throw new ArgumentException($@"没有找到{target}所注册的实现类");
         }
     }
 }
