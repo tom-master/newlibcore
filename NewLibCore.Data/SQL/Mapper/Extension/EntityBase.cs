@@ -21,7 +21,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// </summary>
         /// <value></value>
         [PrimaryKey]
-        public dynamic Id { get; set; }
+        public Int32 Id { get; set; }
 
         /// <summary>
         /// 是否删除
