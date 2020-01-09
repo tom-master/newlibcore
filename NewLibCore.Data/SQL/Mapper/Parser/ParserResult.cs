@@ -15,11 +15,12 @@ namespace NewLibCore.Data.SQL.Mapper
     {
         private StringBuilder _originSql;
 
+        private readonly QueryCacheBase _queryCacheBase;
+
         private readonly IList<MapperParameter> _parameters;
 
         private readonly MapperDbContextBase _mapperDbContextBase;
 
-        private readonly QueryCacheBase _queryCacheBase;
 
         /// <summary>
         /// 初始化一个ResultExecutor类的实例
@@ -27,6 +28,9 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <param name="mapperDbContextBase"></param>
         public ParserResult(MapperDbContextBase mapperDbContextBase, QueryCacheBase queryCacheBase)
         {
+            Parameter.Validate(mapperDbContextBase);
+            Parameter.Validate(queryCacheBase);
+            
             _originSql = new StringBuilder();
             _parameters = new List<MapperParameter>();
 
