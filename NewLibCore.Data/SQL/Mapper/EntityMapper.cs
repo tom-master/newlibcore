@@ -41,7 +41,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
         /// <summary>
         /// 启用模型验证
-        /// </summary>
+        /// </summary> 
         /// <value></value>
         public static Boolean EnableModelValidate { get; set; }
 
