@@ -33,7 +33,6 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
                     throw new Exception($@"{t.Name}没有被{nameof(TableNameAttribute)}所修饰");
                 }
 
-
                 var attribute = (TableNameAttribute)attrubutes.FirstOrDefault();
 
                 _dic.Add(t.Name, new KeyValuePair<string, string>(attribute.TableName, attribute.AliasName));
