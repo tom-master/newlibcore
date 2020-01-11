@@ -123,6 +123,7 @@ namespace NewLibCore.Data.SQL.Mapper
             services = services.AddTransient<HandlerBase, DirectSqlHandler>();
             services = services.AddTransient<HandlerBase, QueryHandler>();
             services = services.AddTransient<HandlerBase, UpdateHandler>();
+            services = services.AddTransient<HandlerBase, InsertHandler>();
 
             #endregion
 

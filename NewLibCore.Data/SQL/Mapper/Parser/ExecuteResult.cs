@@ -45,7 +45,7 @@ namespace NewLibCore.Data.SQL.Mapper
             try
             {
                 var key = ToString();
-                var cache = GetCache<TResult>(key);
+                var cache = GetCache<List<TResult>>(key);
                 if (cache != null)
                 {
                     return cache;
@@ -70,20 +70,28 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             try
             {
-                if (!typeof(TResult).IsComplexType() && !_result.GetType().IsComplexType())
+                var complexType = typeof(TResult).IsComplexType();
+                if (!complexType && !_result.GetType().IsComplexType())
                 {
                     return (TResult)Convert.ChangeType(_result, typeof(TResult));
                 }
 
                 var key = ToString();
-                var cache = GetCache<TResult>(key);
-                if (cache != null)
+                if (complexType)
                 {
-                    return cache.FirstOrDefault();
+                    var cache = GetCache<TResult>(key);
+                    if (cache != null)
+                    {
+                        return cache;
+                    }
                 }
 
+
                 var result = ((DataTable)_result).ToList<TResult>().FirstOrDefault();
-                SetCache(key, result);
+                if (complexType)
+                {
+                    SetCache(key, result);
+                }
                 return result;
             }
             catch (Exception)
@@ -92,14 +100,14 @@ namespace NewLibCore.Data.SQL.Mapper
             }
         }
 
-        private List<T> GetCache<T>(String key)
+        private T GetCache<T>(String key)
         {
-            var result = _queryCacheBase.Get<List<T>>(key);
+            var result = _queryCacheBase.Get<T>(key);
             if (result != null)
             {
                 return result;
             }
-            return null;
+            return default(T);
         }
 
         private void SetCache(String key, Object value)
