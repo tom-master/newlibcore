@@ -12,8 +12,6 @@ namespace NewLibCore.Data.SQL.Mapper.Store
 
     internal static class ExpressionStoreExtension
     {
-
-
         /// <summary>
         /// 添加一个sql语句
         /// </summary>
