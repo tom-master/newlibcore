@@ -72,11 +72,11 @@ namespace NewLibCore.Data.SQL.Mapper
 
         private Stack<String> _parameterNameStack;
 
+        private readonly TemplateBase _templateBase;
+
         private Stack<PredicateType> _predicateTypeStack;
 
         private IReadOnlyList<KeyValuePair<String, String>> _tableAliasMapper;
-
-        private readonly TemplateBase _templateBase;
 
         /// <summary>
         /// 初始化Parser类的新实例

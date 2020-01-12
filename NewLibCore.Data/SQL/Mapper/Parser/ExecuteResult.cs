@@ -42,23 +42,16 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <returns></returns>
         public List<TResult> ToList<TResult>() where TResult : new()
         {
-            try
+            var key = ToString();
+            var cache = GetCache<List<TResult>>(key);
+            if (cache != null)
             {
-                var key = ToString();
-                var cache = GetCache<List<TResult>>(key);
-                if (cache != null)
-                {
-                    return cache;
-                }
+                return cache;
+            }
 
-                var result = ((DataTable)_result).ToList<TResult>();
-                SetCache(key, result);
-                return result;
-            }
-            catch (System.Exception)
-            {
-                throw;
-            }
+            var result = ((DataTable)_result).ToList<TResult>();
+            SetCache(key, result);
+            return result;
         }
 
         /// <summary>
@@ -68,36 +61,29 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <returns></returns>
         public TResult FirstOrDefault<TResult>()
         {
-            try
+
+            var complexType = typeof(TResult).IsComplexType();
+            if (!complexType && !_result.GetType().IsComplexType())
             {
-                var complexType = typeof(TResult).IsComplexType();
-                if (!complexType && !_result.GetType().IsComplexType())
-                {
-                    return (TResult)Convert.ChangeType(_result, typeof(TResult));
-                }
-
-                var key = ToString();
-                if (complexType)
-                {
-                    var cache = GetCache<TResult>(key);
-                    if (cache != null)
-                    {
-                        return cache;
-                    }
-                }
-
-
-                var result = ((DataTable)_result).ToList<TResult>().FirstOrDefault();
-                if (complexType)
-                {
-                    SetCache(key, result);
-                }
-                return result;
+                return (TResult)Convert.ChangeType(_result, typeof(TResult));
             }
-            catch (Exception)
+
+            var key = ToString();
+            if (complexType)
             {
-                throw;
+                var cache = GetCache<TResult>(key);
+                if (cache != null)
+                {
+                    return cache;
+                }
             }
+
+            var result = ((DataTable)_result).ToList<TResult>().FirstOrDefault();
+            if (complexType)
+            {
+                SetCache(key, result);
+            }
+            return result;
         }
 
         private T GetCache<T>(String key)
