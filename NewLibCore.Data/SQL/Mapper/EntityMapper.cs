@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -75,59 +74,66 @@ namespace NewLibCore.Data.SQL.Mapper
         /// </summary>
         private void InitDependency()
         {
-            IServiceCollection services = new ServiceCollection();
-
-            #region scoped
-
-            if (MapperType == MapperType.MSSQL)
+            try
             {
-                services = services.AddScoped<TemplateBase, MsSqlTemplate>();
+                IServiceCollection services = new ServiceCollection();
+
+                #region scoped
+
+                if (MapperType == MapperType.MSSQL)
+                {
+                    services = services.AddScoped<TemplateBase, MsSqlTemplate>();
+                }
+                else if (MapperType == MapperType.MYSQL)
+                {
+                    services = services.AddScoped<TemplateBase, MySqlTemplate>();
+                }
+
+                services = services.AddScoped<MapperDbContextBase, MapperDbContext>();
+
+                #endregion
+
+                #region singleton
+
+                if (_queryCacheBase == null)
+                {
+                    services = services.AddSingleton<QueryCacheBase, DefaultQueryCache>();
+                }
+                else
+                {
+                    services = services.AddSingleton(_queryCacheBase.GetType());
+                }
+
+                if (_logger == null)
+                {
+                    services = services.AddSingleton<ILogger, DefaultLogger>();
+                }
+                else
+                {
+                    services = services.AddSingleton(_logger.GetType());
+                }
+
+                services = services.AddSingleton<RunDiagnosis>();
+                #endregion
+
+                #region transient
+
+                services = services.AddTransient<ParserExecutor, DefaultParserExecutor>();
+                services = services.AddTransient<ParserResult>();
+
+                services = services.AddTransient<HandlerBase, DirectSqlHandler>();
+                services = services.AddTransient<HandlerBase, QueryHandler>();
+                services = services.AddTransient<HandlerBase, UpdateHandler>();
+                services = services.AddTransient<HandlerBase, InsertHandler>();
+
+                #endregion
+
+                _serviceProvider = services.BuildServiceProvider();
             }
-            else if (MapperType == MapperType.MYSQL)
+            catch (System.Exception)
             {
-                services = services.AddScoped<TemplateBase, MySqlTemplate>();
+                throw;
             }
-
-            services = services.AddScoped<MapperDbContextBase, MapperDbContext>();
-
-            #endregion
-
-            #region singleton
-
-            if (_queryCacheBase == null)
-            {
-                services = services.AddSingleton<QueryCacheBase, DefaultQueryCache>();
-            }
-            else
-            {
-                services = services.AddSingleton(_queryCacheBase.GetType());
-            }
-
-            if (_logger == null)
-            {
-                services = services.AddSingleton<ILogger, DefaultLogger>();
-            }
-            else
-            {
-                services = services.AddSingleton(_logger.GetType());
-            }
-
-            services = services.AddSingleton<RunDiagnosis>();
-            #endregion
-
-            #region transient
-
-            services = services.AddTransient<ParserExecutor, DefaultParserExecutor>();
-            services = services.AddTransient<ParserResult>();
-
-            services = services.AddTransient<HandlerBase, DirectSqlHandler>();
-            services = services.AddTransient<HandlerBase, QueryHandler>();
-            services = services.AddTransient<HandlerBase, UpdateHandler>();
-            services = services.AddTransient<HandlerBase, InsertHandler>();
-
-            #endregion
-
-            _serviceProvider = services.BuildServiceProvider();
         }
 
         /// <summary>
