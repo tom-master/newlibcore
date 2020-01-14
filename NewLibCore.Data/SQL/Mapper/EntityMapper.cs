@@ -73,7 +73,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <summary>
         /// 初始化依赖注入
         /// </summary>
-        private void InitDi()
+        private void InitDependency()
         {
             IServiceCollection services = new ServiceCollection();
 
@@ -127,7 +127,6 @@ namespace NewLibCore.Data.SQL.Mapper
 
             #endregion
 
-
             _serviceProvider = services.BuildServiceProvider();
         }
 
@@ -178,7 +177,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
         private EntityMapper()
         {
-            InitDi();
+            InitDependency();
         }
 
         /// <summary>
