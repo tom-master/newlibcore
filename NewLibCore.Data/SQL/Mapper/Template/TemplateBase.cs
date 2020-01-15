@@ -20,6 +20,7 @@ namespace NewLibCore.Data.SQL.Mapper.Template
 
         public TemplateBase(QueryCacheBase queryCacheBase)
         {
+            Parameter.Validate(queryCacheBase);
             _queryCacheBase = queryCacheBase;
         }
 
