@@ -17,20 +17,15 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
 
         private readonly HandlerBase _handlerBase;
 
-        private readonly QueryCacheBase _queryCacheBase;
-
-
-        internal QueryWrapper(ExpressionStore store, RunDiagnosis runDiagnosis, QueryCacheBase queryCacheBase, HandlerBase handlerBase)
+        internal QueryWrapper(ExpressionStore store, RunDiagnosis runDiagnosis, HandlerBase handlerBase)
         {
             Parameter.Validate(store);
             Parameter.Validate(runDiagnosis);
-            Parameter.Validate(queryCacheBase);
             Parameter.Validate(handlerBase);
 
             _store = store;
 
             _diagnosis = runDiagnosis;
-            _queryCacheBase = queryCacheBase;
             _handlerBase = handlerBase;
         }
 
@@ -99,9 +94,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
             Parameter.Validate(pageIndex);
             Parameter.Validate(pageSize);
 
-            var maxKey = _queryCacheBase.Get<Int32>("mysql-max-primarykey");
-            _store.AddPage(pageIndex, pageSize, (Int32)maxKey);
-
+            _store.AddPage(pageIndex, pageSize);
             return this;
         }
 

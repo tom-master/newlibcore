@@ -249,10 +249,9 @@ namespace NewLibCore.Data.SQL.Mapper
             expressionStore.AddFrom<TModel>();
 
             var diagnosis = _serviceProvider.GetService<RunDiagnosis>();
-            var queryCacheBase = _serviceProvider.GetService<QueryCacheBase>();
             var queryHandler = FindHandler(_serviceProvider.GetServices<HandlerBase>(), nameof(QueryHandler));
 
-            return new QueryWrapper<TModel>(expressionStore, diagnosis, queryCacheBase, queryHandler);
+            return new QueryWrapper<TModel>(expressionStore, diagnosis, queryHandler);
         }
 
         /// <summary>

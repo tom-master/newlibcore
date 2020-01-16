@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using System.Reflection;
+using NewLibCore.Data.SQL.Mapper.Component.Cache;
 using NewLibCore.Data.SQL.Mapper.Store;
 using NewLibCore.Data.SQL.Mapper.Validate;
 using NewLibCore.Validate;
@@ -14,6 +15,14 @@ namespace NewLibCore.Data.SQL.Mapper.Template
     /// </summary>
     internal abstract class TemplateBase
     {
+
+        protected QueryCacheBase _queryCacheBase;
+
+        public TemplateBase(QueryCacheBase queryCacheBase)
+        {
+            _queryCacheBase = queryCacheBase;
+        }
+
         internal String PrimaryKey
         {
             get
