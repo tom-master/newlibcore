@@ -15,9 +15,10 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
 
         private readonly ExpressionStore _store;
 
+        private readonly HandlerBase _handlerBase;
+
         private readonly QueryCacheBase _queryCacheBase;
 
-        private readonly HandlerBase _handlerBase;
 
         internal QueryWrapper(ExpressionStore store, RunDiagnosis runDiagnosis, QueryCacheBase queryCacheBase, HandlerBase handlerBase)
         {
