@@ -17,12 +17,10 @@ namespace NewLibCore.Data.SQL.Mapper.Filter
         /// <returns></returns>
         public static FilterBase<T> Create<T>(Expression<Func<T, Boolean>> filter = null) where T : EntityBase
         {
-
             if (filter == null)
             {
                 filter = (t) => true;
             }
-
             return new DefaultFilter<T>(filter);
         }
     }

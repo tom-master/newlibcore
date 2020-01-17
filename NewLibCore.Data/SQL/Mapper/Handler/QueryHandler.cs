@@ -27,7 +27,6 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         protected override ExecuteResult Execute(ExpressionStore store)
         {
             var mainTable = store.From.AliaNameMapper[0];
-
             var result = _parserExecutor.Parse(new ParseModel
             {
                 Sql = _templateBase.CreateSelect(ParseSelect(store), mainTable.Key, mainTable.Value),
@@ -76,7 +75,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
                 var members = (fields.Body as MemberExpression);
                 return (members.Member.Name, aliasName);
             }
-            
+
             throw new Exception("不支持的 ORDER BY 表达式");
         }
 
