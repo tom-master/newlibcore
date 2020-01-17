@@ -69,16 +69,15 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         /// <returns></returns>
         private (String Fields, String AliasName) ParseOrder(ExpressionStore store)
         {
-            var modelAliasName = new List<String>();
             var fields = (LambdaExpression)store.Order.Expression;
-            var aliasName = fields.Parameters[0].Type.GetTableName().AliasName;
-
             if (fields.Body.NodeType == ExpressionType.MemberAccess)
             {
+                var aliasName = fields.Parameters[0].Type.GetTableName().AliasName;
                 var members = (fields.Body as MemberExpression);
                 return (members.Member.Name, aliasName);
             }
-            throw new Exception("不支持的ORDER BY 表达式");
+            
+            throw new Exception("不支持的 ORDER BY 表达式");
         }
 
         /// <summary>
