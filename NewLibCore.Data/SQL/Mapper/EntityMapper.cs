@@ -82,14 +82,14 @@ namespace NewLibCore.Data.SQL.Mapper
 
                 if (MapperType == MapperType.MSSQL)
                 {
-                    services = services.AddTransient<TemplateBase, MsSqlTemplate>();
+                    services = services.AddScoped<TemplateBase, MsSqlTemplate>();
                 }
                 else if (MapperType == MapperType.MYSQL)
                 {
-                    services = services.AddTransient<TemplateBase, MySqlTemplate>();
+                    services = services.AddScoped<TemplateBase, MySqlTemplate>();
                 }
 
-                services = services.AddTransient<MapperDbContextBase, MapperDbContext>();
+                services = services.AddScoped<MapperDbContextBase, MapperDbContext>();
 
                 #endregion
 
@@ -269,7 +269,6 @@ namespace NewLibCore.Data.SQL.Mapper
             {
                 var store = new ExpressionStore();
                 store.AddDirectSql(sql, parameters);
-
                 var handler = FindHandler(_serviceProvider.GetServices<HandlerBase>(), nameof(DirectSqlHandler));
                 return handler.Process(store);
             });
