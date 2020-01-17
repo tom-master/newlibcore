@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Runtime.Caching;
 using NewLibCore.Validate;
-using Newtonsoft.Json;
 
 namespace NewLibCore.Data.SQL.Mapper.Component.Cache
 {

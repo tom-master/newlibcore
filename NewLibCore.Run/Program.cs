@@ -46,7 +46,7 @@ namespace NewLibCore.Run
                 //var a = mapper.Query<User>().FirstOrDefault();
                 for (var i = 0; i < 10; i++)
                 {
-                    var r = mapper.Query<User>().Page(1, 10).ThenByDesc(a => a.Id).ToList();
+                    var r = mapper.Query<User>().Count();
                 }
 
                 sw.Stop();

@@ -87,28 +87,38 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         /// <returns></returns>
         private String ParseSelect(ExpressionStore store)
         {
+            var anonymousObjFields = new List<String>();
+
             if (store.Select != null)
             {
                 var fields = (LambdaExpression)store.Select.Expression;
-
-                var anonymousObjFields = new List<String>();
-                var bodyArguments = (fields.Body as NewExpression).Arguments;
-                foreach (var item in bodyArguments)
+                if (fields.Body.NodeType == ExpressionType.Constant)
                 {
-                    var member = (MemberExpression)item;
-                    var fieldName = ((ParameterExpression)member.Expression).Type.GetTableName().AliasName;
-                    anonymousObjFields.Add($@"{fieldName}.{member.Member.Name}");
+                    var bodyArguments = (fields.Body as ConstantExpression);
+                    anonymousObjFields.Add(bodyArguments.Value.ToString());
                 }
-                return String.Join(",", anonymousObjFields);
+                else
+                {
+                    var bodyArguments = (fields.Body as NewExpression).Arguments;
+                    foreach (var item in bodyArguments)
+                    {
+                        var member = (MemberExpression)item;
+                        var fieldName = ((ParameterExpression)member.Expression).Type.GetTableName().AliasName;
+                        anonymousObjFields.Add($@"{fieldName}.{member.Member.Name}");
+                    }
+                }
+            }
+            else
+            {
+                var types = store.MergeParameterTypes();
+
+                var tableNames = types.Select(s => new KeyValuePair<String, String>(s.Name, s.GetTableName().AliasName)).ToList();
+                anonymousObjFields = types.SelectMany(s => s.GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                .Where(w => w.GetCustomAttributes<PropertyValidate>().Any())
+                .Select(s1 => $@"{tableNames.FirstOrDefault(w => w.Key == s.Name).Value}.{s1.Name}")).Distinct().ToList();
             }
 
-            var types = store.MergeParameterTypes();
-
-            var tableNames = types.Select(s => new KeyValuePair<String, String>(s.Name, s.GetTableName().AliasName)).ToList();
-            var propertys = types.SelectMany(s => s.GetProperties(BindingFlags.Instance | BindingFlags.Public)
-            .Where(w => w.GetCustomAttributes<PropertyValidate>().Any())
-            .Select(s1 => $@"{tableNames.FirstOrDefault(w => w.Key == s.Name).Value}.{s1.Name}")).Distinct();
-            return String.Join(",", propertys);
+            return String.Join(",", anonymousObjFields);
         }
     }
 }
