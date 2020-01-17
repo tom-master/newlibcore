@@ -15,14 +15,7 @@ namespace NewLibCore.Data.SQL.Mapper.Template
     /// </summary>
     internal abstract class TemplateBase
     {
-
-        protected QueryCacheBase _queryCacheBase;
-
-        public TemplateBase(QueryCacheBase queryCacheBase)
-        {
-            Parameter.Validate(queryCacheBase);
-            _queryCacheBase = queryCacheBase;
-        }
+        protected readonly QueryCacheBase _queryCacheBase;
 
         internal String PrimaryKey
         {
@@ -52,8 +45,10 @@ namespace NewLibCore.Data.SQL.Mapper.Template
         /// <summary>
         /// 初始化TemplateBase类的新实例
         /// </summary>
-        protected TemplateBase()
+        protected TemplateBase(QueryCacheBase queryCacheBase)
         {
+            Parameter.Validate(queryCacheBase);
+
             JoinMapper.Clear();
             PredicateMapper.Clear();
             OrderTypeMapper.Clear();
@@ -61,6 +56,8 @@ namespace NewLibCore.Data.SQL.Mapper.Template
             InitPredicateType();
             InitJoinType();
             InitOrderType();
+
+            _queryCacheBase = queryCacheBase;
         }
 
         /// <summary>

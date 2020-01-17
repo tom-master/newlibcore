@@ -82,14 +82,14 @@ namespace NewLibCore.Data.SQL.Mapper
 
                 if (MapperType == MapperType.MSSQL)
                 {
-                    services = services.AddScoped<TemplateBase, MsSqlTemplate>();
+                    services = services.AddTransient<TemplateBase, MsSqlTemplate>();
                 }
                 else if (MapperType == MapperType.MYSQL)
                 {
-                    services = services.AddScoped<TemplateBase, MySqlTemplate>();
+                    services = services.AddTransient<TemplateBase, MySqlTemplate>();
                 }
 
-                services = services.AddScoped<MapperDbContextBase, MapperDbContext>();
+                services = services.AddTransient<MapperDbContextBase, MapperDbContext>();
 
                 #endregion
 

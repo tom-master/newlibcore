@@ -10,11 +10,6 @@ namespace NewLibCore.Data.SQL.Mapper.Component.Cache
     public abstract class QueryCacheBase
     {
         /// <summary>
-        /// 初始化ResultCache类的新实例
-        /// </summary>
-        public QueryCacheBase() { }
-
-        /// <summary>
         /// 添加一个执行结果缓存
         /// </summary>
         /// <param name="key">缓存键</param>

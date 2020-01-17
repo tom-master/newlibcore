@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.Common;
 using MySql.Data.MySqlClient;
+using NewLibCore.Data.SQL.Mapper.Component.Cache;
 using NewLibCore.Data.SQL.Mapper.Store;
 using NewLibCore.Validate;
 
@@ -11,6 +12,12 @@ namespace NewLibCore.Data.SQL.Mapper.Template
     /// </summary>
     internal class MySqlTemplate : TemplateBase
     {
+
+        public MySqlTemplate(QueryCacheBase queryCacheBase):base(queryCacheBase)
+        {
+            
+        }
+        
         internal override String CreateUpdate(String tableName, String aliasName, String field)
         {
             return String.Format("UPDATE {0} AS {1} SET {2} ", tableName, aliasName, field);

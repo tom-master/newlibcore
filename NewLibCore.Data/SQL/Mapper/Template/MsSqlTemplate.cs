@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.Common;
 using System.Data.SqlClient;
+using NewLibCore.Data.SQL.Mapper.Component.Cache;
 using NewLibCore.Data.SQL.Mapper.Store;
 using NewLibCore.Validate;
 
@@ -11,6 +12,12 @@ namespace NewLibCore.Data.SQL.Mapper.Template
     /// </summary>
     internal class MsSqlTemplate : TemplateBase
     {
+
+        public MsSqlTemplate(QueryCacheBase queryCacheBase):base(queryCacheBase)
+        {
+            
+        }
+
         internal override String CreateUpdate(String tableName, String aliasName, String field)
         {
             return String.Format("UPDATE {0} SET {1} FROM {2} AS {0} ", aliasName, field, tableName);
