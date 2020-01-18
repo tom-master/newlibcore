@@ -29,7 +29,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
             var mainTable = store.From.AliaNameMapper[0];
             var result = _parserExecutor.Parse(new ParseModel
             {
-                Sql = _templateBase.CreateSelect(ParseSelect(store), mainTable.Key, mainTable.Value),
+                Sql = _templateBase.CreateSelect(ExtractSelectFields(store), mainTable.Key, mainTable.Value),
                 ExpressionStore = store
             });
 
@@ -45,7 +45,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
                 {
                     throw new Exception("分页中没有指定排序字段");
                 }
-                var (fields, tableName) = ParseOrder(store);
+                var (fields, tableName) = ExtractOrderFields(store);
                 var orderTemplate = _templateBase.CreateOrderBy(store.Order.OrderBy, $@"{tableName}.{fields}");
 
                 var newSql = _templateBase.CreatePagination(store.Pagination, orderTemplate, result.ToString());
@@ -54,7 +54,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
             }
             else if (store.Order != null)
             {
-                var (fields, tableName) = ParseOrder(store);
+                var (fields, tableName) = ExtractOrderFields(store);
                 var orderTemplate = _templateBase.CreateOrderBy(store.Order.OrderBy, $@"{tableName}.{fields}");
                 result.Append(orderTemplate);
             }
@@ -63,10 +63,10 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         }
 
         /// <summary>
-        /// 解析出排序字段
+        /// 提取出排序字段
         /// </summary>
         /// <returns></returns>
-        private (String Fields, String AliasName) ParseOrder(ExpressionStore store)
+        private (String Fields, String AliasName) ExtractOrderFields(ExpressionStore store)
         {
             var fields = (LambdaExpression)store.Order.Expression;
             if (fields.Body.NodeType == ExpressionType.MemberAccess)
@@ -80,10 +80,10 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         }
 
         /// <summary>
-        /// 解析出Select字段
+        /// 提取出Select字段
         /// </summary>
         /// <returns></returns>
-        private String ParseSelect(ExpressionStore store)
+        private String ExtractSelectFields(ExpressionStore store)
         {
             var anonymousObjFields = new List<String>();
 
