@@ -38,12 +38,11 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
             var insertFields = String.Join(",", propertys.Select(c => c.Key));
             var placeHolders = String.Join(",", propertys.Select(key => $@"@{key.Key}"));
             var (tableName, _) = instance.GetType().GetTableName();
-
-            var insert = _templateBase.CreateInsert(tableName, insertFields, placeHolders);
+ 
             var parameters = propertys.Select(c => new MapperParameter(c.Key, c.Value));
             var result = _parserExecutor.Parse(new ParseModel
             {
-                Sql = insert,
+                Sql = _templateBase.CreateInsert(tableName, insertFields, placeHolders),
                 Parameters = parameters
             });
             return result.Execute();
