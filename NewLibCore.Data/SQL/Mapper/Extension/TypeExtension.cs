@@ -21,6 +21,11 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
 
             lock (_dic)
             {
+                if (t.BaseType != typeof(EntityBase))
+                {
+                    throw new InvalidOperationException($@"{t.Name}不属于基类:{nameof(EntityBase)}，不是数据实体的一部分，因此不能获取到表名和表别名");
+                }
+
                 if (_dic.ContainsKey(t.Name))
                 {
                     var dic = _dic[t.Name];

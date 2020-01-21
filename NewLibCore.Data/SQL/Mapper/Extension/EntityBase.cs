@@ -4,7 +4,7 @@ using NewLibCore.Data.SQL.Mapper.Validate;
 namespace NewLibCore.Data.SQL.Mapper
 {
     /// <summary>
-    /// 实体基类
+    /// 表示继承于此类的子类都为数据库的表
     /// </summary>
     public abstract class EntityBase : PropertyMonitor
     {
