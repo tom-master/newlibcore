@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions; 
+using System.Linq.Expressions;
 using NewLibCore.Data.SQL.Mapper.Extension;
 using NewLibCore.Data.SQL.Mapper.Store;
 using NewLibCore.Data.SQL.Mapper.Template;
@@ -331,6 +331,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <param name="expression">表达式</param>
         private void ParserMethodCall(Expression expression)
         {
+            Parameter.Validate(expression);
             var methodCallExp = (MethodCallExpression)expression;
             var methodName = methodCallExp.Method.Name;
 
@@ -396,6 +397,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <param name="relationType">关系类型</param>
         private void CreatePredicate(BinaryExpression binary, PredicateType predicateType)
         {
+            Parameter.Validate(binary);
             var binaryExp = binary;
             if (_joinRelation != JoinRelation.NONE)
             {
@@ -431,22 +433,22 @@ namespace NewLibCore.Data.SQL.Mapper
             //表达式左右两边都不为常量时例如 xx.Id==yy.Id
             if (binary.Left.NodeType != ExpressionType.Constant && binary.Right.NodeType != ExpressionType.Constant)
             {
-                var (LeftMember, LeftAliasName) = ParserLeft(binary);
-                var (RightMember, RightAliasName) = ParserRight(binary);
+                var (LeftMember, LeftAliasName) = ExtractLeftMember(binary);
+                var (RightMember, RightAliasName) = ExtractRightMember(binary);
 
                 var relationTemplate = _templateBase.CreatePredicate(predicateType, $"{RightAliasName}.{RightMember.Member.Name}", $"{LeftAliasName}.{LeftMember.Member.Name}");
                 _parserResult.Append(relationTemplate);
             }
             else if (binary.Left.NodeType == ExpressionType.Constant) //表达式左边为常量
             {
-                var (RightMember, RightAliasName) = ParserRight(binary);
+                var (RightMember, RightAliasName) = ExtractRightMember(binary);
                 var constant = (ConstantExpression)binary.Left;
                 var value = Boolean.TryParse(constant.Value.ToString(), out var result) ? (result ? 1 : 0).ToString() : constant.Value;
                 _parserResult.Append(_templateBase.CreatePredicate(predicateType, value + "", $"{RightAliasName}.{RightMember.Member.Name}"));
             }
             else if (binary.Right.NodeType == ExpressionType.Constant) //表达式的右边为常量
             {
-                var (LeftMember, LeftAliasName) = ParserLeft(binary);
+                var (LeftMember, LeftAliasName) = ExtractLeftMember(binary);
                 var constant = (ConstantExpression)binary.Right;
                 var value = Boolean.TryParse(constant.Value.ToString(), out var result) ? (result ? 1 : 0).ToString() : constant.Value;
                 _parserResult.Append(_templateBase.CreatePredicate(predicateType, $"{LeftAliasName}.{LeftMember.Member.Name}", value + ""));
@@ -456,34 +458,38 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <summary>
         /// 获取右表达式的成员对象和别名
         /// </summary>
-        /// <param name="binaryExp">表达式</param>
+        /// <param name="binary">表达式</param>
         /// <returns></returns>
-        private (MemberExpression RightMember, String RightAliasName) ParserRight(BinaryExpression binaryExp)
+        private (MemberExpression RightMember, String RightAliasName) ExtractRightMember(BinaryExpression binary)
         {
-            var rightMember = (MemberExpression)binaryExp.Right;
+            Parameter.Validate(binary);
+            var rightMember = (MemberExpression)binary.Right;
             var rightParameterExp = (ParameterExpression)rightMember.Expression;
-            if (!_tableAliasMapper.Any(a => a.Key == rightParameterExp.Type.GetTableName().TableName && a.Value == rightParameterExp.Type.GetTableName().AliasName))
+            var (tableName, aliasName) = rightParameterExp.Type.GetTableName();
+            if (!_tableAliasMapper.Any(a => a.Key == tableName && a.Value == aliasName))
             {
                 throw new Exception($@"没有找到参数名:{rightParameterExp.Type.Name}所对应的右表别名");
             }
-            var rightAliasName = _tableAliasMapper.Where(w => w.Key == rightParameterExp.Type.GetTableName().TableName && w.Value == rightParameterExp.Type.GetTableName().AliasName).FirstOrDefault().Value.ToLower();
+            var rightAliasName = _tableAliasMapper.Where(w => w.Key == tableName && w.Value == aliasName).FirstOrDefault().Value.ToLower();
             return (rightMember, rightAliasName);
         }
 
         /// <summary>
         /// 获取左表达式的成员对象和别名
         /// </summary>
-        /// <param name="binaryExp">表达式</param>
+        /// <param name="binary">表达式</param>
         /// <returns></returns>
-        private (MemberExpression LeftMember, String LeftAliasName) ParserLeft(BinaryExpression binaryExp)
+        private (MemberExpression LeftMember, String LeftAliasName) ExtractLeftMember(BinaryExpression binary)
         {
-            var leftMember = (MemberExpression)binaryExp.Left;
+            Parameter.Validate(binary);
+            var leftMember = (MemberExpression)binary.Left;
             var leftParameterExp = (ParameterExpression)leftMember.Expression;
-            if (!_tableAliasMapper.Any(a => a.Key == leftParameterExp.Type.GetTableName().TableName && a.Value == leftParameterExp.Type.GetTableName().AliasName))
+            var (tableName, aliasName) = leftParameterExp.Type.GetTableName();
+            if (!_tableAliasMapper.Any(a => a.Key == tableName && a.Value == aliasName))
             {
                 throw new Exception($@"没有找到参数类型:{leftParameterExp.Type.Name}所对应的左表别名");
             }
-            var leftAliasName = _tableAliasMapper.Where(w => w.Key == leftParameterExp.Type.GetTableName().TableName && w.Value == leftParameterExp.Type.GetTableName().AliasName).FirstOrDefault().Value.ToLower();
+            var leftAliasName = _tableAliasMapper.Where(w => w.Key == tableName && w.Value == aliasName).FirstOrDefault().Value.ToLower();
             return (leftMember, leftAliasName);
         }
     }

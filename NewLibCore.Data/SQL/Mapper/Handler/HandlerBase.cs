@@ -24,6 +24,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
 
         internal ExecuteResult Process(ExpressionStore store)
         {
+            Parameter.Validate(store);
             return Execute(store);
         }
 
