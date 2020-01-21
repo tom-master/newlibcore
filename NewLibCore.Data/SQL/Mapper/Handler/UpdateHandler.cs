@@ -51,8 +51,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
                 ExpressionStore = store
             });
 
-            result.Append($@"{PredicateType.AND} {aliasName}.IsDeleted=0");
-            result.Append($@"{_templateBase.RowCount}");
+            result.Append($@"{PredicateType.AND} {aliasName}.IsDeleted=0 {_templateBase.RowCount}");
             instance.Reset();
 
             return result.Execute();

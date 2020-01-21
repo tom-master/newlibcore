@@ -96,7 +96,7 @@ namespace NewLibCore.Data.SQL.Mapper.Template
         /// 执行受影响的行数
         /// </summary>
         /// <value></value>
-        internal abstract String RowCount { get; }
+        internal abstract String AffectedRows { get; }
 
         /// <summary>
         /// 追加分页语句

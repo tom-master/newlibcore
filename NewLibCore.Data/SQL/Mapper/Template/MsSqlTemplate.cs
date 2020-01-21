@@ -31,7 +31,7 @@ namespace NewLibCore.Data.SQL.Mapper.Template
             }
         }
 
-        internal override String RowCount
+        internal override String AffectedRows
         {
             get
             {
