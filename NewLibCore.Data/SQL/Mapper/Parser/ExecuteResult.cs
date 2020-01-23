@@ -88,6 +88,8 @@ namespace NewLibCore.Data.SQL.Mapper
 
         private T GetCache<T>(String key)
         {
+            Parameter.Validate(key);
+
             var result = _queryCacheBase.Get<T>(key);
             if (result != null)
             {
@@ -98,6 +100,9 @@ namespace NewLibCore.Data.SQL.Mapper
 
         private void SetCache(String key, Object value)
         {
+            Parameter.Validate(key);
+            Parameter.Validate(value);
+            
             _queryCacheBase.Add(key, value);
         }
 

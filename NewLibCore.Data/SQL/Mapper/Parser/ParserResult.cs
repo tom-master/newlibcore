@@ -21,7 +21,6 @@ namespace NewLibCore.Data.SQL.Mapper
 
         private readonly MapperDbContextBase _mapperDbContextBase;
 
-
         /// <summary>
         /// 初始化一个ResultExecutor类的实例
         /// </summary>
@@ -131,6 +130,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <param name="executeResult"></param>
         private void SetCache(ExecuteType executeType, ExecuteResult executeResult)
         {
+            Parameter.Validate(executeResult);
             if (executeType != ExecuteType.SELECT)
             {
                 return;
