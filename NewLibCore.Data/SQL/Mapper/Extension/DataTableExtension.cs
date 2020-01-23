@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
-using Newtonsoft.Json;
+using System.Reflection; 
 
 namespace NewLibCore.Data.SQL.Mapper.Extension
 {
@@ -26,10 +25,10 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
                 return new List<T>();
             }
 
-            return ConvertToList<T>(dataTable);
+            return InnerConvert<T>(dataTable);
         }
 
-        private static List<T> ConvertToList<T>(DataTable dt)
+        private static List<T> InnerConvert<T>(DataTable dt)
         {
             try
             {
