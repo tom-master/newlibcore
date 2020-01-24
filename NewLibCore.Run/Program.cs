@@ -44,10 +44,10 @@ namespace NewLibCore.Run
                 // mapper.Add(user);
 
                 //var a = mapper.Query<User>().FirstOrDefault();
-                for (var i = 0; i < 10; i++)
-                {
+                // for (var i = 0; i < 10; i++)
+                // {
                     var r = mapper.Query<User>().Page(1, 10).ThenByDesc(a => a.Id).ToList();
-                }
+                // }
 
                 sw.Stop();
                 Console.WriteLine($@"共花费{Math.Round(sw.Elapsed.TotalSeconds, 4)}秒");

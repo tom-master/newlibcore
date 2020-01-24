@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using NewLibCore.Data.SQL.Mapper.Component.Cache;
-using NewLibCore.Data.SQL.Mapper.Extension;
 using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper
@@ -15,7 +14,7 @@ namespace NewLibCore.Data.SQL.Mapper
     /// </summary>
     internal sealed class ParserResult
     {
-        private StringBuilder _originSql;
+        private readonly StringBuilder _originSql;
 
         private readonly QueryCacheBase _queryCacheBase;
 
