@@ -139,7 +139,7 @@ namespace NewLibCore.Data.SQL.Mapper
             throw new Exception($@"SQL语句执行类型解析失败:{operationType}");
         }
 
-        protected internal override ExecuteResult RawExecute(String sql, IEnumerable<MapperParameter> parameters = null)
+        protected internal override ExecuteResult RawExecute(String sql, params MapperParameter[] parameters)
         {
             try
             {

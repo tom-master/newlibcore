@@ -57,7 +57,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <param name="parameters">参数</param>
         /// <param name="commandType"></param>
         /// <returns></returns>
-        protected internal abstract ExecuteResult RawExecute(String sql, IEnumerable<MapperParameter> parameters = null);
+        protected internal abstract ExecuteResult RawExecute(String sql, params MapperParameter[] parameters);
 
         public void Dispose()
         {

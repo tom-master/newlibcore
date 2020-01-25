@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using NewLibCore.Data.SQL.Mapper.Component.Cache;
 using NewLibCore.Data.SQL.Mapper.Extension;
 using NewLibCore.Validate;
@@ -25,6 +27,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// 初始化一个ResultExecutor类的实例
         /// </summary>
         /// <param name="mapperDbContextBase"></param>
+        /// <param name="queryCacheBase"></param>
         public ParserResult(MapperDbContextBase mapperDbContextBase, QueryCacheBase queryCacheBase)
         {
             Parameter.Validate(mapperDbContextBase);
@@ -81,9 +84,9 @@ namespace NewLibCore.Data.SQL.Mapper
             if (executeResult == null)
             {
                 var sql = ToString();
-                
+
                 var dbContext = _mapperDbContextBase;
-                executeResult = dbContext.RawExecute(sql, _parameters);
+                executeResult = dbContext.RawExecute(sql, _parameters.ToArray());
                 var executeType = dbContext.GetExecuteType(sql);
 
                 SetCache(executeType, executeResult);
@@ -165,9 +168,8 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <returns></returns>
         public override String ToString()
         {
-            Parameter.Validate(_originSql);
-            _originSql = _originSql.Replace("   ", " ").Replace("  ", " ");
-            return _originSql.ToString().Trim();
+            Parameter.Validate(_originSql.ToString());
+            return Regex.Replace(_originSql.ToString(), "\\s{2,}", " ").Trim();
         }
     }
 }
