@@ -56,11 +56,10 @@ namespace NewLibCore.Data.SQL.Mapper
         /// 转换为原生ado.net参数
         /// </summary>
         /// <returns></returns>
-        internal DbParameter ConvertToDbParameter(TemplateBase templateBase)
+        internal DbParameter ConvertToDbParameter(DbParameter parameter)
         {
-            Parameter.Validate(templateBase);
-            
-            var parameter = templateBase.CreateParameter();
+            Parameter.Validate(parameter);
+
             parameter.ParameterName = Key;
             parameter.Value = Value;
             return parameter;
