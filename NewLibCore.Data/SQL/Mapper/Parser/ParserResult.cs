@@ -167,8 +167,18 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <returns></returns>
         public override String ToString()
         {
-            Parameter.Validate(_originSql.ToString());
-            return Regex.Replace(_originSql.ToString(), "\\s{2,}", " ").Trim();
+            var sql = _originSql.ToString();
+            Parameter.Validate(sql);
+
+            if (sql[0] != ' ')
+            {
+                return sql;
+            }
+            _originSql.Clear();
+
+            sql = Regex.Replace(sql, "\\s{2,}", " ").Trim();
+            _originSql.Append(sql);
+            return sql;
         }
     }
 }
