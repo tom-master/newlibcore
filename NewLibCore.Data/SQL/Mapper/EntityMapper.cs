@@ -20,11 +20,13 @@ namespace NewLibCore.Data.SQL.Mapper
     public sealed class EntityMapper : IDisposable
     {
 
+        private IServiceProvider _serviceProvider;
+
+        
+
         private static ILogger _logger;
 
         private static QueryCacheBase _queryCacheBase;
-
-        private IServiceProvider _serviceProvider;
 
         /// <summary>
         /// 连接字符串名称
@@ -135,6 +137,7 @@ namespace NewLibCore.Data.SQL.Mapper
                 throw;
             }
         }
+
 
         /// <summary>
         /// 切换为mysql
