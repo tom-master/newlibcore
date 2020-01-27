@@ -61,7 +61,6 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <returns></returns>
         public TResult FirstOrDefault<TResult>()
         {
-
             var complexType = typeof(TResult).IsComplexType();
             if (!complexType && !_result.GetType().IsComplexType())
             {
