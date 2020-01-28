@@ -23,6 +23,8 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
 
         protected override ExecuteResult Execute(ExpressionStore store)
         {
+            Parameter.Validate(store);
+            
             var instance = store.Model;
             instance.OnChanged();
             if (EntityMapper.EnableModelValidate)

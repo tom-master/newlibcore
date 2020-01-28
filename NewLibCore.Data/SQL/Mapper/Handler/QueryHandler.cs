@@ -7,6 +7,7 @@ using NewLibCore.Data.SQL.Mapper.Extension;
 using NewLibCore.Data.SQL.Mapper.Store;
 using NewLibCore.Data.SQL.Mapper.Template;
 using NewLibCore.Data.SQL.Mapper.Validate;
+using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper.Handler
 {
@@ -26,11 +27,12 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         /// <returns></returns>
         protected override ExecuteResult Execute(ExpressionStore store)
         {
+            Parameter.Validate(store);
             if (!store.From.AliaNameMapper.Any())
             {
                 throw new ArgumentException("没有指定From表");
             }
-            
+
             var mainTable = store.From.AliaNameMapper[0];
             var result = _parserExecutor.Parse(new ParseModel
             {
@@ -73,6 +75,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         /// <returns></returns>
         private (String Fields, String AliasName) ExtractOrderFields(ExpressionStore store)
         {
+            Parameter.Validate(store);
             var fields = (LambdaExpression)store.Order.Expression;
             if (fields.Body.NodeType == ExpressionType.MemberAccess)
             {
@@ -90,6 +93,7 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         /// <returns></returns>
         private String ExtractSelectFields(ExpressionStore store)
         {
+            Parameter.Validate(store);
             var anonymousObjFields = new List<String>();
 
             if (store.Select != null)
