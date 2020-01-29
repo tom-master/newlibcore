@@ -26,6 +26,11 @@ namespace NewLibCore.Data.SQL.Mapper.Handler
         /// <returns></returns>
         protected override ExecuteResult Execute(ExpressionStore store)
         {
+            if (!store.From.AliaNameMapper.Any())
+            {
+                throw new ArgumentException("没有指定From表");
+            }
+            
             var mainTable = store.From.AliaNameMapper[0];
             var result = _parserExecutor.Parse(new ParseModel
             {
