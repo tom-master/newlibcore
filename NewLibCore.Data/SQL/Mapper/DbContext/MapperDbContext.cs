@@ -171,11 +171,11 @@ namespace NewLibCore.Data.SQL.Mapper
 
                             if (EntityMapper.MapperType == MapperType.MYSQL)
                             {
-                                if (dataTable.Columns.Contains(_templateBase.PrimaryKey))
+                                if (dataTable.Columns.Contains("hiddenKey"))
                                 {
                                     var defaultView = dataTable.DefaultView;
-                                    defaultView.Sort = $@"{_templateBase.PrimaryKey} desc";
-                                    var r = defaultView.ToTable().Rows[0][_templateBase.PrimaryKey];
+                                    defaultView.Sort = $@"hiddenKey desc";
+                                    var r = defaultView.ToTable().Rows[0]["hiddenKey"];
                                     _queryCacheBase.Add("mysql-max-primarykey", r);
                                 }
                             }

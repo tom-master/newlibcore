@@ -49,6 +49,7 @@ namespace NewLibCore.Data.SQL.Mapper.Template
             var maxKey = _queryCacheBase.Get<Int32>("mysql-max-primarykey");
             if (maxKey > 0)
             {
+                rawSql = rawSql.Insert(ExecuteType.SELECT.ToString().Length + 1, $@"{pagination.QueryMainTable}.{PrimaryKey} AS hiddenKey , ");
                 return $@"{rawSql} AND {pagination.QueryMainTable}.{PrimaryKey}>{maxKey} {orderBy} LIMIT {pagination.Size} ;";
             }
 
