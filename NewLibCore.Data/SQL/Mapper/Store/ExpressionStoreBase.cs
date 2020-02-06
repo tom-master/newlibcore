@@ -41,6 +41,8 @@ namespace NewLibCore.Data.SQL.Mapper.Store
         internal Int32 Index { get; set; }
 
         internal Int32 Size { get; set; }
+
+        internal String QueryMainTable { get; set; }
     }
 
     /// <summary>

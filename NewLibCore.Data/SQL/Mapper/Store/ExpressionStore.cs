@@ -409,10 +409,12 @@ namespace NewLibCore.Data.SQL.Mapper.Store
         {
             Parameter.Validate(pageIndex);
             Parameter.Validate(pageSize);
+            
             Pagination = new PaginationExpressionMapper
             {
                 Index = pageIndex,
-                Size = pageSize
+                Size = pageSize,
+                QueryMainTable= From.AliaNameMapper[0].Value
             };
         }
 

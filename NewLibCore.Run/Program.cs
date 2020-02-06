@@ -14,26 +14,6 @@ namespace NewLibCore.Run
         public static void Main(String[] args)
         {
 
-            var array = new List<Int32>();
-            for (int i = 0; i < 10; i++)
-            {
-                array.Add(i);
-            }
-
-            var index = 0;
-            var num = 0;
-            while (array.Count > 1)
-            {
-                num = num + 1;
-                index = num + index;
-                if (index >= array.Count)
-                {
-                    index = index % array.Count;
-                }
-                array.RemoveAt(index);
-            }
-            Console.Write(array);
-
             #region  
 
             EntityMapper.InitDefaultSetting();
@@ -67,7 +47,7 @@ namespace NewLibCore.Run
                 //var a = mapper.Query<User>().FirstOrDefault();
                 // for (var i = 0; i < 10; i++)
                 // {
-                var r = mapper.Query<User>().Page(1, 10).ThenByDesc(a => a.Id).ToList();
+                var r = mapper.Query<User>().Select(a => new { UserId = a.Name }).Page(1, 10).ThenByDesc(a => a.Id).ToList();
                 // }
 
                 sw.Stop();
