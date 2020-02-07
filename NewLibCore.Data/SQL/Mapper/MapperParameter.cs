@@ -58,8 +58,6 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <returns></returns>
         internal DbParameter ConvertToDbParameter(DbParameter parameter)
         {
-            Parameter.Validate(parameter);
-
             parameter.ParameterName = Key;
             parameter.Value = Value;
             return parameter;
