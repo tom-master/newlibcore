@@ -12,12 +12,6 @@ namespace NewLibCore.Data.SQL.Mapper.Template
     /// </summary>
     internal class MySqlTemplate : TemplateBase
     {
-
-        public MySqlTemplate(QueryCacheBase queryCacheBase) : base(queryCacheBase)
-        {
-
-        }
-
         internal override String CreateUpdate(String tableName, String aliasName, String field)
         {
             return String.Format("UPDATE {0} AS {1} SET {2} ", tableName, aliasName, field);
@@ -46,11 +40,9 @@ namespace NewLibCore.Data.SQL.Mapper.Template
             Parameter.Validate(orderBy);
             Parameter.Validate(rawSql);
 
-            var maxKey = _queryCacheBase.Get<Int32>("mysql-max-primarykey");
-            rawSql = rawSql.Insert(ExecuteType.SELECT.ToString().Length + 1, $@"{pagination.QueryMainTable.Value}.{PrimaryKey} AS hiddenKey , ");
-            if (maxKey > 0)
+            if (pagination.MaxKey > 0)
             {
-               // return $@"{rawSql} AND {pagination.QueryMainTable.Value}.{PrimaryKey}<{maxKey} {orderBy} LIMIT {pagination.Size} ;";
+                return $@"{rawSql} AND {pagination.QueryMainTable.Value}.{PrimaryKey}<{pagination.MaxKey} {orderBy} LIMIT {pagination.Size} ;";
             }
 
             return $@"{rawSql} {orderBy} LIMIT {pagination.Size * (pagination.Index - 1)},{pagination.Size} ;";

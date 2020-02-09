@@ -13,11 +13,6 @@ namespace NewLibCore.Data.SQL.Mapper.Template
     internal class MsSqlTemplate : TemplateBase
     {
 
-        public MsSqlTemplate(QueryCacheBase queryCacheBase):base(queryCacheBase)
-        {
-            
-        }
-
         internal override String CreateUpdate(String tableName, String aliasName, String field)
         {
             return String.Format("UPDATE {0} SET {1} FROM {2} AS {0} ", aliasName, field, tableName);

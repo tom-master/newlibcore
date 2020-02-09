@@ -42,6 +42,8 @@ namespace NewLibCore.Data.SQL.Mapper.Store
 
         internal Int32 Size { get; set; }
 
+        internal Int32 MaxKey { get; set; }
+
         internal KeyValuePair<String, String> QueryMainTable { get; set; }
     }
 

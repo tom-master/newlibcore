@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using NewLibCore.Data.SQL.Mapper;
 using NewLibCore.Data.SQL.Mapper.Filter;
@@ -46,7 +47,8 @@ namespace NewLibCore.Run
                 // mapper.Add(user);
 
                 //var a = mapper.Query<User>().FirstOrDefault();
-                for (var i = 0; i < 10; i++)
+                var maxKey = 0;
+                for (var i = 0; i < 2; i++)
                 {
                     var logWhere = FilterFactory.Create<Log>(w => w.LogLevelEnum == LogLevel.Exception);
                     var userWhere = FilterFactory.Create<User>();
@@ -60,11 +62,13 @@ namespace NewLibCore.Run
                                 a.Action,
                                 a.ExceptionMessage,
                                 a.UserId,
-                                a.AddTime
+                                a.AddTime,
+                                a.Id
                             })
-                            .Page(i+1, 9)
+                            .Page(i + 1, 9, maxKey)
                             .ThenByDesc<DateTime>(a => a.AddTime)
                             .ToList();
+                    maxKey = result.Min(w => w.Id);
                 }
 
                 sw.Stop();

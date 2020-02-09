@@ -405,16 +405,17 @@ namespace NewLibCore.Data.SQL.Mapper.Store
         /// </summary>
         /// <param name="pageIndex">页索引</param>
         /// <param name="pageSize">页大小</param>
-        internal void AddPage(Int32 pageIndex, Int32 pageSize)
+        internal void AddPage(Int32 pageIndex, Int32 pageSize, Int32 maxKey = 0)
         {
             Parameter.Validate(pageIndex);
             Parameter.Validate(pageSize);
-            
+
             Pagination = new PaginationExpressionMapper
             {
                 Index = pageIndex,
                 Size = pageSize,
-                QueryMainTable= From.AliaNameMapper[0]
+                MaxKey = maxKey,
+                QueryMainTable = From.AliaNameMapper[0]
             };
         }
 

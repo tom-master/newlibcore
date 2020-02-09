@@ -168,14 +168,6 @@ namespace NewLibCore.Data.SQL.Mapper
                         {
                             var dataTable = new DataTable("tmpDt");
                             dataTable.Load(dr, LoadOption.Upsert);
-
-                            if (EntityMapper.MapperType == MapperType.MYSQL)
-                            {
-                                if (dataTable.Columns.Contains("hiddenKey"))
-                                {
-                                    _queryCacheBase.Add("mysql-max-primarykey", dataTable.Compute("Min(hiddenKey)",null));
-                                }
-                            }
                             executeResult.SaveRawResult(dataTable);
                         }
                     }
