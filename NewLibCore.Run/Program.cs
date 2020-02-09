@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using NewLibCore.Data.SQL.Mapper;
+using NewLibCore.Data.SQL.Mapper.Filter;
 using NewLibCore.Data.SQL.Mapper.Validate;
 using Newtonsoft.Json;
 
@@ -45,10 +46,26 @@ namespace NewLibCore.Run
                 // mapper.Add(user);
 
                 //var a = mapper.Query<User>().FirstOrDefault();
-                // for (var i = 0; i < 10; i++)
-                // {
-                var r = mapper.Query<User>().Select(a => new { UserId = a.Name }).Page(1, 10).ThenByDesc(a => a.Id).ToList();
-                // }
+                for (var i = 0; i < 10; i++)
+                {
+                    var logWhere = FilterFactory.Create<Log>(w => w.LogLevelEnum == LogLevel.Exception);
+                    var userWhere = FilterFactory.Create<User>();
+                    var filter = logWhere.Append(userWhere);
+                    var result = mapper.Query<Log>().LeftJoin<User>((a, b) => a.UserId == b.Id)
+                            .Where<User>(filter)
+                            .Select(a => new
+                            {
+                                a.LogLevelEnum,
+                                a.Controller,
+                                a.Action,
+                                a.ExceptionMessage,
+                                a.UserId,
+                                a.AddTime
+                            })
+                            .Page(i+1, 9)
+                            .ThenByDesc<DateTime>(a => a.AddTime)
+                            .ToList();
+                }
 
                 sw.Stop();
                 Console.WriteLine($@"共花费{Math.Round(sw.Elapsed.TotalSeconds, 4)}秒");
@@ -74,6 +91,76 @@ namespace NewLibCore.Run
         public Int32 Id { get; set; }
 
         public String Name { get; set; }
+    }
+
+    [TableName("newcrm_log")]
+    public partial class Log : EntityBase
+    {
+        /// <summary>
+        /// 日志等级
+        /// </summary>
+        [DefaultValue(typeof(LogLevel), LogLevel.Info)]
+        public LogLevel LogLevelEnum { get; private set; }
+
+        /// <summary>
+        /// 类名
+        /// </summary>
+        [Required, InputRange(25)]
+        public String Controller { get; private set; }
+
+        /// <summary>
+        /// 方法名
+        /// </summary>
+        [Required, InputRange(30)]
+        public String Action { get; private set; }
+
+        /// <summary>
+        /// 异常信息
+        /// </summary>
+        [Required, InputRange(1000)]
+        public String ExceptionMessage { get; private set; }
+
+        /// <summary>
+        /// 异常堆栈
+        /// </summary>
+        [Required]
+        public String Track { get; private set; }
+
+        /// <summary>
+        /// 用户id
+        /// </summary>
+        [Required]
+        public Int32 UserId { get; private set; }
+
+        public Log(Int32 userId, String controller, String action, LogLevel logLevel, String track, String exceptionMessage)
+        {
+            UserId = userId;
+            Controller = controller;
+            Action = action;
+            LogLevelEnum = logLevel;
+            Track = track;
+            ExceptionMessage = exceptionMessage;
+        }
+
+        public Log()
+        {
+
+        }
+    }
+    /// <summary>
+    /// 日志等级
+    /// </summary>
+    public enum LogLevel
+    {
+        Info = 1,
+
+        Warning = 2,
+
+        Debug = 3,
+
+        Error = 4,
+
+        Exception = 5
     }
 
     public enum WallpaperSource

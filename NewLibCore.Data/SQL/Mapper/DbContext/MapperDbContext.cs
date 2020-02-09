@@ -173,10 +173,7 @@ namespace NewLibCore.Data.SQL.Mapper
                             {
                                 if (dataTable.Columns.Contains("hiddenKey"))
                                 {
-                                    var defaultView = dataTable.DefaultView;
-                                    defaultView.Sort = $@"hiddenKey desc";
-                                    var r = defaultView.ToTable().Rows[0]["hiddenKey"];
-                                    _queryCacheBase.Add("mysql-max-primarykey", r);
+                                    _queryCacheBase.Add("mysql-max-primarykey", dataTable.Compute("Min(hiddenKey)",null));
                                 }
                             }
                             executeResult.SaveRawResult(dataTable);

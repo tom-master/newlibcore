@@ -27,9 +27,9 @@ namespace NewLibCore.Data.SQL.Mapper.Component.Cache
             var cacheItem = new CacheItem(key, obj);
             var itemPolicy = new CacheItemPolicy
             {
-                AbsoluteExpiration = expire ?? DateTime.Now.AddHours(1)
+                AbsoluteExpiration = expire ?? DateTime.Now.AddHours(1),
             };
-            _baseCache.Add(cacheItem, itemPolicy);
+            _baseCache.Set(cacheItem, itemPolicy);
         }
 
         public override void Remove(String key)

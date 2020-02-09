@@ -47,10 +47,10 @@ namespace NewLibCore.Data.SQL.Mapper.Template
             Parameter.Validate(rawSql);
 
             var maxKey = _queryCacheBase.Get<Int32>("mysql-max-primarykey");
-            rawSql = rawSql.Insert(ExecuteType.SELECT.ToString().Length + 1, $@"{pagination.QueryMainTable}.{PrimaryKey} AS hiddenKey , ");
+            rawSql = rawSql.Insert(ExecuteType.SELECT.ToString().Length + 1, $@"{pagination.QueryMainTable.Value}.{PrimaryKey} AS hiddenKey , ");
             if (maxKey > 0)
             {
-                return $@"{rawSql} AND {pagination.QueryMainTable}.{PrimaryKey}>{maxKey} {orderBy} LIMIT {pagination.Size} ;";
+                return $@"{rawSql} AND {pagination.QueryMainTable.Value}.{PrimaryKey}<{maxKey} {orderBy} LIMIT {pagination.Size} ;";
             }
 
             return $@"{rawSql} {orderBy} LIMIT {pagination.Size * (pagination.Index - 1)},{pagination.Size} ;";

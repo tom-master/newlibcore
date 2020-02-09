@@ -42,7 +42,7 @@ namespace NewLibCore.Data.SQL.Mapper.Store
 
         internal Int32 Size { get; set; }
 
-        internal String QueryMainTable { get; set; }
+        internal KeyValuePair<String, String> QueryMainTable { get; set; }
     }
 
     /// <summary>

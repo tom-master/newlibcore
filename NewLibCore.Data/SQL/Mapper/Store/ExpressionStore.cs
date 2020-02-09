@@ -414,7 +414,7 @@ namespace NewLibCore.Data.SQL.Mapper.Store
             {
                 Index = pageIndex,
                 Size = pageSize,
-                QueryMainTable= From.AliaNameMapper[0].Value
+                QueryMainTable= From.AliaNameMapper[0]
             };
         }
 
