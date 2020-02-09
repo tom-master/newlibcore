@@ -49,7 +49,7 @@ namespace NewLibCore.Data.SQL.Mapper.Template
             var maxKey = _queryCacheBase.Get<Int32>("mysql-max-primarykey");
             if (maxKey > 0)
             {
-                //return $@"{rawSql} AND {pagination.QueryMainTable}.{PrimaryKey}>{maxKey} {orderBy} LIMIT {pagination.Size} ;";
+                return $@"{rawSql} AND {pagination.QueryMainTable}.{PrimaryKey}>{maxKey} {orderBy} LIMIT {pagination.Size} ;";
             }
 
             return $@"{rawSql} {orderBy} LIMIT {pagination.Size * (pagination.Index - 1)},{pagination.Size} ;";
