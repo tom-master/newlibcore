@@ -17,7 +17,6 @@ namespace NewLibCore.Run
         {
 
             #region  
-
             EntityMapper.InitDefaultSetting();
 
             //EntityMapper.UseMySql();
