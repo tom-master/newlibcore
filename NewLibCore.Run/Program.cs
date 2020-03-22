@@ -21,7 +21,6 @@ namespace NewLibCore.Run
 
             //EntityMapper.UseMySql();
             //EntityMapper.UseMsSql();
-
             EntityMapper.ConnectionStringName = "NewCrmDatabase";
             // for (var i = 0; i < 4; i++)
             // {
