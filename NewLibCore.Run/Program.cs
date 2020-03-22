@@ -23,7 +23,6 @@ namespace NewLibCore.Run
             //EntityMapper.UseMsSql();
 
             EntityMapper.ConnectionStringName = "NewCrmDatabase";
-
             // for (var i = 0; i < 4; i++)
             // {
             //     var thread = new Thread(new ParameterizedThreadStart((a) =>
