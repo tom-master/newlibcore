@@ -9,7 +9,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/NewLibCore.Run/bin/Debug/netcoreapp2.2/NewLibCore.Run.dll",
+            "program": "${workspaceFolder}/NewLibCore.Run/bin/Debug/netcoreapp3.1/NewLibCore.Run.dll",
             "args": [],
             "cwd": "${workspaceFolder}/NewLibCore.Run",
             "console": "internalConsole",

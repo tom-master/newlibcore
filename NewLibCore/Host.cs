@@ -1,11 +1,23 @@
 ﻿using System;
 using System.Configuration;
+using Microsoft.Extensions.Configuration;
 using NewLibCore.Validate;
+using Com.Ctrip.Framework.Apollo;
 
 namespace NewLibCore
 {
     public static class Host
     {
+        private static readonly IConfigurationRoot _configRoot;
+
+        static Host()
+        {
+            var builder = new ConfigurationBuilder();
+            var r = builder.AddJsonFile($"{Environment.CurrentDirectory}/appsettings.json").Build();
+            builder.AddApollo(r.GetSection("apollo")).AddDefault();
+            _configRoot = builder.Build();
+        }
+
         /// <summary>
         /// 获取环境变量
         /// </summary>
@@ -48,7 +60,13 @@ namespace NewLibCore
             {
                 return v1;
             }
-            
+
+            v1 = _configRoot[varName];
+            if (!String.IsNullOrEmpty(v1))
+            {
+                return v1;
+            }
+
             throw new Exception($@"没有找到设置的{varName}环境变量");
         }
     }
