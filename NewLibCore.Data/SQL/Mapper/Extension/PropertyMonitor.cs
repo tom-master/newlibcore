@@ -153,9 +153,26 @@ namespace NewLibCore.Data.SQL.Mapper
 
             var propertyInstanceValue = rawPropertyValue;
             var propertyInstanceValueType = rawPropertyValue.GetType();
-            if (String.IsNullOrEmpty(propertyInstanceValue + "") || propertyInstanceValueType.IsValueType || propertyInstanceValueType.IsNumeric() || (propertyInstanceValue.GetType() == typeof(DateTime) && (DateTime)propertyInstanceValue == default))
+
+            //判断是否为字符串类型的属性值为空
+            if (propertyInstanceValueType == typeof(String) && String.IsNullOrEmpty(propertyInstanceValue + ""))
             {
                 propertyItem.Value = defaultValueAttribute.Value;
+                return;
+            }
+
+            //判断是否为值类型并且值为值类型的默认值
+            if ((propertyInstanceValueType.IsValueType && propertyInstanceValueType.IsNumeric()) && propertyInstanceValue == Activator.CreateInstance(propertyInstanceValueType))
+            {
+                propertyItem.Value = defaultValueAttribute.Value;
+                return;
+            }
+
+            //判断是否为时间类型并且时间类型的值为默认值
+            if (propertyInstanceValue.GetType() == typeof(DateTime) && propertyInstanceValue == Activator.CreateInstance(propertyInstanceValueType))
+            {
+                propertyItem.Value = defaultValueAttribute.Value;
+                return;
             }
         }
 

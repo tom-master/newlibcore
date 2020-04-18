@@ -2,20 +2,22 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.Http;
 using System.Threading;
+using System.Threading.Tasks;
 using NewLibCore.Data.SQL.Mapper;
 using NewLibCore.Data.SQL.Mapper.Filter;
 using NewLibCore.Data.SQL.Mapper.Validate;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace NewLibCore.Run
 {
     public class Program
     {
-
         public static void Main(String[] args)
         {
-
+            var r = Activator.CreateInstance(DateTime.Now.GetType());
             #region  
             EntityMapper.InitDefaultSetting();
 
