@@ -9,7 +9,6 @@ using NewLibCore.Data.SQL.Mapper;
 using NewLibCore.Data.SQL.Mapper.Filter;
 using NewLibCore.Data.SQL.Mapper.Validate;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace NewLibCore.Run
 {
@@ -17,7 +16,6 @@ namespace NewLibCore.Run
     {
         public static void Main(String[] args)
         {
-            var r = Activator.CreateInstance(DateTime.Now.GetType());
             #region  
             EntityMapper.InitDefaultSetting();
 

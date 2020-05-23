@@ -22,34 +22,34 @@ namespace NewLibCore.Data.SQL.Mapper.Component.Cache
         public override void Add(String key, Object obj, DateTime? expire = null)
         {
             return;
-            Parameter.Validate(key);
-            Parameter.Validate(obj);
+            // Parameter.Validate(key);
+            // Parameter.Validate(obj);
 
-            var cacheItem = new CacheItem(key, obj);
-            var itemPolicy = new CacheItemPolicy
-            {
-                AbsoluteExpiration = expire ?? DateTime.Now.AddHours(1),
-            };
-            _baseCache.Set(cacheItem, itemPolicy);
+            // var cacheItem = new CacheItem(key, obj);
+            // var itemPolicy = new CacheItemPolicy
+            // {
+            //     AbsoluteExpiration = expire ?? DateTime.Now.AddHours(1),
+            // };
+            // _baseCache.Set(cacheItem, itemPolicy);
         }
 
         public override void Remove(String key)
         {
             return;
-            Parameter.Validate(key);
-            _baseCache.Remove(key);
+            // Parameter.Validate(key);
+            // _baseCache.Remove(key);
         }
 
         public override TResult Get<TResult>(String key)
         {
             return default(TResult);
-            Parameter.Validate(key);
-            var result = _baseCache.Get(key);
-            if (result == null)
-            {
-                return default(TResult);
-            }
-            return (TResult)result;
+            // Parameter.Validate(key);
+            // var result = _baseCache.Get(key);
+            // if (result == null)
+            // {
+            //     return default(TResult);
+            // }
+            // return (TResult)result;
         }
     }
 }
