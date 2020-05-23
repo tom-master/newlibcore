@@ -16,6 +16,11 @@ namespace NewLibCore.Run
     {
         public static void Main(String[] args)
         {
+            var a = (Object)0;
+            var b = (Object)0;
+            var c = a.ToString() == b.ToString();
+
+
             #region  
             EntityMapper.InitDefaultSetting();
 

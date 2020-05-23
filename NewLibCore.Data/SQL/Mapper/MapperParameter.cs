@@ -25,7 +25,7 @@ namespace NewLibCore.Data.SQL.Mapper
         public MapperParameter(String key, Object value, Boolean filterBadContent)
         {
             Parameter.Validate(key);
-            Parameter.Validate(value);
+            //Parameter.Validate(value);
 
             _filterBadContent = filterBadContent;
             Key = $"@{key}";
@@ -72,7 +72,7 @@ namespace NewLibCore.Data.SQL.Mapper
         {
             try
             {
-                Parameter.Validate(obj);
+                //Parameter.Validate(obj);
                 var objType = obj.GetType();
                 if (objType == typeof(String))
                 {

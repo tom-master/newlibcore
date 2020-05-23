@@ -40,6 +40,7 @@ namespace NewLibCore.Data.SQL.Mapper
             {
                 IsNullable = Nullable.GetUnderlyingType(propertyInfo.PropertyType) != null,
                 DeclaringType = propertyInfo.DeclaringType.FullName,
+                Type = propertyInfo.PropertyType,
                 PropertyName = propertyName,
                 Value = new FastProperty(propertyInfo).Get(this),
                 Validates = propertyInfo.GetCustomAttributes<PropertyValidate>(true).ToArray()
@@ -152,7 +153,7 @@ namespace NewLibCore.Data.SQL.Mapper
             Parameter.Validate(propertyItem);
 
             var propertyInstanceValue = rawPropertyValue;
-            var propertyInstanceValueType = rawPropertyValue.GetType();
+            var propertyInstanceValueType = propertyItem.Type;
 
             //判断是否为字符串类型的属性值为空
             if (propertyInstanceValueType == typeof(String) && String.IsNullOrEmpty(propertyInstanceValue + ""))
@@ -161,15 +162,17 @@ namespace NewLibCore.Data.SQL.Mapper
                 return;
             }
 
+            var createInstanceValue = Activator.CreateInstance(propertyInstanceValueType);
+            var isDefaultValue = propertyInstanceValue.ToString() == createInstanceValue.ToString();
             //判断是否为值类型并且值为值类型的默认值
-            if ((propertyInstanceValueType.IsValueType && propertyInstanceValueType.IsNumeric()) && propertyInstanceValue == Activator.CreateInstance(propertyInstanceValueType))
+            if ((propertyInstanceValueType.IsValueType && propertyInstanceValueType.IsNumeric()) && isDefaultValue)
             {
                 propertyItem.Value = defaultValueAttribute.Value;
                 return;
             }
 
             //判断是否为时间类型并且时间类型的值为默认值
-            if (propertyInstanceValue.GetType() == typeof(DateTime) && propertyInstanceValue == Activator.CreateInstance(propertyInstanceValueType))
+            if (propertyInstanceValue.GetType() == typeof(DateTime) && isDefaultValue)
             {
                 propertyItem.Value = defaultValueAttribute.Value;
                 return;
@@ -207,6 +210,8 @@ namespace NewLibCore.Data.SQL.Mapper
         private class ChangedProperty
         {
             internal Boolean IsNullable { get; set; }
+
+            internal Type Type { get; set; }
 
             internal String DeclaringType { get; set; }
 
