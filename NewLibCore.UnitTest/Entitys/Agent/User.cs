@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using NewCrmCore.Domain.ValueObject;
+using NewLibCore.UnitTest.ValueObject;
 using NewLibCore.Data.SQL.Mapper;
 using NewLibCore.Data.SQL.Mapper.Validate;
 

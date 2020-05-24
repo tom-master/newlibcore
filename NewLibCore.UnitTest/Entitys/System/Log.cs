@@ -1,7 +1,7 @@
 ﻿using System;
-using NewCrmCore.Domain.ValueObject;
 using NewLibCore.Data.SQL.Mapper;
 using NewLibCore.Data.SQL.Mapper.Validate;
+using NewLibCore.UnitTest.ValueObject;
 
 namespace NewLibCore.UnitTest.Entitys.System
 {
