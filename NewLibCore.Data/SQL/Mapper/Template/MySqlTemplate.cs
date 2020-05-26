@@ -42,7 +42,7 @@ namespace NewLibCore.Data.SQL.Mapper.Template
 
             if (pagination.MaxKey > 0)
             {
-                return $@"{rawSql} AND {pagination.QueryMainTable.Value}.{PrimaryKey}<{pagination.MaxKey} {orderBy} LIMIT {pagination.Size} ;";
+                return $@"{rawSql} AND {pagination.QueryMainTable.Value}.{PrimaryKeyName}<{pagination.MaxKey} {orderBy} LIMIT {pagination.Size} ;";
             }
 
             return $@"{rawSql} {orderBy} LIMIT {pagination.Size * (pagination.Index - 1)},{pagination.Size} ;";

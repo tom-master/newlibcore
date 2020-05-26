@@ -4,7 +4,7 @@ using System.ComponentModel.Design;
 using System.Data.Common;
 using System.Linq;
 using System.Reflection;
-using NewLibCore.Data.SQL.Mapper.Component.Cache;
+using MySql.Data.MySqlClient.Authentication;
 using NewLibCore.Data.SQL.Mapper.Store;
 using NewLibCore.Data.SQL.Mapper.Validate;
 using NewLibCore.Validate;
@@ -16,10 +16,20 @@ namespace NewLibCore.Data.SQL.Mapper.Template
 	/// </summary>
 	internal abstract class TemplateBase
 	{
-		internal String PrimaryKey
+		private static String _primaryKeyName;
+		/// <summary>
+		/// 获取主键名称(默认为Id)
+		/// </summary>
+		internal String PrimaryKeyName
 		{
 			get
 			{
+
+				if (!String.IsNullOrEmpty(_primaryKeyName))
+				{
+					return _primaryKeyName;
+				}
+
 				var identityProperty = typeof(EntityBase)
 				 .GetProperties(BindingFlags.Instance | BindingFlags.Public)
 				 .ToList().FirstOrDefault(w => w.GetCustomAttributes<PrimaryKeyAttribute>().Any());
@@ -27,7 +37,9 @@ namespace NewLibCore.Data.SQL.Mapper.Template
 				{
 					throw new ArgumentNullException($@"未找到使用{nameof(PrimaryKeyAttribute)}修饰的主键");
 				}
-				return identityProperty.Name;
+				var name = identityProperty.Name;
+				_primaryKeyName = name;
+				return name;
 			}
 		}
 
@@ -58,7 +70,6 @@ namespace NewLibCore.Data.SQL.Mapper.Template
 			InitPredicateType();
 			InitJoinType();
 			InitOrderType();
-
 		}
 
 		/// <summary>
