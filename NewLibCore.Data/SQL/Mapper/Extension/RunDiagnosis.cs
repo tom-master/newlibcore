@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using NewLibCore.Logger;
+using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper.Extension
 {
@@ -33,6 +34,7 @@ namespace NewLibCore.Data.SQL.Mapper.Extension
         {
             try
             {
+                Parameter.Validate(func);
                 var sw = new Stopwatch();
                 sw.Start();
                 var returnValue = func();
