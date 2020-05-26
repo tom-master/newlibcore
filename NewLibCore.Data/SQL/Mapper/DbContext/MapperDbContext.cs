@@ -21,9 +21,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
 		private DbConnection _connection;
 
-		private DbTransaction _dataTransaction;
-
-		private readonly RunDiagnosis _diagnosis;
+		private DbTransaction _dataTransaction; 
 
 		private readonly TemplateBase _templateBase;
 
@@ -33,12 +31,11 @@ namespace NewLibCore.Data.SQL.Mapper
 		/// <summary>
 		/// 初始化MapperDbContext类的新实例
 		/// </summary>
-		public MapperDbContext(TemplateBase templateBase, QueryCacheBase queryCacheBase, RunDiagnosis diagnosis)
+		public MapperDbContext(TemplateBase templateBase, QueryCacheBase queryCacheBase)
 		{
 			_templateBase = templateBase;
 			_connection = templateBase.CreateDbConnection();
-			_queryCacheBase = queryCacheBase;
-			_diagnosis = diagnosis;
+			_queryCacheBase = queryCacheBase; 
 		}
 
 		protected internal override void Commit()
@@ -46,7 +43,7 @@ namespace NewLibCore.Data.SQL.Mapper
 			if (_dataTransaction != null)
 			{
 				_dataTransaction.Commit();
-				_diagnosis.Info("提交事务");
+				RunDiagnosis.Info("提交事务");
 			}
 		}
 
@@ -55,7 +52,7 @@ namespace NewLibCore.Data.SQL.Mapper
 			if (_dataTransaction != null)
 			{
 				_dataTransaction.Rollback();
-				_diagnosis.Info("事务回滚");
+				RunDiagnosis.Info("事务回滚");
 			}
 		}
 
@@ -63,7 +60,7 @@ namespace NewLibCore.Data.SQL.Mapper
 		{
 			if (_connection.State == ConnectionState.Closed)
 			{
-				_diagnosis.Info("开启连接");
+				RunDiagnosis.Info("开启连接");
 				_connection.Open();
 				try
 				{
@@ -82,7 +79,7 @@ namespace NewLibCore.Data.SQL.Mapper
 				}
 				catch (Exception ex)
 				{
-					_diagnosis.Error($@"获取mssql版本失败:{ex}");
+					RunDiagnosis.Error($@"获取mssql版本失败:{ex}");
 				}
 			}
 		}
@@ -92,14 +89,14 @@ namespace NewLibCore.Data.SQL.Mapper
 			if (_dataTransaction == null)
 			{
 				_dataTransaction = _connection.BeginTransaction(EntityMapper.TransactionLevel);
-				_diagnosis.Info("开启事务");
+				RunDiagnosis.Info("开启事务");
 			}
 			return _dataTransaction;
 		}
 
 		protected internal override void Dispose(Boolean disposing)
 		{
-			_diagnosis.Info($@"释放资源{Environment.NewLine}");
+			RunDiagnosis.Info($@"释放资源{Environment.NewLine}");
 			if (!_disposed)
 			{
 				if (!disposing)
@@ -158,7 +155,7 @@ namespace NewLibCore.Data.SQL.Mapper
 					{
 						cmd.Parameters.AddRange(parameters.Select(s => s.ConvertToDbParameter(_templateBase.CreateParameter())).ToArray());
 					}
-					_diagnosis.Info($@"SQL语句:{sql} 占位符与参数:{(parameters == null || !parameters.Any() ? "" : String.Join($@"{Environment.NewLine}", parameters.Select(s => $@"{s.Key}----{s.Value}")))}");
+					RunDiagnosis.Info($@"SQL语句:{sql} 占位符与参数:{(parameters == null || !parameters.Any() ? "" : String.Join($@"{Environment.NewLine}", parameters.Select(s => $@"{s.Key}----{s.Value}")))}");
 
 					var executeType = GetExecuteType(sql);
 					var executeResult = new ExecuteResult(_queryCacheBase);
@@ -186,7 +183,7 @@ namespace NewLibCore.Data.SQL.Mapper
 			}
 			catch (Exception ex)
 			{
-				_diagnosis.Error($@"SQL语句执行发生异常:{ex}");
+				RunDiagnosis.Error($@"SQL语句执行发生异常:{ex}");
 				throw;
 			}
 		}
