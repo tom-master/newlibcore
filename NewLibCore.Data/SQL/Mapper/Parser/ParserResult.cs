@@ -14,7 +14,7 @@ namespace NewLibCore.Data.SQL.Mapper
     /// </summary>
     internal sealed class ParserResult
     {
-        private readonly StringBuilder _originSql;
+        private readonly StringBuilder _internalSql;
 
         private readonly QueryCacheBase _queryCacheBase;
 
@@ -32,7 +32,7 @@ namespace NewLibCore.Data.SQL.Mapper
             Parameter.Validate(mapperDbContextBase);
             Parameter.Validate(queryCacheBase);
 
-            _originSql = new StringBuilder();
+            _internalSql = new StringBuilder();
             _parameters = new List<MapperParameter>();
 
             _queryCacheBase = queryCacheBase;
@@ -49,7 +49,7 @@ namespace NewLibCore.Data.SQL.Mapper
         internal void Append(String sql)
         {
             Parameter.Validate(sql);
-            _originSql.Append($@" {sql} ");
+            _internalSql.Append($@" {sql} ");
         }
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// </summary>
         internal void ClearSql()
         {
-            _originSql.Clear();
+            _internalSql.Clear();
         }
 
         /// <summary>
@@ -116,7 +116,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <returns></returns>
         private String PrepareCacheKey()
         {
-            Parameter.Validate(_originSql);
+            Parameter.Validate(_internalSql);
             var cacheKey = ToString();
             foreach (var item in _parameters)
             {
@@ -167,17 +167,17 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <returns></returns>
         public override String ToString()
         {
-            var sql = _originSql.ToString();
+            var sql = _internalSql.ToString();
             Parameter.Validate(sql);
 
             if (sql[0] != ' ')
             {
                 return sql;
             }
-            _originSql.Clear();
+            _internalSql.Clear();
 
             sql = Regex.Replace(sql, "\\s{2,}", " ").Trim();
-            _originSql.Append(sql);
+            _internalSql.Append(sql);
             return sql;
         }
     }

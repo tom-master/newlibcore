@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Runtime.Caching;
-using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper.Component.Cache
 {
@@ -21,6 +20,7 @@ namespace NewLibCore.Data.SQL.Mapper.Component.Cache
 
         public override void Add(String key, Object obj, DateTime? expire = null)
         {
+            //因为缓存可能会对分页结果产生错误，暂时注释掉
             return;
             // Parameter.Validate(key);
             // Parameter.Validate(obj);
