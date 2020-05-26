@@ -92,13 +92,12 @@ namespace NewLibCore.Data.SQL.Mapper
 					continue;
 				}
 
-				var validateBases = ValidateAttributeOrder(changedProperty.PropertyName, changedProperty.Validates);
-				var propertyValue = changedProperty.Value;
+				var validateBases = ValidateAttributeOrder(changedProperty.PropertyName, changedProperty.Validates); 
 				for (var i = 0; i < validateBases.Count; i++)
 				{
 					if (validateBases[i] is RequiredAttribute)
 					{
-						if (!validateBases[i].IsValidate(propertyValue))
+						if (!validateBases[i].IsValidate(changedProperty))
 						{
 							if (i + 1 >= validateBases.Count)
 							{
@@ -107,7 +106,7 @@ namespace NewLibCore.Data.SQL.Mapper
 
 							if (validateBases[i + 1] is DefaultValueAttribute)
 							{
-								SetPropertyDefaultValue((DefaultValueAttribute)validateBases[i + 1], changedProperty, propertyValue);
+								SetPropertyDefaultValue((DefaultValueAttribute)validateBases[i + 1], changedProperty, changedProperty.Value);
 								i += 1;
 								continue;
 							}
@@ -116,15 +115,15 @@ namespace NewLibCore.Data.SQL.Mapper
 					}
 					else if (validateBases[i] is DefaultValueAttribute)
 					{
-						if (!validateBases[i].IsValidate(propertyValue))
+						if (!validateBases[i].IsValidate(changedProperty))
 						{
 							ThrowValidateException(validateBases[i], changedProperty);
 						}
-						SetPropertyDefaultValue((DefaultValueAttribute)validateBases[i], changedProperty, propertyValue);
+						SetPropertyDefaultValue((DefaultValueAttribute)validateBases[i], changedProperty, changedProperty.Value);
 					}
 					else if (validateBases[i] is InputRangeAttribute)
 					{
-						if (!validateBases[i].IsValidate(propertyValue))
+						if (!validateBases[i].IsValidate(changedProperty))
 						{
 							ThrowValidateException(validateBases[i], changedProperty);
 						}
@@ -155,21 +154,24 @@ namespace NewLibCore.Data.SQL.Mapper
 			var propertyInstanceValue = rawPropertyValue;
 			var propertyInstanceValueType = propertyItem.Type;
 
-			var createInstanceValue = Activator.CreateInstance(propertyInstanceValueType);
-			var isDefaultValue = propertyInstanceValue.ToString() == createInstanceValue.ToString();
+			var isDefaultValue = propertyInstanceValue.ToString() == (propertyInstanceValueType.IsValueType ? Activator.CreateInstance(propertyInstanceValueType).ToString() : null);
 
 			//判断是否为字符串类型的属性值为空
 			if (propertyInstanceValueType == typeof(String) && String.IsNullOrEmpty(propertyInstanceValue + ""))
 			{
-				propertyItem.Value = defaultValueAttribute.Value; 
+				propertyItem.Value = defaultValueAttribute.Value;
 			}
 			else if ((propertyInstanceValueType.IsValueType && propertyInstanceValueType.IsNumeric()) && isDefaultValue)  //判断是否为值类型并且值为值类型的默认值
 			{
-				propertyItem.Value = defaultValueAttribute.Value; 
+				propertyItem.Value = defaultValueAttribute.Value;
 			}
 			else if (propertyInstanceValue.GetType() == typeof(DateTime) && isDefaultValue)  //判断是否为时间类型并且时间类型的值为默认值
 			{
-				propertyItem.Value = defaultValueAttribute.Value; 
+				propertyItem.Value = defaultValueAttribute.Value;
+			}
+			else if (propertyInstanceValue.GetType() == typeof(Boolean) && isDefaultValue)
+			{
+				propertyItem.Value = defaultValueAttribute.Value;
 			}
 		}
 
@@ -182,7 +184,9 @@ namespace NewLibCore.Data.SQL.Mapper
 		{
 			Parameter.Validate(changedProperty);
 			Parameter.Validate(validateBase);
-			throw new Exception(validateBase.FailReason($@"{changedProperty.DeclaringType}.{changedProperty.PropertyName}"));
+
+			var reason = validateBase.FailReason($@"{changedProperty.DeclaringType}.{changedProperty.PropertyName}");
+			throw new Exception(reason);
 		}
 
 		/// <summary>
@@ -200,21 +204,42 @@ namespace NewLibCore.Data.SQL.Mapper
 			}
 			return validates.OrderByDescending(o => o.Order).ToList();
 		}
+	}
 
-		private class ChangedProperty
-		{
-			internal Boolean IsNullable { get; set; }
+	/// <summary>
+	/// 继承于EntityBase类的子类中的信息
+	/// </summary>
+	internal class ChangedProperty
+	{
+		/// <summary>
+		/// 是否为可空类型
+		/// </summary>
+		internal Boolean IsNullable { get; set; }
 
-			internal Type Type { get; set; }
+		/// <summary>
+		/// 属性类型
+		/// </summary>
+		internal Type Type { get; set; }
 
-			internal String DeclaringType { get; set; }
+		/// <summary>
+		/// 属性全类型名
+		/// </summary>
+		internal String DeclaringType { get; set; }
 
-			internal String PropertyName { get; set; }
+		/// <summary>
+		/// 属性名称
+		/// </summary>
+		internal String PropertyName { get; set; }
 
-			internal Object Value { get; set; }
+		/// <summary>
+		/// 属性值
+		/// </summary>
+		internal Object Value { get; set; }
 
-			internal PropertyValidate[] Validates { get; set; }
-		}
+		/// <summary>
+		/// 属性上应用的PropertyValidate特性
+		/// </summary>
+		internal PropertyValidate[] Validates { get; set; }
 	}
 }
 

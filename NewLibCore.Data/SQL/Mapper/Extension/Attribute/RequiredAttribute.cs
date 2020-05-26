@@ -8,31 +8,32 @@ namespace NewLibCore.Data.SQL.Mapper.Validate
     /// </summary>
     public class RequiredAttribute : PropertyValidate
     {
-        public override Int32 Order
+        internal override Int32 Order
         {
             get { return 3; }
         }
 
-        public override String FailReason(String fieldName)
+        internal override String FailReason(String fieldName)
         {
             return $@"{fieldName} 为必填项!";
         }
 
-        public override Boolean IsValidate(Object value)
+        internal override Boolean IsValidate(ChangedProperty property)
         {
             try
             {
-                Parameter.Validate(value);
+                Parameter.Validate(property);
+                Parameter.Validate(property.Value);
 
-                var type = value.GetType();
+                var type = property.Value.GetType();
 
                 if (type.IsValueType && type.IsNumeric())
                 {
-                    Parameter.Validate((ValueType)value);
+                    Parameter.Validate((ValueType)property.Value);
                 }
                 else
                 {
-                    Parameter.Validate(value);
+                    Parameter.Validate(property.Value);
                 }
                 return true;
             }

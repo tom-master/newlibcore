@@ -14,5 +14,7 @@ namespace NewLibCore.Data.SQL.Mapper.Validate
         {
 
         }
-    }
+
+		internal override Boolean IsValidate(ChangedProperty property) => base.IsValidate(property);
+	}
 }

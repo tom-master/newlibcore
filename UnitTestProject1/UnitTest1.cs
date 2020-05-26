@@ -1,3 +1,4 @@
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NewLibCore.Data.SQL.Mapper;
 using NewLibCore.Data.SQL.Mapper.Validate;
@@ -10,7 +11,7 @@ namespace UnitTestProject1
 		[TestMethod]
 		public void TestMethod1()
 		{
-			var instance = new TestModel("xiaofan");
+			var instance = new TestModel();
 			instance.OnChanged();
 			instance.Validate();
 		}
@@ -18,12 +19,13 @@ namespace UnitTestProject1
 
 	public class TestModel : EntityBase
 	{
-		[DefaultValue("123")]
-		public string Name { get; private set; }
+		[DefaultValue("789")]
+		public DateTime Name { get; private set; }
 
-		public TestModel(string name) 
+		public TestModel(DateTime name) 
 		{
 			Name = name;
 		}
+		public TestModel() { }
 	}
 }

@@ -30,14 +30,14 @@ namespace NewLibCore.Data.SQL.Mapper.Validate
         {
         }
 
-        public override Int32 Order
+        internal override Int32 Order
         {
             get { return 1; }
         }
 
-        public override Boolean IsValidate(Object value)
+        internal override Boolean IsValidate(ChangedProperty property)
         {
-            var internalValue = (value + "").ToString();
+            var internalValue = (property.Value+ "").ToString();
             /*if (_canbeEmpty && String.IsNullOrEmpty(internalValue))
             {
                 return true;
@@ -63,7 +63,7 @@ namespace NewLibCore.Data.SQL.Mapper.Validate
             return false;
         }
 
-        public override String FailReason(String fieldName)
+        internal override String FailReason(String fieldName)
         {
             return $@"{fieldName} 的长度不符合特性的预设长度区间，预设长度区间为为 最小长度：{_min} 最大长度：{_max}";
         }
