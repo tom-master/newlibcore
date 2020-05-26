@@ -161,18 +161,15 @@ namespace NewLibCore.Data.SQL.Mapper
 			//判断是否为字符串类型的属性值为空
 			if (propertyInstanceValueType == typeof(String) && String.IsNullOrEmpty(propertyInstanceValue + ""))
 			{
-				propertyItem.Value = defaultValueAttribute.Value;
-				return;
+				propertyItem.Value = defaultValueAttribute.Value; 
 			}
 			else if ((propertyInstanceValueType.IsValueType && propertyInstanceValueType.IsNumeric()) && isDefaultValue)  //判断是否为值类型并且值为值类型的默认值
 			{
-				propertyItem.Value = defaultValueAttribute.Value;
-				return;
+				propertyItem.Value = defaultValueAttribute.Value; 
 			}
 			else if (propertyInstanceValue.GetType() == typeof(DateTime) && isDefaultValue)  //判断是否为时间类型并且时间类型的值为默认值
 			{
-				propertyItem.Value = defaultValueAttribute.Value;
-				return;
+				propertyItem.Value = defaultValueAttribute.Value; 
 			}
 		}
 
