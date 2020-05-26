@@ -109,6 +109,8 @@ namespace NewLibCore.Data.SQL.Mapper.Validate
 			{
 				_changedProperty = property;
 
+				//判断DefaultValueAttribute中传入的Type与EntityBase子类属性中的数据的实际类型
+				//防止在DateTime类型的属性上使用DefaultValueAttribute向内传入不能转换成DateTime的数据，包括类似于"0000/00/01 00:00:00","WASD","123123"等无法转换为DateTime的数据
 				if (property.Type != Type)
 				{
 					return false;
