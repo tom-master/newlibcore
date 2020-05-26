@@ -50,7 +50,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <summary>
         /// 获取所有出现值变更的属性
         /// </summary>
-        internal void OnChanged()
+        public void OnChanged()
         {
             var propertys = _type.GetProperties(BindingFlags.Instance | BindingFlags.Public).Where(w => w.GetCustomAttributes<PropertyValidate>().Any() && w.Name != "Id" && w.Name != "AddTime" && w.Name != "LastModifyTime");
             SetAddTime();
@@ -83,7 +83,7 @@ namespace NewLibCore.Data.SQL.Mapper
         /// <summary>
         /// 验证属性是否合法
         /// </summary>
-        protected internal void Validate()
+        public void Validate()
         {
             foreach (var changedProperty in _changedPropertys)
             {
