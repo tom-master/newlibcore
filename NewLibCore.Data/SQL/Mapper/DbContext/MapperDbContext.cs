@@ -64,6 +64,7 @@ namespace NewLibCore.Data.SQL.Mapper
 				_connection.Open();
 				try
 				{
+					//根据不同的sql server数据库引擎来选择需要执行的分页方法
 					if (EntityMapper.MapperType == MapperType.MSSQL && EntityMapper.MsSqlPaginationVersion == MsSqlPaginationVersion.NONE)
 					{
 						var version = Int32.Parse(_connection.ServerVersion.Substring(0, _connection.ServerVersion.IndexOf(".")));

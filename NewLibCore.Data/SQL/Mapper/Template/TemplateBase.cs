@@ -17,32 +17,7 @@ namespace NewLibCore.Data.SQL.Mapper.Template
 	internal abstract class TemplateBase
 	{
 		private static String _primaryKeyName;
-		/// <summary>
-		/// 获取主键名称(默认为Id)
-		/// </summary>
-		internal String PrimaryKeyName
-		{
-			get
-			{
-
-				if (!String.IsNullOrEmpty(_primaryKeyName))
-				{
-					return _primaryKeyName;
-				}
-
-				var identityProperty = typeof(EntityBase)
-				 .GetProperties(BindingFlags.Instance | BindingFlags.Public)
-				 .ToList().FirstOrDefault(w => w.GetCustomAttributes<PrimaryKeyAttribute>().Any());
-				if (identityProperty == null)
-				{
-					throw new ArgumentNullException($@"未找到使用{nameof(PrimaryKeyAttribute)}修饰的主键");
-				}
-				var name = identityProperty.Name;
-				_primaryKeyName = name;
-				return name;
-			}
-		}
-
+		
 		/// <summary>
 		/// 谓词关系映射
 		/// </summary>
@@ -109,6 +84,32 @@ namespace NewLibCore.Data.SQL.Mapper.Template
 		/// </summary>
 		/// <value></value>
 		internal abstract String AffectedRows { get; }
+
+		/// <summary>
+		/// 获取主键名称(默认为Id)
+		/// </summary>
+		internal String PrimaryKeyName
+		{
+			get
+			{
+
+				if (!String.IsNullOrEmpty(_primaryKeyName))
+				{
+					return _primaryKeyName;
+				}
+
+				var identityProperty = typeof(EntityBase)
+				 .GetProperties(BindingFlags.Instance | BindingFlags.Public)
+				 .ToList().FirstOrDefault(w => w.GetCustomAttributes<PrimaryKeyAttribute>().Any());
+				if (identityProperty == null)
+				{
+					throw new ArgumentNullException($@"未找到使用{nameof(PrimaryKeyAttribute)}修饰的主键");
+				}
+				var name = identityProperty.Name;
+				_primaryKeyName = name;
+				return name;
+			}
+		}
 
 		/// <summary>
 		/// 追加分页语句

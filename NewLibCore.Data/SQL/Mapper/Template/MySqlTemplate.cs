@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Data.Common;
 using MySql.Data.MySqlClient;
-using NewLibCore.Data.SQL.Mapper.Component.Cache;
 using NewLibCore.Data.SQL.Mapper.Store;
 using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Mapper.Template
 {
-    /// <summary>
-    /// mysql数据库sql模板配置
-    /// </summary>
-    internal class MySqlTemplate : TemplateBase
+	/// <summary>
+	/// mysql数据库sql模板配置
+	/// </summary>
+	internal class MySqlTemplate : TemplateBase
     {
         internal override String CreateUpdate(String tableName, String aliasName, String field)
         {
