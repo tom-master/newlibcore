@@ -108,7 +108,7 @@ namespace NewLibCore.Data.SQL.Mapper
 							if (validateBases[i + 1] is DefaultValueAttribute)
 							{
 								SetPropertyDefaultValue((DefaultValueAttribute)validateBases[i + 1], changedProperty, propertyValue);
-								i = i + 1;
+								i += 1;
 								continue;
 							}
 							ThrowValidateException(validateBases[i], changedProperty);
