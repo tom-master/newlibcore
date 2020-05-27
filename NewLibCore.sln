@@ -9,9 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewLibCore.Data", "NewLibCo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewLibCore.Security", "NewLibCore.Security\NewLibCore.Security.csproj", "{9A51A057-B44E-43E2-8987-BFDCA7C826E8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewLibCore.Run", "NewLibCore.Run\NewLibCore.Run.csproj", "{45458EA9-4091-4079-B092-0D2F088F7490}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestProject1", "UnitTestProject1\UnitTestProject1.csproj", "{FA8A377C-4B63-45A1-986F-9A25419A9948}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewLibCore.UnitTest", "NewLibCore.UnitTest\NewLibCore.UnitTest.csproj", "{FA8A377C-4B63-45A1-986F-9A25419A9948}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
