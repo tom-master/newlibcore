@@ -45,7 +45,7 @@ namespace NewLibCore.Data.SQL.Mapper.Validate
 				}
 				catch (ArgumentException)
 				{
-					throw new ArgumentException($@"默认值 {(value + "" == "" ? "空字符串" : value)} 与类型 {type.ToString()} 不存在显式或隐式转换");
+					throw new ArgumentException($@"默认值 {(value + "" == "" ? "空字符串" : value)} 与类型 {type} 不存在显式或隐式转换");
 				}
 				Value = internalValue;
 			}
