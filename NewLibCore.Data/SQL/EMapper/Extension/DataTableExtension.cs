@@ -15,44 +15,44 @@ namespace NewLibCore.Data.SQL.Extension
         /// <summary>
         /// 获取列表
         /// </summary>
-        /// <typeparam name="T">期望的类型</typeparam>
+        /// <typeparam name="TResult">期望的类型</typeparam>
         /// <param name="dataTable">sql执行后的原始结果</param>
         /// <returns></returns>
-        internal static List<T> ToList<T>(this DataTable dataTable)
+        internal static List<TResult> ToList<TResult>(this DataTable dataTable)
         {
             if (dataTable == null || dataTable.Rows.Count == 0)
             {
-                return new List<T>();
+                return new List<TResult>();
             }
 
-            return InnerConvert<T>(dataTable);
+            return InnerConvert<TResult>(dataTable);
         }
 
-        private static List<T> InnerConvert<T>(DataTable dt)
+        private static List<TResult> InnerConvert<TResult>(DataTable dt)
         {
             try
             {
-                var list = new List<T>();
+                var list = new List<TResult>();
 
-                if (!typeof(T).IsComplexType())
+                if (!typeof(TResult).IsComplexType())
                 {
-                    var obj = default(T);
-                    if (typeof(T) != typeof(String))
+                    var obj = default(TResult);
+                    if (typeof(TResult) != typeof(String))
                     {
-                        obj = Activator.CreateInstance<T>();
+                        obj = Activator.CreateInstance<TResult>();
                     }
-                    var type = obj == null ? typeof(T) : obj.GetType();
+                    var type = obj == null ? typeof(TResult) : obj.GetType();
                     for (var i = 0; i < dt.Rows.Count; i++)
                     {
-                        list.Add((T)ChangeType(dt.Rows[i][0], type));
+                        list.Add((TResult)ChangeType(dt.Rows[i][0], type));
                     }
                 }
-                else if (typeof(T).Name.Contains("ValueTuple"))
+                else if (typeof(TResult).Name.Contains("ValueTuple"))
                 {
                     foreach (DataRow item in dt.Rows)
                     {
                         var r = CreateValueTuple(item.ItemArray);
-                        list.Add((T)r);
+                        list.Add((TResult)r);
                     }
                 }
                 else
@@ -61,7 +61,7 @@ namespace NewLibCore.Data.SQL.Extension
                     IList<PropertyInfo> propertiesCache = null;
                     foreach (DataRow item in dt.Rows)
                     {
-                        var obj = Activator.CreateInstance<T>();
+                        var obj = Activator.CreateInstance<TResult>();
                         if (propertiesCache == null)
                         {
                             propertiesCache = obj.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public);

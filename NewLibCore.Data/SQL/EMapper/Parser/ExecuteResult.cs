@@ -5,7 +5,6 @@ using System.Linq;
 using NewLibCore.Data.SQL.Component.Cache;
 using NewLibCore.Data.SQL.Extension;
 using NewLibCore.Validate;
-using Newtonsoft.Json;
 
 namespace NewLibCore.Data.SQL
 {
@@ -56,7 +55,7 @@ namespace NewLibCore.Data.SQL
         /// </summary>
         /// <typeparam name="TResult">原生类型</typeparam>
         /// <returns></returns>
-        public TResult FirstOrDefault<TResult>()
+        public TResult FirstOrDefault<TResult>() where TResult : new()
         {
             var result = ((DataTable)_result).ToList<TResult>().FirstOrDefault();
             return result;

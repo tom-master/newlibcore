@@ -24,7 +24,7 @@ namespace NewLibCore.UnitTest
                 var sw = new Stopwatch();
                 sw.Start();
 
-                var a = mapper.Query<User>().Select(s => new { s.Id }).FirstOrDefault();
+                var a = mapper.Query<User>().ToList();
 
                 sw.Stop();
                 Console.WriteLine($@"共花费{Math.Round(sw.Elapsed.TotalSeconds, 4)}秒");
