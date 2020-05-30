@@ -28,6 +28,7 @@ namespace NewLibCore.Data.SQL.Validate
         {
             Parameter.Validate(type);
 
+            Type = type;
             if (type.BaseType == typeof(Enum))
             {
                 if (value == null)

@@ -61,7 +61,7 @@ namespace NewLibCore.Data.SQL.Template
         {
             get
             {
-                return "; SELECT CAST(@@IDENTITY AS SIGNED) AS c ;";
+                return "; SELECT CAST(@@IDENTITY AS SIGNED) ;";
             }
         }
 
@@ -69,7 +69,7 @@ namespace NewLibCore.Data.SQL.Template
         {
             get
             {
-                return "; SELECT CAST(ROW_COUNT() AS SIGNED) AS c ;";
+                return "; SELECT CAST(ROW_COUNT() AS SIGNED) ;";
             }
         }
     }

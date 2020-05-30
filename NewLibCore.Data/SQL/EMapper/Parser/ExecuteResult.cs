@@ -36,7 +36,11 @@ namespace NewLibCore.Data.SQL
 
         internal Int32 GetModifyRowCount()
         {
-            return (Int32)_result;
+            if (_result is DataTable)
+            {
+                return (Int32)Convert.ChangeType(((DataTable)_result).Rows[0][0].ToString(), typeof(Int32));
+            }
+            return (Int32)Convert.ChangeType(_result.ToString(), typeof(Int32));
         }
 
         /// <summary>

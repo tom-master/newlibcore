@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Data.SqlClient;
 using System.Linq;
+using MySql.Data.MySqlClient;
 using NewLibCore.Data.SQL.Component.Cache;
 using NewLibCore.Data.SQL.Extension;
 using NewLibCore.Data.SQL.Template;
@@ -149,7 +151,6 @@ namespace NewLibCore.Data.SQL
                     {
                         cmd.Transaction = OpenTransaction();
                     }
-
                     cmd.CommandType = CommandType.Text;
                     cmd.CommandText = sql;
                     if (parameters != null && parameters.Any())

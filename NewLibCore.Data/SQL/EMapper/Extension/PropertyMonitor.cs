@@ -106,6 +106,10 @@ namespace NewLibCore.Data.SQL
 
                             if (validateBases[i + 1] is DefaultValueAttribute)
                             {
+                                if (!validateBases[i + 1].IsValidate(changedProperty))
+                                {
+                                    ThrowValidateException(validateBases[i], changedProperty);
+                                }
                                 SetPropertyDefaultValue((DefaultValueAttribute)validateBases[i + 1], changedProperty, changedProperty.Value);
                                 i += 1;
                                 continue;
