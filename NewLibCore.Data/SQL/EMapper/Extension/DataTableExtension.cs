@@ -4,8 +4,6 @@ using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using AutoMapper;
-using AutoMapper.Data;
 
 namespace NewLibCore.Data.SQL.Extension
 {
@@ -22,7 +20,6 @@ namespace NewLibCore.Data.SQL.Extension
         /// <returns></returns>
         internal static List<T> ToList<T>(this DataTable dataTable)
         {
-
             if (dataTable == null || dataTable.Rows.Count == 0)
             {
                 return new List<T>();

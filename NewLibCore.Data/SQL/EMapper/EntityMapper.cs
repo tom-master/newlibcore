@@ -202,7 +202,7 @@ namespace NewLibCore.Data.SQL
                 store.AddModel(model);
 
                 var handler = FindHandler(_serviceProvider.GetServices<HandlerBase>(), nameof(InsertHandler));
-                model.Id = handler.Process(store).FirstOrDefault<Int32>();
+                model.Id = handler.Process(store).GetModifyRowCount();
                 return model;
             });
         }
@@ -225,7 +225,7 @@ namespace NewLibCore.Data.SQL
                 store.AddWhere(expression);
                 store.AddModel(model);
                 var handler = FindHandler(_serviceProvider.GetServices<HandlerBase>(), nameof(UpdateHandler));
-                return handler.Process(store).FirstOrDefault<Int32>() > 0;
+                return handler.Process(store).GetModifyRowCount() > 0;
             });
         }
 

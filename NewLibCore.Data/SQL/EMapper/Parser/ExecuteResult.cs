@@ -35,6 +35,11 @@ namespace NewLibCore.Data.SQL
             _result = rawResult;
         }
 
+        internal Int32 GetModifyRowCount()
+        {
+            return (Int32)_result;
+        }
+
         /// <summary>
         /// 返回集合对象
         /// </summary>
@@ -42,15 +47,7 @@ namespace NewLibCore.Data.SQL
         /// <returns></returns>
         public List<TResult> ToList<TResult>() where TResult : new()
         {
-            var key = ToString();
-            var cache = GetCache<List<TResult>>(key);
-            if (cache != null)
-            {
-                return cache;
-            }
-
             var result = ((DataTable)_result).ToList<TResult>();
-            SetCache(key, result);
             return result;
         }
 
@@ -61,53 +58,8 @@ namespace NewLibCore.Data.SQL
         /// <returns></returns>
         public TResult FirstOrDefault<TResult>()
         {
-            var complexType = typeof(TResult).IsComplexType();
-            if (!complexType && !_result.GetType().IsComplexType())
-            {
-                return (TResult)Convert.ChangeType(_result, typeof(TResult));
-            }
-
-            var key = ToString();
-            if (complexType)
-            {
-                var cache = GetCache<TResult>(key);
-                if (cache != null)
-                {
-                    return cache;
-                }
-            }
-
             var result = ((DataTable)_result).ToList<TResult>().FirstOrDefault();
-            if (complexType)
-            {
-                SetCache(key, result);
-            }
             return result;
-        }
-
-        private T GetCache<T>(String key)
-        {
-            Parameter.Validate(key);
-
-            var result = _queryCacheBase.Get<T>(key);
-            if (result != null)
-            {
-                return result;
-            }
-            return default(T);
-        }
-
-        private void SetCache(String key, Object value)
-        {
-            Parameter.Validate(key);
-            Parameter.Validate(value);
-
-            _queryCacheBase.Add(key, value);
-        }
-
-        public override String ToString()
-        {
-            return JsonConvert.SerializeObject(_result);
         }
     }
 }
