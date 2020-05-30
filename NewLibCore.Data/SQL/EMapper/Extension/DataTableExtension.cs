@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using AutoMapper;
+using AutoMapper.Data;
 
 namespace NewLibCore.Data.SQL.Extension
 {
@@ -34,6 +35,7 @@ namespace NewLibCore.Data.SQL.Extension
         {
             try
             {
+
                 var list = new List<T>();
 
                 if (!typeof(T).IsComplexType())

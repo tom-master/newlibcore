@@ -7,6 +7,9 @@ using NewLibCore.Data.SQL.Filter;
 using NewLibCore.UnitTest.Entitys.Agent;
 using NewLibCore.UnitTest.Entitys.System;
 using NewLibCore.UnitTest.ValueObject;
+using AutoMapper;
+using AutoMapper.Data;
+using System.Data;
 
 namespace NewLibCore.UnitTest
 {
@@ -16,6 +19,7 @@ namespace NewLibCore.UnitTest
         [TestMethod]
         public void TestMethod1()
         {
+
             #region  
             EntityMapper.InitDefaultSetting();
 
