@@ -20,6 +20,7 @@ namespace NewLibCore.UnitTest
         public void TestMethod1()
         {
 
+
             #region  
             EntityMapper.InitDefaultSetting();
 
@@ -47,30 +48,30 @@ namespace NewLibCore.UnitTest
                 // var user = new User("xiaofan","xiaofan@.1");
                 // mapper.Add(user);
 
-                //var a = mapper.Query<User>().FirstOrDefault();
-                var maxKey = 0;
-                for (var i = 0; i < 2; i++)
-                {
-                    var logWhere = FilterFactory.Create<Log>(w => w.LogLevelEnum == LogLevel.Exception);
-                    var userWhere = FilterFactory.Create<User>();
-                    var filter = logWhere.Append(userWhere);
-                    var result = mapper.Query<Log>().LeftJoin<User>((a, b) => a.UserId == b.Id)
-                            .Where<User>(filter)
-                            .Select(a => new
-                            {
-                                a.LogLevelEnum,
-                                a.Controller,
-                                a.Action,
-                                a.ExceptionMessage,
-                                a.UserId,
-                                a.AddTime,
-                                a.Id
-                            })
-                            .Page(i + 1, 9, maxKey)
-                            .ThenByDesc<DateTime>(a => a.AddTime)
-                            .ToList();
-                    maxKey = result.Min(w => w.Id);
-                }
+                var a = mapper.Query<User>().FirstOrDefault();
+                // var maxKey = 0;
+                // for (var i = 0; i < 2; i++)
+                // {
+                //     var logWhere = FilterFactory.Create<Log>(w => w.LogLevelEnum == LogLevel.Exception);
+                //     var userWhere = FilterFactory.Create<User>();
+                //     var filter = logWhere.Append(userWhere);
+                //     var result = mapper.Query<Log>().LeftJoin<User>((a, b) => a.UserId == b.Id)
+                //             .Where<User>(filter)
+                //             .Select(a => new
+                //             {
+                //                 a.LogLevelEnum,
+                //                 a.Controller,
+                //                 a.Action,
+                //                 a.ExceptionMessage,
+                //                 a.UserId,
+                //                 a.AddTime,
+                //                 a.Id
+                //             })
+                //             .Page(i + 1, 9, maxKey)
+                //             .ThenByDesc<DateTime>(a => a.AddTime)
+                //             .ToList();
+                //     maxKey = result.Min(w => w.Id);
+                // }
 
                 sw.Stop();
                 Console.WriteLine($@"共花费{Math.Round(sw.Elapsed.TotalSeconds, 4)}秒");

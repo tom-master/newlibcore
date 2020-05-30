@@ -35,7 +35,6 @@ namespace NewLibCore.Data.SQL.Extension
         {
             try
             {
-
                 var list = new List<T>();
 
                 if (!typeof(T).IsComplexType())
