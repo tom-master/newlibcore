@@ -3,7 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NewLibCore.Data.SQL.Mapper;
 using NewLibCore.Data.SQL.Mapper.Validate;
 
-namespace UnitTestProject1
+namespace NewLibCore.UnitTest
 {
     [TestClass]
     public class UnitTest1
