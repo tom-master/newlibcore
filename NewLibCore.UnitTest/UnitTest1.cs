@@ -4,7 +4,6 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NewLibCore.Data.SQL.Mapper;
 using NewLibCore.Data.SQL.Mapper.Filter;
-using NewLibCore.Data.SQL.Mapper.Validate;
 using NewLibCore.UnitTest.Entitys.Agent;
 using NewLibCore.UnitTest.Entitys.System;
 using NewLibCore.UnitTest.ValueObject;
