@@ -219,7 +219,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         {
             if (!FromComponent.AliasNameMappers.Any())
             {
-                throw new ArgumentException("û��ָ��From��");
+                throw new ArgumentException("From");
             }
 
             return RunDiagnosis.Watch(() =>
@@ -232,7 +232,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
                  {
                      if (OrderComponent == null)
                      {
-                         throw new Exception("��ҳ��û��ָ�������ֶ�");
+                         throw new Exception("Order");
                      }
                      var (fields, tableName) = ExtractOrderFields();
                      var orderTemplate = _options.TemplateBase.CreateOrderBy(OrderComponent.OrderBy, $@"{tableName}.{fields}");
