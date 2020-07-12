@@ -20,7 +20,7 @@ namespace NewLibCore.Data.SQL
 
         private readonly TemplateBase _template;
 
-        private IReadOnlyList<KeyValuePair<String, String>> _tableAliasMapper;
+        private IReadOnlyList<KeyValuePair<String, String>> _aliasMapper;
 
         /// <summary>
         /// 初始化Parser类的新实例
@@ -36,7 +36,7 @@ namespace NewLibCore.Data.SQL
             _parameterNameStack = new Stack<String>();
             _predicateTypeStack = new Stack<PredicateType>();
 
-            _tableAliasMapper = new List<KeyValuePair<String, String>>();
+            _aliasMapper = new List<KeyValuePair<String, String>>();
         }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace NewLibCore.Data.SQL
         protected override ProcessorResult InnerProcessor()
         {
             //获取合并后的表别名
-            _tableAliasMapper = _expressionStore.MergeAliasMapper();
+            _aliasMapper = _expressionStore.MergeAliasMapper();
 
             //循环翻译连接对象
             foreach (var item in _expressionStore.Joins)
@@ -222,11 +222,11 @@ namespace NewLibCore.Data.SQL
                             {
                                 var parameterExp = (ParameterExpression)memberExp.Expression;
                                 var internalAliasName = "";
-                                if (!_tableAliasMapper.Any(a => a.Key == parameterExp.Type.GetEntityBaseAliasName().TableName && a.Value == parameterExp.Type.GetEntityBaseAliasName().AliasName))
+                                if (!_aliasMapper.Any(a => a.Key == parameterExp.Type.GetEntityBaseAliasName().TableName && a.Value == parameterExp.Type.GetEntityBaseAliasName().AliasName))
                                 {
                                     throw new ArgumentException($@"没有找到{parameterExp.Type.Name}所对应的形参");
                                 }
-                                internalAliasName = $@"{ _tableAliasMapper.Where(w => w.Key == parameterExp.Type.GetEntityBaseAliasName().TableName && w.Value == parameterExp.Type.GetEntityBaseAliasName().AliasName).FirstOrDefault().Value.ToLower()}.";
+                                internalAliasName = $@"{_aliasMapper.Where(w => w.Key == parameterExp.Type.GetEntityBaseAliasName().TableName && w.Value == parameterExp.Type.GetEntityBaseAliasName().AliasName).FirstOrDefault().Value.ToLower()}.";
 
                                 var newParameterName = Guid.NewGuid().ToString().Replace("-", "");
                                 _processorResult.Append(_template.CreatePredicate(_predicateTypeStack.Pop(), $@"{internalAliasName}{memberExp.Member.Name}", $"@{newParameterName}"));
@@ -404,11 +404,11 @@ namespace NewLibCore.Data.SQL
             Parameter.IfNullOrZero(memberExpression);
             var parameterExpression = (ParameterExpression)memberExpression.Expression;
             var (tableName, aliasName) = parameterExpression.Type.GetEntityBaseAliasName();
-            if (!_tableAliasMapper.Any(a => a.Key == tableName && a.Value == aliasName))
+            if (!_aliasMapper.Any(a => a.Key == tableName && a.Value == aliasName))
             {
                 throw new Exception($@"没有找到参数名:{memberExpression.Type.Name}所对应的表别名");
             }
-            return _tableAliasMapper.Where(w => w.Key == tableName && w.Value == aliasName).FirstOrDefault().Value.ToLower();
+            return _aliasMapper.Where(w => w.Key == tableName && w.Value == aliasName).FirstOrDefault().Value.ToLower();
         }
 
     }
