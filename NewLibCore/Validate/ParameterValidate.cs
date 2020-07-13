@@ -5,7 +5,7 @@ namespace NewLibCore.Validate
     public static class Parameter
     {
         /// <summary>
-        /// 验证引用类型是否合法
+        /// 是否为0或null
         /// </summary>
         public static void IfNullOrZero(Object argument)
         {
@@ -13,7 +13,7 @@ namespace NewLibCore.Validate
         }
 
         /// <summary>
-        /// 验证引用类型是否合法
+        /// 是否为0或null
         /// </summary>
         public static void IfNullOrZero(Object argument, Boolean canNull)
         {
@@ -23,14 +23,17 @@ namespace NewLibCore.Validate
             }
         }
 
-
+        /// <summary>
+        /// 是否为0或null
+        /// </summary>
+        /// <param name="valueType"></param>
         public static void IfNullOrZero(ValueType valueType)
         {
             IfNullOrZero(valueType, false);
         }
 
         /// <summary>
-        /// 验证值类型是否合法
+        /// 是否为0或null
         /// </summary>
         public static void IfNullOrZero(ValueType valueType, Boolean canZero)
         {
