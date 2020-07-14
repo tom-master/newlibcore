@@ -5,26 +5,46 @@ namespace NewLibCore.Logger
 {
     public class DefaultLogger : ILogger
     {
+        /// <summary>
+        /// 输出调试日志
+        /// </summary>
+        /// <param name="message"></param>
         public void Debug(String message)
         {
             Write(LoggerLevel.Debug, message);
         }
 
+        /// <summary>
+        /// 输出错误日志
+        /// </summary>
+        /// <param name="message"></param>
         public void Error(String message)
         {
             Write(LoggerLevel.Exception, message);
         }
 
+        /// <summary>
+        /// 输出失败日志
+        /// </summary>
+        /// <param name="message"></param>
         public void Fail(String message)
         {
             Write(LoggerLevel.Error, message);
         }
 
+        /// <summary>
+        /// 输出一般性信息日志
+        /// </summary>
+        /// <param name="message"></param>
         public void Info(String message)
         {
             Write(LoggerLevel.Info, message);
         }
 
+        /// <summary>
+        /// 输出警告信息
+        /// </summary>
+        /// <param name="message"></param>
         public void Warn(String message)
         {
             Write(LoggerLevel.Warning, message);
