@@ -13,18 +13,12 @@ namespace NewLibCore
         public static T ToEnum<T>(String value) where T : struct
         {
             Parameter.IfNullOrZero(value);
-
-            if (String.IsNullOrEmpty(value))
-            {
-                throw new ArgumentException("value不能为空");
-            }
-
             if (Enum.TryParse(value, true, out T t))
             {
                 return t;
             }
 
-            throw new ArgumentException($"{value}不是有效的类型");
+            throw new ArgumentException($"{value}不是有效的值");
         }
 
         /// <summary>
@@ -32,8 +26,8 @@ namespace NewLibCore
         /// </summary>
         public static T ToEnum<T>(Int32 value) where T : struct
         {
-            Parameter.IfNullOrZero(value); 
-            return (T)Enum.ToObject(typeof(T), value);
+            Parameter.IfNullOrZero(value);
+            return ToEnum<T>(value.ToString());
         }
 
         /// <summary>
@@ -51,7 +45,7 @@ namespace NewLibCore
         public static String GetDescription(this Enum e)
         {
             Parameter.IfNullOrZero(e);
-            var attrs = e.GetType().GetField(e.ToString()).GetAttributes<DescriptionAttribute>( false);
+            var attrs = e.GetType().GetField(e.ToString()).GetAttributes<DescriptionAttribute>(false);
             if (attrs.Length == 0)
             {
                 throw new Exception("特性上没有用DescriptionAttribute修饰,因此无法获取描述");
