@@ -36,7 +36,13 @@ namespace NewLibCore
         public static Int32 ToInt32(this Enum e)
         {
             Parameter.IfNullOrZero(e);
-            return (Int32)Enum.Parse(e.GetType(), e.ToString());
+
+            if (Enum.TryParse(e.GetType(), e.ToString(), true, out Object c))
+            {
+                return (Int32)c;
+            }
+
+            throw new ArgumentException($@"无效的枚举值{e}");
         }
 
         /// <summary>
