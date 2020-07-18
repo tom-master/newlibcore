@@ -52,11 +52,11 @@ namespace NewLibCore
         {
             Parameter.IfNullOrZero(e);
             var attrs = e.GetType().GetField(e.ToString()).GetAttributes<DescriptionAttribute>(false);
-            if (attrs.Length == 0)
+            if (attrs.Length > 0)
             {
-                throw new Exception("特性上没有用DescriptionAttribute修饰,因此无法获取描述");
+                return String.Join(",", attrs.Select(s => s.Description));
             }
-            return String.Join(",", attrs.Select(s => s.Description));
+            throw new ArgumentException($@"枚举值:{e}没有应用DescriptionAttribute特性,因此无法获取描述");
         }
     }
 }
