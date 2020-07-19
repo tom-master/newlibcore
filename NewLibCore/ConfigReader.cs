@@ -6,9 +6,8 @@ using Com.Ctrip.Framework.Apollo;
 
 namespace NewLibCore
 {
-    public static class Host
+    public static class ConfigReader
     {
-
         private static IConfigurationRoot ReadApollo()
         {
             var builder = new ConfigurationBuilder();
