@@ -8,12 +8,28 @@ namespace NewLibCore
 {
     public static class ConfigReader
     {
-        private static IConfigurationRoot ReadApollo()
+
+        private String ReadFromEnvironmentVariable(String varKey)
         {
-            var builder = new ConfigurationBuilder();
-            var r = builder.AddJsonFile($"{Environment.CurrentDirectory}/appsettings.json", true, false).Build();
-            return builder.AddApollo(r.GetSection("apollo")).AddDefault().Build();
-            // return builder.AddConfiguration(r.GetSection("newcrm")).Build();
+            Parameter.IfNullOrZero(varKey);
+            var v1 = Environment.GetEnvironmentVariable(varKey, EnvironmentVariableTarget.Machine);
+            if (!String.IsNullOrEmpty(v1))
+            {
+                return v1;
+            }
+
+            v1 = Environment.GetEnvironmentVariable(varKey, EnvironmentVariableTarget.Process);
+            if (!String.IsNullOrEmpty(v1))
+            {
+                return v1;
+            }
+
+            v1 = Environment.GetEnvironmentVariable(varKey, EnvironmentVariableTarget.User);
+            if (!String.IsNullOrEmpty(v1))
+            {
+                return v1;
+            }
+            return "";
         }
 
         /// <summary>
@@ -22,24 +38,7 @@ namespace NewLibCore
         /// <returns></returns>
         public static String GetHostVar(String varName)
         {
-            Parameter.IfNullOrZero(varName);
-            var v1 = Environment.GetEnvironmentVariable(varName, EnvironmentVariableTarget.Machine);
-            if (!String.IsNullOrEmpty(v1))
-            {
-                return v1;
-            }
 
-            v1 = Environment.GetEnvironmentVariable(varName, EnvironmentVariableTarget.Process);
-            if (!String.IsNullOrEmpty(v1))
-            {
-                return v1;
-            }
-
-            v1 = Environment.GetEnvironmentVariable(varName, EnvironmentVariableTarget.User);
-            if (!String.IsNullOrEmpty(v1))
-            {
-                return v1;
-            }
 
             v1 = ConfigurationManager.AppSettings[varName];
             if (!String.IsNullOrEmpty(v1))
