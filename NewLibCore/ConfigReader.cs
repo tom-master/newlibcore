@@ -45,7 +45,7 @@ namespace NewLibCore
         public static String GetHostVar(String varName)
         {
 
-
+            var v1 = "";
             v1 = ConfigurationManager.AppSettings[varName];
             if (!String.IsNullOrEmpty(v1))
             {
