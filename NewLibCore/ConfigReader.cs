@@ -9,7 +9,7 @@ namespace NewLibCore
     public static class ConfigReader
     {
 
-        private String ReadFromEnvironmentVariable(String varKey)
+        private static String ReadFromEnvironmentVariable(String varKey)
         {
             Parameter.IfNullOrZero(varKey);
             var v1 = Environment.GetEnvironmentVariable(varKey, EnvironmentVariableTarget.Machine);
@@ -29,6 +29,12 @@ namespace NewLibCore
             {
                 return v1;
             }
+            return "";
+        }
+
+        private static String ReadFromAppsettings(String varKey)
+        {
+            var builder = new ConfigurationBuilder();
             return "";
         }
 
