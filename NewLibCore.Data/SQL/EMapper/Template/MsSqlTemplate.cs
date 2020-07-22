@@ -83,7 +83,7 @@ namespace NewLibCore.Data.SQL.Template
 
         internal override DbConnection CreateDbConnection()
         {
-            return new SqlConnection(Host.GetHostVar(EntityMapperConfig.ConnectionStringName));
+            return new SqlConnection(ConfigReader.GetHostVar(EntityMapperConfig.ConnectionStringName));
         }
     }
 }
