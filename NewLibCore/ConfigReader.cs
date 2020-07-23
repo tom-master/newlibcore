@@ -32,9 +32,13 @@ namespace NewLibCore
             return "";
         }
 
-        private static String ReadFromAppsettings(String varKey)
+        private static String ReadFromAppsettings(String path, String key)
         {
+            Parameter.IfNullOrZero(path);
+            Parameter.IfNullOrZero(key);
             var builder = new ConfigurationBuilder();
+            var root = builder.AddJsonFile($@"{AppDomain.CurrentDomain.BaseDirectory}/appsettings.json");
+
             return "";
         }
 
