@@ -37,7 +37,7 @@ namespace NewLibCore
             Parameter.IfNullOrZero(path);
             Parameter.IfNullOrZero(key);
             var builder = new ConfigurationBuilder();
-            var root = builder.AddJsonFile($@"{AppDomain.CurrentDomain.BaseDirectory}/appsettings.json");
+            var root = builder.AddJsonFile($@"{AppDomain.CurrentDomain.BaseDirectory}/appsettings.json").Build();
 
             return "";
         }
