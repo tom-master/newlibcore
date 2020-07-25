@@ -56,7 +56,7 @@ namespace NewLibCore.Data.SQL.Template
             Parameter.Validate(orderBy);
             Parameter.Validate(rawSql);
 
-            var sql = "";
+            String sql;
             if (EntityMapper.MsSqlPaginationVersion == MsSqlPaginationVersion.GREATERTHAN2012)
             {
                 sql = $@" {rawSql} {orderBy} OFFSET ({pagination.Index * pagination.Size}) ROWS FETCH NEXT {pagination.Size} ROWS ONLY ;";

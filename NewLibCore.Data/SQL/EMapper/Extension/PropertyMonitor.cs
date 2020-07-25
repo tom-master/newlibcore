@@ -104,26 +104,26 @@ namespace NewLibCore.Data.SQL
                                 ThrowValidateException(validateBases[i], changedProperty);
                             }
 
-                            if (validateBases[i + 1] is DefaultValueAttribute)
+                            if (validateBases[i + 1] is DefaultValueAttribute attribute)
                             {
                                 if (!validateBases[i + 1].IsValidate(changedProperty))
                                 {
                                     ThrowValidateException(validateBases[i], changedProperty);
                                 }
-                                SetPropertyDefaultValue((DefaultValueAttribute)validateBases[i + 1], changedProperty, changedProperty.Value);
+                                SetPropertyDefaultValue(attribute, changedProperty, changedProperty.Value);
                                 i += 1;
                                 continue;
                             }
                             ThrowValidateException(validateBases[i], changedProperty);
                         }
                     }
-                    else if (validateBases[i] is DefaultValueAttribute)
+                    else if (validateBases[i] is DefaultValueAttribute attribute)
                     {
                         if (!validateBases[i].IsValidate(changedProperty))
                         {
                             ThrowValidateException(validateBases[i], changedProperty);
                         }
-                        SetPropertyDefaultValue((DefaultValueAttribute)validateBases[i], changedProperty, changedProperty.Value);
+                        SetPropertyDefaultValue(attribute, changedProperty, changedProperty.Value);
                     }
                     else if (validateBases[i] is InputRangeAttribute)
                     {

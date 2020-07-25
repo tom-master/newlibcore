@@ -33,7 +33,7 @@ namespace NewLibCore.Data.SQL.Validate
             {
                 if (value == null)
                 {
-                    throw new ArgumentException($@"枚举类型 {type.ToString()} 的默认值必须被手动指定");
+                    throw new ArgumentException($@"枚举类型 {type} 的默认值必须被手动指定");
                 }
             }
 
@@ -85,7 +85,7 @@ namespace NewLibCore.Data.SQL.Validate
         /// 初始化一个DefaultValueAttribute类的实例
         /// </summary>
         /// <param name="type">默认值类型</param>
-        public DefaultValueAttribute(Type type) : this(type, default(Object))
+        public DefaultValueAttribute(Type type) : this(type, default)
         {
 
         }

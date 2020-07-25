@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NewLibCore.Data.SQL;
 using NewLibCore.UnitTest.Entitys.Agent;
@@ -12,6 +14,23 @@ namespace NewLibCore.UnitTest
         [TestMethod]
         public void TestMethod1()
         {
+            var lists = new List<String>
+            {
+                "1",
+                "2",
+                "3",
+                "4",
+                "5",
+                "6",
+                "7",
+                "8",
+                "9",
+                "10",
+                ""
+            }.ToList();
+            var result = lists.OrderByDescending(d => d);
+
+
             #region  
             EntityMapper.InitDefaultSetting();
 

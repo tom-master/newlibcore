@@ -488,8 +488,8 @@ namespace NewLibCore.Data.SQL.Store
             var list = new List<KeyValuePair<String, String>>();
             foreach (var item in parameters)
             {
-                var type = item.Type.GetTableName();
-                list.Add(new KeyValuePair<String, String>(type.TableName, type.AliasName));
+                var (TableName, AliasName) = item.Type.GetTableName();
+                list.Add(new KeyValuePair<String, String>(TableName, AliasName));
             }
             return list.ToList();
         }

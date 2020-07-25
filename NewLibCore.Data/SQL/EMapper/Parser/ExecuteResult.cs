@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
 using System.Linq;
-using NewLibCore.Data.SQL.Component.Cache;
-using NewLibCore.Data.SQL.Extension;
+using System.Data;
+using System.Collections.Generic;
 using NewLibCore.Validate;
+using NewLibCore.Data.SQL.Extension;
+using NewLibCore.Data.SQL.Component.Cache;
 
 namespace NewLibCore.Data.SQL
 {
@@ -36,9 +36,9 @@ namespace NewLibCore.Data.SQL
 
         internal Int32 GetModifyRowCount()
         {
-            if (_result is DataTable)
+            if (_result is DataTable table)
             {
-                return (Int32)Convert.ChangeType(((DataTable)_result).Rows[0][0].ToString(), typeof(Int32));
+                return (Int32)Convert.ChangeType(table.Rows[0][0].ToString(), typeof(Int32));
             }
             return (Int32)Convert.ChangeType(_result.ToString(), typeof(Int32));
         }

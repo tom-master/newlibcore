@@ -19,8 +19,7 @@ namespace NewLibCore
                 throw new ArgumentException("value不能为空");
             }
 
-            T t;
-            if (Enum.TryParse(value, true, out t))
+            if (Enum.TryParse(value, true, out T t))
             {
                 return t;
             }

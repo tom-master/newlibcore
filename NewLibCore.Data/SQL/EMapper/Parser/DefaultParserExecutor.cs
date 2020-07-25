@@ -68,16 +68,12 @@ namespace NewLibCore.Data.SQL
     {
         private JoinRelation _joinRelation;
 
-        private ParserResult _parserResult;
-
-        private Stack<String> _parameterNameStack;
-
-        private readonly TemplateBase _templateBase;
-
-        private Stack<PredicateType> _predicateTypeStack;
 
         private IReadOnlyList<KeyValuePair<String, String>> _tableAliasMapper;
-
+        private ParserResult _parserResult;
+        private readonly Stack<PredicateType> _predicateTypeStack;
+        private readonly Stack<String> _parameterNameStack;
+        private readonly TemplateBase _templateBase;
         /// <summary>
         /// 初始化Parser类的新实例
         /// </summary>
@@ -249,21 +245,21 @@ namespace NewLibCore.Data.SQL
                             break;
                         }
 
-                        if (lamdbaExp.Body is BinaryExpression)
+                        if (lamdbaExp.Body is BinaryExpression expression4)
                         {
-                            InternalParser((BinaryExpression)lamdbaExp.Body);
+                            InternalParser(expression4);
                         }
-                        else if (lamdbaExp.Body is MemberExpression)
+                        else if (lamdbaExp.Body is MemberExpression expression3)
                         {
-                            InternalParser((MemberExpression)lamdbaExp.Body);
+                            InternalParser(expression3);
                         }
-                        else if (lamdbaExp.Body is MethodCallExpression)
+                        else if (lamdbaExp.Body is MethodCallExpression expression2)
                         {
-                            InternalParser((MethodCallExpression)lamdbaExp.Body);
+                            InternalParser(expression2);
                         }
-                        else if (lamdbaExp.Body is UnaryExpression)
+                        else if (lamdbaExp.Body is UnaryExpression expression1)
                         {
-                            InternalParser((UnaryExpression)lamdbaExp.Body);
+                            InternalParser(expression1);
                         }
                         break;
                     }
@@ -336,10 +332,9 @@ namespace NewLibCore.Data.SQL
             var methodName = methodCallExp.Method.Name;
 
             var methodCallArguments = methodCallExp.Arguments;
-
-            Expression argument = null, obj = null;
+            Expression argument;
+            Expression obj;
             Type argumentType;
-
             if (methodCallArguments.Count > 1)
             {
                 argumentType = methodCallArguments[0].Type;

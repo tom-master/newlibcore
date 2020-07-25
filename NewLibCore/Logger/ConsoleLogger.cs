@@ -55,7 +55,7 @@ namespace NewLibCore.Logger
             var stackFrame = stackTrace.GetFrame(2);
             var type = stackFrame.GetMethod().DeclaringType;
             Console.ForegroundColor = consoleColor;
-            Console.WriteLine($@"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}][{level.ToString()}][{type.Name}]:{message}");
+            Console.WriteLine($@"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}][{level}][{type.Name}]:{message}");
         }
     }
 }

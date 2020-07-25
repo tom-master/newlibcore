@@ -42,7 +42,7 @@ namespace NewLibCore.Data.SQL.Component.Cache
 
         public override TResult Get<TResult>(String key)
         {
-            return default(TResult);
+            return default;
             // Parameter.Validate(key);
             // var result = _baseCache.Get(key);
             // if (result == null)

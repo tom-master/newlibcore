@@ -18,7 +18,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// <param name="value">保存的值</param>
         /// <param name="expiry">过期时间</param>
         /// <returns></returns>
-        Boolean StringSet(String key, String value, TimeSpan? expiry = default(TimeSpan?));
+        Boolean StringSet(String key, String value, TimeSpan? expiry = default);
 
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// <param name="obj"></param>
         /// <param name="expiry"></param>
         /// <returns></returns>
-        Boolean StringSet<T>(String key, T obj, TimeSpan? expiry = default(TimeSpan?));
+        Boolean StringSet<T>(String key, T obj, TimeSpan? expiry = default);
 
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// <param name="value">保存的值</param>
         /// <param name="expiry">过期时间</param>
         /// <returns></returns>
-        Task<Boolean> StringSetAsync(String key, String value, TimeSpan? expiry = default(TimeSpan?));
+        Task<Boolean> StringSetAsync(String key, String value, TimeSpan? expiry = default);
 
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// <param name="obj"></param>
         /// <param name="expiry"></param>
         /// <returns></returns>
-        Task<Boolean> StringSetAsync<T>(String key, T obj, TimeSpan? expiry = default(TimeSpan?));
+        Task<Boolean> StringSetAsync<T>(String key, T obj, TimeSpan? expiry = default);
 
 
         /// <summary>
@@ -565,7 +565,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// <param name="key">redis key</param>
         /// <param name="expiry"></param>
         /// <returns></returns>
-        Boolean KeyExpire(String key, TimeSpan? expiry = default(TimeSpan?));
+        Boolean KeyExpire(String key, TimeSpan? expiry = default);
 
         RedisType GetKeyType(String key);
 
