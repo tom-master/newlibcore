@@ -52,7 +52,6 @@ namespace NewLibCore
         /// <returns></returns>
         public static String GetHostVar(String varName)
         {
-
             var v1 = "";
             v1 = ConfigurationManager.AppSettings[varName];
             if (!String.IsNullOrEmpty(v1))
@@ -65,12 +64,6 @@ namespace NewLibCore
             {
                 return v1;
             }
-
-            // v1 = ReadApollo()[varName];
-            // if (!String.IsNullOrEmpty(v1))
-            // {
-            //     return v1;
-            // }
 
             throw new Exception($@"没有找到设置的{varName}环境变量");
         }
