@@ -9,14 +9,14 @@ namespace NewLibCore
     /// <summary>
     /// 提供计算MD5的操作类 
     /// </summary>
-    public static class MD
+    public static class MD5
     {
         /// <summary>
         /// 获取输入流的MD5值
         /// </summary>
         /// <param name="stream"></param>
         /// <returns></returns>
-        public static String GetMD5(Stream stream)
+        public static String Get(Stream stream)
         {
             var bs = new Byte[stream.Length];
             stream.Write(bs, 0, bs.Length);
@@ -28,7 +28,7 @@ namespace NewLibCore
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public static String GetMD5(String input)
+        public static String Get(String input)
         {
             return InternalMd5(Encoding.Default.GetBytes(input));
         }
