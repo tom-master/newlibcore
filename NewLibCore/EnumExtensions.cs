@@ -48,13 +48,13 @@ namespace NewLibCore
         /// <summary>
         /// 获取枚举的描述特性中的内容
         /// </summary>
-        public static String GetDescription(this Enum e)
+        public static String GetDescription(this Enum e, String split = ",")
         {
             Parameter.IfNullOrZero(e);
             var attrs = e.GetType().GetField(e.ToString()).GetAttributes<DescriptionAttribute>(false);
             if (attrs.Length > 0)
             {
-                return String.Join(",", attrs.Select(s => s.Description));
+                return String.Join(split, attrs.Select(s => s.Description));
             }
             throw new ArgumentException($@"枚举值:{e}没有应用DescriptionAttribute特性,因此无法获取描述");
         }
