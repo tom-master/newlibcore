@@ -42,7 +42,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public Boolean StringSet(String key, String value, TimeSpan? expiry = default)
         {
-            return _database.StringSet(key, value, expiry);
+            return _database.StringSet($@"{_customKey}{key}", value, expiry);
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public Boolean StringSet<T>(String key, T obj, TimeSpan? expiry = default)
         {
-            return _database.StringSet(key, ConvertJson(obj), expiry);
+            return _database.StringSet($@"{_customKey}{key}", ConvertJson(obj), expiry);
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public String StringGet(String key)
         {
-            return _database.StringGet(key);
+            return _database.StringGet($@"{_customKey}{key}");
         }
 
         /// <summary>
@@ -83,7 +83,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public T StringGet<T>(String key)
         {
-            return ConvertObj<T>(_database.StringGet(key));
+            return ConvertObj<T>(_database.StringGet($@"{_customKey}{key}"));
         }
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public Double StringIncrement(String key, Double val = 1)
         {
-            return _database.StringIncrement(key, val);
+            return _database.StringIncrement($@"{_customKey}{key}", val);
         }
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public Double StringDecrement(String key, Double val = 1)
         {
-            return _database.StringDecrement(key, val);
+            return _database.StringDecrement($@"{_customKey}{key}", val);
         }
 
         #endregion 同步方法
@@ -111,7 +111,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public async Task<Boolean> StringSetAsync(String key, String value, TimeSpan? expiry = default)
         {
-            return await _database.StringSetAsync(key, value, expiry);
+            return await _database.StringSetAsync($@"{_customKey}{key}", value, expiry);
         }
 
         /// <summary>
@@ -128,7 +128,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public async Task<Boolean> StringSetAsync<T>(String key, T obj, TimeSpan? expiry = default)
         {
-            return await _database.StringSetAsync(key, ConvertJson(obj), expiry);
+            return await _database.StringSetAsync($@"{_customKey}{key}", ConvertJson(obj), expiry);
         }
 
         /// <summary>
@@ -136,7 +136,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public async Task<String> StringGetAsync(String key)
         {
-            return await _database.StringGetAsync(key);
+            return await _database.StringGetAsync($@"{_customKey}{key}");
         }
 
         /// <summary>
@@ -152,7 +152,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public async Task<T> StringGetAsync<T>(String key)
         {
-            var result = await _database.StringGetAsync(key);
+            var result = await _database.StringGetAsync($@"{_customKey}{key}");
             return ConvertObj<T>(result);
         }
 
@@ -161,7 +161,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public async Task<Double> StringIncrementAsync(String key, Double val = 1)
         {
-            return await _database.StringIncrementAsync(key, val);
+            return await _database.StringIncrementAsync($@"{_customKey}{key}", val);
         }
 
         /// <summary>
@@ -169,7 +169,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public async Task<Double> StringDecrementAsync(String key, Double val = 1)
         {
-            return await _database.StringDecrementAsync(key, val);
+            return await _database.StringDecrementAsync($@"{_customKey}{key}", val);
         }
 
         #endregion 异步方法
@@ -185,7 +185,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public Boolean HashExists(String key, String dataKey)
         {
-            return _database.HashExists(key, dataKey);
+            return _database.HashExists($@"{_customKey}{key}", dataKey);
         }
 
         /// <summary>
@@ -193,7 +193,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public Boolean HashSet<T>(String key, String dataKey, T t)
         {
-            return _database.HashSet(key, dataKey, ConvertJson(t));
+            return _database.HashSet($@"{_customKey}{key}", dataKey, ConvertJson(t));
         }
 
         /// <summary>
@@ -201,7 +201,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public Boolean HashDelete(String key, String dataKey)
         {
-            return _database.HashDelete(key, dataKey);
+            return _database.HashDelete($@"{_customKey}{key}", dataKey);
         }
 
         /// <summary>
@@ -209,7 +209,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public Int64 HashDelete(String key, IEnumerable<RedisValue> dataKeys)
         {
-            return _database.HashDelete(key, dataKeys.ToArray());
+            return _database.HashDelete($@"{_customKey}{key}", dataKeys.ToArray());
         }
 
         /// <summary>
@@ -217,7 +217,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public T HashGet<T>(String key, String dataKey)
         {
-            return ConvertObj<T>(_database.HashGet(key, dataKey));
+            return ConvertObj<T>(_database.HashGet($@"{_customKey}{key}", dataKey));
         }
 
         /// <summary>
@@ -225,7 +225,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public Double HashIncrement(String key, String dataKey, Double val = 1)
         {
-            return _database.HashIncrement(key, dataKey, val);
+            return _database.HashIncrement($@"{_customKey}{key}", dataKey, val);
         }
 
         /// <summary>
@@ -233,7 +233,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public Double HashDecrement(String key, String dataKey, Double val = 1)
         {
-            return _database.HashDecrement(key, dataKey, val);
+            return _database.HashDecrement($@"{_customKey}{key}", dataKey, val);
         }
 
         /// <summary>
@@ -241,7 +241,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public List<T> HashKeys<T>(String key)
         {
-            return ConvetList<T>(_database.HashKeys(key));
+            return ConvetList<T>(_database.HashKeys($@"{_customKey}{key}"));
         }
 
         #endregion 同步方法
@@ -253,7 +253,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public async Task<Boolean> HashExistsAsync(String key, String dataKey)
         {
-            return await _database.HashExistsAsync(key, dataKey);
+            return await _database.HashExistsAsync($@"{_customKey}{key}", dataKey);
         }
 
         /// <summary>
@@ -261,7 +261,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public async Task<Boolean> HashSetAsync<T>(String key, String dataKey, T t)
         {
-            return await _database.HashSetAsync(key, dataKey, ConvertJson(t));
+            return await _database.HashSetAsync($@"{_customKey}{key}", dataKey, ConvertJson(t));
         }
 
         /// <summary>
@@ -269,7 +269,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public async Task<Boolean> HashDeleteAsync(String key, String dataKey)
         {
-            return await _database.HashDeleteAsync(key, dataKey);
+            return await _database.HashDeleteAsync($@"{_customKey}{key}", dataKey);
         }
 
         /// <summary>
@@ -277,7 +277,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public async Task<Int64> HashDeleteAsync(String key, IEnumerable<RedisValue> dataKeys)
         {
-            return await _database.HashDeleteAsync(key, dataKeys.ToArray());
+            return await _database.HashDeleteAsync($@"{_customKey}{key}", dataKeys.ToArray());
         }
 
         /// <summary>
@@ -285,7 +285,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public async Task<T> HashGeAsync<T>(String key, String dataKey)
         {
-            String value = await _database.HashGetAsync(key, dataKey);
+            String value = await _database.HashGetAsync($@"{_customKey}{key}", dataKey);
             return ConvertObj<T>(value);
         }
 
@@ -294,7 +294,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public async Task<Double> HashIncrementAsync(String key, String dataKey, Double val = 1)
         {
-            return await _database.HashIncrementAsync(key, dataKey, val);
+            return await _database.HashIncrementAsync($@"{_customKey}{key}", dataKey, val);
         }
 
         /// <summary>
@@ -302,7 +302,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public async Task<Double> HashDecrementAsync(String key, String dataKey, Double val = 1)
         {
-            return await _database.HashDecrementAsync(key, dataKey, val);
+            return await _database.HashDecrementAsync($@"{_customKey}{key}", dataKey, val);
         }
 
         /// <summary>
@@ -310,7 +310,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public async Task<List<T>> HashKeysAsync<T>(String key)
         {
-            return ConvetList<T>(await _database.HashKeysAsync(key));
+            return ConvetList<T>(await _database.HashKeysAsync($@"{_customKey}{key}"));
         }
 
         #endregion 异步方法
@@ -326,7 +326,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public void ListRemove<T>(String key, T value)
         {
-            _database.ListRemove(key, ConvertJson(value));
+            _database.ListRemove($@"{_customKey}{key}", ConvertJson(value));
         }
 
         /// <summary>
@@ -334,7 +334,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public List<T> ListRange<T>(String key)
         {
-            var values = _database.ListRange(key);
+            var values = _database.ListRange($@"{_customKey}{key}");
             return ConvetList<T>(values);
         }
 
@@ -343,7 +343,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public List<T> ListRange<T>(String key, Int32 start, Int32 end)
         {
-            var values = _database.ListRange(key, start, end);
+            var values = _database.ListRange($@"{_customKey}{key}", start, end);
             return ConvetList<T>(values);
         }
 
@@ -352,7 +352,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public void ListRightPush<T>(String key, T value)
         {
-            _database.ListRightPush(key, ConvertJson(value));
+            _database.ListRightPush($@"{_customKey}{key}", ConvertJson(value));
         }
 
         /// <summary>
@@ -360,7 +360,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public T ListRightPop<T>(String key)
         {
-            var value = _database.ListRightPop(key);
+            var value = _database.ListRightPop($@"{_customKey}{key}");
             return ConvertObj<T>(value);
         }
 
@@ -369,7 +369,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public void ListLeftPush<T>(String key, T value)
         {
-            _database.ListLeftPush(key, ConvertJson(value));
+            _database.ListLeftPush($@"{_customKey}{key}", ConvertJson(value));
         }
 
         /// <summary>
@@ -377,7 +377,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public T ListLeftPop<T>(String key)
         {
-            var value = _database.ListLeftPop(key);
+            var value = _database.ListLeftPop($@"{_customKey}{key}");
             return ConvertObj<T>(value);
         }
 
@@ -386,7 +386,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public Int64 ListLength(String key)
         {
-            return _database.ListLength(key);
+            return _database.ListLength($@"{_customKey}{key}");
         }
 
         #endregion 同步方法
@@ -398,7 +398,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public async Task<Int64> ListRemoveAsync<T>(String key, T value)
         {
-            return await _database.ListRemoveAsync(key, ConvertJson(value));
+            return await _database.ListRemoveAsync($@"{_customKey}{key}", ConvertJson(value));
         }
 
         /// <summary>
@@ -406,7 +406,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public async Task<List<T>> ListRangeAsync<T>(String key)
         {
-            var values = await _database.ListRangeAsync(key);
+            var values = await _database.ListRangeAsync($@"{_customKey}{key}");
             return ConvetList<T>(values);
         }
 
@@ -415,7 +415,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public async Task<Int64> ListRightPushAsync<T>(String key, T value)
         {
-            return await _database.ListRightPushAsync(key, ConvertJson(value));
+            return await _database.ListRightPushAsync($@"{_customKey}{key}", ConvertJson(value));
         }
 
         /// <summary>
@@ -423,7 +423,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public async Task<T> ListRightPopAsync<T>(String key)
         {
-            var value = await _database.ListRightPopAsync(key);
+            var value = await _database.ListRightPopAsync($@"{_customKey}{key}");
             return ConvertObj<T>(value);
         }
 
@@ -432,7 +432,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public async Task<Int64> ListLeftPushAsync<T>(String key, T value)
         {
-            return await _database.ListLeftPushAsync(key, ConvertJson(value));
+            return await _database.ListLeftPushAsync($@"{_customKey}{key}", ConvertJson(value));
         }
 
         /// <summary>
@@ -440,7 +440,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public async Task<T> ListLeftPopAsync<T>(String key)
         {
-            var value = await _database.ListLeftPopAsync(key);
+            var value = await _database.ListLeftPopAsync($@"{_customKey}{key}");
             return ConvertObj<T>(value);
         }
 
@@ -449,7 +449,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public async Task<Int64> ListLengthAsync(String key)
         {
-            return await _database.ListLengthAsync(key);
+            return await _database.ListLengthAsync($@"{_customKey}{key}");
         }
 
         #endregion 异步方法
@@ -465,7 +465,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public Boolean SortedSetAdd<T>(String key, T value, Double score)
         {
-            return _database.SortedSetAdd(key, ConvertJson(value), score);
+            return _database.SortedSetAdd($@"{_customKey}{key}", ConvertJson(value), score);
         }
 
         /// <summary>
@@ -473,7 +473,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public Boolean SortedSetRemove<T>(String key, T value)
         {
-            return _database.SortedSetRemove(key, ConvertJson(value));
+            return _database.SortedSetRemove($@"{_customKey}{key}", ConvertJson(value));
         }
 
         /// <summary>
@@ -481,7 +481,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public List<T> SortedSetRangeByRank<T>(String key)
         {
-            var values = _database.SortedSetRangeByRank(key);
+            var values = _database.SortedSetRangeByRank($@"{_customKey}{key}");
             return ConvetList<T>(values);
         }
 
@@ -490,7 +490,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public Int64 SortedSetLength(String key)
         {
-            return _database.SortedSetLength(key);
+            return _database.SortedSetLength($@"{_customKey}{key}");
         }
 
         #endregion 同步方法
@@ -502,7 +502,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public async Task<Boolean> SortedSetAddAsync<T>(String key, T value, Double score)
         {
-            return await _database.SortedSetAddAsync(key, ConvertJson(value), score);
+            return await _database.SortedSetAddAsync($@"{_customKey}{key}", ConvertJson(value), score);
         }
 
         /// <summary>
@@ -510,7 +510,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public async Task<Boolean> SortedSetRemoveAsync<T>(String key, T value)
         {
-            return await _database.SortedSetRemoveAsync(key, ConvertJson(value));
+            return await _database.SortedSetRemoveAsync($@"{_customKey}{key}", ConvertJson(value));
         }
 
         /// <summary>
@@ -518,7 +518,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public async Task<List<T>> SortedSetRangeByRankAsync<T>(String key)
         {
-            var values = await _database.SortedSetRangeByRankAsync(key);
+            var values = await _database.SortedSetRangeByRankAsync($@"{_customKey}{key}");
             return ConvetList<T>(values);
         }
 
@@ -527,7 +527,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public async Task<Int64> SortedSetLengthAsync(String key)
         {
-            return await _database.SortedSetLengthAsync(key);
+            return await _database.SortedSetLengthAsync($@"{_customKey}{key}");
         }
 
         #endregion 异步方法
@@ -541,7 +541,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public Boolean KeyDelete(String key)
         {
-            return _database.KeyDelete(key);
+            return _database.KeyDelete($@"{_customKey}{key}");
         }
 
         /// <summary>
@@ -557,7 +557,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public Boolean KeyExists(String key)
         {
-            return _database.KeyExists(key);
+            return _database.KeyExists($@"{_customKey}{key}");
         }
 
         /// <summary>
@@ -565,7 +565,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public Boolean KeyRename(String key, String newKey)
         {
-            return _database.KeyRename(key, newKey);
+            return _database.KeyRename($@"{_customKey}{key}", newKey);
         }
 
         /// <summary>
@@ -573,7 +573,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
         /// </summary>
         public Boolean KeyExpire(String key, TimeSpan? expiry = default)
         {
-            return _database.KeyExpire(key, expiry);
+            return _database.KeyExpire($@"{_customKey}{key}", expiry);
         }
 
         #endregion key
@@ -708,7 +708,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
 
         private RedisKey[] ConvertRedisKeys(IEnumerable<String> redisKeys)
         {
-            return redisKeys.Select(redisKey => (RedisKey)redisKey).ToArray();
+            return redisKeys.Select(redisKey => (RedisKey)$@"{_customKey}{redisKey}").ToArray();
         }
 
         #endregion 辅助方法
@@ -720,7 +720,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
 
         public RedisType GetKeyType(String key)
         {
-            return _database.KeyType(key);
+            return _database.KeyType($@"{_customKey}{key}");
         }
     }
 }
