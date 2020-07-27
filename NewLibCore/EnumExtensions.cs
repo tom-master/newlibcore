@@ -33,13 +33,13 @@ namespace NewLibCore
         /// <summary>
         /// 将输入的值转换成指定的枚举类型
         /// </summary>
-        public static Int32 ToInt32(this Enum e)
+        public static TValue ToValue<TValue>(this Enum e)
         {
             Parameter.IfNullOrZero(e);
 
             if (Enum.TryParse(e.GetType(), e.ToString(), true, out Object c))
             {
-                return (Int32)c;
+                return (TValue)c;
             }
 
             throw new ArgumentException($@"无效的枚举值{e}");
