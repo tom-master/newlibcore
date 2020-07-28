@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace NewLibCore.Data.SQL.EMapper.Extension.DataConvert
+namespace NewLibCore.Data.SQL.DataConvert
 {
     internal class ConverterContext
     {

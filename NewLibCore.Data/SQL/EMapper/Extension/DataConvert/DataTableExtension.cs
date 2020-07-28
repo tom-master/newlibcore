@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Data;
-using NewLibCore.Data.SQL.EMapper.Extension.DataConvert;
 
 namespace NewLibCore.Data.SQL.DataConvert
 {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Text;
 
-namespace NewLibCore.Data.SQL.EMapper.Extension.DataConvert
+namespace NewLibCore.Data.SQL.DataConvert
 {
     internal interface IConverter
     {

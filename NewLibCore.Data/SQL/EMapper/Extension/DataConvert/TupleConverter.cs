@@ -4,7 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 
-namespace NewLibCore.Data.SQL.EMapper.Extension.DataConvert
+namespace NewLibCore.Data.SQL.DataConvert
 {
     internal class TupleConverter : IConverter
     {

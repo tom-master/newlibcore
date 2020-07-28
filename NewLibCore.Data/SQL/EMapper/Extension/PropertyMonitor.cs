@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using NewLibCore.Data.SQL.EMapper.Extension;
-using NewLibCore.Data.SQL.Extension;
+using NewLibCore.Data.SQL.DataConvert;
 using NewLibCore.Data.SQL.Validate;
 using NewLibCore.Validate;
 

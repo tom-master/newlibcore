@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace NewLibCore.Data.SQL.EMapper.Extension
+namespace NewLibCore.Data.SQL.Validate
 {
     /// <summary>
     /// 忽略被监视的属性

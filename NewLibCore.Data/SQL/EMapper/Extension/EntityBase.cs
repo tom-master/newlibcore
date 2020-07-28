@@ -1,5 +1,4 @@
 ﻿using System;
-using NewLibCore.Data.SQL.EMapper.Extension;
 using NewLibCore.Data.SQL.Validate;
 
 namespace NewLibCore.Data.SQL
@@ -35,7 +34,7 @@ namespace NewLibCore.Data.SQL
         /// 添加时间
         /// </summary>
         /// <value></value>
-        [DateTimeDefaultValue,IgnoreMonitor]
+        [DateTimeDefaultValue, IgnoreMonitor]
         public DateTime AddTime { get; set; }
 
         /// <summary>
