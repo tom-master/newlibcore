@@ -22,9 +22,13 @@ namespace NewLibCore
             {
                 if (type.IsEnum)
                 {
-                    result = Enum.Parse(type, value.ToString());
+                    if (Enum.TryParse(type, value.ToString(), false, out result))
+                    {
+                        return (T)result;
+                    }
+                    throw new ArgumentException($@"无法将值{value}转换为枚举类型:{type}");
                 }
-                else if (type == typeof(Guid))
+                if (type == typeof(Guid))
                 {
                     result = Guid.Parse(value.ToString());
                 }

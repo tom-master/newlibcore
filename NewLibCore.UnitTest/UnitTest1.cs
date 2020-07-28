@@ -19,9 +19,6 @@ namespace NewLibCore.UnitTest
         {
             var result1 = EnumExtensions.ToEnum<Test>(1);
             var result2 = EnumExtensions.ToEnum<Test>("B");
-            var result3 = Test.A.ToInt32();
-            var result4 = Test.B.ToInt32();
-            var result5 = Test.C.ToInt32();
         }
     }
 
