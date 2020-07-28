@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using NewLibCore.Data.SQL.EMapper.Extension;
 using NewLibCore.Data.SQL.Extension;
 using NewLibCore.Data.SQL.Validate;
 using NewLibCore.Validate;
@@ -13,9 +14,9 @@ namespace NewLibCore.Data.SQL
     /// </summary>
     public abstract class PropertyMonitor
     {
-        private readonly IList<ChangedProperty> _changedPropertys = new List<ChangedProperty>();
-
         private readonly Type _type;
+
+        private readonly IList<ChangedProperty> _changedPropertys = new List<ChangedProperty>();
 
         internal PropertyMonitor()
         {
@@ -52,7 +53,7 @@ namespace NewLibCore.Data.SQL
         /// </summary>
         internal void OnChanged()
         {
-            var propertys = _type.GetProperties(BindingFlags.Instance | BindingFlags.Public).Where(w => w.GetCustomAttributes<PropertyValidate>().Any() && w.Name != "Id" && w.Name != "AddTime" && w.Name != "LastModifyTime");
+            var propertys = _type.GetProperties(BindingFlags.Instance | BindingFlags.Public).Where(w => w.GetCustomAttributes<PropertyValidate>().Any() && !w.GetCustomAttributes<IgnoreMonitorAttribute>().Any());
             SetAddTime();
             SetUpdateTime();
             foreach (var item in propertys)
@@ -65,9 +66,12 @@ namespace NewLibCore.Data.SQL
         /// 获取值发生变更的属性
         /// </summary>
         /// <returns></returns>
-        internal IReadOnlyList<KeyValuePair<String, Object>> GetChangedPropertys()
+        internal IReadOnlyList<KeyValuePair<String, Object>> ChangedPropertys
         {
-            return _changedPropertys.Select(s => new KeyValuePair<String, Object>(s.PropertyName, s.Value)).ToList().AsReadOnly();
+            get
+            {
+                return _changedPropertys.Select(s => new KeyValuePair<String, Object>(s.PropertyName, s.Value)).ToList().AsReadOnly();
+            }
         }
 
         /// <summary>
@@ -81,9 +85,9 @@ namespace NewLibCore.Data.SQL
         protected internal virtual void SetAddTime() { }
 
         /// <summary>
-        /// 验证属性是否合法
+        /// 检查属性的值是否合法
         /// </summary>
-        internal void Validate()
+        internal void CheckPropertyValue()
         {
             foreach (var changedProperty in _changedPropertys)
             {

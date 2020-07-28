@@ -64,26 +64,21 @@ namespace NewLibCore.Data.SQL
             {
                 RunDiagnosis.Info("开启连接");
                 _connection.Open();
-                try
+
+                //根据不同的sql server数据库引擎来选择需要执行的分页方法
+                if (EntityMapper.MapperType == MapperType.MSSQL && EntityMapper.MsSqlPaginationVersion == MsSqlPaginationVersion.NONE)
                 {
-                    //根据不同的sql server数据库引擎来选择需要执行的分页方法
-                    if (EntityMapper.MapperType == MapperType.MSSQL && EntityMapper.MsSqlPaginationVersion == MsSqlPaginationVersion.NONE)
+                    var version = Int32.Parse(_connection.ServerVersion.Substring(0, _connection.ServerVersion.IndexOf(".")));
+                    if (version <= 11)
                     {
-                        var version = Int32.Parse(_connection.ServerVersion.Substring(0, _connection.ServerVersion.IndexOf(".")));
-                        if (version <= 11)
-                        {
-                            EntityMapper.MsSqlPaginationVersion = MsSqlPaginationVersion.LESSTHEN2012;
-                        }
-                        else
-                        {
-                            EntityMapper.MsSqlPaginationVersion = MsSqlPaginationVersion.GREATERTHAN2012;
-                        }
+                        EntityMapper.MsSqlPaginationVersion = MsSqlPaginationVersion.LESSTHEN2012;
+                    }
+                    else
+                    {
+                        EntityMapper.MsSqlPaginationVersion = MsSqlPaginationVersion.GREATERTHAN2012;
                     }
                 }
-                catch (Exception ex)
-                {
-                    RunDiagnosis.Error($@"获取mssql版本失败:{ex}");
-                }
+
             }
         }
 
@@ -141,52 +136,44 @@ namespace NewLibCore.Data.SQL
 
         protected internal override ExecuteResult RawExecute(String sql, params MapperParameter[] parameters)
         {
-            try
+            Parameter.Validate(sql);
+            OpenConnection();
+            using (var cmd = _connection.CreateCommand())
             {
-                Parameter.Validate(sql);
-                OpenConnection();
-                using (var cmd = _connection.CreateCommand())
+                if (UseTransaction)
                 {
-                    if (UseTransaction)
-                    {
-                        cmd.Transaction = OpenTransaction();
-                    }
-                    cmd.CommandType = CommandType.Text;
-                    cmd.CommandText = sql;
-                    if (parameters != null && parameters.Any())
-                    {
-                        cmd.Parameters.AddRange(parameters.Select(s => s.ConvertToDbParameter(_templateBase.CreateParameter())).ToArray());
-                    }
-                    RunDiagnosis.Info($@"SQL语句:{sql} 占位符与参数:{(parameters == null || !parameters.Any() ? "" : String.Join($@"{Environment.NewLine}", parameters.Select(s => $@"{s.Key}----{s.Value}")))}");
-
-                    var executeType = GetExecuteType(sql);
-                    var executeResult = new ExecuteResult(_queryCacheBase);
-                    if (executeType == ExecuteType.SELECT)
-                    {
-                        using (var dr = cmd.ExecuteReader())
-                        {
-                            var dataTable = new DataTable("tmpDt");
-                            dataTable.Load(dr, LoadOption.Upsert);
-                            executeResult.SaveRawResult(dataTable);
-                        }
-                    }
-                    else if (executeType == ExecuteType.UPDATE)
-                    {
-                        executeResult.SaveRawResult(cmd.ExecuteNonQuery());
-                    }
-                    else if (executeType == ExecuteType.INSERT)
-                    {
-                        executeResult.SaveRawResult(cmd.ExecuteScalar());
-                    }
-
-                    cmd.Parameters.Clear();
-                    return executeResult;
+                    cmd.Transaction = OpenTransaction();
                 }
-            }
-            catch (Exception ex)
-            {
-                RunDiagnosis.Error($@"SQL语句执行发生异常:{ex}");
-                throw;
+                cmd.CommandType = CommandType.Text;
+                cmd.CommandText = sql;
+                if (parameters != null && parameters.Any())
+                {
+                    cmd.Parameters.AddRange(parameters.Select(s => s.ConvertToDbParameter(_templateBase.CreateParameter())).ToArray());
+                }
+                RunDiagnosis.Info($@"SQL语句:{sql} 占位符与参数:{(parameters == null || !parameters.Any() ? "" : String.Join($@"{Environment.NewLine}", parameters.Select(s => $@"{s.Key}----{s.Value}")))}");
+
+                var executeType = GetExecuteType(sql);
+                var executeResult = new ExecuteResult(_queryCacheBase);
+                if (executeType == ExecuteType.SELECT)
+                {
+                    using (var dr = cmd.ExecuteReader())
+                    {
+                        var dataTable = new DataTable("tmpDt");
+                        dataTable.Load(dr, LoadOption.Upsert);
+                        executeResult.SaveRawResult(dataTable);
+                    }
+                }
+                else if (executeType == ExecuteType.UPDATE)
+                {
+                    executeResult.SaveRawResult(cmd.ExecuteNonQuery());
+                }
+                else if (executeType == ExecuteType.INSERT)
+                {
+                    executeResult.SaveRawResult(cmd.ExecuteScalar());
+                }
+
+                cmd.Parameters.Clear();
+                return executeResult;
             }
         }
     }

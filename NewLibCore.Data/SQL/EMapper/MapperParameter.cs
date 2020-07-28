@@ -68,51 +68,44 @@ namespace NewLibCore.Data.SQL
         /// <returns></returns>
         private Object ParseValueType(Object obj)
         {
-            try
+            Parameter.Validate(obj);
+            var objType = obj.GetType();
+            if (objType == typeof(String))
             {
-                Parameter.Validate(obj);
-                var objType = obj.GetType();
-                if (objType == typeof(String))
+                if (_filterBadContent)
                 {
-                    if (_filterBadContent)
-                    {
-                        return UnlegalChatDetection.FilterBadChat(obj.ToString());
-                    }
-                    return obj.ToString();
+                    return UnlegalChatDetection.FilterBadChat(obj.ToString());
                 }
-
-                if (objType == typeof(Boolean))
-                {
-                    return (Boolean)obj ? 1 : 0;
-                }
-
-                if (objType.IsComplexType())
-                {
-                    if (objType.IsArray || objType.IsCollections())
-                    {
-                        var argument = objType.GetGenericArguments();
-                        var hasValue = argument.Any();
-                        if (hasValue && argument[0] == typeof(String))
-                        {
-                            return String.Join(",", ((IList<String>)obj).Select(s => $@"'{s}'"));
-                        }
-                        if (hasValue && argument[0].IsNumeric())
-                        {
-                            return String.Join(",", (IList<Int32>)obj);
-                        }
-                        if (hasValue && argument[0] == typeof(DateTime))
-                        {
-                            return String.Join(",", (IList<DateTime>)obj);
-                        }
-                    }
-                    var ex = $@"无法转换的类型{objType.Name}";
-                }
-                return obj;
+                return obj.ToString();
             }
-            catch (Exception)
+
+            if (objType == typeof(Boolean))
             {
-                throw;
+                return (Boolean)obj ? 1 : 0;
             }
+
+            if (objType.IsComplexType())
+            {
+                if (objType.IsArray || objType.IsCollection())
+                {
+                    var argument = objType.GetGenericArguments();
+                    var hasValue = argument.Any();
+                    if (hasValue && argument[0] == typeof(String))
+                    {
+                        return String.Join(",", ((IList<String>)obj).Select(s => $@"'{s}'"));
+                    }
+                    if (hasValue && argument[0].IsNumeric())
+                    {
+                        return String.Join(",", (IList<Int32>)obj);
+                    }
+                    if (hasValue && argument[0] == typeof(DateTime))
+                    {
+                        return String.Join(",", (IList<DateTime>)obj);
+                    }
+                }
+                var ex = $@"无法转换的类型{objType.Name}";
+            }
+            return obj;
         }
     }
 }

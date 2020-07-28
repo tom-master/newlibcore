@@ -39,16 +39,7 @@ namespace NewLibCore.Data.SQL.Validate
 
             if (value != null)
             {
-                Object internalValue;
-                try
-                {
-                    internalValue = Convert.ChangeType(value, type);
-                }
-                catch (ArgumentException)
-                {
-                    throw new ArgumentException($@"默认值 {(value + "" == "" ? "空字符串" : value)} 与类型 {type} 不存在显式或隐式转换");
-                }
-                Value = internalValue;
+                Value = value.ChangeType(type);
             }
             else
             {
@@ -116,8 +107,7 @@ namespace NewLibCore.Data.SQL.Validate
                 {
                     return false;
                 }
-
-                Convert.ChangeType(Value, property.Type);
+                Value.ChangeType(property.Type);
                 return true;
             }
             catch (Exception)

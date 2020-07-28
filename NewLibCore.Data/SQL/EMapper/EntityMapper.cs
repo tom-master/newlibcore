@@ -73,57 +73,50 @@ namespace NewLibCore.Data.SQL
         /// </summary>
         private void InitDependency()
         {
-            try
+            IServiceCollection services = new ServiceCollection();
+
+            #region scoped
+
+            if (MapperType == MapperType.MSSQL)
             {
-                IServiceCollection services = new ServiceCollection();
-
-                #region scoped
-
-                if (MapperType == MapperType.MSSQL)
-                {
-                    services = services.AddScoped<TemplateBase, MsSqlTemplate>();
-                }
-                else if (MapperType == MapperType.MYSQL)
-                {
-                    services = services.AddScoped<TemplateBase, MySqlTemplate>();
-                }
-
-                services = services.AddScoped<MapperDbContextBase, MapperDbContext>();
-
-                #endregion
-
-                #region singleton
-
-                if (_queryCacheBase == null)
-                {
-                    services = services.AddSingleton<QueryCacheBase, DefaultQueryCache>();
-                }
-                else
-                {
-                    services = services.AddSingleton(_queryCacheBase.GetType());
-                }
-
-                RunDiagnosis.SetLoggerInstance(_logger ?? new DefaultLogger());
-                #endregion
-
-                #region transient
-
-                services = services.AddTransient<ParserExecutor, DefaultParserExecutor>();
-                services = services.AddTransient<ParserResult>();
-
-                services = services.AddTransient<HandlerBase, DirectSqlHandler>();
-                services = services.AddTransient<HandlerBase, QueryHandler>();
-                services = services.AddTransient<HandlerBase, UpdateHandler>();
-                services = services.AddTransient<HandlerBase, InsertHandler>();
-
-                #endregion
-
-                _serviceProvider = services.BuildServiceProvider();
+                services = services.AddScoped<TemplateBase, MsSqlTemplate>();
             }
-            catch (System.Exception)
+            else if (MapperType == MapperType.MYSQL)
             {
-                throw;
+                services = services.AddScoped<TemplateBase, MySqlTemplate>();
             }
+
+            services = services.AddScoped<MapperDbContextBase, MapperDbContext>();
+
+            #endregion
+
+            #region singleton
+
+            if (_queryCacheBase == null)
+            {
+                services = services.AddSingleton<QueryCacheBase, DefaultQueryCache>();
+            }
+            else
+            {
+                services = services.AddSingleton(_queryCacheBase.GetType());
+            }
+
+            RunDiagnosis.SetLoggerInstance(_logger ?? new DefaultLogger());
+            #endregion
+
+            #region transient
+
+            services = services.AddTransient<ParserExecutor, DefaultParserExecutor>();
+            services = services.AddTransient<ParserResult>();
+
+            services = services.AddTransient<Processor, RawSqlProcessor>();
+            services = services.AddTransient<Processor, QueryProcessor>();
+            services = services.AddTransient<Processor, UpdateProcessor>();
+            services = services.AddTransient<Processor, InsertProcessor>();
+
+            #endregion
+
+            _serviceProvider = services.BuildServiceProvider();
         }
 
 
@@ -201,8 +194,8 @@ namespace NewLibCore.Data.SQL
                 var store = new ExpressionStore();
                 store.AddModel(model);
 
-                var handler = FindHandler(_serviceProvider.GetServices<HandlerBase>(), nameof(InsertHandler));
-                model.Id = handler.Process(store).GetModifyRowCount();
+                var processor = FindProcessor(_serviceProvider.GetServices<Processor>(), nameof(InsertProcessor));
+                model.Id = processor.Process(store).GetModifyRowCount();
                 return model;
             });
         }
@@ -224,8 +217,8 @@ namespace NewLibCore.Data.SQL
                 var store = new ExpressionStore();
                 store.AddWhere(expression);
                 store.AddModel(model);
-                var handler = FindHandler(_serviceProvider.GetServices<HandlerBase>(), nameof(UpdateHandler));
-                return handler.Process(store).GetModifyRowCount() > 0;
+                var processor = FindProcessor(_serviceProvider.GetServices<Processor>(), nameof(UpdateProcessor));
+                return processor.Process(store).GetModifyRowCount() > 0;
             });
         }
 
@@ -239,8 +232,7 @@ namespace NewLibCore.Data.SQL
             var expressionStore = new ExpressionStore();
             expressionStore.AddFrom<TModel>();
 
-            var queryHandler = FindHandler(_serviceProvider.GetServices<HandlerBase>(), nameof(QueryHandler));
-
+            var queryHandler = FindProcessor(_serviceProvider.GetServices<Processor>(), nameof(QueryProcessor));
             return new QueryWrapper<TModel>(expressionStore, queryHandler);
         }
 
@@ -259,8 +251,8 @@ namespace NewLibCore.Data.SQL
             {
                 var store = new ExpressionStore();
                 store.AddDirectSql(sql, parameters);
-                var handler = FindHandler(_serviceProvider.GetServices<HandlerBase>(), nameof(DirectSqlHandler));
-                return handler.Process(store);
+                var processor = FindProcessor(_serviceProvider.GetServices<Processor>(), nameof(RawSqlProcessor));
+                return processor.Process(store);
             });
         }
 
@@ -287,7 +279,7 @@ namespace NewLibCore.Data.SQL
             (_serviceProvider as ServiceProvider).Dispose();
         }
 
-        private HandlerBase FindHandler(IEnumerable<HandlerBase> source, String target)
+        private Processor FindProcessor(IEnumerable<Processor> source, String target)
         {
             Parameter.Validate(source);
             Parameter.Validate(target);

@@ -363,7 +363,7 @@ namespace NewLibCore.Data.SQL
                 {
                     predicateType = PredicateType.FULL_LIKE;
                 }
-                else if (argumentType.IsCollections())
+                else if (argumentType.IsCollection())
                 {
                     predicateType = PredicateType.IN;
                 }
@@ -380,7 +380,7 @@ namespace NewLibCore.Data.SQL
                 InternalParser(obj);
                 InternalParser(argument);
             }
-            else if (argumentType.IsCollections())
+            else if (argumentType.IsCollection())
             {
                 InternalParser(argument);
                 InternalParser(obj);

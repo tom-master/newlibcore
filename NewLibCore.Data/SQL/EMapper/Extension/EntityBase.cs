@@ -1,4 +1,5 @@
 ﻿using System;
+using NewLibCore.Data.SQL.EMapper.Extension;
 using NewLibCore.Data.SQL.Validate;
 
 namespace NewLibCore.Data.SQL
@@ -20,7 +21,7 @@ namespace NewLibCore.Data.SQL
         /// 主键
         /// </summary>
         /// <value></value>
-        [PrimaryKey]
+        [PrimaryKey, IgnoreMonitor]
         public Int32 Id { get; set; }
 
         /// <summary>
@@ -34,14 +35,14 @@ namespace NewLibCore.Data.SQL
         /// 添加时间
         /// </summary>
         /// <value></value>
-        [DateTimeDefaultValue]
+        [DateTimeDefaultValue,IgnoreMonitor]
         public DateTime AddTime { get; set; }
 
         /// <summary>
         /// 更新时间
         /// </summary>
         /// <value></value>
-        [DateTimeDefaultValue]
+        [DateTimeDefaultValue, IgnoreMonitor]
         public DateTime LastModifyTime { get; set; }
 
         /// <summary>

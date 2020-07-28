@@ -4,9 +4,9 @@ using NewLibCore.Data.SQL.Template;
 
 namespace NewLibCore.Data.SQL.Handler
 {
-    internal class DirectSqlHandler : HandlerBase
+    internal class RawSqlProcessor : Processor
     {
-        public DirectSqlHandler(TemplateBase templateBase, ParserExecutor parserExecutor) : base(templateBase, parserExecutor)
+        public RawSqlProcessor(TemplateBase templateBase, ParserExecutor parserExecutor) : base(templateBase, parserExecutor)
         {
         }
 

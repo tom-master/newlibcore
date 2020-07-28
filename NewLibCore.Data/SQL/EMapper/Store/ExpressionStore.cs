@@ -475,7 +475,7 @@ namespace NewLibCore.Data.SQL.Store
                     }
                 }
             }
-            return types.Distinct().ToList();
+            return types.Distinct().Where(w => w.GetCustomAttributes<PropertyValidateAttribute>().Any()).ToList();
         }
 
         /// <summary>

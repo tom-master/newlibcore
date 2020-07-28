@@ -5,7 +5,7 @@ using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.Handler
 {
-    internal abstract class HandlerBase
+    internal abstract class Processor
     {
         protected readonly TemplateBase _templateBase;
 
@@ -13,7 +13,7 @@ namespace NewLibCore.Data.SQL.Handler
 
         internal virtual String CurrentId { get { return GetType().Name; } }
 
-        protected HandlerBase(TemplateBase templateBase, ParserExecutor parserExecutor)
+        protected Processor(TemplateBase templateBase, ParserExecutor parserExecutor)
         {
             Parameter.Validate(templateBase);
             Parameter.Validate(parserExecutor);

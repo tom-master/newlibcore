@@ -12,7 +12,7 @@ namespace NewLibCore.Data.SQL.Handler
     /// 更新处理类
     /// </summary>
     /// <typeparam name="TModel"></typeparam>
-    internal class UpdateHandler : HandlerBase
+    internal class UpdateProcessor : Processor
     {
 
         /// <summary>
@@ -20,7 +20,7 @@ namespace NewLibCore.Data.SQL.Handler
         /// </summary>
         /// <param name="templateBase"></param>
         /// <param name="parserExecutor"></param>
-        public UpdateHandler(TemplateBase templateBase, ParserExecutor parserExecutor) : base(templateBase, parserExecutor)
+        public UpdateProcessor(TemplateBase templateBase, ParserExecutor parserExecutor) : base(templateBase, parserExecutor)
         {
         }
 
@@ -31,10 +31,10 @@ namespace NewLibCore.Data.SQL.Handler
 
             if (EntityMapper.EnableModelValidate)
             {
-                instance.Validate();
+                instance.CheckPropertyValue();
             }
 
-            var propertys = instance.GetChangedPropertys();
+            var propertys = instance.ChangedPropertys;
             if (!propertys.Any())
             {
                 throw new Exception("没有获取到值发生变更的属性");
@@ -51,7 +51,7 @@ namespace NewLibCore.Data.SQL.Handler
                 ExpressionStore = store
             });
 
-            result.Append($@"{PredicateType.AND} {aliasName}.IsDeleted=0 {_templateBase.AffectedRows}");
+            result.Append($@"{PredicateType.AND} {aliasName}.{nameof(instance.IsDeleted)}=0 {_templateBase.AffectedRows}");
             instance.Reset();
 
             return result.Execute();

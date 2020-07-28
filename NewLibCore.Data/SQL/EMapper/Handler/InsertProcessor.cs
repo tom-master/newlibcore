@@ -11,13 +11,13 @@ namespace NewLibCore.Data.SQL.Handler
     /// 新增操作处理
     /// </summary>
     /// <typeparam name="TModel"></typeparam>
-    internal class InsertHandler : HandlerBase
+    internal class InsertProcessor : Processor
     {
         /// <summary>
         /// 初始化一个InsertHandler类的实例
         /// </summary>
         /// <param name="model">要插入的模型</param>
-        public InsertHandler(TemplateBase templateBase, ParserExecutor parserExecutor) : base(templateBase, parserExecutor)
+        public InsertProcessor(TemplateBase templateBase, ParserExecutor parserExecutor) : base(templateBase, parserExecutor)
         {
         }
 
@@ -29,10 +29,10 @@ namespace NewLibCore.Data.SQL.Handler
             instance.OnChanged();
             if (EntityMapper.EnableModelValidate)
             {
-                instance.Validate();
+                instance.CheckPropertyValue();
             }
 
-            var propertys = instance.GetChangedPropertys();
+            var propertys = instance.ChangedPropertys;
             if (!propertys.Any())
             {
                 throw new Exception("没有获取到值发生变更的属性");
