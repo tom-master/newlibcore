@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Linq;
-using System.Data;
 using System.Collections.Generic;
-using NewLibCore.Validate;
-using NewLibCore.Data.SQL.Extension;
+using System.Data;
+using System.Linq;
 using NewLibCore.Data.SQL.Component.Cache;
+using NewLibCore.Data.SQL.DataConvert;
+using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL
 {

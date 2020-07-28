@@ -2,12 +2,12 @@
 using System.Data;
 using NewLibCore.Data.SQL.EMapper.Extension.DataConvert;
 
-namespace NewLibCore.Data.SQL.Extension
+namespace NewLibCore.Data.SQL.DataConvert
 {
     /// <summary>
     /// 将一个DataTable转换为指定的集合
     /// </summary>
-    internal static class DataTableExtension
+    internal static class DataConvertExtension
     {
         /// <summary>
         /// 获取列表

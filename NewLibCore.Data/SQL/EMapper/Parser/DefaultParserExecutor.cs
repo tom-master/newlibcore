@@ -67,8 +67,6 @@ namespace NewLibCore.Data.SQL
     internal class DefaultParserExecutor : ParserExecutor
     {
         private JoinRelation _joinRelation;
-
-
         private IReadOnlyList<KeyValuePair<String, String>> _tableAliasMapper;
         private ParserResult _parserResult;
         private readonly Stack<PredicateType> _predicateTypeStack;
