@@ -21,9 +21,9 @@ namespace NewLibCore.Data.SQL
     {
         private static ILogger _logger;
 
-        private IServiceProvider _serviceProvider;
-
         private static QueryCacheBase _queryCacheBase;
+
+        private IServiceProvider _serviceProvider;
 
         /// <summary>
         /// 连接字符串名称

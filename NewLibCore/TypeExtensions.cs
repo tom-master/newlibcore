@@ -3,6 +3,7 @@ using System.Collections;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using NewLibCore.Validate;
 
 namespace NewLibCore
 {
@@ -85,11 +86,28 @@ namespace NewLibCore
             return !TypeDescriptor.GetConverter(type).CanConvertFrom(typeof(String));
         }
 
-        public static Boolean IsCollections(this Type type)
+        public static Boolean IsCollection(this Type type)
         {
             var interfaces = type.GetInterfaces();
             return interfaces.Any(w => w == typeof(IEnumerable)) || interfaces.Any(w => w == typeof(ICollection)) || interfaces.Any(w => w == typeof(IList));
         }
-    }
 
+        /// <summary>
+        /// 修改目标值的类型
+        /// </summary>
+        /// <param name="value">目标值</param>
+        /// <param name="type">转换类型</param>
+        /// <returns></returns>
+        public static Object ChangeType(this Object value, Type type)
+        {
+            Parameter.Validate(value);
+            Parameter.Validate(type);
+
+            if (typeof(Enum).IsAssignableFrom(type))
+            {
+                return Enum.Parse(type, value.ToString());
+            }
+            return Convert.ChangeType(value, type);
+        }
+    }
 }
