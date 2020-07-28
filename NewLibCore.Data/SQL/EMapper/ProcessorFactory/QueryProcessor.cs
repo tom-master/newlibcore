@@ -6,10 +6,9 @@ using System.Reflection;
 using NewLibCore.Data.SQL.Extension;
 using NewLibCore.Data.SQL.Store;
 using NewLibCore.Data.SQL.Template;
-using NewLibCore.Data.SQL.Validate;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Data.SQL.Handler
+namespace NewLibCore.Data.SQL.ProcessorFactory
 {
     /// <summary>
     /// 查询处理类

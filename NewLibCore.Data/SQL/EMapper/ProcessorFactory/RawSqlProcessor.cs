@@ -1,8 +1,7 @@
-using System;
 using NewLibCore.Data.SQL.Store;
 using NewLibCore.Data.SQL.Template;
 
-namespace NewLibCore.Data.SQL.Handler
+namespace NewLibCore.Data.SQL.ProcessorFactory
 {
     internal class RawSqlProcessor : Processor
     {

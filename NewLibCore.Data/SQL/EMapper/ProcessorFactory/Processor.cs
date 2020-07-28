@@ -3,7 +3,7 @@ using NewLibCore.Data.SQL.Store;
 using NewLibCore.Data.SQL.Template;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Data.SQL.Handler
+namespace NewLibCore.Data.SQL.ProcessorFactory
 {
     internal abstract class Processor
     {

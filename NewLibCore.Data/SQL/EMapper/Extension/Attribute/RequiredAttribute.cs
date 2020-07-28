@@ -6,7 +6,7 @@ namespace NewLibCore.Data.SQL.Validate
     /// <summary>
     /// 标记被修饰的属性不能为空
     /// </summary>
-    public class RequiredAttribute : PropertyValidate
+    public class RequiredAttribute : PropertyValidateAttribute
     {
         internal override Int32 Order
         {

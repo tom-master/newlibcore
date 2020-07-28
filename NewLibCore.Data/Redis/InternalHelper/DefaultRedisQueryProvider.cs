@@ -715,7 +715,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
 
         private static readonly JsonSerializerSettings _settings = new JsonSerializerSettings
         {
-            ContractResolver = new PrivateSetterContractResolver()
+            //ContractResolver = new PrivateSetterContractResolver()
         };
 
         public RedisType GetKeyType(String key)

@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Linq;
-using System.Linq.Expressions;
 using NewLibCore.Data.SQL.Extension;
 using NewLibCore.Data.SQL.Store;
 using NewLibCore.Data.SQL.Template;
-using NewLibCore.Validate;
 
-namespace NewLibCore.Data.SQL.Handler
+namespace NewLibCore.Data.SQL.ProcessorFactory
 {
     /// <summary>
     /// 更新处理类

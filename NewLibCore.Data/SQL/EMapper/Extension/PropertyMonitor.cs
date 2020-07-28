@@ -44,7 +44,7 @@ namespace NewLibCore.Data.SQL
                 Type = propertyInfo.PropertyType,
                 PropertyName = propertyName,
                 Value = new FastProperty(propertyInfo).Get(this),
-                Validates = propertyInfo.GetCustomAttributes<PropertyValidate>(true).ToArray()
+                Validates = propertyInfo.GetCustomAttributes<PropertyValidateAttribute>(true)
             });
         }
 
@@ -53,7 +53,8 @@ namespace NewLibCore.Data.SQL
         /// </summary>
         internal void OnChanged()
         {
-            var propertys = _type.GetProperties(BindingFlags.Instance | BindingFlags.Public).Where(w => w.GetCustomAttributes<PropertyValidate>().Any() && !w.GetCustomAttributes<IgnoreMonitorAttribute>().Any());
+            var propertys = _type.GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                .Where(w => w.GetCustomAttributes<PropertyValidateAttribute>().Any() && !w.GetCustomAttributes<IgnoreMonitorAttribute>().Any());
             SetAddTime();
             SetUpdateTime();
             foreach (var item in propertys)
@@ -187,7 +188,7 @@ namespace NewLibCore.Data.SQL
         /// </summary>
         /// <param name="validateBase">特性验证基类</param>
         /// <param name="po">属性项</param>
-        private void ThrowValidateException(PropertyValidate validateBase, ChangedProperty changedProperty)
+        private void ThrowValidateException(PropertyValidateAttribute validateBase, ChangedProperty changedProperty)
         {
             Parameter.Validate(changedProperty);
             Parameter.Validate(validateBase);
@@ -202,7 +203,7 @@ namespace NewLibCore.Data.SQL
         /// <param name="propertyName">属性名</param>
         /// <param name="validates">属性验证列表</param>
         /// <returns></returns>
-        private IList<PropertyValidate> ValidateAttributeOrder(String propertyName, PropertyValidate[] validates)
+        private List<PropertyValidateAttribute> ValidateAttributeOrder(String propertyName, IEnumerable<PropertyValidateAttribute> validates)
         {
             Parameter.Validate(validates);
             if (validates.GroupBy(g => g.Order).Where(w => w.Count() > 1).Any())
@@ -246,7 +247,7 @@ namespace NewLibCore.Data.SQL
         /// <summary>
         /// 属性上应用的PropertyValidate特性
         /// </summary>
-        internal PropertyValidate[] Validates { get; set; }
+        internal IEnumerable<PropertyValidateAttribute> Validates { get; set; }
     }
 }
 

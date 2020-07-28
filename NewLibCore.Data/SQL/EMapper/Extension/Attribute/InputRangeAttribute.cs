@@ -5,7 +5,7 @@ namespace NewLibCore.Data.SQL.Validate
     /// <summary>
     /// 标记被修饰的属性有输入范围
     /// </summary>
-    public class InputRangeAttribute : PropertyValidate
+    public class InputRangeAttribute : PropertyValidateAttribute
     {
         private readonly Int32 _min;
 

@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 using Microsoft.Extensions.DependencyInjection;
 using NewLibCore.Data.SQL.Component.Cache;
 using NewLibCore.Data.SQL.Extension;
-using NewLibCore.Data.SQL.Handler;
+using NewLibCore.Data.SQL.ProcessorFactory;
 using NewLibCore.Data.SQL.Store;
 using NewLibCore.Data.SQL.Template;
 using NewLibCore.Logger;
@@ -232,8 +232,8 @@ namespace NewLibCore.Data.SQL
             var expressionStore = new ExpressionStore();
             expressionStore.AddFrom<TModel>();
 
-            var queryHandler = FindProcessor(_serviceProvider.GetServices<Processor>(), nameof(QueryProcessor));
-            return new QueryWrapper<TModel>(expressionStore, queryHandler);
+            var processor = FindProcessor(_serviceProvider.GetServices<Processor>(), nameof(QueryProcessor));
+            return new QueryWrapper<TModel>(expressionStore, processor);
         }
 
         /// <summary>

@@ -5,7 +5,7 @@ using NewLibCore.Data.SQL.Store;
 using NewLibCore.Data.SQL.Template;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Data.SQL.Handler
+namespace NewLibCore.Data.SQL.ProcessorFactory
 {
     /// <summary>
     /// 新增操作处理

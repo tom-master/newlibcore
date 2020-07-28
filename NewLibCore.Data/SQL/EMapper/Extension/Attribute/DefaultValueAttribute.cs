@@ -6,7 +6,7 @@ namespace NewLibCore.Data.SQL.Validate
     /// <summary>
     /// 标记被修饰的属性有默认值
     /// </summary>
-    public class DefaultValueAttribute : PropertyValidate
+    public class DefaultValueAttribute : PropertyValidateAttribute
     {
         private ChangedProperty _changedProperty;
 
