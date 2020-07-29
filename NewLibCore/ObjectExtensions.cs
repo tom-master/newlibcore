@@ -30,6 +30,10 @@ namespace NewLibCore
                 }
                 if (type == typeof(Guid))
                 {
+                    if (Guid.TryParse(value.ToString(), out Guid guid))
+                    {
+                        return (T)guid;
+                    }
                     result = Guid.Parse(value.ToString());
                 }
                 else
