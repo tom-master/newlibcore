@@ -38,18 +38,15 @@ namespace NewLibCore
                 }
                 else
                 {
-                    result = Convert.ChangeType(value, type);
+                    return (T)Convert.ChangeType(value, type);
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                result = default(T);
+                throw ex;
             }
-
-            return (T)result;
         }
 
-        /// <summary>
         /// 把对象类型转化为指定类型，转化失败时返回指定的默认值
         /// </summary>
         /// <typeparam name="T"> 动态类型 </typeparam>
@@ -58,17 +55,14 @@ namespace NewLibCore
         /// <returns> 转化后的指定类型对象，转化失败时返回指定的默认值 </returns>
         public static T CastTo<T>(this Object value, T defaultValue)
         {
-            Object result;
-            var type = typeof(T);
             try
             {
-                result = type.IsEnum ? Enum.Parse(type, value.ToString()) : Convert.ChangeType(value, type);
+                return CastTo<T>(value);
             }
-            catch
+            catch (System.Exception)
             {
-                result = defaultValue;
+                return defaultValue;
             }
-            return (T)result;
         }
 
         public static Object CastTo(this Object value, Type type)
