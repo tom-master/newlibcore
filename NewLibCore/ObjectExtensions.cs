@@ -32,9 +32,9 @@ namespace NewLibCore
                 {
                     if (Guid.TryParse(value.ToString(), out Guid guid))
                     {
-                        return (T)guid;
+                        return (T)(result = guid);
                     }
-                    result = Guid.Parse(value.ToString());
+                    throw new ArgumentException($@"无法将值{value}转换为GUID类型");
                 }
                 else
                 {
