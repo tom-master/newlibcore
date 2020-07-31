@@ -65,36 +65,12 @@ namespace NewLibCore
             }
         }
 
-        public static Object CastTo(this Object value, Type type)
-        {
-            Object result;
-            try
-            {
-                result = type.IsEnum ? Enum.Parse(type, value.ToString()) : Convert.ChangeType(value, type);
-            }
-            catch
-            {
-                throw;
-            }
-            return result;
-        }
 
-        public static Boolean TryCastTo(this Object value, Type type)
+        public static Boolean TryCastTo<T>(this Object value)
         {
             try
             {
-                if (type.IsEnum)
-                {
-                    Enum.Parse(type, value.ToString());
-                }
-                else if (type == typeof(Guid))
-                {
-                    Guid.Parse(value.ToString());
-                }
-                else
-                {
-                    Convert.ChangeType(value, type);
-                }
+                CastTo<T>(value);
                 return true;
             }
             catch (Exception)
