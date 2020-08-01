@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.Extensions.Primitives;
 
 namespace NewLibCore
 {
@@ -62,20 +61,6 @@ namespace NewLibCore
             catch (System.Exception)
             {
                 return defaultValue;
-            }
-        }
-
-
-        public static Boolean TryCastTo<T>(this Object value)
-        {
-            try
-            {
-                CastTo<T>(value);
-                return true;
-            }
-            catch (Exception)
-            {
-                return false;
             }
         }
     }
