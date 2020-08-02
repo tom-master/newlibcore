@@ -102,7 +102,16 @@ namespace NewLibCore.Data.SQL.Validate
             {
                 return false;
             }
-            return Value.TryCastTo(property.Type);
+
+            try
+            {
+                Convert.ChangeType(Value, property.Type);
+                return true;
+            }
+            catch (System.Exception)
+            {
+                return false;
+            }
         }
     }
 }
