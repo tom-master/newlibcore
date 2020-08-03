@@ -5,6 +5,6 @@ namespace NewLibCore.Data.SQL.DataConvert
 {
     internal interface IConverter
     {
-        List<TResult> Convert<TResult>(DataTable dt);
+        List<TResult> ConvertTo<TResult>(DataTable dt);
     }
 }

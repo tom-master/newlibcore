@@ -7,7 +7,7 @@ namespace NewLibCore.Data.SQL.DataConvert
 {
     internal class TupleConverter : IConverter
     {
-        public List<TResult> Convert<TResult>(DataTable dt)
+        public List<TResult> ConvertTo<TResult>(DataTable dt)
         {
             var convertResult = new List<TResult>();
             foreach (DataRow item in dt.Rows)

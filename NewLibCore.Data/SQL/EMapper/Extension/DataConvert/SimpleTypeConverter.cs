@@ -6,7 +6,7 @@ namespace NewLibCore.Data.SQL.DataConvert
 {
     internal class SimpleTypeConverter : IConverter
     {
-        public List<TResult> Convert<TResult>(DataTable dt)
+        public List<TResult> ConvertTo<TResult>(DataTable dt)
         {
             var convertResults = new List<TResult>();
             var obj = default(TResult);
