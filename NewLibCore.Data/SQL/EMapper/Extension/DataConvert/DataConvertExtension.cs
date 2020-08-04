@@ -22,7 +22,7 @@ namespace NewLibCore.Data.SQL.DataConvert
             }
 
             var converter = ConverterContext.CreateConvert<TResult>();
-            return converter.Convert<TResult>(dataTable);
+            return converter.ConvertTo<TResult>(dataTable);
         }
     }
 }
