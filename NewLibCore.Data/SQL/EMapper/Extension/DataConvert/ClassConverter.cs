@@ -7,7 +7,7 @@ namespace NewLibCore.Data.SQL.DataConvert
 {
     internal class ClassConverter : IConverter
     {
-        public List<TResult> Convert<TResult>(DataTable dt)
+        public List<TResult> ConvertTo<TResult>(DataTable dt)
         {
             var convertResults = new List<TResult>();
             IList<PropertyInfo> propertiesCache = null;
