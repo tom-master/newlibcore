@@ -38,9 +38,9 @@ namespace NewLibCore.Data.SQL
         {
             if (_result is DataTable table)
             {
-                return (Int32)(table.Rows[0][0]).ChangeType(typeof(Int32));
+                return table.Rows[0][0].CastTo<Int32>();
             }
-            return (Int32)_result.ChangeType(typeof(Int32));
+            return _result.CastTo<Int32>();
         }
 
         /// <summary>

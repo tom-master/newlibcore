@@ -1,11 +1,12 @@
 ﻿using System;
+using Microsoft.Extensions.Primitives;
 
 namespace NewLibCore
 {
     /// <summary>
     ///     通用类型扩展方法类
     /// </summary>
-    internal static class ObjectExtensions
+    public static class ObjectExtensions
     {
         /// <summary>
         /// 把对象类型转化为指定类型，转化失败时返回该类型默认值
@@ -60,6 +61,33 @@ namespace NewLibCore
                 result = defaultValue;
             }
             return (T)result;
+        }
+
+        public static Object CastTo(this Object value, Type type)
+        {
+            Object result;
+            try
+            {
+                result = type.IsEnum ? Enum.Parse(type, value.ToString()) : Convert.ChangeType(value, type);
+            }
+            catch
+            {
+                throw;
+            }
+            return result;
+        }
+
+        public static Boolean TryCastTo(this Object value, Type type)
+        {
+            try
+            {
+                Convert.ChangeType(value, type);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
     }
 }

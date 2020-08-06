@@ -28,7 +28,7 @@ namespace NewLibCore.Data.SQL.DataConvert
                         if (value != DBNull.Value)
                         {
                             var fast = new FastProperty(propertyInfo);
-                            fast.Set(obj, value.ChangeType(propertyInfo.PropertyType));
+                            fast.Set(obj, value.CastTo(propertyInfo.PropertyType));
                         }
                     }
                 }

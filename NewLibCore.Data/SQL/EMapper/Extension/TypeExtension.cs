@@ -32,13 +32,13 @@ namespace NewLibCore.Data.SQL.Extension
                     return (dic.Key, dic.Value);
                 }
 
-                var attrubutes = t.GetCustomAttributes(typeof(TableNameAttribute), true);
+                var attrubutes = t.GetAttributes<TableNameAttribute>( true);
                 if (!attrubutes.Any())
                 {
                     throw new Exception($@"{t.Name}没有被{nameof(TableNameAttribute)}所修饰");
                 }
 
-                var attribute = (TableNameAttribute)attrubutes.FirstOrDefault();
+                var attribute = attrubutes.FirstOrDefault();
 
                 _dic.Add(t.Name, new KeyValuePair<string, string>(attribute.TableName, attribute.AliasName));
                 return (attribute.TableName, attribute.AliasName);

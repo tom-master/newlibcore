@@ -18,7 +18,7 @@ namespace NewLibCore.Data.SQL.DataConvert
             var type = obj == null ? typeof(TResult) : obj.GetType();
             for (var i = 0; i < dt.Rows.Count; i++)
             {
-                convertResults.Add((TResult)(dt.Rows[i][0]).ChangeType(type));
+                convertResults.Add((TResult)dt.Rows[i][0].CastTo(type));
             }
             return convertResults;
         }

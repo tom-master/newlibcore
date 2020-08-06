@@ -135,7 +135,7 @@ namespace NewLibCore.Data.SQL.Store
 
             //找到模型中用ForeignKeyAttribute修饰的外键
             var foreignKeyPropertyInfo = parameterType.GetProperties(BindingFlags.Instance | BindingFlags.Public)
-                .FirstOrDefault(w => w.GetCustomAttributes<ForeignKeyAttribute>().Any(f => f.ForeignType == foreignKeyType));
+                .FirstOrDefault(w => w.GetAttributes<ForeignKeyAttribute>().Any(f => f.ForeignType == foreignKeyType));
             if (foreignKeyPropertyInfo == null)
             {
                 throw new ArgumentException($@"{parameterType.Name}中没有用{nameof(ForeignKeyAttribute)}修饰的属性");
@@ -143,7 +143,7 @@ namespace NewLibCore.Data.SQL.Store
 
             //找到对应外键的表用PrimaryKeyAttribute修饰的主键
             var foreignPropertyInfo = foreignKeyType.GetProperties(BindingFlags.Instance | BindingFlags.Public)
-            .FirstOrDefault(w => w.GetCustomAttributes<PrimaryKeyAttribute>().Any());
+            .FirstOrDefault(w => w.GetAttributes<PrimaryKeyAttribute>().Any());
             if (foreignPropertyInfo == null)
             {
                 throw new ArgumentException($@"{foreignKeyType.Name}中没有用{nameof(PrimaryKeyAttribute)}修饰的属性");

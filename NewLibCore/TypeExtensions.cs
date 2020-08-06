@@ -38,43 +38,37 @@ namespace NewLibCore
             return desc?.Description;
         }
 
-        public static Boolean AttributeExists<T>(this MemberInfo memberInfo, Boolean inherit) where T : Attribute
+        public static Boolean AttributeExists<T>(this MemberInfo memberInfo, Boolean inherit = false) where T : Attribute
         {
             return memberInfo.GetCustomAttributes(typeof(T), inherit).Any(m => (m as T) != null);
         }
 
-        public static T GetAttribute<T>(this MemberInfo memberInfo, Boolean inherit) where T : Attribute
+        public static T GetAttribute<T>(this MemberInfo memberInfo, Boolean inherit = false) where T : Attribute
         {
             return memberInfo.GetCustomAttributes(typeof(T), inherit).SingleOrDefault() as T;
         }
 
-        public static T[] GetAttributes<T>(this MemberInfo memberInfo, Boolean inherit) where T : Attribute
+        public static T[] GetAttributes<T>(this MemberInfo memberInfo, Boolean inherit = false) where T : Attribute
         {
             return memberInfo.GetCustomAttributes(typeof(T), inherit).Cast<T>().ToArray();
         }
 
-        public static Boolean IsAssignableToGenericType(this Type givenType, Type genericType)
+        public static Boolean AttributeExists<T>(this PropertyInfo propertyInfo, Boolean inherit = false) where T : Attribute
         {
-            if (!genericType.IsGenericType)
-            {
-                return false;
-            }
-            var interfaceTypes = givenType.GetInterfaces();
-            if (interfaceTypes.Any(interfaceType => interfaceType.IsGenericType && interfaceType.GetGenericTypeDefinition() == genericType))
-            {
-                return true;
-            }
-            if (givenType.IsGenericType && givenType.GetGenericTypeDefinition() == genericType)
-            {
-                return true;
-            }
-            var baseType = givenType.BaseType;
-            if (baseType == null)
-            {
-                return false;
-            }
-            return IsAssignableToGenericType(baseType, genericType);
+            return propertyInfo.GetCustomAttributes(typeof(T), inherit).Any(m => (m as T) != null);
         }
+
+        public static T GetAttribute<T>(this PropertyInfo propertyInfo, Boolean inherit = false) where T : Attribute
+        {
+            return propertyInfo.GetCustomAttributes(typeof(T), inherit).SingleOrDefault() as T;
+        }
+
+        public static T[] GetAttributes<T>(this PropertyInfo propertyInfo, Boolean inherit = false) where T : Attribute
+        {
+            return propertyInfo.GetCustomAttributes(typeof(T), inherit).Cast<T>().ToArray();
+        }
+
+
 
         /// <summary>
         /// 判断是否为复杂类型
@@ -90,24 +84,6 @@ namespace NewLibCore
         {
             var interfaces = type.GetInterfaces();
             return interfaces.Any(w => w == typeof(IEnumerable)) || interfaces.Any(w => w == typeof(ICollection)) || interfaces.Any(w => w == typeof(IList));
-        }
-
-        /// <summary>
-        /// 修改目标值的类型
-        /// </summary>
-        /// <param name="value">目标值</param>
-        /// <param name="type">转换类型</param>
-        /// <returns></returns>
-        public static Object ChangeType(this Object value, Type type)
-        {
-            Parameter.Validate(value);
-            Parameter.Validate(type);
-
-            if (typeof(Enum).IsAssignableFrom(type))
-            {
-                return Enum.Parse(type, value.ToString());
-            }
-            return Convert.ChangeType(value, type);
         }
     }
 }

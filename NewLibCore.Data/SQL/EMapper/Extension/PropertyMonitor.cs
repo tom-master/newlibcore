@@ -43,7 +43,7 @@ namespace NewLibCore.Data.SQL
                 Type = propertyInfo.PropertyType,
                 PropertyName = propertyName,
                 Value = new FastProperty(propertyInfo).Get(this),
-                Validates = propertyInfo.GetCustomAttributes<PropertyValidateAttribute>(true)
+                Validates = propertyInfo.GetAttributes<PropertyValidateAttribute>(true)
             });
         }
 
@@ -53,7 +53,7 @@ namespace NewLibCore.Data.SQL
         internal void OnChanged()
         {
             var propertys = _type.GetProperties(BindingFlags.Instance | BindingFlags.Public)
-                .Where(w => w.GetCustomAttributes<PropertyValidateAttribute>().Any() && !w.GetCustomAttributes<IgnoreMonitorAttribute>().Any());
+                .Where(w => w.GetAttributes<PropertyValidateAttribute>().Any() && !w.GetAttributes<IgnoreMonitorAttribute>().Any());
             SetAddTime();
             SetUpdateTime();
             foreach (var item in propertys)
