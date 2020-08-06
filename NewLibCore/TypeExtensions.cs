@@ -8,12 +8,12 @@ using NewLibCore.Validate;
 namespace NewLibCore
 {
     /// <summary>
-    ///     类型扩展方法类
+    /// 类型扩展方法类
     /// </summary>
     public static class TypeExtensions
     {
         /// <summary>
-        /// 判断指定类型是否为值类型
+        /// 是否为值类型
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
@@ -68,10 +68,8 @@ namespace NewLibCore
             return propertyInfo.GetCustomAttributes(typeof(T), inherit).Cast<T>().ToArray();
         }
 
-
-
         /// <summary>
-        /// 判断是否为复杂类型
+        /// 是否为复杂类型
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
@@ -80,6 +78,11 @@ namespace NewLibCore
             return !TypeDescriptor.GetConverter(type).CanConvertFrom(typeof(String));
         }
 
+        /// <summary>
+        /// 是否为集合类型
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
         public static Boolean IsCollection(this Type type)
         {
             var interfaces = type.GetInterfaces();
