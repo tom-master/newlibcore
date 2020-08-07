@@ -9,11 +9,9 @@ namespace NewLibCore.Security
     public class SensitiveDataSafetyProvider
     {
 
-        private static readonly String _safetyString = "因缺斯汀啦啦啦";
-
-        public static String Encrypt(String source)
+        public static String Encrypt(String source, String saltValue)
         {
-            Parameter.IfNullOrZero(source); 
+            Parameter.IfNullOrZero(source);
             try
             {
                 if (String.IsNullOrEmpty(source))
@@ -24,8 +22,8 @@ namespace NewLibCore.Security
                 var aes = new AesCryptoServiceProvider();
                 var md5 = new MD5CryptoServiceProvider();
                 var sha256 = new SHA256CryptoServiceProvider();
-                var key = sha256.ComputeHash(Encoding.UTF8.GetBytes(_safetyString));
-                var iv = md5.ComputeHash(Encoding.UTF8.GetBytes(_safetyString));
+                var key = sha256.ComputeHash(Encoding.UTF8.GetBytes(saltValue));
+                var iv = md5.ComputeHash(Encoding.UTF8.GetBytes(saltValue));
                 aes.Key = key;
                 aes.IV = iv;
 
@@ -38,13 +36,13 @@ namespace NewLibCore.Security
                     return Convert.ToBase64String(ms.ToArray());
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                throw new ArgumentException(e.Message);
+                throw ex;
             }
         }
 
-        public static String Decrypt(String source)
+        public static String Decrypt(String source, String saltValue)
         {
             Parameter.IfNullOrZero(source);
 
@@ -58,8 +56,8 @@ namespace NewLibCore.Security
                 var aes = new AesCryptoServiceProvider();
                 var md5 = new MD5CryptoServiceProvider();
                 var sha256 = new SHA256CryptoServiceProvider();
-                var key = sha256.ComputeHash(Encoding.UTF8.GetBytes(_safetyString));
-                var iv = md5.ComputeHash(Encoding.UTF8.GetBytes(_safetyString));
+                var key = sha256.ComputeHash(Encoding.UTF8.GetBytes(saltValue));
+                var iv = md5.ComputeHash(Encoding.UTF8.GetBytes(saltValue));
                 aes.Key = key;
                 aes.IV = iv;
 
@@ -72,9 +70,9 @@ namespace NewLibCore.Security
                     return Encoding.UTF8.GetString(ms.ToArray());
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                throw new ArgumentException(e.Message);
+                throw ex;
             }
         }
     }
