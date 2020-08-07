@@ -3,7 +3,6 @@ using System.Collections;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
-using NewLibCore.Validate;
 
 namespace NewLibCore
 {
