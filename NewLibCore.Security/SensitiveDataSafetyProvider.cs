@@ -12,13 +12,9 @@ namespace NewLibCore.Security
         public static String Encrypt(String source, String saltValue)
         {
             Parameter.IfNullOrZero(source);
+            Parameter.IfNullOrZero(saltValue);
             try
             {
-                if (String.IsNullOrEmpty(source))
-                {
-                    throw new ArgumentException("source不能为空");
-                }
-
                 var aes = new AesCryptoServiceProvider();
                 var md5 = new MD5CryptoServiceProvider();
                 var sha256 = new SHA256CryptoServiceProvider();
@@ -45,13 +41,9 @@ namespace NewLibCore.Security
         public static String Decrypt(String source, String saltValue)
         {
             Parameter.IfNullOrZero(source);
-
+            Parameter.IfNullOrZero(saltValue);
             try
             {
-                if (String.IsNullOrEmpty(source))
-                {
-                    throw new ArgumentException("source不能为空");
-                }
 
                 var aes = new AesCryptoServiceProvider();
                 var md5 = new MD5CryptoServiceProvider();
