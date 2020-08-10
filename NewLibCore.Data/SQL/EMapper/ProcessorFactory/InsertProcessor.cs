@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using NewLibCore.Data.SQL.Extension;
-using NewLibCore.Data.SQL.Store;
+﻿using NewLibCore.Data.SQL.Store;
 using NewLibCore.Data.SQL.Template;
 using NewLibCore.Validate;
 
@@ -23,7 +20,7 @@ namespace NewLibCore.Data.SQL.ProcessorFactory
 
         protected override ExecuteResult Execute(ExpressionStore store)
         {
-            Parameter.Validate(store);
+            Parameter.IfNullOrZero(store);
 
             var instance = store.Model;
             instance.OnChanged();
@@ -31,21 +28,10 @@ namespace NewLibCore.Data.SQL.ProcessorFactory
             {
                 instance.CheckPropertyValue();
             }
-
-            var propertys = instance.ChangedPropertys;
-            if (!propertys.Any())
-            {
-                throw new Exception("没有获取到值发生变更的属性");
-            }
-            var insertFields = String.Join(",", propertys.Select(c => c.Key));
-            var placeHolders = String.Join(",", propertys.Select(key => $@"@{key.Key}"));
-            var (tableName, _) = instance.GetType().GetTableName();
-
-            var parameters = propertys.Select(c => new MapperParameter(c.Key, c.Value));
             var result = _parserExecutor.Parse(new ParseModel
             {
-                Sql = _templateBase.CreateInsert(tableName, insertFields, placeHolders),
-                Parameters = parameters
+                Sql = _templateBase.CreateInsert(instance),
+                Parameters = instance.SqlPart.Parameters
             });
             return result.Execute();
         }

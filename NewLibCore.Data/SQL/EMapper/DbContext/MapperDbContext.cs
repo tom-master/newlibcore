@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Data.SqlClient;
 using System.Linq;
-using MySql.Data.MySqlClient;
 using NewLibCore.Data.SQL.Component.Cache;
 using NewLibCore.Data.SQL.Extension;
 using NewLibCore.Data.SQL.Template;
@@ -17,8 +14,6 @@ namespace NewLibCore.Data.SQL
     /// </summary>
     internal sealed class MapperDbContext : MapperDbContextBase
     {
-        private ExecuteType _executeType;
-
         private Boolean _disposed = false;
 
         private DbConnection _connection;
@@ -115,28 +110,10 @@ namespace NewLibCore.Data.SQL
                 _disposed = true;
             }
         }
-
-        protected internal override ExecuteType GetExecuteType(String sql)
+         
+        protected internal override ExecuteResult RawExecute(ExecuteType executeType,String sql, params MapperParameter[] parameters)
         {
-            Parameter.Validate(sql);
-
-            if (_executeType != ExecuteType.NONE)
-            {
-                return _executeType;
-            }
-            var operationType = sql.Substring(0, sql.IndexOf(" "));
-            if (Enum.TryParse<ExecuteType>(operationType, out var executeType))
-            {
-                _executeType = executeType;
-                return executeType;
-            }
-
-            throw new Exception($@"SQL语句执行类型解析失败:{operationType}");
-        }
-
-        protected internal override ExecuteResult RawExecute(String sql, params MapperParameter[] parameters)
-        {
-            Parameter.Validate(sql);
+            Parameter.IfNullOrZero(sql);
             OpenConnection();
             using (var cmd = _connection.CreateCommand())
             {
@@ -152,7 +129,6 @@ namespace NewLibCore.Data.SQL
                 }
                 RunDiagnosis.Info($@"SQL语句:{sql} 占位符与参数:{(parameters == null || !parameters.Any() ? "" : String.Join($@"{Environment.NewLine}", parameters.Select(s => $@"{s.Key}----{s.Value}")))}");
 
-                var executeType = GetExecuteType(sql);
                 var executeResult = new ExecuteResult(_queryCacheBase);
                 if (executeType == ExecuteType.SELECT)
                 {

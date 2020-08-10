@@ -30,7 +30,7 @@ namespace NewLibCore.Data.SQL
         /// <param name="rawResult">语句执行后的原始结果</param>
         internal void SaveRawResult(Object rawResult)
         {
-            Parameter.Validate(rawResult);
+            Parameter.IfNullOrZero(rawResult);
             _result = rawResult;
         }
 

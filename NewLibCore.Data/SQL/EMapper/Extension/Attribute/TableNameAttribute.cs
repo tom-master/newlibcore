@@ -27,7 +27,7 @@ namespace NewLibCore.Data.SQL.Validate
         /// <param name="aliasName">表别名</param>
         public TableNameAttribute(String name, String aliasName = "")
         {
-            Parameter.Validate(name);
+            Parameter.IfNullOrZero(name);
 
             UnlegalChatDetection.FilterBadChat(name);
             TableName = name;

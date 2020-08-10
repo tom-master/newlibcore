@@ -13,8 +13,8 @@ namespace NewLibCore.Data.SQL.ProcessorFactory
         {
             var result = _parserExecutor.Parse(new ParseModel
             {
-                Sql = store.Direct.Sql,
-                Parameters = store.Direct.Parameters
+                Sql = store.RawSql.Sql,
+                Parameters = store.RawSql.Parameters
             });
             return result.Execute();
         }

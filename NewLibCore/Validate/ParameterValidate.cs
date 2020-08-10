@@ -7,15 +7,15 @@ namespace NewLibCore.Validate
         /// <summary>
         /// 验证引用类型是否合法
         /// </summary>
-        public static void Validate(Object argument)
+        public static void IfNullOrZero(Object argument)
         {
-            Validate(argument, false);
+            IfNullOrZero(argument, false);
         }
 
         /// <summary>
         /// 验证引用类型是否合法
         /// </summary>
-        public static void Validate(Object argument, Boolean canNull)
+        public static void IfNullOrZero(Object argument, Boolean canNull)
         {
             if (!canNull && (argument == null || String.IsNullOrEmpty(argument.ToString())))
             {
@@ -24,15 +24,15 @@ namespace NewLibCore.Validate
         }
 
 
-        public static void Validate(ValueType valueType)
+        public static void IfNullOrZero(ValueType valueType)
         {
-            Validate(valueType, false);
+            IfNullOrZero(valueType, false);
         }
 
         /// <summary>
         /// 验证值类型是否合法
         /// </summary>
-        public static void Validate(ValueType valueType, Boolean canZero)
+        public static void IfNullOrZero(ValueType valueType, Boolean canZero)
         {
             var type = valueType.GetType();
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.Common;
 using MySql.Data.MySqlClient;
+using NewLibCore.Data.SQL.Extension;
 using NewLibCore.Data.SQL.Store;
 using NewLibCore.Validate;
 
@@ -11,9 +12,10 @@ namespace NewLibCore.Data.SQL.Template
     /// </summary>
     internal class MySqlTemplate : TemplateBase
     {
-        internal override String CreateUpdate(String tableName, String aliasName, String field)
+        internal override String CreateUpdate<TModel>(TModel model)
         {
-            return String.Format("UPDATE {0} AS {1} SET {2} ", tableName, aliasName, field);
+            var (tableName, aliasName) = model.GetTableName();
+            return $@"UPDATE {tableName} AS {aliasName} SET {model.SqlPart.InsertPlaceHolders}";
         }
 
         protected override void AppendPredicateType()
@@ -26,18 +28,18 @@ namespace NewLibCore.Data.SQL.Template
 
         internal override String CreatePredicate(PredicateType predicateType, String left, String right)
         {
-            Parameter.Validate(predicateType);
-            Parameter.Validate(left);
-            Parameter.Validate(right);
+            Parameter.IfNullOrZero(predicateType);
+            Parameter.IfNullOrZero(left);
+            Parameter.IfNullOrZero(right);
 
             return String.Format(PredicateMapper[predicateType], left, right);
         }
 
         internal override String CreatePagination(PaginationExpressionMapper pagination, String orderBy, String rawSql)
         {
-            Parameter.Validate(pagination.Size);
-            Parameter.Validate(orderBy);
-            Parameter.Validate(rawSql);
+            Parameter.IfNullOrZero(pagination.Size);
+            Parameter.IfNullOrZero(orderBy);
+            Parameter.IfNullOrZero(rawSql);
 
             if (pagination.MaxKey > 0)
             {

@@ -28,7 +28,7 @@ namespace NewLibCore.Data.SQL
         /// <param name="propertyName">属性名称</param>
         protected void OnChanged(String propertyName)
         {
-            Parameter.Validate(propertyName);
+            Parameter.IfNullOrZero(propertyName);
 
             var propertyInfo = _type.GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance);
             if (propertyInfo == null)
@@ -66,11 +66,11 @@ namespace NewLibCore.Data.SQL
         /// 获取值发生变更的属性
         /// </summary>
         /// <returns></returns>
-        internal IReadOnlyList<KeyValuePair<String, Object>> ChangedPropertys
+        internal SqlPart SqlPart
         {
             get
             {
-                return _changedPropertys.Select(s => new KeyValuePair<String, Object>(s.PropertyName, s.Value)).ToList().AsReadOnly();
+                return new SqlPart(_changedPropertys);
             }
         }
 
@@ -156,8 +156,8 @@ namespace NewLibCore.Data.SQL
         /// <param name="rawPropertyValue">原始的属性值</param>
         private void SetPropertyDefaultValue(DefaultValueAttribute defaultValueAttribute, ChangedProperty propertyItem, Object rawPropertyValue)
         {
-            Parameter.Validate(defaultValueAttribute);
-            Parameter.Validate(propertyItem);
+            Parameter.IfNullOrZero(defaultValueAttribute);
+            Parameter.IfNullOrZero(propertyItem);
 
             var propertyInstanceValue = rawPropertyValue;
             var propertyInstanceValueType = propertyItem.Type;
@@ -189,8 +189,8 @@ namespace NewLibCore.Data.SQL
         /// <param name="po">属性项</param>
         private void ThrowValidateException(PropertyValidateAttribute validateBase, ChangedProperty changedProperty)
         {
-            Parameter.Validate(changedProperty);
-            Parameter.Validate(validateBase);
+            Parameter.IfNullOrZero(changedProperty);
+            Parameter.IfNullOrZero(validateBase);
 
             var reason = validateBase.FailReason($@"{changedProperty.DeclaringType}.{changedProperty.PropertyName}");
             throw new Exception(reason);
@@ -204,7 +204,7 @@ namespace NewLibCore.Data.SQL
         /// <returns></returns>
         private List<PropertyValidateAttribute> ValidateAttributeOrder(String propertyName, IEnumerable<PropertyValidateAttribute> validates)
         {
-            Parameter.Validate(validates);
+            Parameter.IfNullOrZero(validates);
             if (validates.GroupBy(g => g.Order).Where(w => w.Count() > 1).Any())
             {
                 throw new Exception($@"{propertyName} 中使用了多个优先级相同的特性");
@@ -247,6 +247,27 @@ namespace NewLibCore.Data.SQL
         /// 属性上应用的PropertyValidate特性
         /// </summary>
         internal IEnumerable<PropertyValidateAttribute> Validates { get; set; }
+    }
+
+    internal class SqlPart
+    {
+        internal String Fields { get; private set; }
+
+        internal String InsertPlaceHolders { get; private set; }
+
+        internal String UpdatePlaceHolders { get; private set; }
+
+        internal List<MapperParameter> Parameters { get; private set; }
+
+        internal SqlPart(IEnumerable<ChangedProperty> changedProperties)
+        {
+            Parameter.IfNullOrZero(changedProperties);
+
+            Fields = String.Join(",", changedProperties.Select(c => c.PropertyName));
+            InsertPlaceHolders = String.Join(",", changedProperties.Select(key => $@"@{key.PropertyName}"));
+            UpdatePlaceHolders = String.Join(",", changedProperties.Select(c => $@"{c.PropertyName}=@{c.PropertyName}"));
+            Parameters = changedProperties.Select(c => new MapperParameter(c.PropertyName, c.Value)).ToList();
+        }
     }
 }
 

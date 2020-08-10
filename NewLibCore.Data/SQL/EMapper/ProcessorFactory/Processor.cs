@@ -15,8 +15,8 @@ namespace NewLibCore.Data.SQL.ProcessorFactory
 
         protected Processor(TemplateBase templateBase, ParserExecutor parserExecutor)
         {
-            Parameter.Validate(templateBase);
-            Parameter.Validate(parserExecutor);
+            Parameter.IfNullOrZero(templateBase);
+            Parameter.IfNullOrZero(parserExecutor);
 
             _templateBase = templateBase;
             _parserExecutor = parserExecutor;
@@ -24,7 +24,7 @@ namespace NewLibCore.Data.SQL.ProcessorFactory
 
         internal ExecuteResult Process(ExpressionStore store)
         {
-            Parameter.Validate(store);
+            Parameter.IfNullOrZero(store);
             return Execute(store);
         }
 

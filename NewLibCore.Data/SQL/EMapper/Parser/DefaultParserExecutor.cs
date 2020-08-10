@@ -17,6 +17,7 @@ namespace NewLibCore.Data.SQL
         internal IEnumerable<MapperParameter> Parameters { get; set; }
 
         internal ExpressionStore ExpressionStore { get; set; }
+ 
     }
 
     /// <summary>
@@ -39,8 +40,8 @@ namespace NewLibCore.Data.SQL
 
         internal ParserResult Parse(ParseModel parseModel)
         {
-            Parameter.Validate(parseModel);
-            Parameter.Validate(parseModel.Sql);
+            Parameter.IfNullOrZero(parseModel);
+            Parameter.IfNullOrZero(parseModel.Sql);
 
             if (parseModel.Parameters != null)
             {
@@ -78,7 +79,7 @@ namespace NewLibCore.Data.SQL
         /// <param name="templateBase"></param>
         public DefaultParserExecutor(TemplateBase templateBase, ParserResult parserResult) : base(parserResult)
         {
-            Parameter.Validate(templateBase);
+            Parameter.IfNullOrZero(templateBase);
 
             _templateBase = templateBase;
 
@@ -95,8 +96,8 @@ namespace NewLibCore.Data.SQL
         /// <returns></returns>
         protected override ParserResult InnerParse(ParserResult parserResult, ExpressionStore expressionStore)
         {
-            Parameter.Validate(parserResult);
-            Parameter.Validate(expressionStore);
+            Parameter.IfNullOrZero(parserResult);
+            Parameter.IfNullOrZero(expressionStore);
 
             _parserResult = parserResult;
 
@@ -325,7 +326,7 @@ namespace NewLibCore.Data.SQL
         /// <param name="expression">表达式</param>
         private void ParserMethodCall(Expression expression)
         {
-            Parameter.Validate(expression);
+            Parameter.IfNullOrZero(expression);
             var methodCallExp = (MethodCallExpression)expression;
             var methodName = methodCallExp.Method.Name;
 
@@ -392,7 +393,7 @@ namespace NewLibCore.Data.SQL
         /// <param name="relationType">关系类型</param>
         private void CreatePredicate(BinaryExpression binary, PredicateType predicateType)
         {
-            Parameter.Validate(binary);
+            Parameter.IfNullOrZero(binary);
             var binaryExp = binary;
             if (_joinRelation != JoinRelation.NONE)
             {
@@ -423,7 +424,7 @@ namespace NewLibCore.Data.SQL
         /// <param name="relationType">关系类型</param>
         private void GetJoin(BinaryExpression binary, PredicateType predicateType)
         {
-            Parameter.Validate(binary);
+            Parameter.IfNullOrZero(binary);
 
             //表达式左右两边都不为常量时例如 xx.Id==yy.Id
             if (binary.Left.NodeType != ExpressionType.Constant && binary.Right.NodeType != ExpressionType.Constant)
@@ -457,7 +458,7 @@ namespace NewLibCore.Data.SQL
         /// <returns></returns>
         private (MemberExpression RightMember, String RightAliasName) ExtractRightMember(BinaryExpression binary)
         {
-            Parameter.Validate(binary);
+            Parameter.IfNullOrZero(binary);
             var rightMember = (MemberExpression)binary.Right;
             var rightParameterExp = (ParameterExpression)rightMember.Expression;
             var (tableName, aliasName) = rightParameterExp.Type.GetTableName();
@@ -476,7 +477,7 @@ namespace NewLibCore.Data.SQL
         /// <returns></returns>
         private (MemberExpression LeftMember, String LeftAliasName) ExtractLeftMember(BinaryExpression binary)
         {
-            Parameter.Validate(binary);
+            Parameter.IfNullOrZero(binary);
             var leftMember = (MemberExpression)binary.Left;
             var leftParameterExp = (ParameterExpression)leftMember.Expression;
             var (tableName, aliasName) = leftParameterExp.Type.GetTableName();

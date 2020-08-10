@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Common;
 
 namespace NewLibCore.Data.SQL
@@ -41,14 +40,7 @@ namespace NewLibCore.Data.SQL
         /// </summary>
         /// <param name="disposing"></param>
         protected internal abstract void Dispose(Boolean disposing);
-
-        /// <summary>
-        /// 获取语句的执行类型
-        /// </summary>
-        /// <param name="sql">语句</param>
-        /// <returns></returns>
-        protected internal abstract ExecuteType GetExecuteType(String sql);
-
+ 
         /// <summary>
         /// 执行原生sql语句
         /// </summary>
@@ -57,7 +49,7 @@ namespace NewLibCore.Data.SQL
         /// <param name="parameters">参数</param>
         /// <param name="commandType"></param>
         /// <returns></returns>
-        protected internal abstract ExecuteResult RawExecute(String sql, params MapperParameter[] parameters);
+        protected internal abstract ExecuteResult RawExecute(ExecuteType executeType,String sql, params MapperParameter[] parameters);
 
         public void Dispose()
         {

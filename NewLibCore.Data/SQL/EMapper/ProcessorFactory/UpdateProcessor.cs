@@ -32,20 +32,11 @@ namespace NewLibCore.Data.SQL.ProcessorFactory
                 instance.CheckPropertyValue();
             }
 
-            var propertys = instance.ChangedPropertys;
-            if (!propertys.Any())
-            {
-                throw new Exception("没有获取到值发生变更的属性");
-            }
-            var (tableName, aliasName) = instance.GetType().GetTableName();
-            var updateFields = String.Join(",", propertys.Select(p => $@"{aliasName}.{p.Key}=@{p.Key}"));
-            var parameters = propertys.Select(c => new MapperParameter(c.Key, c.Value));
-            var update = _templateBase.CreateUpdate(tableName, aliasName, updateFields);
-
+            var (_, aliasName) = instance.GetTableName();
             var result = _parserExecutor.Parse(new ParseModel
             {
-                Sql = update,
-                Parameters = parameters,
+                Sql = _templateBase.CreateUpdate(instance),
+                Parameters = instance.SqlPart.Parameters,
                 ExpressionStore = store
             });
 

@@ -12,7 +12,7 @@ namespace NewLibCore
         /// </summary>
         public static T ToEnum<T>(String value) where T : struct
         {
-            Parameter.Validate(value);
+            Parameter.IfNullOrZero(value);
 
             if (String.IsNullOrEmpty(value))
             {
@@ -32,8 +32,7 @@ namespace NewLibCore
         /// </summary>
         public static T ToEnum<T>(Int32 value) where T : struct
         {
-            Parameter.Validate(value);
-
+            Parameter.IfNullOrZero(value); 
             return (T)Enum.ToObject(typeof(T), value);
         }
 
@@ -42,7 +41,7 @@ namespace NewLibCore
         /// </summary>
         public static Int32 ToInt32(this Enum e)
         {
-            Parameter.Validate(e);
+            Parameter.IfNullOrZero(e);
             return (Int32)Enum.Parse(e.GetType(), e.ToString());
         }
 
@@ -51,11 +50,11 @@ namespace NewLibCore
         /// </summary>
         public static String GetDescription(this Enum e)
         {
-            Parameter.Validate(e);
+            Parameter.IfNullOrZero(e);
             var attrs = e.GetType().GetField(e.ToString()).GetCustomAttributes(typeof(DescriptionAttribute), false);
             if (attrs.Length == 0)
             {
-                return "";
+                throw new Exception("特性上没有用DescriptionAttribute修饰,因此无法获取描述");
             }
             return String.Join(",", attrs.Select(s => ((DescriptionAttribute)s).Description));
         }

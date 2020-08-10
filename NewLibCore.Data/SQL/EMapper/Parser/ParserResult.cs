@@ -16,8 +16,6 @@ namespace NewLibCore.Data.SQL
     {
         private readonly StringBuilder _internalSql;
 
-        private readonly QueryCacheBase _queryCacheBase;
-
         private readonly IList<MapperParameter> _parameters;
 
         private readonly MapperDbContextBase _mapperDbContextBase;
@@ -27,15 +25,13 @@ namespace NewLibCore.Data.SQL
         /// </summary>
         /// <param name="mapperDbContextBase"></param>
         /// <param name="queryCacheBase"></param>
-        public ParserResult(MapperDbContextBase mapperDbContextBase, QueryCacheBase queryCacheBase)
+        public ParserResult(MapperDbContextBase mapperDbContextBase)
         {
-            Parameter.Validate(mapperDbContextBase);
-            Parameter.Validate(queryCacheBase);
+            Parameter.IfNullOrZero(mapperDbContextBase);
 
             _internalSql = new StringBuilder();
             _parameters = new List<MapperParameter>();
 
-            _queryCacheBase = queryCacheBase;
             _mapperDbContextBase = mapperDbContextBase;
         }
 
@@ -44,11 +40,9 @@ namespace NewLibCore.Data.SQL
         /// 追加一个sql语句
         /// </summary>
         /// <param name="sql"></param>
-        /// <param name="entityParameters"></param>
-        /// <returns></returns>
         internal void Append(String sql)
         {
-            Parameter.Validate(sql);
+            Parameter.IfNullOrZero(sql);
             _internalSql.Append($@" {sql} ");
         }
 
@@ -58,7 +52,7 @@ namespace NewLibCore.Data.SQL
         /// <param name="parameters"></param>
         internal void Append(params MapperParameter[] parameters)
         {
-            Parameter.Validate(parameters);
+            Parameter.IfNullOrZero(parameters);
 
             foreach (var item in parameters)
             {
@@ -78,20 +72,22 @@ namespace NewLibCore.Data.SQL
         /// <returns></returns>
         internal ExecuteResult Execute()
         {
+            var sql = ToString();
+            var executeType = GetExecuteType(sql);
+            return _mapperDbContextBase.RawExecute(executeType, sql, _parameters.ToArray());
+        }
 
-            var executeResult = GetCache();
-            if (executeResult == null)
+        private ExecuteType GetExecuteType(String sql)
+        {
+            Parameter.IfNullOrZero(sql);
+
+            var operationType = sql.Substring(0, sql.IndexOf(" "));
+            if (Enum.TryParse<ExecuteType>(operationType, out var executeType))
             {
-                var sql = ToString();
-
-                var dbContext = _mapperDbContextBase;
-                executeResult = dbContext.RawExecute(sql, _parameters.ToArray());
-                var executeType = dbContext.GetExecuteType(sql);
-
-                SetCache(executeType, executeResult);
+                return executeType;
             }
 
-            return executeResult;
+            throw new Exception($@"SQL语句执行类型解析失败:{operationType}");
         }
 
         /// <summary>
@@ -110,56 +106,6 @@ namespace NewLibCore.Data.SQL
             _parameters.Clear();
         }
 
-        /// <summary>
-        /// 获取作为要缓存的sql语句的key
-        /// </summary>
-        /// <returns></returns>
-        private String PrepareCacheKey()
-        {
-            Parameter.Validate(_internalSql);
-            var cacheKey = ToString();
-            foreach (var item in _parameters)
-            {
-                cacheKey = cacheKey.Replace(item.Key, item.Value.ToString());
-            }
-            return MD.GetMD5(cacheKey);
-        }
-
-        /// <summary>
-        /// 设置缓存
-        /// </summary>
-        /// <param name="executeType"></param>
-        /// <param name="executeResult"></param>
-        private void SetCache(ExecuteType executeType, ExecuteResult executeResult)
-        {
-            Parameter.Validate(executeResult);
-            if (executeType != ExecuteType.SELECT)
-            {
-                return;
-            }
-
-            if (_queryCacheBase != null)
-            {
-                _queryCacheBase.Add(PrepareCacheKey(), executeResult);
-            }
-        }
-
-        /// <summary>
-        /// 获取缓存
-        /// </summary>
-        /// <returns></returns>
-        private ExecuteResult GetCache()
-        {
-            if (_queryCacheBase != null)
-            {
-                var cacheResult = _queryCacheBase.Get<ExecuteResult>(PrepareCacheKey());
-                if (cacheResult != null)
-                {
-                    return cacheResult;
-                }
-            }
-            return null;
-        }
 
         /// <summary>
         /// 返回存储的sql语句
@@ -168,7 +114,7 @@ namespace NewLibCore.Data.SQL
         public override String ToString()
         {
             var sql = _internalSql.ToString();
-            Parameter.Validate(sql);
+            Parameter.IfNullOrZero(sql);
 
             if (sql[0] != ' ')
             {

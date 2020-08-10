@@ -14,7 +14,7 @@ namespace NewLibCore
         /// </summary>
         public static Boolean IsExistDirectory(String directoryPath)
         {
-            Parameter.Validate(directoryPath);
+            Parameter.IfNullOrZero(directoryPath);
             return Directory.Exists(directoryPath);
         }
 
@@ -24,7 +24,7 @@ namespace NewLibCore
         /// </summary>
         public static Boolean IsExistFile(String filePath)
         {
-            Parameter.Validate(filePath);
+            Parameter.IfNullOrZero(filePath);
             return File.Exists(filePath);
         }
         #endregion
@@ -35,7 +35,7 @@ namespace NewLibCore
         /// </summary>
         public static void CreateDirectory(String directoryPath)
         {
-            Parameter.Validate(directoryPath);
+            Parameter.IfNullOrZero(directoryPath);
 
             //如果目录不存在则创建该目录
             if (!IsExistDirectory(directoryPath))
@@ -51,7 +51,7 @@ namespace NewLibCore
         /// </summary>
         public static Int32 GetLineCount(String filePath)
         {
-            Parameter.Validate(filePath);
+            Parameter.IfNullOrZero(filePath);
 
             //将文本文件的各行读到一个字符串数组中
             var rows = File.ReadAllLines(filePath);
@@ -70,7 +70,7 @@ namespace NewLibCore
         /// </summary>
         public static String[] GetFileNames(String directoryPath)
         {
-            Parameter.Validate(directoryPath);
+            Parameter.IfNullOrZero(directoryPath);
             //如果目录不存在，则抛出异常
             if (!IsExistDirectory(directoryPath))
             {
@@ -86,8 +86,8 @@ namespace NewLibCore
         /// </summary>
         public static String[] GetFileNames(String directoryPath, String searchPattern, Boolean isSearchChild)
         {
-            Parameter.Validate(directoryPath);
-            Parameter.Validate(searchPattern);
+            Parameter.IfNullOrZero(directoryPath);
+            Parameter.IfNullOrZero(searchPattern);
 
             //如果目录不存在，则抛出异常
             if (!IsExistDirectory(directoryPath))
@@ -115,7 +115,7 @@ namespace NewLibCore
         /// </summary>
         public static String[] GetDirectories(String directoryPath)
         {
-            Parameter.Validate(directoryPath);
+            Parameter.IfNullOrZero(directoryPath);
             try
             {
                 return Directory.GetDirectories(directoryPath);
@@ -131,8 +131,8 @@ namespace NewLibCore
         /// </summary>
         public static String[] GetDirectories(String directoryPath, String searchPattern, Boolean isSearchChild)
         {
-            Parameter.Validate(directoryPath);
-            Parameter.Validate(searchPattern);
+            Parameter.IfNullOrZero(directoryPath);
+            Parameter.IfNullOrZero(searchPattern);
 
             try
             {
@@ -155,8 +155,8 @@ namespace NewLibCore
         /// </summary>
         public static void WriteText(String filePath, String content)
         {
-            Parameter.Validate(filePath);
-            Parameter.Validate(content);
+            Parameter.IfNullOrZero(filePath);
+            Parameter.IfNullOrZero(content);
 
             File.WriteAllText(filePath, content);
         }
@@ -168,8 +168,8 @@ namespace NewLibCore
         /// </summary>
         public static void AppendText(String filePath, String content)
         {
-            Parameter.Validate(filePath);
-            Parameter.Validate(content);
+            Parameter.IfNullOrZero(filePath);
+            Parameter.IfNullOrZero(content);
 
             File.AppendAllText(filePath, content);
         }
@@ -181,8 +181,8 @@ namespace NewLibCore
         /// </summary>
         public static void Copy(String sourceFilePath, String destFilePath)
         {
-            Parameter.Validate(sourceFilePath);
-            Parameter.Validate(destFilePath);
+            Parameter.IfNullOrZero(sourceFilePath);
+            Parameter.IfNullOrZero(destFilePath);
 
             File.Copy(sourceFilePath, destFilePath, true);
         }
@@ -194,8 +194,8 @@ namespace NewLibCore
         /// </summary>
         public static void Move(String sourceFilePath, String descDirectoryPath)
         {
-            Parameter.Validate(sourceFilePath);
-            Parameter.Validate(descDirectoryPath);
+            Parameter.IfNullOrZero(sourceFilePath);
+            Parameter.IfNullOrZero(descDirectoryPath);
 
             //获取源文件的名称
             var sourceFileName = GetFileName(sourceFilePath);
@@ -218,7 +218,7 @@ namespace NewLibCore
         /// </summary>
         public static String GetFileName(String filePath)
         {
-            Parameter.Validate(filePath);
+            Parameter.IfNullOrZero(filePath);
             return new FileInfo(filePath).Name;
         }
         #endregion
@@ -229,7 +229,7 @@ namespace NewLibCore
         /// </summary>
         public static String GetFileNameNoExtension(String filePath)
         {
-            Parameter.Validate(filePath);
+            Parameter.IfNullOrZero(filePath);
             return new FileInfo(filePath).Name.Split('.')[0];
         }
         #endregion
@@ -240,7 +240,7 @@ namespace NewLibCore
         /// </summary>
         public static String GetExtension(String filePath)
         {
-            Parameter.Validate(filePath);
+            Parameter.IfNullOrZero(filePath);
             return new FileInfo(filePath).Extension;
         }
         #endregion
@@ -251,7 +251,7 @@ namespace NewLibCore
         /// </summary>
         public static void ClearDirectory(String directoryPath)
         {
-            Parameter.Validate(directoryPath);
+            Parameter.IfNullOrZero(directoryPath);
             if (IsExistDirectory(directoryPath))
             {
                 //删除目录中所有的文件
@@ -277,7 +277,7 @@ namespace NewLibCore
         /// </summary>
         public static void DeleteFile(String filePath)
         {
-            Parameter.Validate(filePath);
+            Parameter.IfNullOrZero(filePath);
             if (IsExistFile(filePath))
             {
                 File.Delete(filePath);
@@ -291,7 +291,7 @@ namespace NewLibCore
         /// </summary>
         public static void DeleteDirectory(String directoryPath)
         {
-            Parameter.Validate(directoryPath);
+            Parameter.IfNullOrZero(directoryPath);
             if (IsExistDirectory(directoryPath))
             {
                 Directory.Delete(directoryPath, true);

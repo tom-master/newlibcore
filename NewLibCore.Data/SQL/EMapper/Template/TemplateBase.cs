@@ -5,6 +5,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Reflection;
 using MySql.Data.MySqlClient.Authentication;
+using NewLibCore.Data.SQL.Extension;
 using NewLibCore.Data.SQL.Store;
 using NewLibCore.Data.SQL.Validate;
 using NewLibCore.Validate;
@@ -58,15 +59,15 @@ namespace NewLibCore.Data.SQL.Template
         /// <summary>
         /// 添加模板
         /// </summary>
-        internal virtual String CreateInsert(String tableName, String field, String placeHolder)
+        internal virtual String CreateInsert<TModel>(TModel model) where TModel : EntityBase
         {
-            return String.Format("INSERT {0} ({1}) VALUES({2}) {3}", tableName, field, placeHolder, Identity);
+            return $@"INSERT {model.GetTableName().TableName} ({model.SqlPart.Fields}) VALUES ({model.SqlPart.InsertPlaceHolders}) {Identity} ";
         }
 
         /// <summary>
         /// 更新模板
         /// </summary>
-        internal abstract String CreateUpdate(String tableName, String aliasName, String field);
+        internal abstract String CreateUpdate<TModel>(TModel model) where TModel : EntityBase;
 
         /// <summary>
         /// 追加关系类型
@@ -151,9 +152,9 @@ namespace NewLibCore.Data.SQL.Template
         /// <returns></returns>
         internal String CreateJoin(JoinRelation joinRelation, String left, String right)
         {
-            Parameter.Validate(joinRelation);
-            Parameter.Validate(left);
-            Parameter.Validate(right);
+            Parameter.IfNullOrZero(joinRelation);
+            Parameter.IfNullOrZero(left);
+            Parameter.IfNullOrZero(right);
 
             if (!JoinMapper.ContainsKey(joinRelation))
             {
@@ -171,8 +172,8 @@ namespace NewLibCore.Data.SQL.Template
         /// <returns></returns>
         internal String CreateOrderBy(OrderByType orderByType, String left)
         {
-            Parameter.Validate(orderByType);
-            Parameter.Validate(left);
+            Parameter.IfNullOrZero(orderByType);
+            Parameter.IfNullOrZero(left);
 
             if (!OrderTypeMapper.ContainsKey(orderByType))
             {

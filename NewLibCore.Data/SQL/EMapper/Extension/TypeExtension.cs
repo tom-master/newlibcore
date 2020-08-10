@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using NewLibCore.Data.SQL.Validate;
 using NewLibCore.Validate;
 namespace NewLibCore.Data.SQL.Extension
@@ -15,15 +16,19 @@ namespace NewLibCore.Data.SQL.Extension
         /// </summary>
         /// <param name="t">对象类型</param>
         /// <returns></returns>
+        internal static (String TableName, String AliasName) GetTableName(this EntityBase entityBase)
+        {
+            return GetTableName(entityBase.GetType());
+        }
+
         internal static (String TableName, String AliasName) GetTableName(this Type t)
         {
-            Parameter.Validate(t);
-
+            Parameter.IfNullOrZero(t);
             lock (_dic)
             {
                 if (t.BaseType != typeof(EntityBase))
                 {
-                    throw new InvalidOperationException($@"{t.Name}不属于基类:{nameof(EntityBase)}，不是数据实体的一部分，因此不能获取到表名和表别名");
+                    throw new InvalidOperationException($@"{t.Name}不属于基类:{nameof(EntityBase)}，不是数据实体的一部分，因此不能获取到表名和别名");
                 }
 
                 if (_dic.ContainsKey(t.Name))
@@ -32,7 +37,7 @@ namespace NewLibCore.Data.SQL.Extension
                     return (dic.Key, dic.Value);
                 }
 
-                var attrubutes = t.GetAttributes<TableNameAttribute>( true);
+                var attrubutes = t.GetAttributes<TableNameAttribute>(true);
                 if (!attrubutes.Any())
                 {
                     throw new Exception($@"{t.Name}没有被{nameof(TableNameAttribute)}所修饰");

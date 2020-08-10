@@ -22,18 +22,18 @@ namespace NewLibCore.Data.SQL.Validate
         {
             try
             {
-                Parameter.Validate(property);
-                Parameter.Validate(property.Value);
+                Parameter.IfNullOrZero(property);
+                Parameter.IfNullOrZero(property.Value);
 
                 var type = property.Value.GetType();
 
                 if (type.IsValueType && type.IsNumeric())
                 {
-                    Parameter.Validate((ValueType)property.Value);
+                    Parameter.IfNullOrZero((ValueType)property.Value);
                 }
                 else
                 {
-                    Parameter.Validate(property.Value);
+                    Parameter.IfNullOrZero(property.Value);
                 }
                 return true;
             }

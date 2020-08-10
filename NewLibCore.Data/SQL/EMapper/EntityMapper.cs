@@ -151,7 +151,7 @@ namespace NewLibCore.Data.SQL
         /// <param name="logger"></param>
         public static void SetLogger(ILogger logger)
         {
-            Parameter.Validate(logger);
+            Parameter.IfNullOrZero(logger);
             _logger = logger;
         }
 
@@ -161,7 +161,7 @@ namespace NewLibCore.Data.SQL
         /// <param name="cache"></param>
         public static void SetCache(QueryCacheBase cache)
         {
-            Parameter.Validate(cache);
+            Parameter.IfNullOrZero(cache);
             _queryCacheBase = cache;
         }
 
@@ -187,7 +187,7 @@ namespace NewLibCore.Data.SQL
         /// <returns></returns>
         public TModel Add<TModel>(TModel model) where TModel : EntityBase, new()
         {
-            Parameter.Validate(model);
+            Parameter.IfNullOrZero(model);
 
             return RunDiagnosis.Watch(() =>
             {
@@ -209,8 +209,8 @@ namespace NewLibCore.Data.SQL
         /// <returns></returns>
         public Boolean Update<TModel>(TModel model, Expression<Func<TModel, Boolean>> expression) where TModel : EntityBase, new()
         {
-            Parameter.Validate(model);
-            Parameter.Validate(expression);
+            Parameter.IfNullOrZero(model);
+            Parameter.IfNullOrZero(expression);
 
             return RunDiagnosis.Watch(() =>
             {
@@ -245,7 +245,7 @@ namespace NewLibCore.Data.SQL
         /// <returns></returns>
         public ExecuteResult SqlQuery(String sql, params MapperParameter[] parameters)
         {
-            Parameter.Validate(sql);
+            Parameter.IfNullOrZero(sql);
 
             return RunDiagnosis.Watch(() =>
             {
@@ -281,8 +281,8 @@ namespace NewLibCore.Data.SQL
 
         private Processor FindProcessor(IEnumerable<Processor> source, String target)
         {
-            Parameter.Validate(source);
-            Parameter.Validate(target);
+            Parameter.IfNullOrZero(source);
+            Parameter.IfNullOrZero(target);
             var result = source.FirstOrDefault(w => w.CurrentId == target);
             if (result != null)
             {

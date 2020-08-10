@@ -21,8 +21,8 @@ namespace NewLibCore.Data.SQL.Filter
         /// <returns></returns>
         public Expression<Func<T, T1, Boolean>> Append<T1>(FilterBase<T1> right) where T1 : EntityBase
         {
-            Parameter.Validate(right);
-            Parameter.Validate(right.Filter);
+            Parameter.IfNullOrZero(right);
+            Parameter.IfNullOrZero(right.Filter);
 
             Expression leftBody, rightBody;
             ParameterExpression leftParameter, rightParameter;
@@ -51,7 +51,7 @@ namespace NewLibCore.Data.SQL.Filter
         /// <returns></returns>
         public static implicit operator Expression<Func<T, Boolean>>(FilterBase<T> combination)
         {
-            Parameter.Validate(combination);
+            Parameter.IfNullOrZero(combination);
             return combination.Filter;
         }
     }

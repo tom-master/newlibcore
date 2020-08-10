@@ -29,7 +29,7 @@ namespace NewLibCore.Data.SQL.Extension
         /// <param name="logger"></param>
         internal static void SetLoggerInstance(ILogger logger)
         {
-            Parameter.Validate(logger);
+            Parameter.IfNullOrZero(logger);
             _logger = logger;
         }
 
@@ -43,7 +43,7 @@ namespace NewLibCore.Data.SQL.Extension
         {
             try
             {
-                Parameter.Validate(func);
+                Parameter.IfNullOrZero(func);
                 var sw = new Stopwatch();
                 sw.Start();
                 var returnValue = func();

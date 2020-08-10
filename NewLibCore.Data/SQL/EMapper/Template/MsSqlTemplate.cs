@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.Common;
 using System.Data.SqlClient;
+using NewLibCore.Data.SQL.Extension;
 using NewLibCore.Data.SQL.Store;
 using NewLibCore.Validate;
 
@@ -12,9 +13,10 @@ namespace NewLibCore.Data.SQL.Template
     internal class MsSqlTemplate : TemplateBase
     {
 
-        internal override String CreateUpdate(String tableName, String aliasName, String field)
+        internal override String CreateUpdate<TModel>(TModel model)
         {
-            return String.Format("UPDATE {0} SET {1} FROM {2} AS {0} ", aliasName, field, tableName);
+            var (tableName, aliasName) = model.GetTableName();
+            return $@"UPDATE {aliasName} SET {model.SqlPart.UpdatePlaceHolders} FROM {tableName} AS {aliasName}";
         }
 
         internal override String Identity
@@ -43,18 +45,18 @@ namespace NewLibCore.Data.SQL.Template
 
         internal override String CreatePredicate(PredicateType predicateType, String left, String right)
         {
-            Parameter.Validate(predicateType);
-            Parameter.Validate(left);
-            Parameter.Validate(right);
+            Parameter.IfNullOrZero(predicateType);
+            Parameter.IfNullOrZero(left);
+            Parameter.IfNullOrZero(right);
 
             return String.Format(PredicateMapper[predicateType], left, right);
         }
 
         internal override String CreatePagination(PaginationExpressionMapper pagination, String orderBy, String rawSql)
         {
-            Parameter.Validate(pagination.Size);
-            Parameter.Validate(orderBy);
-            Parameter.Validate(rawSql);
+            Parameter.IfNullOrZero(pagination.Size);
+            Parameter.IfNullOrZero(orderBy);
+            Parameter.IfNullOrZero(rawSql);
 
             String sql;
             if (EntityMapper.MsSqlPaginationVersion == MsSqlPaginationVersion.GREATERTHAN2012)

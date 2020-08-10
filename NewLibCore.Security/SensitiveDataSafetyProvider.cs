@@ -13,8 +13,7 @@ namespace NewLibCore.Security
 
         public static String Encrypt(String source)
         {
-            Parameter.Validate(source);
-
+            Parameter.IfNullOrZero(source); 
             try
             {
                 if (String.IsNullOrEmpty(source))
@@ -47,7 +46,7 @@ namespace NewLibCore.Security
 
         public static String Decrypt(String source)
         {
-            Parameter.Validate(source);
+            Parameter.IfNullOrZero(source);
 
             try
             {
