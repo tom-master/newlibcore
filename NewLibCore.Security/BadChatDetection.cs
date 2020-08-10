@@ -66,22 +66,22 @@ namespace NewLibCore.Security
             value = Regex.Replace(value, "mid", "", RegexOptions.IgnoreCase);
 
             //特殊的字符
-            value = value.Replace("'", "");
-            value = value.Replace(";", "");
-            value = value.Replace(",", "");
-            value = value.Replace("?", "");
-            value = value.Replace("<", "");
-            value = value.Replace(">", "");
-            value = value.Replace("(", "");
-            value = value.Replace(")", "");
-            value = value.Replace("@", "");
-            value = value.Replace("=", "");
-            value = value.Replace("+", "");
-            value = value.Replace("*", "");
-            value = value.Replace("&", "");
-            value = value.Replace("#", "");
-            value = value.Replace("%", "");
-            value = value.Replace("$", "");
+            // value = value.Replace("'", "");
+            // value = value.Replace(";", "");
+            // value = value.Replace(",", "");
+            // value = value.Replace("?", "");
+            // value = value.Replace("<", "");
+            // value = value.Replace(">", "");
+            // value = value.Replace("(", "");
+            // value = value.Replace(")", "");
+            // value = value.Replace("@", "");
+            // value = value.Replace("=", "");
+            // value = value.Replace("+", "");
+            // value = value.Replace("*", "");
+            // value = value.Replace("&", "");
+            // value = value.Replace("#", "");
+            // value = value.Replace("%", "");
+            // value = value.Replace("$", "");
 
             return value;
         }
