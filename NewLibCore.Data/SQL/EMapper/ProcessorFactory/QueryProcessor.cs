@@ -16,7 +16,7 @@ namespace NewLibCore.Data.SQL.ProcessorFactory
     internal class QueryProcessor : Processor
     {
 
-        public QueryProcessor(TemplateBase templateBase, ParserExecutor parserExecutor) : base(templateBase, parserExecutor)
+        public QueryProcessor(TemplateBase templateBase, ExpressionProcessor expressionProcessor) : base(templateBase, expressionProcessor)
         {
         }
 
@@ -33,7 +33,7 @@ namespace NewLibCore.Data.SQL.ProcessorFactory
             }
 
             var mainTable = store.From.AliaNameMapper[0];
-            var result = _parserExecutor.Parse(new ParseModel
+            var result = _expressionProcessor.Parse(new ParseModel
             {
                 Sql = _templateBase.CreateSelect(ExtractSelectFields(store), mainTable.Key, mainTable.Value),
                 ExpressionStore = store

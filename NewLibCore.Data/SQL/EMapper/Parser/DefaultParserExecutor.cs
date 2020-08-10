@@ -17,59 +17,59 @@ namespace NewLibCore.Data.SQL
         internal IEnumerable<MapperParameter> Parameters { get; set; }
 
         internal ExpressionStore ExpressionStore { get; set; }
- 
+
     }
 
     /// <summary>
     /// 将Expression解析为对应的SQL谓词
     /// </summary>
-    internal abstract class ParserExecutor
+    internal abstract class ExpressionProcessor
     {
-        private readonly ParserResult _parserResult;
+        private readonly ExpressionProcessorResult _expressionProcessorResult;
 
-        internal ParserExecutor(ParserResult parserResult)
+        internal ExpressionProcessor(ExpressionProcessorResult expressionProcessorResult)
         {
-            _parserResult = parserResult;
+            _expressionProcessorResult = expressionProcessorResult;
         }
 
         /// <summary>
         /// 翻译
         /// </summary>
         /// <returns></returns>
-        protected abstract ParserResult InnerParse(ParserResult parserResult, ExpressionStore expressionStore);
+        protected abstract ExpressionProcessorResult InnerProcessor(ExpressionProcessorResult parserResult, ExpressionStore expressionStore);
 
-        internal ParserResult Parse(ParseModel parseModel)
+        internal ExpressionProcessorResult Parse(ParseModel parseModel)
         {
             Parameter.IfNullOrZero(parseModel);
             Parameter.IfNullOrZero(parseModel.Sql);
 
             if (parseModel.Parameters != null)
             {
-                _parserResult.Append(parseModel.Sql, parseModel.Parameters.ToArray());
+                _expressionProcessorResult.Append(parseModel.Sql, parseModel.Parameters.ToArray());
             }
             else
             {
-                _parserResult.Append(parseModel.Sql);
+                _expressionProcessorResult.Append(parseModel.Sql);
             }
 
 
             if (parseModel.ExpressionStore != null)
             {
-                InnerParse(_parserResult, parseModel.ExpressionStore);
+                InnerProcessor(_expressionProcessorResult, parseModel.ExpressionStore);
             }
 
-            return _parserResult;
+            return _expressionProcessorResult;
         }
     }
 
     /// <summary>
     /// 将Expression解析为对应的SQL谓词
     /// </summary>
-    internal class DefaultParserExecutor : ParserExecutor
+    internal class DefaultExpressionProcessor : ExpressionProcessor
     {
         private JoinRelation _joinRelation;
         private IReadOnlyList<KeyValuePair<String, String>> _tableAliasMapper;
-        private ParserResult _parserResult;
+        private ExpressionProcessorResult _expressionProcessorResult;
         private readonly Stack<PredicateType> _predicateTypeStack;
         private readonly Stack<String> _parameterNameStack;
         private readonly TemplateBase _templateBase;
@@ -77,7 +77,7 @@ namespace NewLibCore.Data.SQL
         /// 初始化Parser类的新实例
         /// </summary>
         /// <param name="templateBase"></param>
-        public DefaultParserExecutor(TemplateBase templateBase, ParserResult parserResult) : base(parserResult)
+        public DefaultExpressionProcessor(TemplateBase templateBase, ExpressionProcessorResult parserResult) : base(parserResult)
         {
             Parameter.IfNullOrZero(templateBase);
 
@@ -94,12 +94,12 @@ namespace NewLibCore.Data.SQL
         /// </summary>
         /// <param name="expressionStore"></param>
         /// <returns></returns>
-        protected override ParserResult InnerParse(ParserResult parserResult, ExpressionStore expressionStore)
+        protected override ExpressionProcessorResult InnerProcessor(ExpressionProcessorResult expressionProcessorResult, ExpressionStore expressionStore)
         {
-            Parameter.IfNullOrZero(parserResult);
+            Parameter.IfNullOrZero(expressionProcessorResult);
             Parameter.IfNullOrZero(expressionStore);
 
-            _parserResult = parserResult;
+            _expressionProcessorResult = expressionProcessorResult;
 
             //获取合并后的表别名
             _tableAliasMapper = expressionStore.MergeAliasMapper();
@@ -120,7 +120,7 @@ namespace NewLibCore.Data.SQL
                         continue;
                     }
                     //获取连接语句的模板 
-                    _parserResult.Append(_templateBase.CreateJoin(item.JoinRelation, aliasItem.Key, aliasItem.Value.ToLower()));
+                    _expressionProcessorResult.Append(_templateBase.CreateJoin(item.JoinRelation, aliasItem.Key, aliasItem.Value.ToLower()));
 
                     //设置相应的连接类型
                     _joinRelation = item.JoinRelation;
@@ -129,7 +129,7 @@ namespace NewLibCore.Data.SQL
                     InternalParser(item.Expression);
                 }
             }
-            _parserResult.Append(" WHERE 1=1 ");
+            _expressionProcessorResult.Append(" WHERE 1=1 ");
             //翻译Where条件对象
             if (expressionStore.Where != null)
             {
@@ -137,16 +137,16 @@ namespace NewLibCore.Data.SQL
                 //当表达式主体为常量时则直接返回，不做解析
                 if (lambdaExp.Body.NodeType == ExpressionType.Constant)
                 {
-                    return _parserResult;
+                    return _expressionProcessorResult;
                 }
 
                 _joinRelation = JoinRelation.NONE;
-                _parserResult.Append(PredicateType.AND.ToString());
+                _expressionProcessorResult.Append(PredicateType.AND.ToString());
 
                 //获取Where类型中的存储的表达式对象进行翻译
                 InternalParser(lambdaExp);
             }
-            return _parserResult;
+            return _expressionProcessorResult;
         }
 
         /// <summary>
@@ -164,7 +164,7 @@ namespace NewLibCore.Data.SQL
                         if (binaryExp.Left.NodeType != ExpressionType.Constant && binaryExp.Right.NodeType != ExpressionType.Constant)
                         {
                             InternalParser(binaryExp.Left);
-                            _parserResult.Append(PredicateType.AND.ToString());
+                            _expressionProcessorResult.Append(PredicateType.AND.ToString());
                             InternalParser(binaryExp.Right);
                         }
                         else
@@ -185,7 +185,7 @@ namespace NewLibCore.Data.SQL
                     {
                         var binaryExp = (BinaryExpression)expression;
                         InternalParser(binaryExp.Left);
-                        _parserResult.Append(PredicateType.OR.ToString());
+                        _expressionProcessorResult.Append(PredicateType.OR.ToString());
                         InternalParser(binaryExp.Right);
                         break;
                     }
@@ -197,7 +197,7 @@ namespace NewLibCore.Data.SQL
                 case ExpressionType.Constant:
                     {
                         var binaryExp = (ConstantExpression)expression;
-                        _parserResult.Append(new MapperParameter(_parameterNameStack.Pop(), binaryExp.Value));
+                        _expressionProcessorResult.Append(new MapperParameter(_parameterNameStack.Pop(), binaryExp.Value));
                         break;
                     }
                 case ExpressionType.Equal:
@@ -288,14 +288,14 @@ namespace NewLibCore.Data.SQL
                                 internalAliasName = $@"{ _tableAliasMapper.Where(w => w.Key == parameterExp.Type.GetTableName().TableName && w.Value == parameterExp.Type.GetTableName().AliasName).FirstOrDefault().Value.ToLower()}.";
 
                                 var newParameterName = Guid.NewGuid().ToString().Replace("-", "");
-                                _parserResult.Append(_templateBase.CreatePredicate(_predicateTypeStack.Pop(), $@"{internalAliasName}{memberExp.Member.Name}", $"@{newParameterName}"));
+                                _expressionProcessorResult.Append(_templateBase.CreatePredicate(_predicateTypeStack.Pop(), $@"{internalAliasName}{memberExp.Member.Name}", $"@{newParameterName}"));
                                 _parameterNameStack.Push(newParameterName);
                             }
                         }
                         else
                         {
                             var getter = Expression.Lambda(memberExp).Compile();
-                            _parserResult.Append(new MapperParameter(_parameterNameStack.Pop(), getter.DynamicInvoke()));
+                            _expressionProcessorResult.Append(new MapperParameter(_parameterNameStack.Pop(), getter.DynamicInvoke()));
                         }
                         break;
                     }
@@ -433,21 +433,21 @@ namespace NewLibCore.Data.SQL
                 var (RightMember, RightAliasName) = ExtractRightMember(binary);
 
                 var relationTemplate = _templateBase.CreatePredicate(predicateType, $"{RightAliasName}.{RightMember.Member.Name}", $"{LeftAliasName}.{LeftMember.Member.Name}");
-                _parserResult.Append(relationTemplate);
+                _expressionProcessorResult.Append(relationTemplate);
             }
             else if (binary.Left.NodeType == ExpressionType.Constant) //表达式左边为常量
             {
                 var (RightMember, RightAliasName) = ExtractRightMember(binary);
                 var constant = (ConstantExpression)binary.Left;
                 var value = Boolean.TryParse(constant.Value.ToString(), out var result) ? (result ? 1 : 0).ToString() : constant.Value;
-                _parserResult.Append(_templateBase.CreatePredicate(predicateType, value + "", $"{RightAliasName}.{RightMember.Member.Name}"));
+                _expressionProcessorResult.Append(_templateBase.CreatePredicate(predicateType, value + "", $"{RightAliasName}.{RightMember.Member.Name}"));
             }
             else if (binary.Right.NodeType == ExpressionType.Constant) //表达式的右边为常量
             {
                 var (LeftMember, LeftAliasName) = ExtractLeftMember(binary);
                 var constant = (ConstantExpression)binary.Right;
                 var value = Boolean.TryParse(constant.Value.ToString(), out var result) ? (result ? 1 : 0).ToString() : constant.Value;
-                _parserResult.Append(_templateBase.CreatePredicate(predicateType, $"{LeftAliasName}.{LeftMember.Member.Name}", value + ""));
+                _expressionProcessorResult.Append(_templateBase.CreatePredicate(predicateType, $"{LeftAliasName}.{LeftMember.Member.Name}", value + ""));
             }
         }
 

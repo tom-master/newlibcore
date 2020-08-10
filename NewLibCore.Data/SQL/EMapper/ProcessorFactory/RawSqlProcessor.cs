@@ -5,13 +5,13 @@ namespace NewLibCore.Data.SQL.ProcessorFactory
 {
     internal class RawSqlProcessor : Processor
     {
-        public RawSqlProcessor(TemplateBase templateBase, ParserExecutor parserExecutor) : base(templateBase, parserExecutor)
+        public RawSqlProcessor(TemplateBase templateBase, ExpressionProcessor expressionProcessor) : base(templateBase, expressionProcessor)
         {
         }
 
         protected override ExecuteResult Execute(ExpressionStore store)
         {
-            var result = _parserExecutor.Parse(new ParseModel
+            var result = _expressionProcessor.Parse(new ParseModel
             {
                 Sql = store.RawSql.Sql,
                 Parameters = store.RawSql.Parameters

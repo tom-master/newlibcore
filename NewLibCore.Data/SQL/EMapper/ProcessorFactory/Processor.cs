@@ -9,17 +9,17 @@ namespace NewLibCore.Data.SQL.ProcessorFactory
     {
         protected readonly TemplateBase _templateBase;
 
-        protected readonly ParserExecutor _parserExecutor;
+        protected readonly ExpressionProcessor _expressionProcessor;
 
         internal virtual String CurrentId { get { return GetType().Name; } }
 
-        protected Processor(TemplateBase templateBase, ParserExecutor parserExecutor)
+        protected Processor(TemplateBase templateBase, ExpressionProcessor expressionProcessor)
         {
             Parameter.IfNullOrZero(templateBase);
-            Parameter.IfNullOrZero(parserExecutor);
+            Parameter.IfNullOrZero(expressionProcessor);
 
             _templateBase = templateBase;
-            _parserExecutor = parserExecutor;
+            _expressionProcessor = expressionProcessor;
         }
 
         internal ExecuteResult Process(ExpressionStore store)

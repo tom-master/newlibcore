@@ -14,7 +14,7 @@ namespace NewLibCore.Data.SQL.ProcessorFactory
         /// 初始化一个InsertHandler类的实例
         /// </summary>
         /// <param name="model">要插入的模型</param>
-        public InsertProcessor(TemplateBase templateBase, ParserExecutor parserExecutor) : base(templateBase, parserExecutor)
+        public InsertProcessor(TemplateBase templateBase, ExpressionProcessor expressionProcessor) : base(templateBase, expressionProcessor)
         {
         }
 
@@ -28,7 +28,7 @@ namespace NewLibCore.Data.SQL.ProcessorFactory
             {
                 instance.CheckPropertyValue();
             }
-            var result = _parserExecutor.Parse(new ParseModel
+            var result = _expressionProcessor.Parse(new ParseModel
             {
                 Sql = _templateBase.CreateInsert(instance),
                 Parameters = instance.SqlPart.Parameters

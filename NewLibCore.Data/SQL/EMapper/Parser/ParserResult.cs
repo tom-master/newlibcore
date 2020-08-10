@@ -12,7 +12,7 @@ namespace NewLibCore.Data.SQL
     /// <summary>
     /// 执行Expression翻译后的sql语句
     /// </summary>
-    internal sealed class ParserResult
+    internal sealed class ExpressionProcessorResult
     {
         private readonly StringBuilder _internalSql;
 
@@ -25,7 +25,7 @@ namespace NewLibCore.Data.SQL
         /// </summary>
         /// <param name="mapperDbContextBase"></param>
         /// <param name="queryCacheBase"></param>
-        public ParserResult(MapperDbContextBase mapperDbContextBase)
+        public ExpressionProcessorResult(MapperDbContextBase mapperDbContextBase)
         {
             Parameter.IfNullOrZero(mapperDbContextBase);
 

@@ -106,8 +106,8 @@ namespace NewLibCore.Data.SQL
 
             #region transient
 
-            services = services.AddTransient<ParserExecutor, DefaultParserExecutor>();
-            services = services.AddTransient<ParserResult>();
+            services = services.AddTransient<ExpressionProcessor, DefaultExpressionProcessor>();
+            services = services.AddTransient<ExpressionProcessorResult>();
 
             services = services.AddTransient<Processor, RawSqlProcessor>();
             services = services.AddTransient<Processor, QueryProcessor>();

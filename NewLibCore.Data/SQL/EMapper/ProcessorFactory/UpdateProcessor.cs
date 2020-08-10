@@ -18,7 +18,7 @@ namespace NewLibCore.Data.SQL.ProcessorFactory
         /// </summary>
         /// <param name="templateBase"></param>
         /// <param name="parserExecutor"></param>
-        public UpdateProcessor(TemplateBase templateBase, ParserExecutor parserExecutor) : base(templateBase, parserExecutor)
+        public UpdateProcessor(TemplateBase templateBase, ExpressionProcessor expressionProcessor) : base(templateBase, expressionProcessor)
         {
         }
 
@@ -33,7 +33,7 @@ namespace NewLibCore.Data.SQL.ProcessorFactory
             }
 
             var (_, aliasName) = instance.GetTableName();
-            var result = _parserExecutor.Parse(new ParseModel
+            var result = _expressionProcessor.Parse(new ParseModel
             {
                 Sql = _templateBase.CreateUpdate(instance),
                 Parameters = instance.SqlPart.Parameters,
