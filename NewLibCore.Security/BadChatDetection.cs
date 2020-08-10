@@ -6,7 +6,7 @@ namespace NewLibCore.Security
     /// <summary>
     /// 过滤危险字符
     /// </summary>
-    public class UnlegalChatDetection
+    public class BadChatDetection
     {
         public static String FilterBadChat(String value)
         {
