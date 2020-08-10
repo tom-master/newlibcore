@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using Microsoft.Extensions.DependencyInjection;
 using NewLibCore.Data.SQL.Component.Cache;
+using NewLibCore.Data.SQL.EMapper.Parser;
 using NewLibCore.Data.SQL.Extension;
 using NewLibCore.Data.SQL.ProcessorFactory;
 using NewLibCore.Data.SQL.Store;

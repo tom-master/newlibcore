@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using NewLibCore.Data.SQL.EMapper.Parser;
 using NewLibCore.Data.SQL.Extension;
 using NewLibCore.Data.SQL.Store;
 using NewLibCore.Data.SQL.Template;

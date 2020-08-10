@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using NewLibCore.Data.SQL.EMapper.Parser;
 using NewLibCore.Data.SQL.Extension;
 using NewLibCore.Data.SQL.Store;
 using NewLibCore.Data.SQL.Template;
@@ -9,67 +10,12 @@ using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL
 {
-
-    internal class ParseModel
-    {
-        internal String Sql { get; set; }
-
-        internal IEnumerable<MapperParameter> Parameters { get; set; }
-
-        internal ExpressionStore ExpressionStore { get; set; }
-
-    }
-
-    /// <summary>
-    /// 将Expression解析为对应的SQL谓词
-    /// </summary>
-    internal abstract class ExpressionProcessor
-    {
-        private readonly ExpressionProcessorResult _expressionProcessorResult;
-
-        internal ExpressionProcessor(ExpressionProcessorResult expressionProcessorResult)
-        {
-            _expressionProcessorResult = expressionProcessorResult;
-        }
-
-        /// <summary>
-        /// 翻译
-        /// </summary>
-        /// <returns></returns>
-        protected abstract ExpressionProcessorResult InnerProcessor(ExpressionProcessorResult parserResult, ExpressionStore expressionStore);
-
-        internal ExpressionProcessorResult Parse(ParseModel parseModel)
-        {
-            Parameter.IfNullOrZero(parseModel);
-            Parameter.IfNullOrZero(parseModel.Sql);
-
-            if (parseModel.Parameters != null)
-            {
-                _expressionProcessorResult.Append(parseModel.Sql, parseModel.Parameters.ToArray());
-            }
-            else
-            {
-                _expressionProcessorResult.Append(parseModel.Sql);
-            }
-
-
-            if (parseModel.ExpressionStore != null)
-            {
-                InnerProcessor(_expressionProcessorResult, parseModel.ExpressionStore);
-            }
-
-            return _expressionProcessorResult;
-        }
-    }
-
     /// <summary>
     /// 将Expression解析为对应的SQL谓词
     /// </summary>
     internal class DefaultExpressionProcessor : ExpressionProcessor
     {
-        private JoinRelation _joinRelation;
         private IReadOnlyList<KeyValuePair<String, String>> _tableAliasMapper;
-        private ExpressionProcessorResult _expressionProcessorResult;
         private readonly Stack<PredicateType> _predicateTypeStack;
         private readonly Stack<String> _parameterNameStack;
         private readonly TemplateBase _templateBase;
@@ -77,7 +23,7 @@ namespace NewLibCore.Data.SQL
         /// 初始化Parser类的新实例
         /// </summary>
         /// <param name="templateBase"></param>
-        public DefaultExpressionProcessor(TemplateBase templateBase, ExpressionProcessorResult parserResult) : base(parserResult)
+        public DefaultExpressionProcessor(TemplateBase templateBase, ExpressionProcessorResult expressionProcessorResult) : base(expressionProcessorResult)
         {
             Parameter.IfNullOrZero(templateBase);
 
@@ -94,18 +40,13 @@ namespace NewLibCore.Data.SQL
         /// </summary>
         /// <param name="expressionStore"></param>
         /// <returns></returns>
-        protected override ExpressionProcessorResult InnerProcessor(ExpressionProcessorResult expressionProcessorResult, ExpressionStore expressionStore)
+        protected override ExpressionProcessorResult InnerProcessor()
         {
-            Parameter.IfNullOrZero(expressionProcessorResult);
-            Parameter.IfNullOrZero(expressionStore);
-
-            _expressionProcessorResult = expressionProcessorResult;
-
             //获取合并后的表别名
-            _tableAliasMapper = expressionStore.MergeAliasMapper();
+            _tableAliasMapper = _expressionStore.MergeAliasMapper();
 
             //循环翻译连接对象
-            foreach (var item in expressionStore.Joins)
+            foreach (var item in _expressionStore.Joins)
             {
                 if (item.AliaNameMapper == null || item.JoinRelation == JoinRelation.NONE)
                 {
@@ -122,29 +63,24 @@ namespace NewLibCore.Data.SQL
                     //获取连接语句的模板 
                     _expressionProcessorResult.Append(_templateBase.CreateJoin(item.JoinRelation, aliasItem.Key, aliasItem.Value.ToLower()));
 
-                    //设置相应的连接类型
-                    _joinRelation = item.JoinRelation;
-
                     //获取连接类型中的存储的表达式对象进行翻译
-                    InternalParser(item.Expression);
+                    InternalParser(item.Expression, item.JoinRelation);
                 }
             }
             _expressionProcessorResult.Append(" WHERE 1=1 ");
             //翻译Where条件对象
-            if (expressionStore.Where != null)
+            if (_expressionStore.Where != null)
             {
-                var lambdaExp = (LambdaExpression)expressionStore.Where.Expression;
+                var lambdaExp = (LambdaExpression)_expressionStore.Where.Expression;
                 //当表达式主体为常量时则直接返回，不做解析
                 if (lambdaExp.Body.NodeType == ExpressionType.Constant)
                 {
                     return _expressionProcessorResult;
                 }
-
-                _joinRelation = JoinRelation.NONE;
                 _expressionProcessorResult.Append(PredicateType.AND.ToString());
 
                 //获取Where类型中的存储的表达式对象进行翻译
-                InternalParser(lambdaExp);
+                InternalParser(lambdaExp,JoinRelation.NONE);
             }
             return _expressionProcessorResult;
         }
@@ -153,7 +89,7 @@ namespace NewLibCore.Data.SQL
         /// 根据表达式构建出相应结果
         /// </summary>
         /// <param name="expression">表达式</param>
-        private void InternalParser(Expression expression)
+        private void InternalParser(Expression expression, JoinRelation joinRelation)
         {
             switch (expression.NodeType)
             {
@@ -163,19 +99,19 @@ namespace NewLibCore.Data.SQL
 
                         if (binaryExp.Left.NodeType != ExpressionType.Constant && binaryExp.Right.NodeType != ExpressionType.Constant)
                         {
-                            InternalParser(binaryExp.Left);
+                            InternalParser(binaryExp.Left, joinRelation);
                             _expressionProcessorResult.Append(PredicateType.AND.ToString());
-                            InternalParser(binaryExp.Right);
+                            InternalParser(binaryExp.Right, joinRelation);
                         }
                         else
                         {
                             if (binaryExp.Left.NodeType != ExpressionType.Constant)
                             {
-                                InternalParser(binaryExp.Left);
+                                InternalParser(binaryExp.Left, joinRelation);
                             }
                             else if (binaryExp.Right.NodeType != ExpressionType.Constant)
                             {
-                                InternalParser(binaryExp.Right);
+                                InternalParser(binaryExp.Right, joinRelation);
                             }
                         }
 
@@ -184,14 +120,14 @@ namespace NewLibCore.Data.SQL
                 case ExpressionType.OrElse:
                     {
                         var binaryExp = (BinaryExpression)expression;
-                        InternalParser(binaryExp.Left);
+                        InternalParser(binaryExp.Left, joinRelation);
                         _expressionProcessorResult.Append(PredicateType.OR.ToString());
-                        InternalParser(binaryExp.Right);
+                        InternalParser(binaryExp.Right, joinRelation);
                         break;
                     }
                 case ExpressionType.Call:
                     {
-                        ParserMethodCall(expression);
+                        ParserMethodCall(expression, joinRelation);
                         break;
                     }
                 case ExpressionType.Constant:
@@ -203,37 +139,37 @@ namespace NewLibCore.Data.SQL
                 case ExpressionType.Equal:
                     {
                         var binaryExp = (BinaryExpression)expression;
-                        CreatePredicate(binaryExp, PredicateType.EQ);
+                        CreatePredicate(binaryExp, PredicateType.EQ, joinRelation);
                         break;
                     }
                 case ExpressionType.GreaterThan:
                     {
                         var binaryExp = (BinaryExpression)expression;
-                        CreatePredicate(binaryExp, PredicateType.GT);
+                        CreatePredicate(binaryExp, PredicateType.GT, joinRelation);
                         break;
                     }
                 case ExpressionType.NotEqual:
                     {
                         var binaryExp = (BinaryExpression)expression;
-                        CreatePredicate(binaryExp, PredicateType.NQ);
+                        CreatePredicate(binaryExp, PredicateType.NQ, joinRelation);
                         break;
                     }
                 case ExpressionType.GreaterThanOrEqual:
                     {
                         var binaryExp = (BinaryExpression)expression;
-                        CreatePredicate(binaryExp, PredicateType.GE);
+                        CreatePredicate(binaryExp, PredicateType.GE, joinRelation);
                         break;
                     }
                 case ExpressionType.LessThan:
                     {
                         var binaryExp = (BinaryExpression)expression;
-                        CreatePredicate(binaryExp, PredicateType.LT);
+                        CreatePredicate(binaryExp, PredicateType.LT, joinRelation);
                         break;
                     }
                 case ExpressionType.LessThanOrEqual:
                     {
                         var binaryExp = (BinaryExpression)expression;
-                        CreatePredicate(binaryExp, PredicateType.LE);
+                        CreatePredicate(binaryExp, PredicateType.LE, joinRelation);
                         break;
                     }
                 case ExpressionType.Lambda:
@@ -246,19 +182,19 @@ namespace NewLibCore.Data.SQL
 
                         if (lamdbaExp.Body is BinaryExpression expression4)
                         {
-                            InternalParser(expression4);
+                            InternalParser(expression4, joinRelation);
                         }
                         else if (lamdbaExp.Body is MemberExpression expression3)
                         {
-                            InternalParser(expression3);
+                            InternalParser(expression3, joinRelation);
                         }
                         else if (lamdbaExp.Body is MethodCallExpression expression2)
                         {
-                            InternalParser(expression2);
+                            InternalParser(expression2, joinRelation);
                         }
                         else if (lamdbaExp.Body is UnaryExpression expression1)
                         {
-                            InternalParser(expression1);
+                            InternalParser(expression1, joinRelation);
                         }
                         break;
                     }
@@ -274,7 +210,7 @@ namespace NewLibCore.Data.SQL
                                     var parameterExp = (ParameterExpression)memberExp.Expression;
                                     var newMember = Expression.MakeMemberAccess(parameterExp, parameterExp.Type.GetMember(memberExp.Member.Name)[0]);
                                     var newExpression = Expression.Equal(newMember, Expression.Constant(true));
-                                    InternalParser(newExpression);
+                                    InternalParser(newExpression, joinRelation);
                                 }
                             }
                             else
@@ -304,13 +240,13 @@ namespace NewLibCore.Data.SQL
                         var memberExpression = (MemberExpression)((UnaryExpression)expression).Operand;
                         var parameterExp = (ParameterExpression)memberExpression.Expression;
                         var newMember = Expression.MakeMemberAccess(parameterExp, parameterExp.Type.GetMember(memberExpression.Member.Name)[0]);
-                        InternalParser(Expression.NotEqual(newMember, Expression.Constant(true)));
+                        InternalParser(Expression.NotEqual(newMember, Expression.Constant(true)), joinRelation);
                         break;
                     }
                 case ExpressionType.Convert:
                     {
                         var exp = ((UnaryExpression)expression).Operand;
-                        InternalParser(exp);
+                        InternalParser(exp, joinRelation);
                         break;
                     }
                 default:
@@ -324,7 +260,7 @@ namespace NewLibCore.Data.SQL
         /// 翻译表达式中的方法调用
         /// </summary>
         /// <param name="expression">表达式</param>
-        private void ParserMethodCall(Expression expression)
+        private void ParserMethodCall(Expression expression, JoinRelation joinRelation)
         {
             Parameter.IfNullOrZero(expression);
             var methodCallExp = (MethodCallExpression)expression;
@@ -376,13 +312,13 @@ namespace NewLibCore.Data.SQL
 
             if (argumentType == typeof(String))
             {
-                InternalParser(obj);
-                InternalParser(argument);
+                InternalParser(obj, joinRelation);
+                InternalParser(argument, joinRelation);
             }
             else if (argumentType.IsCollection())
             {
-                InternalParser(argument);
-                InternalParser(obj);
+                InternalParser(argument, joinRelation);
+                InternalParser(obj, joinRelation);
             }
         }
 
@@ -391,11 +327,11 @@ namespace NewLibCore.Data.SQL
         /// </summary>
         /// <param name="binary">表达式</param>
         /// <param name="relationType">关系类型</param>
-        private void CreatePredicate(BinaryExpression binary, PredicateType predicateType)
+        private void CreatePredicate(BinaryExpression binary, PredicateType predicateType, JoinRelation joinRelation)
         {
             Parameter.IfNullOrZero(binary);
             var binaryExp = binary;
-            if (_joinRelation != JoinRelation.NONE)
+            if (joinRelation != JoinRelation.NONE)
             {
                 GetJoin(binaryExp, predicateType);
             }
@@ -406,13 +342,13 @@ namespace NewLibCore.Data.SQL
                 //当表达式的左边和右边同时不为常量或者只有左边为常量的话，则从左到右解析表达式，否则从右到左解析表达式
                 if ((binary.Left.NodeType != ExpressionType.Constant && binary.Right.NodeType != ExpressionType.Constant) || binary.Left.NodeType != ExpressionType.Constant)
                 {
-                    InternalParser(binaryExp.Left);
-                    InternalParser(binaryExp.Right);
+                    InternalParser(binaryExp.Left, joinRelation);
+                    InternalParser(binaryExp.Right, joinRelation);
                 }
                 else
                 {
-                    InternalParser(binaryExp.Right);
-                    InternalParser(binaryExp.Left);
+                    InternalParser(binaryExp.Right, joinRelation);
+                    InternalParser(binaryExp.Left, joinRelation);
                 }
             }
         }
