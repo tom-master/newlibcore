@@ -8,7 +8,7 @@ namespace NewLibCore.Data.SQL.Validate
     /// 标记被修饰的类为数据库中的一个表
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-    public class TableNameAttribute : Attribute
+    public class TableNameAttribute : PropertyValidateAttribute
     {
         /// <summary>
         /// 表名

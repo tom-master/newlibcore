@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using NewLibCore.Data.SQL.EMapper;
 using NewLibCore.Data.SQL.EMapper.Parser;
 using NewLibCore.Data.SQL.Extension;
 using NewLibCore.Data.SQL.Store;
@@ -28,7 +29,7 @@ namespace NewLibCore.Data.SQL.ProcessorFactory
             var instance = store.Model;
             instance.SetUpdateTime();
 
-            if (EntityMapper.EnableModelValidate)
+            if (EntityMapperConfig.EnableModelValidate)
             {
                 instance.CheckPropertyValue();
             }

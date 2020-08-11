@@ -51,12 +51,12 @@ namespace NewLibCore
         public static String GetDescription(this Enum e)
         {
             Parameter.IfNullOrZero(e);
-            var attrs = e.GetType().GetField(e.ToString()).GetCustomAttributes(typeof(DescriptionAttribute), false);
+            var attrs = e.GetType().GetField(e.ToString()).GetAttributes<DescriptionAttribute>( false);
             if (attrs.Length == 0)
             {
                 throw new Exception("特性上没有用DescriptionAttribute修饰,因此无法获取描述");
             }
-            return String.Join(",", attrs.Select(s => ((DescriptionAttribute)s).Description));
+            return String.Join(",", attrs.Select(s => s.Description));
         }
     }
 }

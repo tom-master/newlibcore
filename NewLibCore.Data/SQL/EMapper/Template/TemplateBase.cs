@@ -101,7 +101,7 @@ namespace NewLibCore.Data.SQL.Template
 
                 var identityProperty = typeof(EntityBase)
                  .GetProperties(BindingFlags.Instance | BindingFlags.Public)
-                 .ToList().FirstOrDefault(w => w.GetCustomAttributes<PrimaryKeyAttribute>().Any());
+                 .ToList().FirstOrDefault(w => w.GetAttributes<PrimaryKeyAttribute>().Any());
                 if (identityProperty == null)
                 {
                     throw new ArgumentNullException($@"未找到使用{nameof(PrimaryKeyAttribute)}修饰的主键");

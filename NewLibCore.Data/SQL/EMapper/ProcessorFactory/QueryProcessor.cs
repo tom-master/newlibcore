@@ -7,6 +7,7 @@ using NewLibCore.Data.SQL.EMapper.Parser;
 using NewLibCore.Data.SQL.Extension;
 using NewLibCore.Data.SQL.Store;
 using NewLibCore.Data.SQL.Template;
+using NewLibCore.Data.SQL.Validate;
 using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL.ProcessorFactory
@@ -119,8 +120,10 @@ namespace NewLibCore.Data.SQL.ProcessorFactory
             {
                 var types = store.MergeParameterTypes();
                 var tableNames = types.Select(s => new KeyValuePair<String, String>(s.Name, s.GetTableName().AliasName)).ToList();
-                anonymousObjFields = types.SelectMany(s => s.GetProperties(BindingFlags.Instance | BindingFlags.Public)
-                .Select(s1 => $@"{tableNames.FirstOrDefault(w => w.Key == s.Name).Value}.{s1.Name}")).Distinct().ToList();
+                anonymousObjFields = types
+                    .SelectMany(s => s.GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                    .Where(w => w.GetAttributes<PropertyValidateAttribute>().Any())
+                  .Select(s1 => $@"{tableNames.FirstOrDefault(w => w.Key == s.Name).Value}.{s1.Name}")).Distinct().ToList();
             }
 
             return String.Join(",", anonymousObjFields);

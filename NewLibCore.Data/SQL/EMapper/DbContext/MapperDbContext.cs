@@ -2,7 +2,7 @@
 using System.Data;
 using System.Data.Common;
 using System.Linq;
-using NewLibCore.Data.SQL.Component.Cache;
+using NewLibCore.Data.SQL.EMapper;
 using NewLibCore.Data.SQL.Extension;
 using NewLibCore.Data.SQL.Template;
 using NewLibCore.Validate;
@@ -20,19 +20,16 @@ namespace NewLibCore.Data.SQL
 
         private DbTransaction _dataTransaction;
 
-        private readonly TemplateBase _templateBase;
-
-        private readonly QueryCacheBase _queryCacheBase;
+        private readonly TemplateBase _templateBase; 
 
 
         /// <summary>
         /// 初始化MapperDbContext类的新实例
         /// </summary>
-        public MapperDbContext(TemplateBase templateBase, QueryCacheBase queryCacheBase)
+        public MapperDbContext(TemplateBase templateBase)
         {
             _templateBase = templateBase;
             _connection = templateBase.CreateDbConnection();
-            _queryCacheBase = queryCacheBase;
         }
 
         protected internal override void Commit()
@@ -61,16 +58,16 @@ namespace NewLibCore.Data.SQL
                 _connection.Open();
 
                 //根据不同的sql server数据库引擎来选择需要执行的分页方法
-                if (EntityMapper.MapperType == MapperType.MSSQL && EntityMapper.MsSqlPaginationVersion == MsSqlPaginationVersion.NONE)
+                if (EntityMapperConfig.MapperType == MapperType.MSSQL && EntityMapperConfig.MsSqlPaginationVersion == MsSqlPaginationVersion.NONE)
                 {
                     var version = Int32.Parse(_connection.ServerVersion.Substring(0, _connection.ServerVersion.IndexOf(".")));
                     if (version <= 11)
                     {
-                        EntityMapper.MsSqlPaginationVersion = MsSqlPaginationVersion.LESSTHEN2012;
+                        EntityMapperConfig.MsSqlPaginationVersion = MsSqlPaginationVersion.LESSTHEN2012;
                     }
                     else
                     {
-                        EntityMapper.MsSqlPaginationVersion = MsSqlPaginationVersion.GREATERTHAN2012;
+                        EntityMapperConfig.MsSqlPaginationVersion = MsSqlPaginationVersion.GREATERTHAN2012;
                     }
                 }
 
@@ -81,7 +78,7 @@ namespace NewLibCore.Data.SQL
         {
             if (_dataTransaction == null)
             {
-                _dataTransaction = _connection.BeginTransaction(EntityMapper.TransactionLevel);
+                _dataTransaction = _connection.BeginTransaction(EntityMapperConfig.TransactionLevel);
                 RunDiagnosis.Info("开启事务");
             }
             return _dataTransaction;
@@ -129,7 +126,7 @@ namespace NewLibCore.Data.SQL
                 }
                 RunDiagnosis.Info($@"SQL语句:{sql} 占位符与参数:{(parameters == null || !parameters.Any() ? "" : String.Join($@"{Environment.NewLine}", parameters.Select(s => $@"{s.Key}----{s.Value}")))}");
 
-                var executeResult = new ExecuteResult(_queryCacheBase);
+                var executeResult = new ExecuteResult();
                 if (executeType == ExecuteType.SELECT)
                 {
                     using (var dr = cmd.ExecuteReader())

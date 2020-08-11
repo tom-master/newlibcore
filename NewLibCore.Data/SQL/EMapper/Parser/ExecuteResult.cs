@@ -14,15 +14,6 @@ namespace NewLibCore.Data.SQL
     public sealed class ExecuteResult
     {
         private Object _result;
-        // private readonly QueryCacheBase _queryCacheBase;
-
-        /// <summary>
-        /// 初始化一个RawExecuteResult类的实例
-        /// </summary>
-        internal ExecuteResult(QueryCacheBase _)
-        {
-            // _queryCacheBase = queryCacheBase;
-        }
 
         /// <summary>
         /// 保存语句执行后的原始结果

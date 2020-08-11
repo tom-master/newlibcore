@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.Common;
 using System.Data.SqlClient;
+using NewLibCore.Data.SQL.EMapper;
 using NewLibCore.Data.SQL.Extension;
 using NewLibCore.Data.SQL.Store;
 using NewLibCore.Validate;
@@ -59,7 +60,7 @@ namespace NewLibCore.Data.SQL.Template
             Parameter.IfNullOrZero(rawSql);
 
             String sql;
-            if (EntityMapper.MsSqlPaginationVersion == MsSqlPaginationVersion.GREATERTHAN2012)
+            if (EntityMapperConfig.MsSqlPaginationVersion == MsSqlPaginationVersion.GREATERTHAN2012)
             {
                 sql = $@" {rawSql} {orderBy} OFFSET ({pagination.Index * pagination.Size}) ROWS FETCH NEXT {pagination.Size} ROWS ONLY ;";
             }
@@ -78,7 +79,7 @@ namespace NewLibCore.Data.SQL.Template
 
         internal override DbConnection CreateDbConnection()
         {
-            return new SqlConnection(Host.GetHostVar(EntityMapper.ConnectionStringName));
+            return new SqlConnection(Host.GetHostVar(EntityMapperConfig.ConnectionStringName));
         }
     }
 }

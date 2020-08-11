@@ -1,12 +1,11 @@
 using NewLibCore.Data.SQL.EMapper.Parser;
 using NewLibCore.Data.SQL.Store;
-using NewLibCore.Data.SQL.Template;
 
 namespace NewLibCore.Data.SQL.ProcessorFactory
 {
     internal class RawSqlProcessor : Processor
     {
-        public RawSqlProcessor(TemplateBase templateBase, ExpressionProcessor expressionProcessor) : base(templateBase, expressionProcessor)
+        public RawSqlProcessor(ExpressionProcessor expressionProcessor) : base(null, expressionProcessor)
         {
         }
 

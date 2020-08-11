@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.Common;
 using MySql.Data.MySqlClient;
+using NewLibCore.Data.SQL.EMapper;
 using NewLibCore.Data.SQL.Extension;
 using NewLibCore.Data.SQL.Store;
 using NewLibCore.Validate;
@@ -56,7 +57,7 @@ namespace NewLibCore.Data.SQL.Template
 
         internal override DbConnection CreateDbConnection()
         {
-            return new MySqlConnection(Host.GetHostVar(EntityMapper.ConnectionStringName));
+            return new MySqlConnection(Host.GetHostVar(EntityMapperConfig.ConnectionStringName));
         }
 
         internal override String Identity

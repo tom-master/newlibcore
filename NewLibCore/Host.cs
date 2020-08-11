@@ -8,14 +8,12 @@ namespace NewLibCore
 {
     public static class Host
     {
-        private static readonly IConfigurationRoot _configRoot;
 
-        static Host()
+        private static IConfigurationRoot ReadApollo()
         {
             var builder = new ConfigurationBuilder();
             var r = builder.AddJsonFile($"{Environment.CurrentDirectory}/appsettings.json").Build();
-            builder.AddApollo(r.GetSection("apollo")).AddDefault();
-            _configRoot = builder.Build();
+            return builder.AddApollo(r.GetSection("apollo")).AddDefault().Build();
         }
 
         /// <summary>
@@ -24,7 +22,7 @@ namespace NewLibCore
         /// <returns></returns>
         public static String GetHostVar(String varName)
         {
-            Parameter.IfNullOrZero(varName);  
+            Parameter.IfNullOrZero(varName);
             var v1 = Environment.GetEnvironmentVariable(varName, EnvironmentVariableTarget.Machine);
             if (!String.IsNullOrEmpty(v1))
             {
@@ -55,7 +53,7 @@ namespace NewLibCore
                 return v1;
             }
 
-            v1 = _configRoot[varName];
+            v1 = ReadApollo()[varName];
             if (!String.IsNullOrEmpty(v1))
             {
                 return v1;

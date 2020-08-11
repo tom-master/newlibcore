@@ -1,4 +1,5 @@
-﻿using NewLibCore.Data.SQL.EMapper.Parser;
+﻿using NewLibCore.Data.SQL.EMapper;
+using NewLibCore.Data.SQL.EMapper.Parser;
 using NewLibCore.Data.SQL.Store;
 using NewLibCore.Data.SQL.Template;
 using NewLibCore.Validate;
@@ -25,7 +26,7 @@ namespace NewLibCore.Data.SQL.ProcessorFactory
 
             var instance = store.Model;
             instance.OnChanged();
-            if (EntityMapper.EnableModelValidate)
+            if (EntityMapperConfig.EnableModelValidate)
             {
                 instance.CheckPropertyValue();
             }

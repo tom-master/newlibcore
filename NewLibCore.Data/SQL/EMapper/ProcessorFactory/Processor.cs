@@ -16,7 +16,7 @@ namespace NewLibCore.Data.SQL.ProcessorFactory
 
         protected Processor(TemplateBase templateBase, ExpressionProcessor expressionProcessor)
         {
-            Parameter.IfNullOrZero(templateBase);
+            //Parameter.IfNullOrZero(templateBase);
             Parameter.IfNullOrZero(expressionProcessor);
 
             _templateBase = templateBase;
