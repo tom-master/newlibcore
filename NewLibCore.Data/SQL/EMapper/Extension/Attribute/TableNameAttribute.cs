@@ -29,17 +29,14 @@ namespace NewLibCore.Data.SQL.Validate
         {
             Parameter.IfNullOrZero(name);
 
-            UnlegalChatDetection.FilterBadChat(name);
-            TableName = name;
-
+            TableName = BadChatDetection.FilterBadChat(name);
             if (String.IsNullOrEmpty(aliasName))
             {
                 AliasName = name;
             }
             else
             {
-                UnlegalChatDetection.FilterBadChat(aliasName);
-                AliasName = aliasName;
+                AliasName = BadChatDetection.FilterBadChat(aliasName);
             }
         }
     }
