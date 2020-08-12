@@ -70,7 +70,7 @@ namespace NewLibCore.Data.SQL
             {
                 if (_filterBadContent)
                 {
-                    return UnlegalChatDetection.FilterBadChat(obj.ToString());
+                    return BadChatDetection.FilterBadChat(obj.ToString());
                 }
                 return obj.ToString();
             }
