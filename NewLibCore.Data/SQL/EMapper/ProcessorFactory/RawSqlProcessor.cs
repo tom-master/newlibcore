@@ -9,9 +9,9 @@ namespace NewLibCore.Data.SQL.ProcessorFactory
         {
         }
 
-        protected override ExecuteResult Execute(ExpressionStore store)
+        protected override ResultConvert Execute(ExpressionStore store)
         {
-            var result = _expressionProcessor.Parse(new ParseModel
+            var result = _expressionProcessor.Processor(new ParseModel
             {
                 Sql = store.RawSql.Sql,
                 Parameters = store.RawSql.Parameters

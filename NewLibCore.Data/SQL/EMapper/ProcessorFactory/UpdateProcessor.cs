@@ -24,7 +24,7 @@ namespace NewLibCore.Data.SQL.ProcessorFactory
         {
         }
 
-        protected override ExecuteResult Execute(ExpressionStore store)
+        protected override ResultConvert Execute(ExpressionStore store)
         {
             var instance = store.Model;
             instance.SetUpdateTime();
@@ -35,7 +35,7 @@ namespace NewLibCore.Data.SQL.ProcessorFactory
             }
 
             var (_, aliasName) = instance.GetTableName();
-            var result = _expressionProcessor.Parse(new ParseModel
+            var result = _expressionProcessor.Processor(new ParseModel
             {
                 Sql = _templateBase.CreateUpdate(instance),
                 Parameters = instance.SqlPart.Parameters,

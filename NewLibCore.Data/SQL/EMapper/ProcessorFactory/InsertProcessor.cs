@@ -20,7 +20,7 @@ namespace NewLibCore.Data.SQL.ProcessorFactory
         {
         }
 
-        protected override ExecuteResult Execute(ExpressionStore store)
+        protected override ResultConvert Execute(ExpressionStore store)
         {
             Parameter.IfNullOrZero(store);
 
@@ -30,7 +30,7 @@ namespace NewLibCore.Data.SQL.ProcessorFactory
             {
                 instance.CheckPropertyValue();
             }
-            var result = _expressionProcessor.Parse(new ParseModel
+            var result = _expressionProcessor.Processor(new ParseModel
             {
                 Sql = _templateBase.CreateInsert(instance),
                 Parameters = instance.SqlPart.Parameters

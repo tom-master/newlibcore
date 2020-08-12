@@ -16,7 +16,7 @@ namespace NewLibCore.Data.SQL
     /// </summary>
     public sealed class EntityMapper : IDisposable
     {
-        
+
         private EntityMapper()
         {
         }
@@ -27,6 +27,7 @@ namespace NewLibCore.Data.SQL
         /// <returns></returns>
         public static EntityMapper CreateMapper()
         {
+            EntityMapperConfig.InitDependency();
             return new EntityMapper();
         }
 
@@ -45,7 +46,7 @@ namespace NewLibCore.Data.SQL
                 var store = new ExpressionStore();
                 store.AddModel(model);
 
-                var processor = FindProcessor(EntityMapperConfig.Provider.GetServices<Processor>(), nameof(InsertProcessor));
+                var processor = FindProcessor(nameof(InsertProcessor));
                 model.Id = processor.Process(store).GetModifyRowCount();
                 return model;
             });
@@ -68,7 +69,7 @@ namespace NewLibCore.Data.SQL
                 var store = new ExpressionStore();
                 store.AddWhere(expression);
                 store.AddModel(model);
-                var processor = FindProcessor(EntityMapperConfig.Provider.GetServices<Processor>(), nameof(UpdateProcessor));
+                var processor = FindProcessor(nameof(UpdateProcessor));
                 return processor.Process(store).GetModifyRowCount() > 0;
             });
         }
@@ -83,7 +84,7 @@ namespace NewLibCore.Data.SQL
             var expressionStore = new ExpressionStore();
             expressionStore.AddFrom<TModel>();
 
-            var processor = FindProcessor(EntityMapperConfig.Provider.GetServices<Processor>(), nameof(QueryProcessor));
+            var processor = FindProcessor(nameof(QueryProcessor));
             return new QueryWrapper<TModel>(expressionStore, processor);
         }
 
@@ -94,7 +95,7 @@ namespace NewLibCore.Data.SQL
         /// <param name="parameters">实体参数</param>
         /// <typeparam name="TModel"></typeparam>
         /// <returns></returns>
-        public ExecuteResult SqlQuery(String sql, params MapperParameter[] parameters)
+        public ResultConvert SqlQuery(String sql, params MapperParameter[] parameters)
         {
             Parameter.IfNullOrZero(sql);
 
@@ -102,7 +103,7 @@ namespace NewLibCore.Data.SQL
             {
                 var store = new ExpressionStore();
                 store.AddDirectSql(sql, parameters);
-                var processor = FindProcessor(EntityMapperConfig.Provider.GetServices<Processor>(), nameof(RawSqlProcessor));
+                var processor = FindProcessor(nameof(RawSqlProcessor));
                 return processor.Process(store);
             });
         }
@@ -130,11 +131,10 @@ namespace NewLibCore.Data.SQL
             (EntityMapperConfig.Provider as ServiceProvider).Dispose();
         }
 
-        private Processor FindProcessor(IEnumerable<Processor> source, String target)
+        private Processor FindProcessor(String target)
         {
-            Parameter.IfNullOrZero(source);
             Parameter.IfNullOrZero(target);
-            var result = source.FirstOrDefault(w => w.CurrentId == target);
+            var result = EntityMapperConfig.Provider.GetServices<Processor>().FirstOrDefault(w => w.CurrentId == target);
             if (result != null)
             {
                 return result;

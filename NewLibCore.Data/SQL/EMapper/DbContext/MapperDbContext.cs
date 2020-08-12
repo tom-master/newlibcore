@@ -108,7 +108,7 @@ namespace NewLibCore.Data.SQL
             }
         }
          
-        protected internal override ExecuteResult RawExecute(ExecuteType executeType,String sql, params MapperParameter[] parameters)
+        protected internal override ResultConvert RawExecute(ExecuteType executeType,String sql, params MapperParameter[] parameters)
         {
             Parameter.IfNullOrZero(sql);
             OpenConnection();
@@ -126,7 +126,7 @@ namespace NewLibCore.Data.SQL
                 }
                 RunDiagnosis.Info($@"SQL语句:{sql} 占位符与参数:{(parameters == null || !parameters.Any() ? "" : String.Join($@"{Environment.NewLine}", parameters.Select(s => $@"{s.Key}----{s.Value}")))}");
 
-                var executeResult = new ExecuteResult();
+                var executeResult = new ResultConvert();
                 if (executeType == ExecuteType.SELECT)
                 {
                     using (var dr = cmd.ExecuteReader())

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using NewLibCore.Data.SQL.Component.Cache;
 using NewLibCore.Data.SQL.DataConvert;
 using NewLibCore.Validate;
 
@@ -11,7 +10,7 @@ namespace NewLibCore.Data.SQL
     /// <summary>
     /// sql语句执行后的结果
     /// </summary>
-    public sealed class ExecuteResult
+    public sealed class SqlExecuteResultConvert
     {
         private Object _result;
 

@@ -3,18 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using NewLibCore.Data.SQL.Component.Cache;
 using NewLibCore.Validate;
 
 namespace NewLibCore.Data.SQL
 {
-
     /// <summary>
     /// 执行Expression翻译后的sql语句
     /// </summary>
-    internal sealed class ExpressionProcessorResult
+    internal sealed class ExpressionProcessorResult : IDisposable
     {
-        private readonly StringBuilder _internalSql;
+        private readonly StringBuilder _innerSql;
 
         private readonly IList<MapperParameter> _parameters;
 
@@ -24,26 +22,14 @@ namespace NewLibCore.Data.SQL
         /// 初始化一个ResultExecutor类的实例
         /// </summary>
         /// <param name="mapperDbContextBase"></param>
-        /// <param name="queryCacheBase"></param>
         public ExpressionProcessorResult(MapperDbContextBase mapperDbContextBase)
         {
             Parameter.IfNullOrZero(mapperDbContextBase);
 
-            _internalSql = new StringBuilder();
+            _innerSql = new StringBuilder();
             _parameters = new List<MapperParameter>();
 
             _mapperDbContextBase = mapperDbContextBase;
-        }
-
-
-        /// <summary>
-        /// 追加一个sql语句
-        /// </summary>
-        /// <param name="sql"></param>
-        internal void Append(String sql)
-        {
-            Parameter.IfNullOrZero(sql);
-            _internalSql.Append($@" {sql} ");
         }
 
         /// <summary>
@@ -62,7 +48,7 @@ namespace NewLibCore.Data.SQL
 
         internal void Append(String sql, params MapperParameter[] parameters)
         {
-            Append(sql);
+            _innerSql.Append($@" {sql} ");
             Append(parameters);
         }
 
@@ -70,7 +56,7 @@ namespace NewLibCore.Data.SQL
         /// 执行表达式翻译出的sql语句
         /// </summary>
         /// <returns></returns>
-        internal ExecuteResult Execute()
+        internal ResultConvert Execute()
         {
             var sql = ToString();
             var executeType = GetExecuteType(sql);
@@ -91,40 +77,39 @@ namespace NewLibCore.Data.SQL
         }
 
         /// <summary>
-        /// 清空上次使用后留下的语句
-        /// </summary>
-        internal void ClearSql()
-        {
-            _internalSql.Clear();
-        }
-
-        /// <summary>
-        /// 清空上次使用后留下的参数
-        /// </summary>
-        internal void ClearParameter()
-        {
-            _parameters.Clear();
-        }
-
-
-        /// <summary>
         /// 返回存储的sql语句
         /// </summary>
         /// <returns></returns>
         public override String ToString()
         {
-            var sql = _internalSql.ToString();
+            var sql = _innerSql.ToString();
             Parameter.IfNullOrZero(sql);
 
             if (sql[0] != ' ')
             {
                 return sql;
             }
-            _internalSql.Clear();
+            _innerSql.Clear();
 
             sql = Regex.Replace(sql, "\\s{2,}", " ").Trim();
-            _internalSql.Append(sql);
+            _innerSql.Append(sql);
             return sql;
+        }
+
+        public void ClearSql()
+        {
+            _innerSql.Clear();
+        }
+
+        public void ClearParameter() 
+        {
+            _parameters.Clear();
+        }
+
+        public void Dispose()
+        {
+            ClearSql();
+            ClearParameter();
         }
     }
 }

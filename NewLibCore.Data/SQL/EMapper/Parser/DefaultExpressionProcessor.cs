@@ -4,7 +4,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using NewLibCore.Data.SQL.EMapper.Parser;
 using NewLibCore.Data.SQL.Extension;
-using NewLibCore.Data.SQL.Store;
 using NewLibCore.Data.SQL.Template;
 using NewLibCore.Validate;
 
@@ -15,15 +14,20 @@ namespace NewLibCore.Data.SQL
     /// </summary>
     internal class DefaultExpressionProcessor : ExpressionProcessor
     {
-        private IReadOnlyList<KeyValuePair<String, String>> _tableAliasMapper;
         private readonly Stack<PredicateType> _predicateTypeStack;
+
         private readonly Stack<String> _parameterNameStack;
+
         private readonly TemplateBase _templateBase;
+
+        private IReadOnlyList<KeyValuePair<String, String>> _tableAliasMapper;
+
         /// <summary>
         /// 初始化Parser类的新实例
         /// </summary>
         /// <param name="templateBase"></param>
-        public DefaultExpressionProcessor(TemplateBase templateBase, ExpressionProcessorResult expressionProcessorResult) : base(expressionProcessorResult)
+        public DefaultExpressionProcessor(TemplateBase templateBase, ExpressionProcessorResult expressionProcessorResult)
+            : base(expressionProcessorResult)
         {
             Parameter.IfNullOrZero(templateBase);
 

@@ -16,6 +16,7 @@ namespace NewLibCore.Data.SQL.EMapper.Parser
 
         internal ExpressionProcessor(ExpressionProcessorResult expressionProcessorResult)
         {
+            Parameter.IfNullOrZero(expressionProcessorResult);
             _expressionProcessorResult = expressionProcessorResult;
         }
 
@@ -25,11 +26,11 @@ namespace NewLibCore.Data.SQL.EMapper.Parser
         /// <returns></returns>
         protected abstract ExpressionProcessorResult InnerProcessor();
 
-        internal ExpressionProcessorResult Parse(ParseModel parseModel)
+        internal ExpressionProcessorResult Processor(ParseModel parseModel)
         {
             Parameter.IfNullOrZero(parseModel);
             Parameter.IfNullOrZero(parseModel.Sql);
-
+            _expressionProcessorResult.Dispose();
             if (parseModel.Parameters != null)
             {
                 _expressionProcessorResult.Append(parseModel.Sql, parseModel.Parameters.ToArray());

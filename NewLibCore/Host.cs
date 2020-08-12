@@ -13,7 +13,8 @@ namespace NewLibCore
         {
             var builder = new ConfigurationBuilder();
             var r = builder.AddJsonFile($"{Environment.CurrentDirectory}/appsettings.json").Build();
-            return builder.AddApollo(r.GetSection("apollo")).AddDefault().Build();
+            //return builder.AddApollo(r.GetSection("apollo")).AddDefault().Build();
+            return builder.AddConfiguration(r.GetSection("newcrm")).Build();
         }
 
         /// <summary>

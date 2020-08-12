@@ -24,11 +24,12 @@ namespace NewLibCore.UnitTest
             //}
             try
             {
-                for (int i = 0; i < 8; i++)
+                for (int i = 0; i < Environment.ProcessorCount; i++)
                 {
                     using (var mapper = EntityMapper.CreateMapper())
                     {
-                        var result = mapper.Query<User>().Where(w => w.Id == 4).ToList();
+                        mapper.Query<User>().Where(w => w.Id == 4).ToList();
+                        mapper.Query<User>().Where(w => w.Id == 4).ToList();
                         var r = 0;
                     }
                 }

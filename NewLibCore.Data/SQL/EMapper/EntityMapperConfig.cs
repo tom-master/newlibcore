@@ -57,13 +57,12 @@ namespace NewLibCore.Data.SQL.EMapper
             UseMySql();
             SetTransactionLevel(IsolationLevel.Unspecified);
             EnableModelValidate = true;
-            InitDependency();
         }
 
         /// <summary>
         /// 初始化依赖注入
         /// </summary>
-        private static void InitDependency()
+        internal static void InitDependency()
         {
             IServiceCollection services = new ServiceCollection();
 
@@ -81,25 +80,21 @@ namespace NewLibCore.Data.SQL.EMapper
                 services = services.AddTransient<TemplateBase, MySqlTemplate>();
             }
 
-            services = services.AddTransient<MapperDbContextBase, MapperDbContext>();
+            services = services.AddScoped<MapperDbContextBase, MapperDbContext>();
 
             #endregion
 
             #region singleton
 
             RunDiagnosis.SetLoggerInstance(_logger ?? new DefaultLogger());
-            #endregion
 
-            #region transient
+            services = services.AddScoped<ExpressionProcessor, DefaultExpressionProcessor>();
+            services = services.AddScoped<ExpressionProcessorResult>();
 
-            services = services.AddTransient<ExpressionProcessor, DefaultExpressionProcessor>();
-            services = services.AddTransient<ExpressionProcessorResult>();
-
-            services = services.AddTransient<Processor, RawSqlProcessor>();
-            services = services.AddTransient<Processor, QueryProcessor>();
-            services = services.AddTransient<Processor, UpdateProcessor>();
-            services = services.AddTransient<Processor, InsertProcessor>();
-
+            services = services.AddScoped<Processor, RawSqlProcessor>();
+            services = services.AddScoped<Processor, QueryProcessor>();
+            services = services.AddScoped<Processor, UpdateProcessor>();
+            services = services.AddScoped<Processor, InsertProcessor>();
             #endregion
 
             Provider = services.BuildServiceProvider();

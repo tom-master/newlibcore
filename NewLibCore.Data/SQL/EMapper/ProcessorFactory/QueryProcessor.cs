@@ -26,7 +26,7 @@ namespace NewLibCore.Data.SQL.ProcessorFactory
         /// 执行查询操作的翻译
         /// </summary>
         /// <returns></returns>
-        protected override ExecuteResult Execute(ExpressionStore store)
+        protected override ResultConvert Execute(ExpressionStore store)
         {
             Parameter.IfNullOrZero(store);
             if (!store.From.AliaNameMapper.Any())
@@ -35,7 +35,7 @@ namespace NewLibCore.Data.SQL.ProcessorFactory
             }
 
             var mainTable = store.From.AliaNameMapper[0];
-            var result = _expressionProcessor.Parse(new ParseModel
+            var result = _expressionProcessor.Processor(new ParseModel
             {
                 Sql = _templateBase.CreateSelect(ExtractSelectFields(store), mainTable.Key, mainTable.Value),
                 ExpressionStore = store
