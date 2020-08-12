@@ -49,7 +49,7 @@ namespace NewLibCore.Data.SQL
         /// <param name="parameters">参数</param>
         /// <param name="commandType"></param>
         /// <returns></returns>
-        protected internal abstract ResultConvert RawExecute(ExecuteType executeType,String sql, params MapperParameter[] parameters);
+        protected internal abstract SqlExecuteResultConvert RawExecute(ExecuteType executeType,String sql, params MapperParameter[] parameters);
 
         public void Dispose()
         {

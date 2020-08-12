@@ -56,7 +56,7 @@ namespace NewLibCore.Data.SQL
         /// 执行表达式翻译出的sql语句
         /// </summary>
         /// <returns></returns>
-        internal ResultConvert Execute()
+        internal SqlExecuteResultConvert Execute()
         {
             var sql = ToString();
             var executeType = GetExecuteType(sql);

@@ -1,20 +1,15 @@
-using System;
+﻿using System;
 using System.Text.Json;
-using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NewLibCore.Data.SQL;
 using NewLibCore.Data.SQL.EMapper;
 using NewLibCore.UnitTest.Entitys.Agent;
 
-namespace NewLibCore.UnitTest
+namespace ConsoleApp1
 {
-    [TestClass]
-    public class UnitTest1
+    class Program
     {
-        private static readonly Object _obj = new object();
-        [TestMethod]
-        public void TestMethod1()
+        static void Main(string[] args)
         {
             EntityMapperConfig.InitDefaultSetting();
             EntityMapperConfig.ConnectionStringName = "newcrm";
@@ -26,24 +21,18 @@ namespace NewLibCore.UnitTest
             //}
             try
             {
-                Thread[] threads = new Thread[Environment.ProcessorCount];
                 for (int i = 0; i < Environment.ProcessorCount; i++)
                 {
-                    threads[i] = new Thread(() =>
+                    var r = Task.Run(() =>
                     {
                         using (var mapper = EntityMapper.CreateMapper())
                         {
                             var result = mapper.Query<User>().Where(w => w.Id == 4).ToList();
-                            Console.WriteLine(JsonSerializer.Serialize(result));
+                            return result;
                         }
                     });
+                    Console.WriteLine(JsonSerializer.Serialize(r));
                 }
-
-                foreach (var item in threads)
-                {
-                    item.Start();
-                }
-
             }
             catch (Exception ex)
             {

@@ -95,7 +95,7 @@ namespace NewLibCore.Data.SQL
         /// <param name="parameters">实体参数</param>
         /// <typeparam name="TModel"></typeparam>
         /// <returns></returns>
-        public ResultConvert SqlQuery(String sql, params MapperParameter[] parameters)
+        public SqlExecuteResultConvert SqlQuery(String sql, params MapperParameter[] parameters)
         {
             Parameter.IfNullOrZero(sql);
 

@@ -16,7 +16,6 @@ namespace NewLibCore.Data.SQL.EMapper.Parser
 
         internal ExpressionProcessor(ExpressionProcessorResult expressionProcessorResult)
         {
-            Parameter.IfNullOrZero(expressionProcessorResult);
             _expressionProcessorResult = expressionProcessorResult;
         }
 

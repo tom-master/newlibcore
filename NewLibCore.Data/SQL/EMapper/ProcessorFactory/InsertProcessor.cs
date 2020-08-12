@@ -20,7 +20,7 @@ namespace NewLibCore.Data.SQL.ProcessorFactory
         {
         }
 
-        protected override ResultConvert Execute(ExpressionStore store)
+        protected override SqlExecuteResultConvert Execute(ExpressionStore store)
         {
             Parameter.IfNullOrZero(store);
 

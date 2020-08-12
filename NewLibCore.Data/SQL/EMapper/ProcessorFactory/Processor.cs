@@ -23,12 +23,12 @@ namespace NewLibCore.Data.SQL.ProcessorFactory
             _expressionProcessor = expressionProcessor;
         }
 
-        internal ResultConvert Process(ExpressionStore store)
+        internal SqlExecuteResultConvert Process(ExpressionStore store)
         {
             Parameter.IfNullOrZero(store);
             return Execute(store);
         }
 
-        protected abstract ResultConvert Execute(ExpressionStore store);
+        protected abstract SqlExecuteResultConvert Execute(ExpressionStore store);
     }
 }

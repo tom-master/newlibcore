@@ -26,7 +26,7 @@ namespace NewLibCore.Data.SQL.ProcessorFactory
         /// 执行查询操作的翻译
         /// </summary>
         /// <returns></returns>
-        protected override ResultConvert Execute(ExpressionStore store)
+        protected override SqlExecuteResultConvert Execute(ExpressionStore store)
         {
             Parameter.IfNullOrZero(store);
             if (!store.From.AliaNameMapper.Any())
