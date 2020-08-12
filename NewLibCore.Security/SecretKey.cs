@@ -6,9 +6,8 @@ using NewLibCore.Validate;
 
 namespace NewLibCore.Security
 {
-    public class SensitiveDataSafetyProvider
+    public class SecretKey
     {
-
         public static String Encrypt(String source, String saltValue)
         {
             Parameter.IfNullOrZero(source);
