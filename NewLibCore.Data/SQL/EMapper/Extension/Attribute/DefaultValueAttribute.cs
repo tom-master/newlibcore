@@ -44,7 +44,7 @@ namespace NewLibCore.Data.SQL.Validate
                 var hasNullOrEmpty = String.IsNullOrEmpty(value + "");
                 if (type == typeof(Boolean))
                 {
-                    Value = hasNullOrEmpty ? false : value.CastTo((Boolean)value);
+                    Value = !hasNullOrEmpty && value.CastTo((Boolean)value);
                 }
                 else if (type == typeof(Guid))
                 {
