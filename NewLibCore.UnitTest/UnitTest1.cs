@@ -45,7 +45,7 @@ namespace NewLibCore.UnitTest
                 }
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
                 throw;
