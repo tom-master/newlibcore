@@ -58,6 +58,10 @@ namespace NewLibCore.Data.SQL.Validate
                 {
                     Value = hasNullOrEmpty ? "" : value.CastTo(value.ToString());
                 }
+                else if (type == typeof(DateTime?) || type == typeof(DateTime))
+                {
+                    Value = hasNullOrEmpty ? DateTime.Now : value.CastTo(DateTime.Parse(value.ToString()));
+                }
             }
             else
             {

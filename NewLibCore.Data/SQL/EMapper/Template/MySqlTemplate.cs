@@ -16,7 +16,7 @@ namespace NewLibCore.Data.SQL.Template
         internal override String CreateUpdate<TModel>(TModel model)
         {
             var (tableName, aliasName) = model.GetTableName();
-            return $@"UPDATE {tableName} AS {aliasName} SET {model.SqlPart.InsertPlaceHolders}";
+            return $@"UPDATE {tableName} AS {aliasName} SET {model.SqlPart.UpdatePlaceHolders}";
         }
 
         protected override void AppendPredicateType()
