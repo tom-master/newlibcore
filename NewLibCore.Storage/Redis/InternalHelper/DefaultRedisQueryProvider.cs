@@ -5,7 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-namespace NewLibCore.Data.Redis.InternalHelper
+
+namespace NewLibCore.Storage.Redis.InternalHelper
 {
     /// <summary>
     /// Redis操作
