@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using StackExchange.Redis;
 
-namespace NewLibCore.Data.Redis.InternalHelper
+namespace NewLibCore.Storage.Redis.InternalHelper
 {
     public interface ICacheQueryProvider
     {

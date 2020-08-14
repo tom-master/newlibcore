@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using NewLibCore.Logger;
 using StackExchange.Redis;
 
-namespace NewLibCore.Data.Redis.InternalHelper
+namespace NewLibCore.Storage.Redis.InternalHelper
 {
     /// <summary>
     /// ConnectionMultiplexer对象管理帮助类
