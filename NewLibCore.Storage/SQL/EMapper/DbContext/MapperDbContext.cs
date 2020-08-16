@@ -7,7 +7,7 @@ using NewLibCore.Data.SQL.Extension;
 using NewLibCore.Data.SQL.Template;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Data.SQL
+namespace NewLibCore.Storage.SQL
 {
     /// <summary>
     /// 执行解析后的SQL
