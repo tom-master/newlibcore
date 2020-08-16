@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace NewLibCore.Data.SQL.Component.Cache
+namespace NewLibCore.Storage.SQL.Component.Cache
 {
     /// <summary>
     /// 提供对sql查询结果的缓存操作
