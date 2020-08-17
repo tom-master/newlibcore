@@ -81,10 +81,21 @@ namespace NewLibCore
         {
             try
             {
-                Convert.ChangeType(value, type);
+                if (type.IsEnum)
+                {
+                    Enum.Parse(type, value.ToString());
+                }
+                else if (type == typeof(Guid))
+                {
+                    Guid.Parse(value.ToString());
+                }
+                else
+                {
+                    Convert.ChangeType(value, type);
+                }
                 return true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return false;
             }
