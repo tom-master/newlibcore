@@ -19,6 +19,11 @@ namespace NewLibCore.Data.SQL
 
         private EntityMapper()
         {
+            EntityMapperConfig.InitDependency();
+        }
+
+        static EntityMapper()
+        {
         }
 
         /// <summary>
@@ -27,7 +32,6 @@ namespace NewLibCore.Data.SQL
         /// <returns></returns>
         public static EntityMapper CreateMapper()
         {
-            EntityMapperConfig.InitDependency();
             return new EntityMapper();
         }
 
