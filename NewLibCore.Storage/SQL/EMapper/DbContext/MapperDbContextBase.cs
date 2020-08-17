@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Data.Common;
 
-namespace NewLibCore.Data.SQL
+namespace NewLibCore.Storage.SQL
 {
     /// <summary>
     /// 执行解析后的SQL
     /// </summary>
-    internal abstract class MapperDbContextBase :  IDisposable
+    internal abstract class MapperDbContextBase : IDisposable
     {
         /// <summary>
         /// 是否使用事物
@@ -40,7 +40,7 @@ namespace NewLibCore.Data.SQL
         /// </summary>
         /// <param name="disposing"></param>
         protected internal abstract void Dispose(Boolean disposing);
- 
+
         /// <summary>
         /// 执行原生sql语句
         /// </summary>
@@ -49,7 +49,7 @@ namespace NewLibCore.Data.SQL
         /// <param name="parameters">参数</param>
         /// <param name="commandType"></param>
         /// <returns></returns>
-        protected internal abstract SqlExecuteResultConvert RawExecute(ExecuteType executeType,String sql, params MapperParameter[] parameters);
+        protected internal abstract SqlExecuteResultConvert RawExecute(ExecuteType executeType, String sql, params MapperParameter[] parameters);
 
         public void Dispose()
         {
