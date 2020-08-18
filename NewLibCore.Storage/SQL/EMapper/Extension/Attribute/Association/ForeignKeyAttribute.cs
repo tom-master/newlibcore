@@ -1,7 +1,7 @@
 ﻿using System;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Data.SQL.Validate
+namespace NewLibCore.Storage.SQL.Validate
 {
     /// <summary>
     /// 外键特性
