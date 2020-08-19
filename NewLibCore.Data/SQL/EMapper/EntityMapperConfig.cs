@@ -14,8 +14,6 @@ namespace NewLibCore.Data.SQL.EMapper
     {
         private static ILogger _logger;
 
-        public static IServiceProvider Provider { get; private set; }
-
         /// <summary>
         /// 连接字符串名称
         /// </summary>
@@ -62,7 +60,7 @@ namespace NewLibCore.Data.SQL.EMapper
         /// <summary>
         /// 初始化依赖注入
         /// </summary>
-        internal static void InitDependency()
+        public IServiceProvider InitDependency()
         {
             IServiceCollection services = new ServiceCollection();
 
@@ -73,11 +71,11 @@ namespace NewLibCore.Data.SQL.EMapper
             }
             if (MapperType == MapperType.MSSQL)
             {
-                services = services.AddTransient<TemplateBase, MsSqlTemplate>();
+                services = services.AddScoped<TemplateBase, MsSqlTemplate>();
             }
             else if (MapperType == MapperType.MYSQL)
             {
-                services = services.AddTransient<TemplateBase, MySqlTemplate>();
+                services = services.AddScoped<TemplateBase, MySqlTemplate>();
             }
 
             services = services.AddScoped<MapperDbContextBase, MapperDbContext>();
@@ -88,16 +86,15 @@ namespace NewLibCore.Data.SQL.EMapper
 
             RunDiagnosis.SetLoggerInstance(_logger ?? new DefaultLogger());
 
-            services = services.AddScoped<ExpressionProcessor, DefaultExpressionProcessor>();
-            services = services.AddScoped<ExpressionProcessorResult>();
+            services = services.AddTransient<ExpressionProcessor, DefaultExpressionProcessor>();
+            services = services.AddTransient<ExpressionProcessorResult>();
 
-            services = services.AddScoped<Processor, RawSqlProcessor>();
-            services = services.AddScoped<Processor, QueryProcessor>();
-            services = services.AddScoped<Processor, UpdateProcessor>();
-            services = services.AddScoped<Processor, InsertProcessor>();
+            services = services.AddTransient<Processor, RawSqlProcessor>();
+            services = services.AddTransient<Processor, QueryProcessor>();
+            services = services.AddTransient<Processor, UpdateProcessor>();
+            services = services.AddTransient<Processor, InsertProcessor>();
             #endregion
-
-            Provider = services.BuildServiceProvider();
+            return services.BuildServiceProvider();
         }
 
         /// <summary>

@@ -12,7 +12,7 @@ namespace NewLibCore
         private static IConfigurationRoot ReadApollo()
         {
             var builder = new ConfigurationBuilder();
-            var r = builder.AddJsonFile($"{Environment.CurrentDirectory}/appsettings.json").Build();
+            var r = builder.AddJsonFile($"{Environment.CurrentDirectory}/appsettings.json", true, false).Build();
             return builder.AddApollo(r.GetSection("apollo")).AddDefault().Build();
             // return builder.AddConfiguration(r.GetSection("newcrm")).Build();
         }

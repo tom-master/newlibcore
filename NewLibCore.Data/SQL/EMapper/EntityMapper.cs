@@ -16,10 +16,10 @@ namespace NewLibCore.Data.SQL
     /// </summary>
     public sealed class EntityMapper : IDisposable
     {
-
+        private IServiceProvider _provider;
         private EntityMapper()
         {
-            EntityMapperConfig.InitDependency();
+            _provider = new EntityMapperConfig().InitDependency();
         }
 
         static EntityMapper()
@@ -114,17 +114,17 @@ namespace NewLibCore.Data.SQL
 
         public void Commit()
         {
-            EntityMapperConfig.Provider.GetService<MapperDbContextBase>().Commit();
+            _provider.GetService<MapperDbContextBase>().Commit();
         }
 
         public void Rollback()
         {
-            EntityMapperConfig.Provider.GetService<MapperDbContextBase>().Rollback();
+            _provider.GetService<MapperDbContextBase>().Rollback();
         }
 
         public void OpenTransaction()
         {
-            EntityMapperConfig.Provider.GetService<MapperDbContextBase>().UseTransaction = true;
+            _provider.GetService<MapperDbContextBase>().UseTransaction = true;
         }
 
         /// <summary>
@@ -132,13 +132,13 @@ namespace NewLibCore.Data.SQL
         /// </summary>
         public void Dispose()
         {
-            (EntityMapperConfig.Provider as ServiceProvider).Dispose();
+            (_provider as ServiceProvider).Dispose();
         }
 
         private Processor FindProcessor(String target)
         {
             Parameter.IfNullOrZero(target);
-            var result = EntityMapperConfig.Provider.GetServices<Processor>().FirstOrDefault(w => w.CurrentId == target);
+            var result = _provider.GetServices<Processor>().FirstOrDefault(w => w.CurrentId == target);
             if (result != null)
             {
                 return result;

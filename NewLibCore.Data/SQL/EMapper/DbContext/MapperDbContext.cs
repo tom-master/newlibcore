@@ -20,8 +20,7 @@ namespace NewLibCore.Data.SQL
 
         private DbTransaction _dataTransaction;
 
-        private readonly TemplateBase _templateBase; 
-
+        private readonly TemplateBase _templateBase;
 
         /// <summary>
         /// 初始化MapperDbContext类的新实例
@@ -107,8 +106,8 @@ namespace NewLibCore.Data.SQL
                 _disposed = true;
             }
         }
-         
-        protected internal override SqlExecuteResultConvert RawExecute(ExecuteType executeType,String sql, params MapperParameter[] parameters)
+
+        protected internal override SqlExecuteResultConvert RawExecute(ExecuteType executeType, String sql, params MapperParameter[] parameters)
         {
             Parameter.IfNullOrZero(sql);
             OpenConnection();
