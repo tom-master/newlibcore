@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using NewLibCore.Validate;
 using StackExchange.Redis;
 
-namespace NewLibCore.Data.SQL.Validate
+namespace NewLibCore.Storage.SQL.Validate
 {
     /// <summary>
     /// 标记被修饰的属性有默认值
