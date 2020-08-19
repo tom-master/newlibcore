@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NewLibCore.Data.SQL.Validate
+namespace NewLibCore.Storage.SQL.Validate
 {
     /// <summary>
     /// 忽略被监视的属性
