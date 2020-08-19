@@ -16,7 +16,7 @@ namespace NewLibCore.Data.SQL
     /// </summary>
     public sealed class EntityMapper : IDisposable
     {
-        private IServiceProvider _provider;
+        private readonly IServiceProvider _provider;
         private EntityMapper()
         {
             _provider = new EntityMapperConfig().InitDependency();
