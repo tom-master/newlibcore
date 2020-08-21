@@ -1,12 +1,12 @@
 ﻿using System;
 
-namespace NewLibCore.Data.SQL.Validate
+namespace NewLibCore.Storage.SQL.Validate
 {
     /// <summary>
     /// 基本的属性验证类
     /// </summary>
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
-    public abstract class PropertyValidateAttribute: Attribute
+    public abstract class PropertyValidateAttribute : Attribute
     {
         /// <summary>
         /// 是否验证通过
