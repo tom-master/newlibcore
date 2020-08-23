@@ -22,15 +22,16 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         internal OrderComponent OrderComponent { get; private set; }
         internal PaginationComponent PaginationComponent { get; private set; }
         internal readonly EntityMapperOptions _options;
+        private readonly PredicateProcessorResultExecutor _predicateProcessorResultExecutor;
 
         public SelectWrapper(IOptions<EntityMapperOptions> options, MapperDbContextBase mapperDbContextBase)
-        : base(options, mapperDbContextBase)
+        : base(options)
         {
             Check.IfNullOrZero(options);
             Check.IfNullOrZero(mapperDbContextBase);
 
             _options = options.Value;
-
+            _predicateProcessorResultExecutor = new PredicateProcessorResultExecutor(mapperDbContextBase);
             SelectComponent = new ColumnFieldComponent();
             FromComponent = new FromComponent();
             JoinComponent = new JoinComponent();
@@ -237,17 +238,16 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
                      var (fields, tableName) = ExtractOrderFields();
                      var orderTemplate = _options.TemplateBase.CreateOrderBy(OrderComponent.OrderBy, $@"{tableName}.{fields}");
                      var newSql = _options.TemplateBase.CreatePagination(PaginationComponent, orderTemplate, result.ToString());
-                     result.ClearSql();
-                     result.Append(newSql);
+                     result.Sql.Append(newSql);
                  }
                  else if (OrderComponent != null)
                  {
                      var (fields, tableName) = ExtractOrderFields();
                      var orderTemplate = _options.TemplateBase.CreateOrderBy(OrderComponent.OrderBy, $@"{tableName}.{fields}");
-                     result.Append(orderTemplate);
+                     result.Sql.Append(orderTemplate);
                  }
 
-                 return result.Execute();
+                 return _predicateProcessorResultExecutor.Execute(result.Sql.ToString(), result.Parameter.ToArray());
              });
         }
 
