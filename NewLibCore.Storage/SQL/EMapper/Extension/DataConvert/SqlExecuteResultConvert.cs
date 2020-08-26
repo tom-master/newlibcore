@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using NewLibCore.Data.SQL.DataConvert;
+using NewLibCore.Storage.SQL.DataConvert;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Data.SQL
+namespace NewLibCore.Storage.SQL
 {
     /// <summary>
     /// sql语句执行后的结果
