@@ -11,8 +11,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewLibCore.Security", "NewL
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewLibCore.UnitTest", "NewLibCore.UnitTest\NewLibCore.UnitTest.csproj", "{FA8A377C-4B63-45A1-986F-9A25419A9948}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewLibCore.Run", "NewLibCore.Run\NewLibCore.Run.csproj", "{7F7C2921-99BB-4394-AB57-456324635387}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

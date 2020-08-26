@@ -3,6 +3,7 @@ using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 namespace NewLibCore.Data.Redis.InternalHelper
 {
@@ -669,10 +670,7 @@ namespace NewLibCore.Data.Redis.InternalHelper
 
         private String ConvertJson<T>(T value)
         {
-            var result = value is String ? value.ToString() : JsonConvert.SerializeObject(value, Formatting.Indented, new JsonSerializerSettings
-            {
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-            });
+            var result = value is String ? value.ToString() : JsonConvert.SerializeObject(value);
             return result;
         }
 
@@ -682,13 +680,20 @@ namespace NewLibCore.Data.Redis.InternalHelper
             {
                 return default;
             }
-            return JsonConvert.DeserializeObject<T>(value);
+            var r = JsonConvert.DeserializeObject<T>(value, new JsonSerializerSettings
+            {
+                ContractResolver = new PrivateSetterContractResolver()
+            });
+            return r;
         }
 
         private List<T> ConvetList<T>(RedisValue[] values)
         {
             var result = new List<T>();
-            return values.Select(s => JsonConvert.DeserializeObject<T>(s)).ToList();
+            return values.Select(s => JsonConvert.DeserializeObject<T>(s, new JsonSerializerSettings
+            {
+                ContractResolver = new PrivateSetterContractResolver()
+            })).ToList();
         }
 
         private RedisKey[] ConvertRedisKeys(IEnumerable<String> redisKeys)
