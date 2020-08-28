@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 
-namespace NewLibCore.Data.SQL.Extension.Filter
+namespace NewLibCore.Storage.SQL.Extension.Filter
 {
     /// <summary>
     /// 默认的合并查询表达式 
