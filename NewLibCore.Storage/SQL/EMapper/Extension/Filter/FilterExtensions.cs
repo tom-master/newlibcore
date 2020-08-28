@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq.Expressions;
-using NewLibCore.Data.SQL.Extension;
+using NewLibCore.Storage.SQL.Extension;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Data.SQL.Extension.Filter
+namespace NewLibCore.Storage.SQL.Extension.Filter
 {
     /// <summary>
     /// 合并扩展
