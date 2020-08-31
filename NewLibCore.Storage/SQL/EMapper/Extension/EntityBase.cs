@@ -1,7 +1,7 @@
 ﻿using System;
-using NewLibCore.Data.SQL.Validate;
+using NewLibCore.Storage.SQL.Validate;
 
-namespace NewLibCore.Data.SQL
+namespace NewLibCore.Storage.SQL
 {
     /// <summary>
     /// 表示继承于此类的子类都为数据库的表
