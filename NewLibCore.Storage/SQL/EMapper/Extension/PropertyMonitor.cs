@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using NewLibCore.Data.SQL.DataConvert;
-using NewLibCore.Data.SQL.Validate;
+using NewLibCore.Storage.SQL.DataConvert;
+using NewLibCore.Storage.SQL.Validate;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Data.SQL
+namespace NewLibCore.Storage.SQL
 {
     /// <summary>
     /// 监控实体值变更
