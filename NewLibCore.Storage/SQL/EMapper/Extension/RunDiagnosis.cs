@@ -1,10 +1,10 @@
 using System;
 using System.Diagnostics;
-using NewLibCore.Data.SQL.EMapper;
+using NewLibCore.Storage.SQL.EMapper;
 using NewLibCore.Logger;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Data.SQL.Extension
+namespace NewLibCore.Storage.SQL.Extension
 {
     internal static class RunDiagnosis
     {
