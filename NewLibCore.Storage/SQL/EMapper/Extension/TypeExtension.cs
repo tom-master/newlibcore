@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NewLibCore.Data.SQL.Validate;
+using NewLibCore.Storage.SQL.Validate;
 using NewLibCore.Validate;
-namespace NewLibCore.Data.SQL.Extension
+namespace NewLibCore.Storage.SQL.Extension
 {
     internal static class EntityTypeExtension
     {
