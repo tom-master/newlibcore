@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using NewLibCore.Data.SQL.EMapper.Parser;
-using NewLibCore.Data.SQL.Extension;
-using NewLibCore.Data.SQL.Template;
+using NewLibCore.Storage.SQL.EMapper.Parser;
+using NewLibCore.Storage.SQL.Extension;
+using NewLibCore.Storage.SQL.Template;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Data.SQL
+namespace NewLibCore.Storage.SQL
 {
     /// <summary>
     /// 将Expression解析为对应的SQL谓词
