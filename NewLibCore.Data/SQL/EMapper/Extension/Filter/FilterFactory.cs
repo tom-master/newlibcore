@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq.Expressions;
-using NewLibCore.Data.SQL.Extension;
 
 namespace NewLibCore.Data.SQL.Extension.Filter
 {
