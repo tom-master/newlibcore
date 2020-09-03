@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 using NewLibCore.Data.SQL.Extension;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Data.SQL.Filter
+namespace NewLibCore.Data.SQL.Extension.Filter
 {
     /// <summary>
     /// 合并扩展

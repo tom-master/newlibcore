@@ -2,7 +2,7 @@
 using System.Linq.Expressions;
 using NewLibCore.Data.SQL.Extension;
 
-namespace NewLibCore.Data.SQL.Filter
+namespace NewLibCore.Data.SQL.Extension.Filter
 {
     /// <summary>
     /// 合并工厂
