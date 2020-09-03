@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using NewLibCore.Data.SQL.Store;
+using NewLibCore.Storage.SQL.Store;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Data.SQL.EMapper.Parser
+namespace NewLibCore.Storage.SQL.EMapper.Parser
 {
     /// <summary>
     /// 将Expression解析为对应的SQL谓词
