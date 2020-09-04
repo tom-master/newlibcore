@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Data.SQL
+namespace NewLibCore.Storage.SQL
 {
     /// <summary>
     /// 执行表达式翻译结果
