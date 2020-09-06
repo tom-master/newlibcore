@@ -183,6 +183,11 @@ namespace NewLibCore.Data.SQL.Template
             return String.Format(OrderTypeMapper[orderByType], left);
         }
 
+        /// <summary>
+        /// 将类型转换为数据库类型
+        /// </summary>
+        /// <param name="dataType"></param>
+        /// <returns></returns>
         protected DbType ConvertToDatabaseDataType(Type dataType)
         {
 
