@@ -1,10 +1,10 @@
 using System;
-using NewLibCore.Data.SQL.EMapper.Parser;
-using NewLibCore.Data.SQL.Store;
-using NewLibCore.Data.SQL.Template;
+using NewLibCore.Storage.SQL.EMapper.Parser;
+using NewLibCore.Storage.SQL.Store;
+using NewLibCore.Storage.SQL.Template;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Data.SQL.ProcessorFactory
+namespace NewLibCore.Storage.SQL.ProcessorFactory
 {
     internal abstract class Processor
     {
