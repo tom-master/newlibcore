@@ -28,6 +28,7 @@ namespace NewLibCore.Data.SQL
             _filterBadContent = filterBadContent;
             Key = $"@{key}";
             Value = ParseValueType(value);
+            RuntimeType = Value.GetType();
         }
 
         /// <summary>
@@ -49,6 +50,12 @@ namespace NewLibCore.Data.SQL
         /// 值
         /// </summary>
         internal Object Value { get; private set; }
+
+        /// <summary>
+        /// 值的运行时类型
+        /// </summary>
+        /// <value></value>
+        internal Type RuntimeType { get; private set; }
 
         /// <summary>
         /// 转换传入的数据类型

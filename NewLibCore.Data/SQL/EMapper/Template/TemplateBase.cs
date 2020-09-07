@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
+using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Reflection;
-using MySql.Data.MySqlClient.Authentication;
 using NewLibCore.Data.SQL.Extension;
 using NewLibCore.Data.SQL.Store;
 using NewLibCore.Data.SQL.Validate;
@@ -17,6 +16,7 @@ namespace NewLibCore.Data.SQL.Template
     /// </summary>
     internal abstract class TemplateBase
     {
+
         private static String _primaryKeyName;
 
         /// <summary>
@@ -33,6 +33,7 @@ namespace NewLibCore.Data.SQL.Template
         /// 排序方式映射
         /// </summary>
         protected readonly IDictionary<OrderByType, String> OrderTypeMapper = new Dictionary<OrderByType, String>();
+
 
         /// <summary>
         /// 初始化TemplateBase类的新实例
@@ -135,7 +136,7 @@ namespace NewLibCore.Data.SQL.Template
         /// 创建参数
         /// </summary>
         /// <returns></returns>
-        internal abstract DbParameter CreateParameter(String key, Object value);
+        internal abstract DbParameter CreateParameter(String key, Object value, Type dataType);
 
         /// <summary>
         /// 创建连接
@@ -182,6 +183,46 @@ namespace NewLibCore.Data.SQL.Template
             return String.Format(OrderTypeMapper[orderByType], left);
         }
 
+        protected DbType ConvertToDatabaseDataType(Type dataType)
+        {
+
+            switch (Type.GetTypeCode(dataType))
+            {
+                case TypeCode.Boolean:
+                    return DbType.Boolean;
+                case TypeCode.Byte:
+                    return DbType.Byte;
+                case TypeCode.DateTime:
+                    return DbType.DateTime;
+                case TypeCode.Decimal:
+                    return DbType.Decimal;
+                case TypeCode.Double:
+                    return DbType.Double;
+                case TypeCode.Int16:
+                    return DbType.Int16;
+                case TypeCode.Int32:
+                    return DbType.Int32;
+                case TypeCode.Int64:
+                    return DbType.Int64;
+                case TypeCode.SByte:
+                    return DbType.SByte;
+                case TypeCode.Single:
+                    return DbType.Single;
+                case TypeCode.String:
+                    return DbType.String;
+                case TypeCode.UInt16:
+                    return DbType.UInt16;
+                case TypeCode.UInt32:
+                    return DbType.UInt32;
+                case TypeCode.UInt64:
+                    return DbType.UInt64;
+                case TypeCode.Object:
+                    return DbType.Object;
+                default:
+                    throw new InvalidCastException();
+            }
+        }
+
         /// <summary>
         /// 初始化默认逻辑关系
         /// </summary>
@@ -218,5 +259,6 @@ namespace NewLibCore.Data.SQL.Template
             OrderTypeMapper.Add(OrderByType.ASC, " ORDER BY {0} ASC ");
             OrderTypeMapper.Add(OrderByType.DESC, " ORDER BY {0} DESC ");
         }
+
     }
 }

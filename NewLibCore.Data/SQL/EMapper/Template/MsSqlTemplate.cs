@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
 using NewLibCore.Data.SQL.EMapper;
@@ -13,6 +15,7 @@ namespace NewLibCore.Data.SQL.Template
     /// </summary>
     internal class MsSqlTemplate : TemplateBase
     {
+        private IDictionary<Type, SqlDbType> _dbTypeMapper;
 
         internal override String CreateUpdate<TModel>(TModel model)
         {
@@ -72,9 +75,14 @@ namespace NewLibCore.Data.SQL.Template
             return sql;
         }
 
-        internal override DbParameter CreateParameter(String key, Object value)
+        internal override DbParameter CreateParameter(String key, Object value, Type dataType)
         {
-            return new SqlParameter(key, value);
+            return new SqlParameter
+            {
+                ParameterName = key,
+                Value = value,
+                DbType = ConvertToDatabaseDataType(dataType)
+            };
         }
 
         internal override DbConnection CreateDbConnection()
