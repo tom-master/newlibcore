@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using NewLibCore.Data.SQL.EMapper.Parser;
-using NewLibCore.Data.SQL.Extension;
-using NewLibCore.Data.SQL.Store;
-using NewLibCore.Data.SQL.Template;
-using NewLibCore.Data.SQL.Validate;
+using NewLibCore.Storage.SQL.EMapper.Parser;
+using NewLibCore.Storage.SQL.Extension;
+using NewLibCore.Storage.SQL.Store;
+using NewLibCore.Storage.SQL.Template;
+using NewLibCore.Storage.SQL.Validate;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Data.SQL.ProcessorFactory
+namespace NewLibCore.Storage.SQL.ProcessorFactory
 {
     /// <summary>
     /// 查询处理类
