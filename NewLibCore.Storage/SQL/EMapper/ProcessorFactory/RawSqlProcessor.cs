@@ -1,7 +1,7 @@
-using NewLibCore.Data.SQL.EMapper.Parser;
-using NewLibCore.Data.SQL.Store;
+using NewLibCore.Storage.SQL.EMapper.Parser;
+using NewLibCore.Storage.SQL.Store;
 
-namespace NewLibCore.Data.SQL.ProcessorFactory
+namespace NewLibCore.Storage.SQL.ProcessorFactory
 {
     internal class RawSqlProcessor : Processor
     {
