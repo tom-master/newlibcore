@@ -72,9 +72,9 @@ namespace NewLibCore.Data.SQL.Template
             return sql;
         }
 
-        internal override DbParameter CreateParameter()
+        internal override DbParameter CreateParameter(String key, Object value)
         {
-            return new SqlParameter();
+            return new SqlParameter(key, value);
         }
 
         internal override DbConnection CreateDbConnection()

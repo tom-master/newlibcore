@@ -121,7 +121,7 @@ namespace NewLibCore.Data.SQL
                 cmd.CommandText = sql;
                 if (parameters != null && parameters.Any())
                 {
-                    cmd.Parameters.AddRange(parameters.Select(s => s.ConvertToDbParameter(_templateBase.CreateParameter())).ToArray());
+                    cmd.Parameters.AddRange(parameters.Select(s => _templateBase.CreateParameter(s.Key, s.Value)).ToArray());
                 }
                 RunDiagnosis.Info($@"SQL语句:{sql} 占位符与参数:{(parameters == null || !parameters.Any() ? "" : String.Join($@"{Environment.NewLine}", parameters.Select(s => $@"{s.Key}----{s.Value}")))}");
 

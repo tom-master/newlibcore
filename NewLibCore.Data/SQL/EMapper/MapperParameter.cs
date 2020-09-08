@@ -51,17 +51,6 @@ namespace NewLibCore.Data.SQL
         internal Object Value { get; private set; }
 
         /// <summary>
-        /// 转换为原生ado.net参数
-        /// </summary>
-        /// <returns></returns>
-        internal DbParameter ConvertToDbParameter(DbParameter parameter)
-        {
-            parameter.ParameterName = Key;
-            parameter.Value = Value;
-            return parameter;
-        }
-
-        /// <summary>
         /// 转换传入的数据类型
         /// </summary>
         /// <param name="obj"></param>

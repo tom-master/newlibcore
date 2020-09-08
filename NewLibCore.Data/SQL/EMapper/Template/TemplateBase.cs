@@ -135,7 +135,7 @@ namespace NewLibCore.Data.SQL.Template
         /// 创建参数
         /// </summary>
         /// <returns></returns>
-        internal abstract DbParameter CreateParameter();
+        internal abstract DbParameter CreateParameter(String key, Object value);
 
         /// <summary>
         /// 创建连接

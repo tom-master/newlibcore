@@ -50,9 +50,9 @@ namespace NewLibCore.Data.SQL.Template
             return $@"{rawSql} {orderBy} LIMIT {pagination.Size * (pagination.Index - 1)},{pagination.Size} ;";
         }
 
-        internal override DbParameter CreateParameter()
+        internal override DbParameter CreateParameter(String key, Object value)
         {
-            return new MySqlParameter();
+            return new MySqlParameter(key, value);
         }
 
         internal override DbConnection CreateDbConnection()
