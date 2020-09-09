@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Linq;
-using NewLibCore.Data.SQL.EMapper;
-using NewLibCore.Data.SQL.EMapper.Parser;
-using NewLibCore.Data.SQL.Extension;
-using NewLibCore.Data.SQL.Store;
-using NewLibCore.Data.SQL.Template;
+using NewLibCore.Storage.SQL.EMapper;
+using NewLibCore.Storage.SQL.EMapper.Parser;
+using NewLibCore.Storage.SQL.Extension;
+using NewLibCore.Storage.SQL.Store;
+using NewLibCore.Storage.SQL.Template;
 
-namespace NewLibCore.Data.SQL.ProcessorFactory
+namespace NewLibCore.Storage.SQL.ProcessorFactory
 {
     /// <summary>
     /// 更新处理类
