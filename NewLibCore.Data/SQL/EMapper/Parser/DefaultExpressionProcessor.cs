@@ -84,7 +84,7 @@ namespace NewLibCore.Data.SQL
                 _expressionProcessorResult.Append(PredicateType.AND.ToString());
 
                 //获取Where类型中的存储的表达式对象进行翻译
-                InternalParser(lambdaExp,JoinRelation.NONE);
+                InternalParser(lambdaExp, JoinRelation.NONE);
             }
             return _expressionProcessorResult;
         }
@@ -92,7 +92,8 @@ namespace NewLibCore.Data.SQL
         /// <summary>
         /// 根据表达式构建出相应结果
         /// </summary>
-        /// <param name="expression">表达式</param>
+        /// <param name="expression"></param>
+        /// <param name="joinRelation"></param>
         private void InternalParser(Expression expression, JoinRelation joinRelation)
         {
             switch (expression.NodeType)
