@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using NewLibCore.Data.SQL.Extension;
-using NewLibCore.Data.SQL.Validate;
+using NewLibCore.Storage.SQL.Extension;
+using NewLibCore.Storage.SQL.Validate;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Data.SQL.Store
+namespace NewLibCore.Storage.SQL.Store
 {
 
     internal static class ExpressionStoreExtension
