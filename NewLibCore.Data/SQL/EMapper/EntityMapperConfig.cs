@@ -37,7 +37,7 @@ namespace NewLibCore.Data.SQL.EMapper
         /// </summary>
         internal static IsolationLevel TransactionLevel { get; set; }
 
-        /// <summary>
+        /// <summary> 
         /// 映射的数据库类型
         /// </summary>
         internal static MapperType MapperType { get; set; }
