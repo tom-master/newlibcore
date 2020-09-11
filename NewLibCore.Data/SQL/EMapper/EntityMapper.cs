@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,9 +16,12 @@ namespace NewLibCore.Data.SQL
     public sealed class EntityMapper : IDisposable
     {
         private readonly IServiceProvider _provider;
+
+        private readonly MapperDbContextBase _contextBase;
         private EntityMapper()
         {
             _provider = new EntityMapperConfig().InitDependency();
+            _contextBase = _provider.GetService<MapperDbContextBase>();
         }
 
         static EntityMapper()
@@ -114,17 +116,17 @@ namespace NewLibCore.Data.SQL
 
         public void Commit()
         {
-            _provider.GetService<MapperDbContextBase>().Commit();
+            _contextBase.Commit();
         }
 
         public void Rollback()
         {
-            _provider.GetService<MapperDbContextBase>().Rollback();
+            _contextBase.Rollback();
         }
 
         public void OpenTransaction()
         {
-            _provider.GetService<MapperDbContextBase>().UseTransaction = true;
+            _contextBase.UseTransaction = true;
         }
 
         /// <summary>

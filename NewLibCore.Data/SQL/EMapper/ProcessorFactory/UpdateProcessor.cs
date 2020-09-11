@@ -19,7 +19,8 @@ namespace NewLibCore.Data.SQL.ProcessorFactory
         /// 初始化一个UpdateHandler类的实例
         /// </summary>
         /// <param name="templateBase"></param>
-        /// <param name="parserExecutor"></param>
+        /// <param name="expressionProcessor"></param>
+        /// <returns></returns>
         public UpdateProcessor(TemplateBase templateBase, ExpressionProcessor expressionProcessor) : base(templateBase, expressionProcessor)
         {
         }

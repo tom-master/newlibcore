@@ -14,6 +14,10 @@ namespace NewLibCore.Data.SQL.ProcessorFactory
 
         internal virtual String CurrentId { get { return GetType().Name; } }
 
+        protected Processor(ExpressionProcessor expressionProcessor) : this(null, expressionProcessor)
+        {
+
+        }
         protected Processor(TemplateBase templateBase, ExpressionProcessor expressionProcessor)
         {
             //Parameter.IfNullOrZero(templateBase);

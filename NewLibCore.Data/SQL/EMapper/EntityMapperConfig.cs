@@ -30,7 +30,7 @@ namespace NewLibCore.Data.SQL.EMapper
         /// 启用模型验证
         /// </summary> 
         /// <value></value>
-        public static Boolean EnableModelValidate { get; set; }
+        public static Boolean EnableModelValidate { get; set; } = true;
 
         /// <summary>
         /// 事务隔离级别
@@ -40,7 +40,7 @@ namespace NewLibCore.Data.SQL.EMapper
         /// <summary> 
         /// 映射的数据库类型
         /// </summary>
-        internal static MapperType MapperType { get; set; }
+        internal static MapperType MapperType { get; set; } = MapperType.NONE;
 
         /// <summary>
         /// mssql的版本
@@ -60,7 +60,7 @@ namespace NewLibCore.Data.SQL.EMapper
         /// <summary>
         /// 初始化依赖注入
         /// </summary>
-        public IServiceProvider InitDependency()
+        internal IServiceProvider InitDependency()
         {
             IServiceCollection services = new ServiceCollection();
 

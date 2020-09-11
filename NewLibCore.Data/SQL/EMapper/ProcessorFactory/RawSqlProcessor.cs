@@ -5,7 +5,7 @@ namespace NewLibCore.Data.SQL.ProcessorFactory
 {
     internal class RawSqlProcessor : Processor
     {
-        public RawSqlProcessor(ExpressionProcessor expressionProcessor) : base(null, expressionProcessor)
+        public RawSqlProcessor(ExpressionProcessor expressionProcessor) : base(expressionProcessor)
         {
         }
 
