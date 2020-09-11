@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace NewLibCore.Data.SQL.Store
+namespace NewLibCore.Storage.SQL.Store
 {
     /// <summary>
     /// 表达式拆分后的语句对象
