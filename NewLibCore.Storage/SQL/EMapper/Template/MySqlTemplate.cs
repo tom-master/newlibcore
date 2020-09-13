@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Data.Common;
 using MySql.Data.MySqlClient;
-using NewLibCore.Data.SQL.EMapper;
-using NewLibCore.Data.SQL.Extension;
-using NewLibCore.Data.SQL.Store;
+using NewLibCore.Storage.SQL.EMapper;
+using NewLibCore.Storage.SQL.Extension;
+using NewLibCore.Storage.SQL.Store;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Data.SQL.Template
+namespace NewLibCore.Storage.SQL.Template
 {
     /// <summary>
     /// mysql数据库sql模板配置
