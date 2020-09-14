@@ -4,12 +4,12 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Reflection;
-using NewLibCore.Data.SQL.Extension;
-using NewLibCore.Data.SQL.Store;
-using NewLibCore.Data.SQL.Validate;
+using NewLibCore.Storage.SQL.Extension;
+using NewLibCore.Storage.SQL.Store;
+using NewLibCore.Storage.SQL.Validate;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Data.SQL.Template
+namespace NewLibCore.Storage.SQL.Template
 {
     /// <summary>
     /// 为相应的数据库实例提供对应的模板化SQL
