@@ -2,13 +2,13 @@
 using System.Linq;
 using System.Linq.Expressions;
 using Microsoft.Extensions.DependencyInjection;
-using NewLibCore.Data.SQL.EMapper;
-using NewLibCore.Data.SQL.Extension;
-using NewLibCore.Data.SQL.ProcessorFactory;
-using NewLibCore.Data.SQL.Store;
+using NewLibCore.Storage.SQL.EMapper;
+using NewLibCore.Storage.SQL.Extension;
+using NewLibCore.Storage.SQL.ProcessorFactory;
+using NewLibCore.Storage.SQL.Store;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Data.SQL
+namespace NewLibCore.Storage.SQL
 {
     /// <summary>
     /// 将对应的操作翻译为sql并执行
