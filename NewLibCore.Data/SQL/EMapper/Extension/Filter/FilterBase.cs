@@ -27,14 +27,14 @@ namespace NewLibCore.Data.SQL.Extension.Filter
             ParameterExpression leftParameter, rightParameter;
             {
                 var type = typeof(T);
-                leftParameter = Expression.Parameter(type, type.GetTableName().AliasName);
+                leftParameter = Expression.Parameter(type, type.GetEntityBaseAliasName().AliasName);
                 var parameterVister = new ParameterVisitor(leftParameter);
                 leftBody = parameterVister.Replace(Filter.Body);
             }
 
             {
                 var type = typeof(T1);
-                rightParameter = Expression.Parameter(type, type.GetTableName().AliasName);
+                rightParameter = Expression.Parameter(type, type.GetEntityBaseAliasName().AliasName);
                 var parameterVister = new ParameterVisitor(rightParameter);
                 rightBody = parameterVister.Replace(right.Filter.Body);
             }

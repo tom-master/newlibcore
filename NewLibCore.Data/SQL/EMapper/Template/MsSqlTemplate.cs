@@ -15,7 +15,7 @@ namespace NewLibCore.Data.SQL.Template
     {
         internal override String CreateUpdate<TModel>(TModel model)
         {
-            var (tableName, aliasName) = model.GetTableName();
+            var (tableName, aliasName) = model.GetEntityBaseAliasName();
             return $@"UPDATE {aliasName} SET {model.SqlPart.UpdatePlaceHolders} FROM {tableName} AS {aliasName}";
         }
 

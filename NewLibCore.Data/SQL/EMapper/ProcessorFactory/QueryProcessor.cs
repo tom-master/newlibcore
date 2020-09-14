@@ -80,7 +80,7 @@ namespace NewLibCore.Data.SQL.ProcessorFactory
             var fields = (LambdaExpression)store.Order.Expression;
             if (fields.Body.NodeType == ExpressionType.MemberAccess)
             {
-                var aliasName = fields.Parameters[0].Type.GetTableName().AliasName;
+                var aliasName = fields.Parameters[0].Type.GetEntityBaseAliasName().AliasName;
                 var members = (fields.Body as MemberExpression);
                 return (members.Member.Name, aliasName);
             }
@@ -111,7 +111,7 @@ namespace NewLibCore.Data.SQL.ProcessorFactory
                     foreach (var item in bodyArguments)
                     {
                         var member = (MemberExpression)item;
-                        var fieldName = ((ParameterExpression)member.Expression).Type.GetTableName().AliasName;
+                        var fieldName = ((ParameterExpression)member.Expression).Type.GetEntityBaseAliasName().AliasName;
                         anonymousObjFields.Add($@"{fieldName}.{member.Member.Name}");
                     }
                 }
@@ -119,7 +119,7 @@ namespace NewLibCore.Data.SQL.ProcessorFactory
             else
             {
                 var types = store.MergeParameterTypes();
-                var tableNames = types.Select(s => new KeyValuePair<String, String>(s.Name, s.GetTableName().AliasName)).ToList();
+                var tableNames = types.Select(s => new KeyValuePair<String, String>(s.Name, s.GetEntityBaseAliasName().AliasName)).ToList();
                 anonymousObjFields = types
                     .SelectMany(s => s.GetProperties(BindingFlags.Instance | BindingFlags.Public)
                     .Where(w => w.GetAttributes<PropertyValidateAttribute>().Any())

@@ -62,7 +62,7 @@ namespace NewLibCore.Data.SQL.Template
         /// </summary>
         internal virtual String CreateInsert<TModel>(TModel model) where TModel : EntityBase
         {
-            return $@"INSERT {model.GetTableName().TableName} ({model.SqlPart.Fields}) VALUES ({model.SqlPart.InsertPlaceHolders}) {Identity} ";
+            return $@"INSERT {model.GetEntityBaseAliasName().TableName} ({model.SqlPart.Fields}) VALUES ({model.SqlPart.InsertPlaceHolders}) {Identity} ";
         }
 
         /// <summary>

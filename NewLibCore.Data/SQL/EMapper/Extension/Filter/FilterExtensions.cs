@@ -29,7 +29,7 @@ namespace NewLibCore.Data.SQL.Extension.Filter
             }
 
             var type = typeof(T);
-            var internalParameter = Expression.Parameter(type, type.GetTableName().AliasName);
+            var internalParameter = Expression.Parameter(type, type.GetEntityBaseAliasName().AliasName);
             var parameterVister = new ParameterVisitor(internalParameter);
             var leftBody = parameterVister.Replace(left.Filter.Body);
             var rightBody = parameterVister.Replace(right.Body);
@@ -55,7 +55,7 @@ namespace NewLibCore.Data.SQL.Extension.Filter
             }
 
             var type = typeof(T);
-            var internalParameter = Expression.Parameter(type, type.GetTableName().AliasName);
+            var internalParameter = Expression.Parameter(type, type.GetEntityBaseAliasName().AliasName);
             var parameterVister = new ParameterVisitor(internalParameter);
             var leftBody = parameterVister.Replace(left.Filter.Body);
             var rightBody = parameterVister.Replace(right.Body);

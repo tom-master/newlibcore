@@ -100,7 +100,7 @@ namespace NewLibCore.Data.SQL.Store
                 Expression = expression,
                 AliaNameMapper = new List<KeyValuePair<String, String>>
                 {
-                   new KeyValuePair<String, String>(modelType.GetTableName().TableName,modelType.GetTableName().AliasName)
+                   new KeyValuePair<String, String>(modelType.GetEntityBaseAliasName().TableName,modelType.GetEntityBaseAliasName().AliasName)
                 }
             };
         }
@@ -149,8 +149,8 @@ namespace NewLibCore.Data.SQL.Store
                 throw new ArgumentException($@"{foreignKeyType.Name}中没有用{nameof(PrimaryKeyAttribute)}修饰的属性");
             }
 
-            var leftParameter = Expression.Parameter(parameterType, parameterType.GetTableName().AliasName);
-            var rightParameter = Expression.Parameter(foreignKeyType, foreignKeyType.GetTableName().AliasName);
+            var leftParameter = Expression.Parameter(parameterType, parameterType.GetEntityBaseAliasName().AliasName);
+            var rightParameter = Expression.Parameter(foreignKeyType, foreignKeyType.GetEntityBaseAliasName().AliasName);
 
             var left = Expression.Property(leftParameter, foreignKeyPropertyInfo);
             var right = Expression.Property(rightParameter, foreignPropertyInfo);
@@ -396,7 +396,7 @@ namespace NewLibCore.Data.SQL.Store
                 Expression = expression,
                 JoinRelation = joinRelation,
                 AliaNameMapper = ParseToAliasNames(((LambdaExpression)expression).Parameters),
-                MainTable = typeof(TModel).GetTableName().TableName
+                MainTable = typeof(TModel).GetEntityBaseAliasName().TableName
             });
         }
 
@@ -488,7 +488,7 @@ namespace NewLibCore.Data.SQL.Store
             var list = new List<KeyValuePair<String, String>>();
             foreach (var item in parameters)
             {
-                var (TableName, AliasName) = item.Type.GetTableName();
+                var (TableName, AliasName) = item.Type.GetEntityBaseAliasName();
                 list.Add(new KeyValuePair<String, String>(TableName, AliasName));
             }
             return list.ToList();

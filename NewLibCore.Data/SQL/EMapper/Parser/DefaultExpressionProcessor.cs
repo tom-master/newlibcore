@@ -222,11 +222,11 @@ namespace NewLibCore.Data.SQL
                             {
                                 var parameterExp = (ParameterExpression)memberExp.Expression;
                                 var internalAliasName = "";
-                                if (!_tableAliasMapper.Any(a => a.Key == parameterExp.Type.GetTableName().TableName && a.Value == parameterExp.Type.GetTableName().AliasName))
+                                if (!_tableAliasMapper.Any(a => a.Key == parameterExp.Type.GetEntityBaseAliasName().TableName && a.Value == parameterExp.Type.GetEntityBaseAliasName().AliasName))
                                 {
                                     throw new ArgumentException($@"没有找到{parameterExp.Type.Name}所对应的形参");
                                 }
-                                internalAliasName = $@"{ _tableAliasMapper.Where(w => w.Key == parameterExp.Type.GetTableName().TableName && w.Value == parameterExp.Type.GetTableName().AliasName).FirstOrDefault().Value.ToLower()}.";
+                                internalAliasName = $@"{ _tableAliasMapper.Where(w => w.Key == parameterExp.Type.GetEntityBaseAliasName().TableName && w.Value == parameterExp.Type.GetEntityBaseAliasName().AliasName).FirstOrDefault().Value.ToLower()}.";
 
                                 var newParameterName = Guid.NewGuid().ToString().Replace("-", "");
                                 _processorResult.Append(_template.CreatePredicate(_predicateTypeStack.Pop(), $@"{internalAliasName}{memberExp.Member.Name}", $"@{newParameterName}"));
@@ -403,7 +403,7 @@ namespace NewLibCore.Data.SQL
         {
             Parameter.IfNullOrZero(memberExpression);
             var parameterExpression = (ParameterExpression)memberExpression.Expression;
-            var (tableName, aliasName) = parameterExpression.Type.GetTableName();
+            var (tableName, aliasName) = parameterExpression.Type.GetEntityBaseAliasName();
             if (!_tableAliasMapper.Any(a => a.Key == tableName && a.Value == aliasName))
             {
                 throw new Exception($@"没有找到参数名:{memberExpression.Type.Name}所对应的表别名");

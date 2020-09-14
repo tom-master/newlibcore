@@ -1,32 +1,30 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using NewLibCore.Data.SQL.Validate;
 using NewLibCore.Validate;
 namespace NewLibCore.Data.SQL.Extension
 {
     internal static class EntityTypeExtension
     {
-
         private static readonly IDictionary<String, KeyValuePair<String, String>> _dic = new Dictionary<String, KeyValuePair<String, String>>();
 
         /// <summary>
-        /// 获取设置在实体的指定表名
+        /// 获取设置在EntityBase的表别名
         /// </summary>
         /// <param name="entityBase"></param>
         /// <returns></returns>
-        internal static (String TableName, String AliasName) GetTableName(this EntityBase entityBase)
+        internal static (String TableName, String AliasName) GetEntityBaseAliasName(this EntityBase entityBase)
         {
-            return GetTableName(entityBase.GetType());
+            return GetEntityBaseAliasName(entityBase.GetType());
         }
 
         /// <summary>
-        /// 获取设置在实体的指定表名
+        /// 获取设置在EntityBase的表别名
         /// </summary>
         /// <param name="t">对象类型</param>
         /// <returns></returns>
-        internal static (String TableName, String AliasName) GetTableName(this Type t)
+        internal static (String TableName, String AliasName) GetEntityBaseAliasName(this Type t)
         {
             Parameter.IfNullOrZero(t);
             lock (_dic)

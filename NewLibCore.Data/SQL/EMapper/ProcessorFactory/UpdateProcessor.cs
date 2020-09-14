@@ -35,7 +35,7 @@ namespace NewLibCore.Data.SQL.ProcessorFactory
                 instance.CheckPropertyValue();
             }
 
-            var (_, aliasName) = instance.GetTableName();
+            var (_, aliasName) = instance.GetEntityBaseAliasName();
             var result = _expressionProcessor.Processor(new ParseModel
             {
                 Sql = _templateBase.CreateUpdate(instance),
