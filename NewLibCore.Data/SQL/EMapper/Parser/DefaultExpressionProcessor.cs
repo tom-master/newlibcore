@@ -367,78 +367,49 @@ namespace NewLibCore.Data.SQL
         {
             Parameter.IfNullOrZero(binary);
 
+            var leftMember = (MemberExpression)binary.Left;
+            var rightMember = (MemberExpression)binary.Right;
             //表达式左右两边都不为常量时例如 xx.Id==yy.Id
             if (binary.Left.NodeType != ExpressionType.Constant && binary.Right.NodeType != ExpressionType.Constant)
             {
-                var (LeftMember, LeftAliasName) = ExtractLeftMember(binary);
-                var (RightMember, RightAliasName) = ExtractRightMember(binary);
+                var leftAliasName = ExtractMember(leftMember);
+                var rightAliasName = ExtractMember(rightMember);
 
-                var relationTemplate = _template.CreatePredicate(predicateType, $"{RightAliasName}.{RightMember.Member.Name}", $"{LeftAliasName}.{LeftMember.Member.Name}");
+                var relationTemplate = _template.CreatePredicate(predicateType, $"{rightAliasName}.{rightMember.Member.Name}", $"{leftAliasName}.{leftMember.Member.Name}");
                 _processorResult.Append(relationTemplate);
             }
             else if (binary.Left.NodeType == ExpressionType.Constant) //表达式左边为常量
             {
-                var (RightMember, RightAliasName) = ExtractRightMember(binary);
+                var rightAliasName = ExtractMember(rightMember);
                 var constant = (ConstantExpression)binary.Left;
                 var value = Boolean.TryParse(constant.Value.ToString(), out var result) ? (result ? 1 : 0).ToString() : constant.Value;
-                _processorResult.Append(_template.CreatePredicate(predicateType, value + "", $"{RightAliasName}.{RightMember.Member.Name}"));
+                _processorResult.Append(_template.CreatePredicate(predicateType, value + "", $"{rightAliasName}.{rightMember.Member.Name}"));
             }
             else if (binary.Right.NodeType == ExpressionType.Constant) //表达式的右边为常量
             {
-                var (LeftMember, LeftAliasName) = ExtractLeftMember(binary);
+                var leftAliasName = ExtractMember(leftMember);
                 var constant = (ConstantExpression)binary.Right;
                 var value = Boolean.TryParse(constant.Value.ToString(), out var result) ? (result ? 1 : 0).ToString() : constant.Value;
-                _processorResult.Append(_template.CreatePredicate(predicateType, $"{LeftAliasName}.{LeftMember.Member.Name}", value + ""));
+                _processorResult.Append(_template.CreatePredicate(predicateType, $"{leftAliasName}.{leftMember.Member.Name}", value + ""));
             }
         }
 
         /// <summary>
-        /// 获取右表达式的成员对象和别名
+        /// 提取表达式参数的类型别名
         /// </summary>
-        /// <param name="binary">表达式</param>
+        /// <param name="memberExpression"></param>
         /// <returns></returns>
-        private (MemberExpression RightMember, String RightAliasName) ExtractRightMember(BinaryExpression binary)
-        {
-            Parameter.IfNullOrZero(binary);
-            var rightMember = (MemberExpression)binary.Right;
-            var rightParameterExp = (ParameterExpression)rightMember.Expression;
-            var (tableName, aliasName) = rightParameterExp.Type.GetTableName();
-            if (!_tableAliasMapper.Any(a => a.Key == tableName && a.Value == aliasName))
-            {
-                throw new Exception($@"没有找到参数名:{rightParameterExp.Type.Name}所对应的右表别名");
-            }
-            var rightAliasName = _tableAliasMapper.Where(w => w.Key == tableName && w.Value == aliasName).FirstOrDefault().Value.ToLower();
-            return (rightMember, rightAliasName);
-        }
-
         private String ExtractMember(MemberExpression memberExpression)
         {
             Parameter.IfNullOrZero(memberExpression);
-            var (tableName, aliasName) = memberExpression.Type.GetTableName();
+            var parameterExpression = (ParameterExpression)memberExpression.Expression;
+            var (tableName, aliasName) = parameterExpression.Type.GetTableName();
             if (!_tableAliasMapper.Any(a => a.Key == tableName && a.Value == aliasName))
             {
                 throw new Exception($@"没有找到参数名:{memberExpression.Type.Name}所对应的表别名");
             }
-            return aliasName = _tableAliasMapper.Where(w => w.Key == tableName && w.Value == aliasName).FirstOrDefault().Value.ToLower();
+            return _tableAliasMapper.Where(w => w.Key == tableName && w.Value == aliasName).FirstOrDefault().Value.ToLower();
         }
 
-        /// <summary>
-        /// 获取左表达式的成员对象和别名
-        /// </summary>
-        /// <param name="binary">表达式</param>
-        /// <returns></returns>
-        private (MemberExpression LeftMember, String LeftAliasName) ExtractLeftMember(BinaryExpression binary)
-        {
-            Parameter.IfNullOrZero(binary);
-            var leftMember = (MemberExpression)binary.Left;
-            var leftParameterExp = (ParameterExpression)leftMember.Expression;
-            var (tableName, aliasName) = leftParameterExp.Type.GetTableName();
-            if (!_tableAliasMapper.Any(a => a.Key == tableName && a.Value == aliasName))
-            {
-                throw new Exception($@"没有找到参数类型:{leftParameterExp.Type.Name}所对应的左表别名");
-            }
-            var leftAliasName = _tableAliasMapper.Where(w => w.Key == tableName && w.Value == aliasName).FirstOrDefault().Value.ToLower();
-            return (leftMember, leftAliasName);
-        }
     }
 }
