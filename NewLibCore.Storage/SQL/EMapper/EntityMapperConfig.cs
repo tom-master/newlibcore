@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Data;
 using Microsoft.Extensions.DependencyInjection;
-using NewLibCore.Data.SQL.EMapper.Parser;
-using NewLibCore.Data.SQL.Extension;
-using NewLibCore.Data.SQL.ProcessorFactory;
-using NewLibCore.Data.SQL.Template;
+using NewLibCore.Storage.SQL.EMapper.Parser;
+using NewLibCore.Storage.SQL.Extension;
+using NewLibCore.Storage.SQL.ProcessorFactory;
+using NewLibCore.Storage.SQL.Template;
 using NewLibCore.Logger;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Data.SQL.EMapper
+namespace NewLibCore.Storage.SQL.EMapper
 {
     public class EntityMapperConfig
     {
