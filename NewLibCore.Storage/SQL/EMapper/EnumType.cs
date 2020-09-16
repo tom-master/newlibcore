@@ -1,5 +1,5 @@
 ﻿
-namespace NewLibCore.Data.SQL
+namespace NewLibCore.Storage.SQL
 {
     /// <summary>
     /// 执行的类型
