@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using NewLibCore.UnitTest.ValueObject;
-using NewLibCore.Data.SQL;
-using NewLibCore.Data.SQL.Validate;
+using NewLibCore.Storage.SQL;
+using NewLibCore.Storage.SQL.Validate;
 
 namespace NewLibCore.UnitTest.Entitys.Agent
 {
