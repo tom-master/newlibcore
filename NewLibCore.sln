@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewLibCore", "NewLibCore\NewLibCore.csproj", "{A17D52BA-5213-42A1-A8B4-8A9172FDDF30}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewLibCore.Data", "NewLibCore.Data\NewLibCore.Data.csproj", "{580B27C4-5D8A-4DB9-955C-A8C31FF99570}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewLibCore.Storage", "NewLibCore.Storage\NewLibCore.Storage.csproj", "{580B27C4-5D8A-4DB9-955C-A8C31FF99570}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewLibCore.Security", "NewLibCore.Security\NewLibCore.Security.csproj", "{9A51A057-B44E-43E2-8987-BFDCA7C826E8}"
 EndProject
