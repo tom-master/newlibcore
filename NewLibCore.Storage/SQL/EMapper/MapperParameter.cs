@@ -5,7 +5,7 @@ using System.Linq;
 using NewLibCore.Security;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Data.SQL
+namespace NewLibCore.Storage.SQL
 {
     /// <summary>
     /// 实体参数
