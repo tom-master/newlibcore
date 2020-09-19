@@ -18,7 +18,7 @@ namespace NewLibCore.Data.SQL
 
         private readonly Stack<String> _parameterNameStack;
 
-        private readonly TemplateBase _templateBase;
+        private readonly TemplateBase _template;
 
         private IReadOnlyList<KeyValuePair<String, String>> _tableAliasMapper;
 
@@ -26,12 +26,12 @@ namespace NewLibCore.Data.SQL
         /// 初始化Parser类的新实例
         /// </summary>
         /// <param name="templateBase"></param>
-        public DefaultExpressionProcessor(TemplateBase templateBase, ProcessorResult processorResult)
+        public DefaultExpressionProcessor(TemplateBase template, ProcessorResult processorResult)
             : base(processorResult)
         {
-            Parameter.IfNullOrZero(templateBase);
+            Parameter.IfNullOrZero(template);
 
-            _templateBase = templateBase;
+            _template = template;
 
             _parameterNameStack = new Stack<String>();
             _predicateTypeStack = new Stack<PredicateType>();
@@ -65,7 +65,7 @@ namespace NewLibCore.Data.SQL
                         continue;
                     }
                     //获取连接语句的模板 
-                    _processorResult.Append(_templateBase.CreateJoin(item.JoinRelation, aliasItem.Key, aliasItem.Value.ToLower()));
+                    _processorResult.Append(_template.CreateJoin(item.JoinRelation, aliasItem.Key, aliasItem.Value.ToLower()));
 
                     //获取连接类型中的存储的表达式对象进行翻译
                     InternalParser(item.Expression, item.JoinRelation);
@@ -229,7 +229,7 @@ namespace NewLibCore.Data.SQL
                                 internalAliasName = $@"{ _tableAliasMapper.Where(w => w.Key == parameterExp.Type.GetTableName().TableName && w.Value == parameterExp.Type.GetTableName().AliasName).FirstOrDefault().Value.ToLower()}.";
 
                                 var newParameterName = Guid.NewGuid().ToString().Replace("-", "");
-                                _processorResult.Append(_templateBase.CreatePredicate(_predicateTypeStack.Pop(), $@"{internalAliasName}{memberExp.Member.Name}", $"@{newParameterName}"));
+                                _processorResult.Append(_template.CreatePredicate(_predicateTypeStack.Pop(), $@"{internalAliasName}{memberExp.Member.Name}", $"@{newParameterName}"));
                                 _parameterNameStack.Push(newParameterName);
                             }
                         }
@@ -373,7 +373,7 @@ namespace NewLibCore.Data.SQL
                 var (LeftMember, LeftAliasName) = ExtractLeftMember(binary);
                 var (RightMember, RightAliasName) = ExtractRightMember(binary);
 
-                var relationTemplate = _templateBase.CreatePredicate(predicateType, $"{RightAliasName}.{RightMember.Member.Name}", $"{LeftAliasName}.{LeftMember.Member.Name}");
+                var relationTemplate = _template.CreatePredicate(predicateType, $"{RightAliasName}.{RightMember.Member.Name}", $"{LeftAliasName}.{LeftMember.Member.Name}");
                 _processorResult.Append(relationTemplate);
             }
             else if (binary.Left.NodeType == ExpressionType.Constant) //表达式左边为常量
@@ -381,14 +381,14 @@ namespace NewLibCore.Data.SQL
                 var (RightMember, RightAliasName) = ExtractRightMember(binary);
                 var constant = (ConstantExpression)binary.Left;
                 var value = Boolean.TryParse(constant.Value.ToString(), out var result) ? (result ? 1 : 0).ToString() : constant.Value;
-                _processorResult.Append(_templateBase.CreatePredicate(predicateType, value + "", $"{RightAliasName}.{RightMember.Member.Name}"));
+                _processorResult.Append(_template.CreatePredicate(predicateType, value + "", $"{RightAliasName}.{RightMember.Member.Name}"));
             }
             else if (binary.Right.NodeType == ExpressionType.Constant) //表达式的右边为常量
             {
                 var (LeftMember, LeftAliasName) = ExtractLeftMember(binary);
                 var constant = (ConstantExpression)binary.Right;
                 var value = Boolean.TryParse(constant.Value.ToString(), out var result) ? (result ? 1 : 0).ToString() : constant.Value;
-                _processorResult.Append(_templateBase.CreatePredicate(predicateType, $"{LeftAliasName}.{LeftMember.Member.Name}", value + ""));
+                _processorResult.Append(_template.CreatePredicate(predicateType, $"{LeftAliasName}.{LeftMember.Member.Name}", value + ""));
             }
         }
 
