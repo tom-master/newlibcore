@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using NewLibCore.Storage.SQL;
+using NewLibCore.Storage.SQL.Validate;
 using NewLibCore.UnitTest.ValueObject;
 
 namespace NewLibCore.UnitTest.Entitys.Agent

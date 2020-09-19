@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\NewLibCore.Data\NewLibCore.Data.csproj" />
+    <ProjectReference Include="..\NewLibCore.Storage\NewLibCore.Storage.csproj" />
   </ItemGroup>
 
   <ItemGroup>
