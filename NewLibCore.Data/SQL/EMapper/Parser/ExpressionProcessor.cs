@@ -11,32 +11,32 @@ namespace NewLibCore.Data.SQL.EMapper.Parser
     /// </summary>
     internal abstract class ExpressionProcessor
     {
-        protected readonly ExpressionProcessorResult _expressionProcessorResult;
+        protected readonly ProcessorResult _processorResult;
         protected ExpressionStore _expressionStore;
 
-        internal ExpressionProcessor(ExpressionProcessorResult expressionProcessorResult)
+        internal ExpressionProcessor(ProcessorResult processorResult)
         {
-            _expressionProcessorResult = expressionProcessorResult;
+            _processorResult = processorResult;
         }
 
         /// <summary>
         /// 翻译
         /// </summary>
         /// <returns></returns>
-        protected abstract ExpressionProcessorResult InnerProcessor();
+        protected abstract ProcessorResult InnerProcessor();
 
-        internal ExpressionProcessorResult Processor(ParseModel parseModel)
+        internal ProcessorResult Processor(ParseModel parseModel)
         {
             Parameter.IfNullOrZero(parseModel);
             Parameter.IfNullOrZero(parseModel.Sql);
-            _expressionProcessorResult.Dispose();
+            _processorResult.Dispose();
             if (parseModel.Parameters != null)
             {
-                _expressionProcessorResult.Append(parseModel.Sql, parseModel.Parameters.ToArray());
+                _processorResult.Append(parseModel.Sql, parseModel.Parameters.ToArray());
             }
             else
             {
-                _expressionProcessorResult.Append(parseModel.Sql);
+                _processorResult.Append(parseModel.Sql);
             }
 
             if (parseModel.ExpressionStore != null)
@@ -45,7 +45,7 @@ namespace NewLibCore.Data.SQL.EMapper.Parser
                 InnerProcessor();
             }
 
-            return _expressionProcessorResult;
+            return _processorResult;
         }
     }
 

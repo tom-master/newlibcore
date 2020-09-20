@@ -8,9 +8,9 @@ using NewLibCore.Validate;
 namespace NewLibCore.Data.SQL
 {
     /// <summary>
-    /// 执行Expression翻译后的sql语句
+    /// 执行表达式翻译结果
     /// </summary>
-    internal sealed class ExpressionProcessorResult : IDisposable
+    internal sealed class ProcessorResult : IDisposable
     {
         private readonly StringBuilder _innerSql;
 
@@ -22,7 +22,7 @@ namespace NewLibCore.Data.SQL
         /// 初始化一个ResultExecutor类的实例
         /// </summary>
         /// <param name="mapperDbContextBase"></param>
-        public ExpressionProcessorResult(MapperDbContextBase mapperDbContextBase)
+        public ProcessorResult(MapperDbContextBase mapperDbContextBase)
         {
             Parameter.IfNullOrZero(mapperDbContextBase);
 
@@ -101,7 +101,7 @@ namespace NewLibCore.Data.SQL
             _innerSql.Clear();
         }
 
-        public void ClearParameter() 
+        public void ClearParameter()
         {
             _parameters.Clear();
         }
