@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
 using NewLibCore.Data.SQL.EMapper;
@@ -15,8 +13,6 @@ namespace NewLibCore.Data.SQL.Template
     /// </summary>
     internal class MsSqlTemplate : TemplateBase
     {
-        private IDictionary<Type, SqlDbType> _dbTypeMapper;
-
         internal override String CreateUpdate<TModel>(TModel model)
         {
             var (tableName, aliasName) = model.GetTableName();
