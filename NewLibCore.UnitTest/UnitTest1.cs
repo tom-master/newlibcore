@@ -18,20 +18,19 @@ namespace NewLibCore.UnitTest
         [TestMethod]
         public void TestMethod1()
         {
-            ICacheQueryProvider cacheProvider = new DefaultRedisQueryProvider(0, "39.106.106.137:9736,allowAdmin=false,password=UGieaY5u9SwRUzoxbuePq,connectTimeout=15000,keepAlive=60,syncTimeout=3000");
-            var rr = cacheProvider.StringGet<Config>("NewCrm:Config:UserId:4");
+            // ICacheQueryProvider cacheProvider = new DefaultRedisQueryProvider(0, "39.106.106.137:9736,allowAdmin=false,password=UGieaY5u9SwRUzoxbuePq,connectTimeout=15000,keepAlive=60,syncTimeout=3000");
+            // var rr = cacheProvider.StringGet<Config>("NewCrm:Config:UserId:4");
             // cacheProvider.StringSet("NewCrm:Config:UserId:4", new Config
             // {
             //     Skin = "wasd123"
             // });
-            // EntityMapperConfig.InitDefaultSetting();
-            // EntityMapperConfig.ConnectionStringName = "newcrm";
+            EntityMapperConfig.InitDefaultSetting();
+            EntityMapperConfig.ConnectionStringName = "NewCrmDatabase";
 
-            // //using (var mapper = EntityMapper.CreateMapper())
-            // //{
-            // //    var result = mapper.Query<User>().Where(w => w.Id == 4).ToList();
-            // //    var r = 0;
-            // //}
+            using (var mapper = EntityMapper.CreateMapper())
+            {
+                var result = mapper.Query<User>().InnerJoin<Config>((a, b) => a.Id == b.UserId).Where(w => w.Id == 4).ToList();
+            }
             // try
             // {
             //     Thread[] threads = new Thread[Environment.ProcessorCount];

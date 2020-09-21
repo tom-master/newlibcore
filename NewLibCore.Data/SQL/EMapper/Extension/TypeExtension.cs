@@ -14,13 +14,18 @@ namespace NewLibCore.Data.SQL.Extension
         /// <summary>
         /// 获取设置在实体的指定表名
         /// </summary>
-        /// <param name="t">对象类型</param>
+        /// <param name="entityBase"></param>
         /// <returns></returns>
         internal static (String TableName, String AliasName) GetTableName(this EntityBase entityBase)
         {
             return GetTableName(entityBase.GetType());
         }
 
+        /// <summary>
+        /// 获取设置在实体的指定表名
+        /// </summary>
+        /// <param name="t">对象类型</param>
+        /// <returns></returns>
         internal static (String TableName, String AliasName) GetTableName(this Type t)
         {
             Parameter.IfNullOrZero(t);
