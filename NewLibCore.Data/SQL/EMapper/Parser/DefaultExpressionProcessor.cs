@@ -411,6 +411,17 @@ namespace NewLibCore.Data.SQL
             return (rightMember, rightAliasName);
         }
 
+        private String ExtractMember(MemberExpression memberExpression)
+        {
+            Parameter.IfNullOrZero(memberExpression);
+            var (tableName, aliasName) = memberExpression.Type.GetTableName();
+            if (!_tableAliasMapper.Any(a => a.Key == tableName && a.Value == aliasName))
+            {
+                throw new Exception($@"没有找到参数名:{memberExpression.Type.Name}所对应的表别名");
+            }
+            return aliasName = _tableAliasMapper.Where(w => w.Key == tableName && w.Value == aliasName).FirstOrDefault().Value.ToLower();
+        }
+
         /// <summary>
         /// 获取左表达式的成员对象和别名
         /// </summary>
