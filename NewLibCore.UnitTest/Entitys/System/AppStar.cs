@@ -1,9 +1,9 @@
 ﻿using System;
-using NewLibCore.Data.SQL;
-using NewLibCore.Data.SQL.Validate;
+using NewLibCore.Storage.SQL;
+using NewLibCore.Storage.SQL.Validate;
 
 namespace NewLibCore.UnitTest.Entitys.System
-{
+{`
     [TableName("newcrm_app_star")]
     public partial class AppStar : EntityBase
     {
