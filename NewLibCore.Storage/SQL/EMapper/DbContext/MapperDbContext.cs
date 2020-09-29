@@ -2,9 +2,6 @@
 using System.Data;
 using System.Data.Common;
 using System.Linq;
-using NewLibCore.Data.SQL.EMapper;
-using NewLibCore.Data.SQL.Extension;
-using NewLibCore.Data.SQL.Template;
 using NewLibCore.Validate;
 
 namespace NewLibCore.Storage.SQL
