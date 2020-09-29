@@ -1,7 +1,7 @@
 ﻿using System;
+using NewLibCore.Storage.SQL;
+using NewLibCore.Storage.SQL.Validate;
 using NewLibCore.UnitTest.ValueObject;
-using NewLibCore.Data.SQL;
-using NewLibCore.Data.SQL.Validate;
 
 namespace NewLibCore.UnitTest.Entitys.System
 {
