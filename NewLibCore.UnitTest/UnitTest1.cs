@@ -3,9 +3,6 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NewLibCore.Data.Redis.InternalHelper;
-using NewLibCore.Data.SQL;
-using NewLibCore.Data.SQL.EMapper;
 using NewLibCore.UnitTest.Entitys.Agent;
 using NewLibCore.UnitTest.Entitys.System;
 
@@ -17,8 +14,6 @@ namespace NewLibCore.UnitTest
         [TestMethod]
         public void TestMethod1()
         {
-            var result1 = EnumExtensions.ToEnum<Test>(1);
-            var result2 = EnumExtensions.ToEnum<Test>("B");
         }
     }
 
