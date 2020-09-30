@@ -449,6 +449,6 @@ namespace NewLibCore.Storage.SQL
     {
         internal StringBuilder Sql { get; } = new StringBuilder();
 
-        internal IEnumerable<MapperParameter> Parameter { get; } = new List<MapperParameter>();
+        internal IEnumerable<MapperParameter> Parameters { get; } = new List<MapperParameter>();
     }
 }
