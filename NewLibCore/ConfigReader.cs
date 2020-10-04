@@ -9,6 +9,11 @@ namespace NewLibCore
     public static class ConfigReader
     {
 
+        private static String ReadFromApollo(String key)
+        {
+            return "";
+        }
+
         private static String ReadFromEnvironmentVariable(String varKey)
         {
             Parameter.IfNullOrZero(varKey);
