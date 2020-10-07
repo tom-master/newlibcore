@@ -9,17 +9,14 @@ namespace NewLibCore.Storage.SQL.Component.Cache
 
         public override void Add(string key, object obj, DateTime? timeOut = null)
         {
-            throw new NotImplementedException();
         }
 
         public override TResult Get<TResult>(string key)
         {
-            throw new NotImplementedException();
         }
 
         public override void Remove(string key)
         {
-            throw new NotImplementedException();
         }
     }
 }
