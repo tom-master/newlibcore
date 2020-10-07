@@ -13,7 +13,7 @@ namespace NewLibCore.Storage.SQL.Component.Cache
         /// <param name="key">缓存键</param>
         /// <param name="obj">缓存值</param>
         /// <param name="timeOut">超时时间</param>
-        public abstract void Add(String key, Object obj, DateTime? timeOut = null);
+        public abstract void Add(String key, Object obj, TimeSpan? timeOut = default);
 
         /// <summary>
         /// 获取一个执行结果缓存

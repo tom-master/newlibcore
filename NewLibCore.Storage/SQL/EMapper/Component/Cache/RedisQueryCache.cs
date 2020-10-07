@@ -7,7 +7,7 @@ namespace NewLibCore.Storage.SQL.Component.Cache
         {
         }
 
-        public override void Add(string key, object obj, DateTime? timeOut = null)
+        public override void Add(string key, object obj, TimeSpan? timeOut = default)
         {
         }
 

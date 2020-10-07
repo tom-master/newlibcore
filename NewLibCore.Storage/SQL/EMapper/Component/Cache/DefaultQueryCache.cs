@@ -18,7 +18,7 @@ namespace NewLibCore.Storage.SQL.Component.Cache
             _baseCache = MemoryCache.Default;
         }
 
-        public override void Add(String key, Object obj, DateTime? expire = null)
+        public override void Add(String key, Object obj, TimeSpan? timeOut = default)
         {
             //因为缓存可能会对分页结果产生错误，暂时注释掉
             return;
