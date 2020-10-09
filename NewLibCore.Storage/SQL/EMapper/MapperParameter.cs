@@ -25,7 +25,7 @@ namespace NewLibCore.Storage.SQL
             Parameter.IfNullOrZero(value);
 
             _filterBadContent = filterBadContent;
-            Key = $"@{key}";
+            Key = key;
             Value = ParseValueType(value);
             RuntimeType = Value.GetType();
         }
