@@ -139,7 +139,7 @@ namespace NewLibCore.Storage.SQL
                 case ExpressionType.Constant:
                     {
                         var binaryExp = (ConstantExpression)expression;
-                        _predicateProcessorResult.Parameter.Append(new MapperParameter(_parameterNameStack.Pop(), binaryExp.Value));
+                        _predicateProcessorResult.Parameters.Append(new MapperParameter(_parameterNameStack.Pop(), binaryExp.Value));
                         break;
                     }
                 case ExpressionType.Equal:
@@ -237,7 +237,7 @@ namespace NewLibCore.Storage.SQL
                         else
                         {
                             var getter = Expression.Lambda(memberExp).Compile();
-                            _predicateProcessorResult.Parameter.Append(new MapperParameter(_parameterNameStack.Pop(), getter.DynamicInvoke()));
+                            _predicateProcessorResult.Parameters.Append(new MapperParameter(_parameterNameStack.Pop(), getter.DynamicInvoke()));
                         }
                         break;
                     }

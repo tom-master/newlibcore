@@ -247,7 +247,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
                      result.Sql.Append(orderTemplate);
                  }
 
-                 return _predicateProcessorResultExecutor.Execute(result.Sql.ToString(), result.Parameter.ToArray());
+                 return _predicateProcessorResultExecutor.Execute(result);
              });
         }
 
