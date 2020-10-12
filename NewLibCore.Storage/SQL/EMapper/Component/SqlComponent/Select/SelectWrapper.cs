@@ -216,7 +216,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         /// ִ�в�ѯ�����ķ���
         /// </summary>
         /// <returns></returns>
-        public SqlExecuteResultConvert Execute()
+        public ExecutorResult Execute()
         {
             if (!FromComponent.AliasNameMappers.Any())
             {

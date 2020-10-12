@@ -42,7 +42,7 @@ namespace NewLibCore.Storage.SQL.Component.Sql
             FromComponent = fromComponent;
         }
 
-        internal SqlExecuteResultConvert Execute()
+        internal ExecutorResult Execute()
         {
             return RunDiagnosis.Watch(() =>
             {
@@ -61,7 +61,7 @@ namespace NewLibCore.Storage.SQL.Component.Sql
                 predicateProcessResult.Sql.Append($@"{update} {PredicateType.AND} {aliasName}.{nameof(instance.IsDeleted)} = 0 {_options.TemplateBase.AffectedRows}");
                 instance.Reset();
 
-                return _processResultExecutor.Execute(predicateProcessResult.Sql.ToString(), predicateProcessResult.Parameter.ToArray());
+                return _processResultExecutor.Execute(predicateProcessResult);
             });
         }
     }

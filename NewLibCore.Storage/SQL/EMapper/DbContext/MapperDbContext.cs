@@ -94,7 +94,7 @@ namespace NewLibCore.Storage.SQL
             }
         }
 
-        protected internal override SqlExecuteResultConvert Insert(String sql, params MapperParameter[] parameters)
+        protected internal override ExecutorResult Insert(String sql, params MapperParameter[] parameters)
         {
             Check.IfNullOrZero(sql);
             OpenConnection();
@@ -112,14 +112,14 @@ namespace NewLibCore.Storage.SQL
                 }
                 RunDiagnosis.Info($@"SQL语句:{sql} 占位符与参数:{(parameters == null || !parameters.Any() ? "" : String.Join($@"{Environment.NewLine}", parameters.Select(s => $@"{s.Key}----{s.Value}")))}");
 
-                var executeResult = new SqlExecuteResultConvert();
+                var executeResult = new ExecutorResult();
                 executeResult.SaveRawResult(cmd.ExecuteScalar());
                 cmd.Parameters.Clear();
                 return executeResult;
             }
         }
 
-        protected internal override SqlExecuteResultConvert Update(String sql, params MapperParameter[] parameters)
+        protected internal override ExecutorResult Update(String sql, params MapperParameter[] parameters)
         {
             Check.IfNullOrZero(sql);
             OpenConnection();
@@ -137,14 +137,14 @@ namespace NewLibCore.Storage.SQL
                 }
                 RunDiagnosis.Info($@"SQL语句:{sql} 占位符与参数:{(parameters == null || !parameters.Any() ? "" : String.Join($@"{Environment.NewLine}", parameters.Select(s => $@"{s.Key}----{s.Value}")))}");
 
-                var executeResult = new SqlExecuteResultConvert();
+                var executeResult = new ExecutorResult();
                 executeResult.SaveRawResult(cmd.ExecuteNonQuery());
                 cmd.Parameters.Clear();
                 return executeResult;
             }
         }
 
-        protected internal override SqlExecuteResultConvert Select(String sql, params MapperParameter[] parameters)
+        protected internal override ExecutorResult Select(String sql, params MapperParameter[] parameters)
         {
             Check.IfNullOrZero(sql);
             OpenConnection();
@@ -167,7 +167,7 @@ namespace NewLibCore.Storage.SQL
                     var dataTable = new DataTable("tmpDt");
                     dataTable.Load(dr, LoadOption.Upsert);
 
-                    var executeResult = new SqlExecuteResultConvert();
+                    var executeResult = new ExecutorResult();
                     executeResult.SaveRawResult(dataTable);
                     cmd.Parameters.Clear();
                     return executeResult;

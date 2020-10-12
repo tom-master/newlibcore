@@ -28,7 +28,7 @@ namespace NewLibCore.Storage.SQL.Component.Sql
             _model = model;
         }
 
-        internal SqlExecuteResultConvert Execute()
+        internal ExecutorResult Execute()
         {
             return RunDiagnosis.Watch(() =>
              {

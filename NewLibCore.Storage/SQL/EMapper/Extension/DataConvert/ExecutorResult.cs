@@ -10,7 +10,7 @@ namespace NewLibCore.Storage.SQL
     /// <summary>
     /// sql语句执行后的结果
     /// </summary>
-    public sealed class SqlExecuteResultConvert
+    public sealed class ExecutorResult
     {
         private Object _result;
 

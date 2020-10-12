@@ -25,7 +25,7 @@ namespace NewLibCore.Storage.SQL
         /// 执行表达式翻译出的sql语句
         /// </summary>
         /// <returns></returns>
-        internal SqlExecuteResultConvert Execute(PredicateProcessorResult processorResult)
+        internal ExecutorResult Execute(PredicateProcessorResult processorResult)
         {
             var sql = processorResult.Sql.ToString();
             sql = ReformatSql(sql);
