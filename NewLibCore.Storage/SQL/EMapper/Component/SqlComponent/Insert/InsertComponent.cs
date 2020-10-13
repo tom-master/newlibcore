@@ -4,6 +4,8 @@ using NewLibCore.Storage.SQL.Extension;
 using NewLibCore.Storage.SQL.Template;
 using NewLibCore.Validate;
 using System;
+using System.Linq;
+
 namespace NewLibCore.Storage.SQL.Component.Sql
 {
     public class InsertComponent
@@ -41,7 +43,11 @@ namespace NewLibCore.Storage.SQL.Component.Sql
                      instance.CheckPropertyValue();
                  }
                  var insert = _templateBase.CreateInsert(instance);
-                 return _processResultExecutor.Execute(insert, instance.GetSqlElements().Parameters);
+                 PredicateProcessorResult predicateProcessorResult = new PredicateProcessorResult();
+                 predicateProcessorResult.Sql.Append(insert);
+                 predicateProcessorResult.Parameters.Append(instance.GetSqlElements().Parameters);
+
+                 return _processResultExecutor.Execute(predicateProcessorResult);
              });
         }
     }
