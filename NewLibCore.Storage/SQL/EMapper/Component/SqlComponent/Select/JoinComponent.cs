@@ -15,7 +15,6 @@ namespace NewLibCore.Storage.SQL.Component.Sql
 
         internal JoinRelation JoinRelation { get; private set; }
 
-        internal IList<JoinComponent> JoinComponents { get; private set; } = new List<JoinComponent>();
 
         internal void AddJoin<TModel, TJoin>(Expression<Func<TModel, TJoin, Boolean>> expression, JoinRelation joinRelation)
                 where TModel : EntityBase, new()
@@ -28,7 +27,6 @@ namespace NewLibCore.Storage.SQL.Component.Sql
             MainTable = typeof(TModel).GetEntityBaseAliasName().TableName;
 
             InitAliasNameMappers(ParseToAliasNames(expression).ToArray().ToArray());
-            JoinComponents.Add(this);
         }
 
         internal void AddInclude<TModel, TModel1>(Expression<Func<TModel, TModel1>> include)

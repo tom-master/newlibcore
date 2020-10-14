@@ -16,7 +16,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
     {
         internal ColumnFieldComponent SelectComponent { get; private set; }
         internal FromComponent FromComponent { get; private set; }
-        internal JoinComponent JoinComponent { get; private set; }
+        internal IList<JoinComponent> JoinComponents { get; private set; }
         internal WhereComponent WhereComponent { get; private set; }
         internal OrderComponent OrderComponent { get; private set; }
         internal PaginationComponent PaginationComponent { get; private set; }
@@ -28,6 +28,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         {
             Check.IfNullOrZero(options);
             _options = options.Value;
+            JoinComponents = new List<JoinComponent>();
             _predicateProcessorResultExecutor = new PredicateProcessorResultExecutor(options.Value.DbContext);
         }
 
@@ -43,8 +44,9 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         where TRight : EntityBase, new()
         {
             Check.IfNullOrZero(join);
-            JoinComponent = new JoinComponent();
-            JoinComponent.AddJoin(join, JoinRelation.LEFT);
+            var joinComponent = new JoinComponent();
+            joinComponent.AddJoin(join, JoinRelation.LEFT);
+            JoinComponents.Add(joinComponent);
             return this;
         }
 
@@ -53,8 +55,9 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         where TRight : EntityBase, new()
         {
             Check.IfNullOrZero(join);
-            JoinComponent = new JoinComponent();
-            JoinComponent.AddJoin(join, JoinRelation.RIGHT);
+            var joinComponent = new JoinComponent();
+            joinComponent.AddJoin(join, JoinRelation.RIGHT);
+            JoinComponents.Add(joinComponent);
             return this;
         }
 
@@ -63,8 +66,9 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         where TRight : EntityBase, new()
         {
             Check.IfNullOrZero(join);
-            JoinComponent = new JoinComponent();
-            JoinComponent.AddJoin(join, JoinRelation.INNER);
+            var joinComponent = new JoinComponent();
+            joinComponent.AddJoin(join, JoinRelation.INNER);
+            JoinComponents.Add(joinComponent);
             return this;
         }
 
@@ -216,8 +220,9 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         where TModel1 : EntityBase, new()
         {
             Check.IfNullOrZero(include);
-            JoinComponent = new JoinComponent();
-            JoinComponent.AddInclude(include);
+            var joinComponent = new JoinComponent();
+            joinComponent.AddInclude(include);
+            JoinComponents.Add(joinComponent);
             return this;
         }
 
@@ -236,7 +241,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
              {
                  var mainTable = FromComponent.AliasNameMappers[0];
                  var selectStatement = _options.TemplateBase.CreateSelect(ExtractSelectFields(), mainTable.Key, mainTable.Value);
-                 var predicateProcessorResult = Process(JoinComponent, WhereComponent, FromComponent);
+                 var predicateProcessorResult = Process(JoinComponents, WhereComponent, FromComponent);
                  predicateProcessorResult.StatmentTemplate = selectStatement;
                  if (PaginationComponent != null)
                  {
@@ -327,18 +332,15 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
                 types.Add(type);
             }
 
-            if (JoinComponent != null)
+            foreach (var item in JoinComponents)
             {
-                foreach (var item in JoinComponent.JoinComponents)
+                if (item.Expression == null)
                 {
-                    if (item.Expression == null)
-                    {
-                        continue;
-                    }
-                    foreach (var parameter in (item.Expression as LambdaExpression).Parameters)
-                    {
-                        types.Add(parameter.Type);
-                    }
+                    continue;
+                }
+                foreach (var parameter in (item.Expression as LambdaExpression).Parameters)
+                {
+                    types.Add(parameter.Type);
                 }
             }
             return types.Distinct().ToList();

@@ -32,32 +32,29 @@ namespace NewLibCore.Storage.SQL
             _predicateProcessorResultBuilder = new PredicateProcessorResultBuilder();
         }
 
-        internal PredicateProcessorResultBuilder Process(JoinComponent joinComponent, WhereComponent whereComponent, FromComponent fromComponent)
+        internal PredicateProcessorResultBuilder Process(IEnumerable<JoinComponent> joinComponents, WhereComponent whereComponent, FromComponent fromComponent)
         {
-            _aliasMapper = MergeComponentAlias(joinComponent, whereComponent, fromComponent);
+            _aliasMapper = MergeComponentAlias(joinComponents, whereComponent, fromComponent);
             //循环翻译连接对象
-            if (joinComponent != null)
+            foreach (var item in joinComponents)
             {
-                foreach (var item in joinComponent.JoinComponents)
+                if (item.AliasNameMappers == null || item.JoinRelation == JoinRelation.NONE)
                 {
-                    if (item.AliasNameMappers == null || item.JoinRelation == JoinRelation.NONE)
+                    continue;
+                }
+
+                //获取连接对象中的表别名，进行连接语句的翻译
+                foreach (var aliasItem in item.AliasNameMappers)
+                {
+                    if (aliasItem.Key.ToLower() == item.MainTable.ToLower())
                     {
                         continue;
                     }
+                    //获取连接语句的模板 
+                    AssignmentPredicateType(item.JoinRelation, _options.TemplateBase.CreateJoin(item.JoinRelation, aliasItem.Key, aliasItem.Value.ToLower()));
 
-                    //获取连接对象中的表别名，进行连接语句的翻译
-                    foreach (var aliasItem in item.AliasNameMappers)
-                    {
-                        if (aliasItem.Key.ToLower() == item.MainTable.ToLower())
-                        {
-                            continue;
-                        }
-                        //获取连接语句的模板 
-                        AssignmentPredicateType(item.JoinRelation, _options.TemplateBase.CreateJoin(item.JoinRelation, aliasItem.Key, aliasItem.Value.ToLower()));
-
-                        //获取连接类型中的存储的表达式对象进行翻译
-                        InternalProcess(item.Expression, item.JoinRelation);
-                    }
+                    //获取连接类型中的存储的表达式对象进行翻译
+                    InternalProcess(item.Expression, item.JoinRelation);
                 }
             }
             AssignmentPredicateType(JoinRelation.NONE, " WHERE 1=1 ");
@@ -414,13 +411,13 @@ namespace NewLibCore.Storage.SQL
             return _aliasMapper.Where(w => w.Key == tableName && w.Value == aliasName).FirstOrDefault().Value.ToLower();
         }
 
-        private IList<KeyValuePair<String, String>> MergeComponentAlias(JoinComponent joinComponent, WhereComponent whereComponent, FromComponent fromComponent)
+        private IList<KeyValuePair<String, String>> MergeComponentAlias(IEnumerable<JoinComponent> joinComponents, WhereComponent whereComponent, FromComponent fromComponent)
         {
             var newAliasMapper = new List<KeyValuePair<String, String>>();
 
-            if (joinComponent != null)
+            if (joinComponents != null)
             {
-                newAliasMapper.AddRange(joinComponent.JoinComponents.SelectMany(s => s.AliasNameMappers));
+                newAliasMapper.AddRange(joinComponents.SelectMany(s => s.AliasNameMappers));
             }
 
             if (whereComponent != null)
