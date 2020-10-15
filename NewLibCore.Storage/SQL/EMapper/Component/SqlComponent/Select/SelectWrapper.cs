@@ -241,7 +241,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
              {
                  var mainTable = FromComponent.AliasNameMappers[0];
                  var selectStatement = _options.TemplateBase.CreateSelect(ExtractSelectFields(), mainTable.Key, mainTable.Value);
-                 var predicateProcessorResult = Process(JoinComponents, WhereComponent, FromComponent);
+                 var predicateProcessorResult = Process(WhereComponent, FromComponent, JoinComponents);
                  predicateProcessorResult.StatmentTemplate = selectStatement;
                  if (PaginationComponent != null)
                  {

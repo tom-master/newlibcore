@@ -11,16 +11,16 @@ using NewLibCore.Validate;
 
 namespace NewLibCore.Storage.SQL
 {
-    public class PredicateProcessor
+    public class PredicateExpressionTranslator
     {
         private readonly Stack<PredicateType> _predicateTypeStack;
         private readonly Stack<String> _parameterNameStack;
         private readonly EntityMapperOptions _options;
-        private readonly PredicateProcessorResultBuilder _predicateProcessorResultBuilder;
+        private readonly PredicateExpressionTranslatorResultBuilder _predicateExpressionTranslatorResultBuilder;
 
         private IList<KeyValuePair<String, String>> _aliasMapper;
 
-        internal PredicateProcessor(IOptions<EntityMapperOptions> options)
+        internal PredicateExpressionTranslator(IOptions<EntityMapperOptions> options)
         {
             Check.IfNullOrZero(options);
 
@@ -29,10 +29,15 @@ namespace NewLibCore.Storage.SQL
             _predicateTypeStack = new Stack<PredicateType>();
 
             _aliasMapper = new List<KeyValuePair<String, String>>();
-            _predicateProcessorResultBuilder = new PredicateProcessorResultBuilder();
+            _predicateExpressionTranslatorResultBuilder = new PredicateExpressionTranslatorResultBuilder();
         }
 
-        internal PredicateProcessorResultBuilder Process(IEnumerable<JoinComponent> joinComponents, WhereComponent whereComponent, FromComponent fromComponent)
+        internal PredicateExpressionTranslatorResultBuilder Translate(WhereComponent whereComponent, FromComponent fromComponent)
+        {
+            return Translate(whereComponent, fromComponent, new List<JoinComponent>());
+        }
+
+        internal PredicateExpressionTranslatorResultBuilder Translate(WhereComponent whereComponent, FromComponent fromComponent, IEnumerable<JoinComponent> joinComponents)
         {
             _aliasMapper = MergeComponentAlias(joinComponents, whereComponent, fromComponent);
             //循环翻译连接对象
@@ -65,7 +70,7 @@ namespace NewLibCore.Storage.SQL
                 //当表达式主体为常量时则直接返回，不做解析
                 if (lambdaExp.Body.NodeType == ExpressionType.Constant)
                 {
-                    return _predicateProcessorResultBuilder;
+                    return _predicateExpressionTranslatorResultBuilder;
                 }
                 AssignmentPredicateType(JoinRelation.NONE, PredicateType.AND.ToString());
 
@@ -77,18 +82,18 @@ namespace NewLibCore.Storage.SQL
             {
                 AssignmentPredicateType(JoinRelation.NONE, $@"{PredicateType.AND} {aliasItem.Value.ToLower()}.IsDeleted = 0");
             }
-            return _predicateProcessorResultBuilder;
+            return _predicateExpressionTranslatorResultBuilder;
         }
 
         private void AssignmentPredicateType(JoinRelation joinRelation, String value)
         {
             if (joinRelation == JoinRelation.NONE)
             {
-                _predicateProcessorResultBuilder.WhereStatement.Append($@" {value} ");
+                _predicateExpressionTranslatorResultBuilder.WhereStatement.Append($@" {value} ");
             }
             else
             {
-                _predicateProcessorResultBuilder.JoinStatement.Append($@" {value} ");
+                _predicateExpressionTranslatorResultBuilder.JoinStatement.Append($@" {value} ");
             }
         }
 
@@ -141,7 +146,7 @@ namespace NewLibCore.Storage.SQL
                 case ExpressionType.Constant:
                     {
                         var binaryExp = (ConstantExpression)expression;
-                        _predicateProcessorResultBuilder.Parameters.Append(new MapperParameter(_parameterNameStack.Pop(), binaryExp.Value));
+                        _predicateExpressionTranslatorResultBuilder.Parameters.Append(new MapperParameter(_parameterNameStack.Pop(), binaryExp.Value));
                         break;
                     }
                 case ExpressionType.Equal:
@@ -239,7 +244,7 @@ namespace NewLibCore.Storage.SQL
                         else
                         {
                             var getter = Expression.Lambda(memberExp).Compile();
-                            _predicateProcessorResultBuilder.Parameters.Append(new MapperParameter(_parameterNameStack.Pop(), getter.DynamicInvoke()));
+                            _predicateExpressionTranslatorResultBuilder.Parameters.Append(new MapperParameter(_parameterNameStack.Pop(), getter.DynamicInvoke()));
                         }
                         break;
                     }
@@ -443,7 +448,7 @@ namespace NewLibCore.Storage.SQL
         }
     }
 
-    internal class PredicateProcessorResultBuilder
+    internal class PredicateExpressionTranslatorResultBuilder
     {
         private static readonly String _joinPlaceHolder = "<join>";
         private static readonly String _wherePlaceHolder = "<where>";
