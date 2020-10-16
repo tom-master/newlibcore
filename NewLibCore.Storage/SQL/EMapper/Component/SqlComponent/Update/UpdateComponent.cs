@@ -7,7 +7,7 @@ using NewLibCore.Validate;
 
 namespace NewLibCore.Storage.SQL.Component.Sql
 {
-    public class UpdateComponent : PredicateProcessor
+    public class UpdateComponent : PredicateExpressionTranslator
     {
         internal EntityBase Model { get; set; }
 
@@ -57,7 +57,7 @@ namespace NewLibCore.Storage.SQL.Component.Sql
 
                 var (_, aliasName) = instance.GetEntityBaseAliasName();
                 var update = _options.TemplateBase.CreateUpdate(instance);
-                var predicateProcessResult = Process(WhereComponent, FromComponent);
+                var predicateProcessResult = Translate(WhereComponent, FromComponent);
                 predicateProcessResult.StatmentTemplate = update;
                 //predicateProcessResult.Sql.Append($@"{update} {PredicateType.AND} {aliasName}.{nameof(instance.IsDeleted)} = 0 {_options.TemplateBase.AffectedRows}");
                 instance.Reset();

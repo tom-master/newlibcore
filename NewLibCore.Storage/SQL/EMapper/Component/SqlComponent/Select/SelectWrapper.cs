@@ -12,7 +12,7 @@ using System.Reflection;
 
 namespace NewLibCore.Storage.SQL.ProcessorFactory
 {
-    public class SelectWrapper : PredicateProcessor
+    public class SelectWrapper : PredicateExpressionTranslator
     {
         internal ColumnFieldComponent SelectComponent { get; private set; }
         internal FromComponent FromComponent { get; private set; }
@@ -241,7 +241,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
              {
                  var mainTable = FromComponent.AliasNameMappers[0];
                  var selectStatement = _options.TemplateBase.CreateSelect(ExtractSelectFields(), mainTable.Key, mainTable.Value);
-                 var predicateProcessorResult = Process(WhereComponent, FromComponent, JoinComponents);
+                 var predicateProcessorResult = Translate(WhereComponent, FromComponent, JoinComponents);
                  predicateProcessorResult.StatmentTemplate = selectStatement;
                  if (PaginationComponent != null)
                  {
