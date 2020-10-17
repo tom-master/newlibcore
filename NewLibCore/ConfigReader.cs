@@ -16,7 +16,7 @@ namespace NewLibCore
 
         private static String ReadFromEnvironmentVariable(String varKey)
         {
-            Parameter.IfNullOrZero(varKey);
+            Check.IfNullOrZero(varKey);
             var v1 = Environment.GetEnvironmentVariable(varKey, EnvironmentVariableTarget.Machine);
             if (!String.IsNullOrEmpty(v1))
             {
@@ -39,7 +39,7 @@ namespace NewLibCore
 
         private static String ReadFromAppsettings(String key)
         {
-            Parameter.IfNullOrZero(key);
+            Check.IfNullOrZero(key);
             var builder = new ConfigurationBuilder();
             var root = builder.AddJsonFile($@"{AppDomain.CurrentDomain.BaseDirectory}/appsettings.json").Build();
             var path = $@"{key}";
