@@ -12,7 +12,7 @@ namespace NewLibCore
         /// </summary>
         public static T ToEnum<T>(String value) where T : struct
         {
-            Parameter.IfNullOrZero(value);
+            Check.IfNullOrZero(value);
             if (Enum.TryParse(value, true, out T t))
             {
                 return t;
@@ -26,7 +26,7 @@ namespace NewLibCore
         /// </summary>
         public static T ToEnum<T>(Int32 value) where T : struct
         {
-            Parameter.IfNullOrZero(value);
+            Check.IfNullOrZero(value);
             return ToEnum<T>(value.ToString());
         }
 
@@ -35,7 +35,7 @@ namespace NewLibCore
         /// </summary>
         public static TValue ToValue<TValue>(this Enum e)
         {
-            Parameter.IfNullOrZero(e);
+            Check.IfNullOrZero(e);
 
             if (Enum.TryParse(e.GetType(), e.ToString(), true, out Object c))
             {
@@ -50,7 +50,7 @@ namespace NewLibCore
         /// </summary>
         public static String GetDescription(this Enum e, String split = ",")
         {
-            Parameter.IfNullOrZero(e);
+            Check.IfNullOrZero(e);
             var attrs = e.GetType().GetField(e.ToString()).GetAttributes<DescriptionAttribute>(false);
             if (attrs.Length > 0)
             {
