@@ -40,7 +40,7 @@ namespace NewLibCore
         /// <returns></returns>
         private static String InternalMd5(Byte[] bs)
         {
-            Parameter.IfNullOrZero(bs);
+            Check.IfNullOrZero(bs);
 
             var md5 = new MD5CryptoServiceProvider();
             md5.ComputeHash(bs);
