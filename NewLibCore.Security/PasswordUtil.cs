@@ -19,8 +19,8 @@ namespace NewLibCore.Security
         /// <returns></returns>
         public static Boolean ComparePasswords(String dbPassword, String userPassword)
         {
-            Parameter.IfNullOrZero(dbPassword);
-            Parameter.IfNullOrZero(userPassword);
+            Check.IfNullOrZero(dbPassword);
+            Check.IfNullOrZero(userPassword);
 
             var dbPwd = Convert.FromBase64String(dbPassword);
             var hashedPwd = HashString(userPassword);
@@ -50,7 +50,7 @@ namespace NewLibCore.Security
         /// <returns></returns>
         public static String CreateDbPassword(String userPassword)
         {
-            Parameter.IfNullOrZero(userPassword);
+            Check.IfNullOrZero(userPassword);
 
             if (String.IsNullOrEmpty(userPassword))
             {
@@ -73,7 +73,7 @@ namespace NewLibCore.Security
         /// <returns></returns>
         private static Byte[] HashString(String str)
         {
-            Parameter.IfNullOrZero(str);
+            Check.IfNullOrZero(str);
 
             if (String.IsNullOrEmpty(str))
             {
@@ -95,8 +95,8 @@ namespace NewLibCore.Security
         /// <returns></returns>
         private static Boolean CompareByteArray(ICollection<Byte> array1, IList<Byte> array2 = null)
         {
-            Parameter.IfNullOrZero(array1);
-            Parameter.IfNullOrZero(array2);
+            Check.IfNullOrZero(array1);
+            Check.IfNullOrZero(array2);
 
             if (array2 == null)
             {
@@ -117,8 +117,8 @@ namespace NewLibCore.Security
         /// <returns></returns>
         private static Byte[] CreateSaltedPassword(Byte[] saltValue, Byte[] unsaltedPassword)
         {
-            Parameter.IfNullOrZero(saltValue);
-            Parameter.IfNullOrZero(unsaltedPassword);
+            Check.IfNullOrZero(saltValue);
+            Check.IfNullOrZero(unsaltedPassword);
 
             var rawSalted = new Byte[unsaltedPassword.Length + saltValue.Length];
             unsaltedPassword.CopyTo(rawSalted, 0);
