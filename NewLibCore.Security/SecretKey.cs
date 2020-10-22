@@ -10,8 +10,8 @@ namespace NewLibCore.Security
     {
         public static String Encrypt(String source, String saltValue)
         {
-            Parameter.IfNullOrZero(source);
-            Parameter.IfNullOrZero(saltValue);
+            Check.IfNullOrZero(source);
+            Check.IfNullOrZero(saltValue);
             try
             {
                 var aes = new AesCryptoServiceProvider();
@@ -39,8 +39,8 @@ namespace NewLibCore.Security
 
         public static String Decrypt(String source, String saltValue)
         {
-            Parameter.IfNullOrZero(source);
-            Parameter.IfNullOrZero(saltValue);
+            Check.IfNullOrZero(source);
+            Check.IfNullOrZero(saltValue);
             try
             {
 
