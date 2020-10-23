@@ -27,6 +27,7 @@ namespace NewLibCore.Storage.SQL
         /// </summary>
         public MapperDbContext(TemplateBase templateBase)
         {
+            Check.IfNullOrZero(templateBase);
             _templateBase = templateBase;
             _connection = templateBase.CreateDbConnection();
         }
@@ -109,7 +110,7 @@ namespace NewLibCore.Storage.SQL
 
         protected internal override SqlExecuteResultConvert RawExecute(ExecuteType executeType, String sql, params MapperParameter[] parameters)
         {
-            Parameter.IfNullOrZero(sql);
+            Check.IfNullOrZero(sql);
             OpenConnection();
             using (var cmd = _connection.CreateCommand())
             {
