@@ -28,7 +28,7 @@ namespace NewLibCore.Storage.SQL.Validate
         /// <param name="value">默认值</param>
         public DefaultValueAttribute(Type type, Object value)
         {
-            Parameter.IfNullOrZero(type);
+            Check.IfNullOrZero(type);
 
             Type = type;
             if (type.IsEnum)
