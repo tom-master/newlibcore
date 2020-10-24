@@ -13,7 +13,7 @@ namespace NewLibCore.Storage.SQL.Validate
 
         public ForeignKeyAttribute(Type foreignType)
         {
-            Parameter.IfNullOrZero(foreignType);
+            Check.IfNullOrZero(foreignType);
             ForeignType = foreignType;
         }
     }
