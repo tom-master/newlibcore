@@ -20,7 +20,7 @@ namespace NewLibCore.Storage.SQL
         /// <param name="rawResult">语句执行后的原始结果</param>
         internal void SaveRawResult(Object rawResult)
         {
-            Parameter.IfNullOrZero(rawResult);
+            Check.IfNullOrZero(rawResult);
             _result = rawResult;
         }
 
