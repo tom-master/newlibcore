@@ -27,7 +27,7 @@ namespace NewLibCore.Storage.SQL.Validate
         /// <param name="aliasName">表别名</param>
         public TableNameAttribute(String name, String aliasName = "")
         {
-            Parameter.IfNullOrZero(name);
+            Check.IfNullOrZero(name);
 
             TableName = BadChatDetection.FilterBadChat(name);
             if (String.IsNullOrEmpty(aliasName))
