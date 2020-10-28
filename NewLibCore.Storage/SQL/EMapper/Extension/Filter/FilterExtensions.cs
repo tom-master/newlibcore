@@ -19,8 +19,8 @@ namespace NewLibCore.Storage.SQL.Extension.Filter
         /// <typeparam name="T"></typeparam>
         public static void And<T>(this FilterBase<T> left, Expression<Func<T, Boolean>> right) where T : EntityBase
         {
-            Parameter.IfNullOrZero(left);
-            Parameter.IfNullOrZero(right);
+            Check.IfNullOrZero(left);
+            Check.IfNullOrZero(right);
 
             if (left.Filter == null)
             {
@@ -45,8 +45,8 @@ namespace NewLibCore.Storage.SQL.Extension.Filter
         /// <typeparam name="T"></typeparam>
         public static void Or<T>(this FilterBase<T> left, Expression<Func<T, Boolean>> right) where T : EntityBase
         {
-            Parameter.IfNullOrZero(left);
-            Parameter.IfNullOrZero(right);
+            Check.IfNullOrZero(left);
+            Check.IfNullOrZero(right);
 
             if (left.Filter == null)
             {
@@ -70,8 +70,8 @@ namespace NewLibCore.Storage.SQL.Extension.Filter
         /// <typeparam name="T"></typeparam>
         public static void Not<T>(this FilterBase<T> left) where T : EntityBase
         {
-            Parameter.IfNullOrZero(left);
-            Parameter.IfNullOrZero(left.Filter);
+            Check.IfNullOrZero(left);
+            Check.IfNullOrZero(left.Filter);
 
             var lambdaExpression = (LambdaExpression)left.Filter;
             var internalParameter = lambdaExpression.Parameters[0];
