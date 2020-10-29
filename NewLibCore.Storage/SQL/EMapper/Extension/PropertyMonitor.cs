@@ -28,7 +28,7 @@ namespace NewLibCore.Storage.SQL
         /// <param name="propertyName">属性名称</param>
         protected void OnChanged(String propertyName)
         {
-            Parameter.IfNullOrZero(propertyName);
+            Check.IfNullOrZero(propertyName);
 
             var propertyInfo = _type.GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance);
             if (propertyInfo == null)
@@ -156,8 +156,8 @@ namespace NewLibCore.Storage.SQL
         /// <param name="rawPropertyValue">原始的属性值</param>
         private void SetPropertyDefaultValue(DefaultValueAttribute defaultValueAttribute, ChangedProperty propertyItem, Object rawPropertyValue)
         {
-            Parameter.IfNullOrZero(defaultValueAttribute);
-            Parameter.IfNullOrZero(propertyItem);
+            Check.IfNullOrZero(defaultValueAttribute);
+            Check.IfNullOrZero(propertyItem);
 
             var propertyInstanceValue = rawPropertyValue;
             var propertyInstanceValueType = propertyItem.Type;
@@ -189,8 +189,8 @@ namespace NewLibCore.Storage.SQL
         /// <param name="po">属性项</param>
         private void ThrowValidateException(PropertyValidateAttribute validateBase, ChangedProperty changedProperty)
         {
-            Parameter.IfNullOrZero(changedProperty);
-            Parameter.IfNullOrZero(validateBase);
+            Check.IfNullOrZero(changedProperty);
+            Check.IfNullOrZero(validateBase);
 
             var reason = validateBase.FailReason($@"{changedProperty.DeclaringType}.{changedProperty.PropertyName}");
             throw new Exception(reason);
@@ -204,7 +204,7 @@ namespace NewLibCore.Storage.SQL
         /// <returns></returns>
         private List<PropertyValidateAttribute> ValidateAttributeOrder(String propertyName, IEnumerable<PropertyValidateAttribute> validates)
         {
-            Parameter.IfNullOrZero(validates);
+            Check.IfNullOrZero(validates);
             if (validates.GroupBy(g => g.Order).Where(w => w.Count() > 1).Any())
             {
                 throw new Exception($@"{propertyName} 中使用了多个优先级相同的特性");
@@ -261,7 +261,7 @@ namespace NewLibCore.Storage.SQL
 
         internal SqlPart(IEnumerable<ChangedProperty> changedProperties)
         {
-            Parameter.IfNullOrZero(changedProperties);
+            Check.IfNullOrZero(changedProperties);
 
             Fields = String.Join(",", changedProperties.Select(c => c.PropertyName));
             InsertPlaceHolders = String.Join(",", changedProperties.Select(key => $@"@{key.PropertyName}"));
