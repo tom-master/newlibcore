@@ -26,7 +26,7 @@ namespace NewLibCore.Storage.SQL.Extension
         /// <returns></returns>
         internal static (String TableName, String AliasName) GetEntityBaseAliasName(this Type t)
         {
-            Parameter.IfNullOrZero(t);
+            Check.IfNullOrZero(t);
             lock (_dic)
             {
                 if (t.BaseType != typeof(EntityBase))
