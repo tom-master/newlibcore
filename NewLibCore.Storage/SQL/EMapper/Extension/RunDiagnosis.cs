@@ -30,7 +30,7 @@ namespace NewLibCore.Storage.SQL.Extension
         /// <param name="logger"></param>
         internal static void SetLoggerInstance(ILogger logger)
         {
-            Parameter.IfNullOrZero(logger);
+            Check.IfNullOrZero(logger);
             _logger = logger;
         }
 
@@ -44,7 +44,7 @@ namespace NewLibCore.Storage.SQL.Extension
         {
             try
             {
-                Parameter.IfNullOrZero(func);
+                Check.IfNullOrZero(func);
                 var sw = new Stopwatch();
                 sw.Start();
                 var returnValue = func();
