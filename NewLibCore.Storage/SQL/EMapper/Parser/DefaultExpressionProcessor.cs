@@ -29,7 +29,7 @@ namespace NewLibCore.Storage.SQL
         public DefaultExpressionProcessor(TemplateBase template, ProcessorResult processorResult)
             : base(processorResult)
         {
-            Parameter.IfNullOrZero(template);
+            Check.IfNullOrZero(template);
 
             _template = template;
 
@@ -206,7 +206,7 @@ namespace NewLibCore.Storage.SQL
                 case ExpressionType.MemberAccess:
                     {
                         var memberExp = (MemberExpression)expression;
-                        if (memberExp.Expression.NodeType == ExpressionType.Parameter)
+                        if (memberExp.Expression.NodeType == ExpressionType.Check)
                         {
                             if (_predicateTypeStack.Count == 0)
                             {
@@ -267,7 +267,7 @@ namespace NewLibCore.Storage.SQL
         /// <param name="expression">表达式</param>
         private void ParserMethodCall(Expression expression, JoinRelation joinRelation)
         {
-            Parameter.IfNullOrZero(expression);
+            Check.IfNullOrZero(expression);
             var methodCallExp = (MethodCallExpression)expression;
             var methodName = methodCallExp.Method.Name;
 
@@ -334,7 +334,7 @@ namespace NewLibCore.Storage.SQL
         /// <param name="relationType">关系类型</param>
         private void CreatePredicate(BinaryExpression binary, PredicateType predicateType, JoinRelation joinRelation)
         {
-            Parameter.IfNullOrZero(binary);
+            Check.IfNullOrZero(binary);
             var binaryExp = binary;
             if (joinRelation != JoinRelation.NONE)
             {
@@ -365,7 +365,7 @@ namespace NewLibCore.Storage.SQL
         /// <param name="relationType">关系类型</param>
         private void GetJoin(BinaryExpression binary, PredicateType predicateType)
         {
-            Parameter.IfNullOrZero(binary);
+            Check.IfNullOrZero(binary);
 
             var leftMember = (MemberExpression)binary.Left;
             var rightMember = (MemberExpression)binary.Right;
@@ -401,7 +401,7 @@ namespace NewLibCore.Storage.SQL
         /// <returns></returns>
         private String ExtractMember(MemberExpression memberExpression)
         {
-            Parameter.IfNullOrZero(memberExpression);
+            Check.IfNullOrZero(memberExpression);
             var parameterExpression = (ParameterExpression)memberExpression.Expression;
             var (tableName, aliasName) = parameterExpression.Type.GetEntityBaseAliasName();
             if (!_aliasMapper.Any(a => a.Key == tableName && a.Value == aliasName))
