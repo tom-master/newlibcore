@@ -206,7 +206,7 @@ namespace NewLibCore.Storage.SQL
                 case ExpressionType.MemberAccess:
                     {
                         var memberExp = (MemberExpression)expression;
-                        if (memberExp.Expression.NodeType == ExpressionType.Check)
+                        if (memberExp.Expression.NodeType == ExpressionType.Parameter)
                         {
                             if (_predicateTypeStack.Count == 0)
                             {

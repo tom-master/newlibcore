@@ -27,8 +27,8 @@ namespace NewLibCore.Storage.SQL.EMapper.Parser
 
         internal ProcessorResult Processor(ParseModel parseModel)
         {
-            Parameter.IfNullOrZero(parseModel);
-            Parameter.IfNullOrZero(parseModel.Sql);
+            Check.IfNullOrZero(parseModel);
+            Check.IfNullOrZero(parseModel.Sql);
             _processorResult.Dispose();
             if (parseModel.Parameters != null)
             {
