@@ -24,7 +24,7 @@ namespace NewLibCore.Storage.SQL
         /// <param name="mapperDbContextBase"></param>
         public ProcessorResult(MapperDbContextBase mapperDbContextBase)
         {
-            Parameter.IfNullOrZero(mapperDbContextBase);
+            Check.IfNullOrZero(mapperDbContextBase);
 
             _innerSql = new StringBuilder();
             _parameters = new List<MapperParameter>();
@@ -38,7 +38,7 @@ namespace NewLibCore.Storage.SQL
         /// <param name="parameters"></param>
         internal void Append(params MapperParameter[] parameters)
         {
-            Parameter.IfNullOrZero(parameters);
+            Check.IfNullOrZero(parameters);
 
             foreach (var item in parameters)
             {
@@ -65,7 +65,7 @@ namespace NewLibCore.Storage.SQL
 
         private ExecuteType GetExecuteType(String sql)
         {
-            Parameter.IfNullOrZero(sql);
+            Check.IfNullOrZero(sql);
 
             var operationType = sql.Substring(0, sql.IndexOf(" "));
             if (Enum.TryParse<ExecuteType>(operationType, out var executeType))
@@ -83,7 +83,7 @@ namespace NewLibCore.Storage.SQL
         public override String ToString()
         {
             var sql = _innerSql.ToString();
-            Parameter.IfNullOrZero(sql);
+            Check.IfNullOrZero(sql);
 
             if (sql[0] != ' ')
             {
