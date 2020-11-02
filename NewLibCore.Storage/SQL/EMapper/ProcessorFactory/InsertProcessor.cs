@@ -22,7 +22,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
 
         protected override SqlExecuteResultConvert Execute(ExpressionStore store)
         {
-            Parameter.IfNullOrZero(store);
+            Check.IfNullOrZero(store);
 
             var instance = store.Model;
             instance.OnChanged();
