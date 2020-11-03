@@ -20,8 +20,8 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         }
         protected Processor(TemplateBase templateBase, ExpressionProcessor expressionProcessor)
         {
-            //Parameter.IfNullOrZero(templateBase);
-            Parameter.IfNullOrZero(expressionProcessor);
+            Check.IfNullOrZero(templateBase);
+            Check.IfNullOrZero(expressionProcessor);
 
             _templateBase = templateBase;
             _expressionProcessor = expressionProcessor;
@@ -29,7 +29,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
 
         internal SqlExecuteResultConvert Process(ExpressionStore store)
         {
-            Parameter.IfNullOrZero(store);
+            Check.IfNullOrZero(store);
             return Execute(store);
         }
 
