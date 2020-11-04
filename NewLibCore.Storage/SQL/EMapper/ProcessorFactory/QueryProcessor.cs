@@ -28,7 +28,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         /// <returns></returns>
         protected override SqlExecuteResultConvert Execute(ExpressionStore store)
         {
-            Parameter.IfNullOrZero(store);
+            Check.IfNullOrZero(store);
             if (!store.From.AliaNameMapper.Any())
             {
                 throw new ArgumentException("没有指定From表");
@@ -76,7 +76,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         /// <returns></returns>
         private (String Fields, String AliasName) ExtractOrderFields(ExpressionStore store)
         {
-            Parameter.IfNullOrZero(store);
+            Check.IfNullOrZero(store);
             var fields = (LambdaExpression)store.Order.Expression;
             if (fields.Body.NodeType == ExpressionType.MemberAccess)
             {
@@ -94,7 +94,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         /// <returns></returns>
         private String ExtractSelectFields(ExpressionStore store)
         {
-            Parameter.IfNullOrZero(store);
+            Check.IfNullOrZero(store);
             var anonymousObjFields = new List<String>();
 
             if (store.Select != null)
@@ -139,8 +139,8 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
 
         internal QueryWrapper(ExpressionStore store, Processor processor)
         {
-            Parameter.IfNullOrZero(store);
-            Parameter.IfNullOrZero(processor);
+            Check.IfNullOrZero(store);
+            Check.IfNullOrZero(processor);
 
             _store = store;
             _processor = processor;
@@ -155,7 +155,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         public QueryWrapper<TModel> LeftJoin<TRight>(Expression<Func<TModel, TRight, Boolean>> join)
         where TRight : EntityBase, new()
         {
-            Parameter.IfNullOrZero(join);
+            Check.IfNullOrZero(join);
             _store.AddJoin(join, JoinRelation.LEFT);
             return this;
         }
@@ -164,7 +164,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         where TLeft : EntityBase, new()
         where TRight : EntityBase, new()
         {
-            Parameter.IfNullOrZero(join);
+            Check.IfNullOrZero(join);
             _store.AddJoin(join, JoinRelation.LEFT);
 
             return this;
@@ -173,7 +173,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         public QueryWrapper<TModel> RightJoin<TRight>(Expression<Func<TModel, TRight, Boolean>> join)
         where TRight : EntityBase, new()
         {
-            Parameter.IfNullOrZero(join);
+            Check.IfNullOrZero(join);
             _store.AddJoin(join, JoinRelation.LEFT);
             return this;
         }
@@ -182,7 +182,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         where TLeft : EntityBase, new()
         where TRight : EntityBase, new()
         {
-            Parameter.IfNullOrZero(join);
+            Check.IfNullOrZero(join);
             _store.AddJoin(join, JoinRelation.RIGHT);
 
             return this;
@@ -191,7 +191,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         public QueryWrapper<TModel> InnerJoin<TRight>(Expression<Func<TModel, TRight, Boolean>> join)
         where TRight : EntityBase, new()
         {
-            Parameter.IfNullOrZero(join);
+            Check.IfNullOrZero(join);
             _store.AddJoin(join, JoinRelation.INNER);
             return this;
         }
@@ -200,7 +200,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         where TLeft : EntityBase, new()
         where TRight : EntityBase, new()
         {
-            Parameter.IfNullOrZero(join);
+            Check.IfNullOrZero(join);
             _store.AddJoin(join, JoinRelation.INNER);
 
             return this;
@@ -208,8 +208,8 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
 
         public QueryWrapper<TModel> Page(Int32 pageIndex, Int32 pageSize, Int32 maxKey = 0)
         {
-            Parameter.IfNullOrZero(pageIndex);
-            Parameter.IfNullOrZero(pageSize);
+            Check.IfNullOrZero(pageIndex);
+            Check.IfNullOrZero(pageSize);
 
             _store.AddPage(pageIndex, pageSize, maxKey);
             return this;
@@ -286,7 +286,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
 
         public QueryWrapper<TModel> Where(Expression<Func<TModel, Boolean>> filter)
         {
-            Parameter.IfNullOrZero(filter);
+            Check.IfNullOrZero(filter);
             _store.AddWhere(filter);
             return this;
         }
@@ -294,7 +294,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         public QueryWrapper<TModel> Where<TModel1>(Expression<Func<TModel1, Boolean>> filter)
         where TModel1 : EntityBase, new()
         {
-            Parameter.IfNullOrZero(filter);
+            Check.IfNullOrZero(filter);
             _store.AddWhere(filter);
             return this;
         }
@@ -302,7 +302,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         public QueryWrapper<TModel> Where<TModel1>(Expression<Func<TModel, TModel1, Boolean>> filter)
         where TModel1 : EntityBase, new()
         {
-            Parameter.IfNullOrZero(filter);
+            Check.IfNullOrZero(filter);
             _store.AddWhere(filter);
             return this;
         }
@@ -311,7 +311,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         where TModel1 : EntityBase, new()
         where TModel2 : EntityBase, new()
         {
-            Parameter.IfNullOrZero(filter);
+            Check.IfNullOrZero(filter);
             _store.AddWhere(filter);
             return this;
         }
@@ -322,7 +322,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         where TModel2 : EntityBase, new()
         where TModel3 : EntityBase, new()
         {
-            Parameter.IfNullOrZero(filter);
+            Check.IfNullOrZero(filter);
             _store.AddWhere(filter);
             return this;
         }
@@ -333,7 +333,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         where TModel3 : EntityBase, new()
         where TModel4 : EntityBase, new()
         {
-            Parameter.IfNullOrZero(filter);
+            Check.IfNullOrZero(filter);
             _store.AddWhere(filter);
             return this;
         }
@@ -346,21 +346,21 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         where TModel4 : EntityBase, new()
         where TModel5 : EntityBase, new()
         {
-            Parameter.IfNullOrZero(filter);
+            Check.IfNullOrZero(filter);
             _store.AddWhere(filter);
             return this;
         }
 
         public QueryWrapper<TModel> ThenByDesc<TKey>(Expression<Func<TModel, TKey>> order)
         {
-            Parameter.IfNullOrZero(order);
+            Check.IfNullOrZero(order);
             _store.AddOrderBy(order, OrderByType.DESC);
             return this;
         }
 
         public QueryWrapper<TModel> ThenByAsc<TKey>(Expression<Func<TModel, TKey>> order)
         {
-            Parameter.IfNullOrZero(order);
+            Check.IfNullOrZero(order);
             _store.AddOrderBy(order, OrderByType.ASC);
             return this;
         }
@@ -368,7 +368,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         public QueryWrapper<TModel> Include<TModel1>(Expression<Func<TModel, TModel1>> include)
         where TModel1 : EntityBase, new()
         {
-            Parameter.IfNullOrZero(include);
+            Check.IfNullOrZero(include);
             _store.AddInclude(include);
             return this;
         }
