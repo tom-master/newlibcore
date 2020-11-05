@@ -19,7 +19,7 @@ namespace NewLibCore.Storage.SQL.Store
         /// <param name="parameters"></param>
         internal static void AddDirectSql(this ExpressionStore store, String sql, params MapperParameter[] parameters)
         {
-            Parameter.IfNullOrZero(sql);
+            Check.IfNullOrZero(sql);
             store.RawSql = new RawSqlMapper
             {
                 Sql = sql,
@@ -29,7 +29,7 @@ namespace NewLibCore.Storage.SQL.Store
 
         internal static void AddModel<TModel>(this ExpressionStore store, TModel model) where TModel : EntityBase, new()
         {
-            Parameter.IfNullOrZero(model);
+            Check.IfNullOrZero(model);
             store.Model = model;
         }
     }
@@ -116,7 +116,7 @@ namespace NewLibCore.Storage.SQL.Store
         internal void AddOrderBy<TModel, TKey>(Expression<Func<TModel, TKey>> order, OrderByType orderByType)
         where TModel : EntityBase, new()
         {
-            Parameter.IfNullOrZero(order);
+            Check.IfNullOrZero(order);
             Order = new OrderExpressionMapper
             {
                 Expression = order,
@@ -128,7 +128,7 @@ namespace NewLibCore.Storage.SQL.Store
         where TModel : EntityBase, new()
         where TModel1 : EntityBase, new()
         {
-            Parameter.IfNullOrZero(include);
+            Check.IfNullOrZero(include);
 
             var parameterType = include.Parameters[0].Type;
             var foreignKeyType = include.Body.Type;
@@ -166,7 +166,7 @@ namespace NewLibCore.Storage.SQL.Store
         /// <param name="filter"></param>
         internal void AddWhere<TModel1>(Expression<Func<TModel1, Boolean>> filter) where TModel1 : EntityBase, new()
         {
-            Parameter.IfNullOrZero(filter);
+            Check.IfNullOrZero(filter);
             Where = new SimpleExpressionMapper
             {
                 Expression = filter,
@@ -184,7 +184,7 @@ namespace NewLibCore.Storage.SQL.Store
         where TModel1 : EntityBase, new()
         where TModel2 : EntityBase, new()
         {
-            Parameter.IfNullOrZero(filter);
+            Check.IfNullOrZero(filter);
             Where = new SimpleExpressionMapper
             {
                 Expression = filter,
@@ -204,7 +204,7 @@ namespace NewLibCore.Storage.SQL.Store
         where TModel2 : EntityBase, new()
         where TModel3 : EntityBase, new()
         {
-            Parameter.IfNullOrZero(filter);
+            Check.IfNullOrZero(filter);
             Where = new SimpleExpressionMapper
             {
                 Expression = filter,
@@ -226,7 +226,7 @@ namespace NewLibCore.Storage.SQL.Store
         where TModel3 : EntityBase, new()
         where TModel4 : EntityBase, new()
         {
-            Parameter.IfNullOrZero(filter);
+            Check.IfNullOrZero(filter);
             Where = new SimpleExpressionMapper
             {
                 Expression = filter,
@@ -250,7 +250,7 @@ namespace NewLibCore.Storage.SQL.Store
         where TModel4 : EntityBase, new()
         where TModel5 : EntityBase, new()
         {
-            Parameter.IfNullOrZero(filter);
+            Check.IfNullOrZero(filter);
             Where = new SimpleExpressionMapper
             {
                 Expression = filter,
@@ -276,7 +276,7 @@ namespace NewLibCore.Storage.SQL.Store
         where TModel5 : EntityBase, new()
         where TModel6 : EntityBase, new()
         {
-            Parameter.IfNullOrZero(filter);
+            Check.IfNullOrZero(filter);
             Where = new SimpleExpressionMapper
             {
                 Expression = filter,
@@ -292,7 +292,7 @@ namespace NewLibCore.Storage.SQL.Store
         internal void AddSelect<TModel1>(Expression<Func<TModel1, dynamic>> selector)
         where TModel1 : EntityBase, new()
         {
-            Parameter.IfNullOrZero(selector);
+            Check.IfNullOrZero(selector);
             Select = new SimpleExpressionMapper
             {
                 Expression = selector
@@ -309,7 +309,7 @@ namespace NewLibCore.Storage.SQL.Store
         where TModel1 : EntityBase, new()
         where TModel2 : EntityBase, new()
         {
-            Parameter.IfNullOrZero(selector);
+            Check.IfNullOrZero(selector);
             Select = new SimpleExpressionMapper
             {
                 Expression = selector
@@ -328,7 +328,7 @@ namespace NewLibCore.Storage.SQL.Store
         where TModel2 : EntityBase, new()
         where TModel3 : EntityBase, new()
         {
-            Parameter.IfNullOrZero(selector);
+            Check.IfNullOrZero(selector);
             Select = new SimpleExpressionMapper
             {
                 Expression = selector
@@ -349,7 +349,7 @@ namespace NewLibCore.Storage.SQL.Store
         where TModel3 : EntityBase, new()
         where TModel4 : EntityBase, new()
         {
-            Parameter.IfNullOrZero(selector);
+            Check.IfNullOrZero(selector);
             Select = new SimpleExpressionMapper
             {
                 Expression = selector
@@ -372,7 +372,7 @@ namespace NewLibCore.Storage.SQL.Store
         where TModel4 : EntityBase, new()
         where TModel5 : EntityBase, new()
         {
-            Parameter.IfNullOrZero(selector);
+            Check.IfNullOrZero(selector);
             Select = new SimpleExpressionMapper
             {
                 Expression = selector
@@ -390,7 +390,7 @@ namespace NewLibCore.Storage.SQL.Store
         where TModel : EntityBase, new()
         where TJoin : EntityBase, new()
         {
-            Parameter.IfNullOrZero(expression);
+            Check.IfNullOrZero(expression);
             Joins.Add(new JoinExpressionMapper
             {
                 Expression = expression,
@@ -407,8 +407,8 @@ namespace NewLibCore.Storage.SQL.Store
         /// <param name="pageSize">页大小</param>
         internal void AddPage(Int32 pageIndex, Int32 pageSize, Int32 maxKey = 0)
         {
-            Parameter.IfNullOrZero(pageIndex);
-            Parameter.IfNullOrZero(pageSize);
+            Check.IfNullOrZero(pageIndex);
+            Check.IfNullOrZero(pageSize);
 
             Pagination = new PaginationExpressionMapper
             {
