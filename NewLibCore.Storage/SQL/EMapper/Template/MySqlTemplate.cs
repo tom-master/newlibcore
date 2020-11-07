@@ -29,18 +29,18 @@ namespace NewLibCore.Storage.SQL.Template
 
         internal override String CreatePredicate(PredicateType predicateType, String left, String right)
         {
-            Parameter.IfNullOrZero(predicateType);
-            Parameter.IfNullOrZero(left);
-            Parameter.IfNullOrZero(right);
+            Check.IfNullOrZero(predicateType);
+            Check.IfNullOrZero(left);
+            Check.IfNullOrZero(right);
 
             return String.Format(PredicateMapper[predicateType], left, right);
         }
 
         internal override String CreatePagination(PaginationExpressionMapper pagination, String orderBy, String rawSql)
         {
-            Parameter.IfNullOrZero(pagination.Size);
-            Parameter.IfNullOrZero(orderBy);
-            Parameter.IfNullOrZero(rawSql);
+            Check.IfNullOrZero(pagination.Size);
+            Check.IfNullOrZero(orderBy);
+            Check.IfNullOrZero(rawSql);
 
             if (pagination.MaxKey > 0)
             {
