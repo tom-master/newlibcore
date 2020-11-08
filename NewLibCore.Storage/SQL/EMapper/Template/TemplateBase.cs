@@ -153,9 +153,9 @@ namespace NewLibCore.Storage.SQL.Template
         /// <returns></returns>
         internal String CreateJoin(JoinRelation joinRelation, String left, String right)
         {
-            Parameter.IfNullOrZero(joinRelation);
-            Parameter.IfNullOrZero(left);
-            Parameter.IfNullOrZero(right);
+            Check.IfNullOrZero(joinRelation);
+            Check.IfNullOrZero(left);
+            Check.IfNullOrZero(right);
 
             if (!JoinMapper.ContainsKey(joinRelation))
             {
@@ -173,8 +173,8 @@ namespace NewLibCore.Storage.SQL.Template
         /// <returns></returns>
         internal String CreateOrderBy(OrderByType orderByType, String left)
         {
-            Parameter.IfNullOrZero(orderByType);
-            Parameter.IfNullOrZero(left);
+            Check.IfNullOrZero(orderByType);
+            Check.IfNullOrZero(left);
 
             if (!OrderTypeMapper.ContainsKey(orderByType))
             {
