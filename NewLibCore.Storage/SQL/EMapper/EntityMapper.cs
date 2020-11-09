@@ -45,7 +45,7 @@ namespace NewLibCore.Storage.SQL
         /// <returns></returns>
         public TModel Add<TModel>(TModel model) where TModel : EntityBase, new()
         {
-            Parameter.IfNullOrZero(model);
+            Check.IfNullOrZero(model);
 
             return RunDiagnosis.Watch(() =>
             {
@@ -67,8 +67,8 @@ namespace NewLibCore.Storage.SQL
         /// <returns></returns>
         public Boolean Update<TModel>(TModel model, Expression<Func<TModel, Boolean>> expression) where TModel : EntityBase, new()
         {
-            Parameter.IfNullOrZero(model);
-            Parameter.IfNullOrZero(expression);
+            Check.IfNullOrZero(model);
+            Check.IfNullOrZero(expression);
 
             return RunDiagnosis.Watch(() =>
             {
@@ -103,7 +103,7 @@ namespace NewLibCore.Storage.SQL
         /// <returns></returns>
         public SqlExecuteResultConvert SqlQuery(String sql, params MapperParameter[] parameters)
         {
-            Parameter.IfNullOrZero(sql);
+            Check.IfNullOrZero(sql);
 
             return RunDiagnosis.Watch(() =>
             {
@@ -139,7 +139,7 @@ namespace NewLibCore.Storage.SQL
 
         private Processor FindProcessor(String target)
         {
-            Parameter.IfNullOrZero(target);
+            Check.IfNullOrZero(target);
             var result = _provider.GetServices<Processor>().FirstOrDefault(w => w.CurrentId == target);
             if (result != null)
             {
