@@ -128,7 +128,7 @@ namespace NewLibCore.Storage.SQL.EMapper
         /// <param name="logger"></param>
         public static void SetLogger(ILogger logger)
         {
-            Parameter.IfNullOrZero(logger);
+            Check.IfNullOrZero(logger);
             _logger = logger;
         }
     }
