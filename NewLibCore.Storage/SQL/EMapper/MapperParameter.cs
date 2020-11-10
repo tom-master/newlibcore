@@ -21,8 +21,8 @@ namespace NewLibCore.Storage.SQL
         /// <param name="filterBadContent">是否过滤非法字符</param>
         public MapperParameter(String key, Object value, Boolean filterBadContent)
         {
-            Parameter.IfNullOrZero(key);
-            Parameter.IfNullOrZero(value);
+            Check.IfNullOrZero(key);
+            Check.IfNullOrZero(value);
 
             _filterBadContent = filterBadContent;
             Key = key;
@@ -63,7 +63,7 @@ namespace NewLibCore.Storage.SQL
         /// <returns></returns>
         private Object ParseValueType(Object obj)
         {
-            Parameter.IfNullOrZero(obj);
+            Check.IfNullOrZero(obj);
             var objType = obj.GetType();
             if (objType == typeof(String))
             {
