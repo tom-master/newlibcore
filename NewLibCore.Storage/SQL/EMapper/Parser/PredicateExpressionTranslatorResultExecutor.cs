@@ -6,11 +6,11 @@ using NewLibCore.Validate;
 
 namespace NewLibCore.Storage.SQL
 {
-    public sealed class PredicateProcessorResultExecutor : IDisposable
+    public sealed class PredicateExpressionTranslatorResultExecutor : IDisposable
     {
         private readonly MapperDbContextBase _mapperDbContextBase;
 
-        public PredicateProcessorResultExecutor(MapperDbContextBase mapperDbContextBase)
+        public PredicateExpressionTranslatorResultExecutor(MapperDbContextBase mapperDbContextBase)
         {
             _mapperDbContextBase = mapperDbContextBase;
         }

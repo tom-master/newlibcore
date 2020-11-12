@@ -17,12 +17,12 @@ namespace NewLibCore.Storage.SQL.Component.Sql
 
         private readonly EntityMapperOptions _options;
 
-        private readonly PredicateProcessorResultExecutor _processResultExecutor;
+        private readonly PredicateExpressionTranslatorResultExecutor _processResultExecutor;
 
         public UpdateComponent(IOptions<EntityMapperOptions> options) : base(options)
         {
             _options = options.Value;
-            _processResultExecutor = new PredicateProcessorResultExecutor(options.Value.DbContext);
+            _processResultExecutor = new PredicateExpressionTranslatorResultExecutor(options.Value.DbContext);
         }
 
         internal void AddModel<TModel>(TModel model) where TModel : EntityBase, new()

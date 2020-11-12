@@ -11,7 +11,7 @@ namespace NewLibCore.Storage.SQL.Component.Sql
     {
         private readonly TemplateBase _templateBase;
         private readonly EntityMapperOptions _options;
-        private readonly PredicateProcessorResultExecutor _processResultExecutor;
+        private readonly PredicateExpressionTranslatorResultExecutor _processResultExecutor;
 
         private EntityBase _model;
 
@@ -19,7 +19,7 @@ namespace NewLibCore.Storage.SQL.Component.Sql
         {
             Check.IfNullOrZero(options);
 
-            _processResultExecutor = new PredicateProcessorResultExecutor(options.Value.DbContext);
+            _processResultExecutor = new PredicateExpressionTranslatorResultExecutor(options.Value.DbContext);
             _options = options.Value;
         }
 

@@ -21,7 +21,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         internal OrderComponent OrderComponent { get; private set; }
         internal PaginationComponent PaginationComponent { get; private set; }
         internal readonly EntityMapperOptions _options;
-        private readonly PredicateProcessorResultExecutor _predicateProcessorResultExecutor;
+        private readonly PredicateExpressionTranslatorResultExecutor _predicateProcessorResultExecutor;
 
         public SelectWrapper(IOptions<EntityMapperOptions> options)
         : base(options)
@@ -29,7 +29,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
             Check.IfNullOrZero(options);
             _options = options.Value;
             JoinComponents = new List<JoinComponent>();
-            _predicateProcessorResultExecutor = new PredicateProcessorResultExecutor(options.Value.DbContext);
+            _predicateProcessorResultExecutor = new PredicateExpressionTranslatorResultExecutor(options.Value.DbContext);
         }
 
         public SelectWrapper Query<TModel>() where TModel : EntityBase, new()
