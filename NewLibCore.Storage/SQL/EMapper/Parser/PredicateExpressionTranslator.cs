@@ -11,6 +11,9 @@ using NewLibCore.Validate;
 
 namespace NewLibCore.Storage.SQL
 {
+    /// <summary>
+    /// 谓词表达式翻译
+    /// </summary>
     public class PredicateExpressionTranslator
     {
         private readonly Stack<PredicateType> _predicateTypeStack;

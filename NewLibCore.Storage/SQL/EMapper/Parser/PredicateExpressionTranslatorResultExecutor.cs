@@ -6,6 +6,9 @@ using NewLibCore.Validate;
 
 namespace NewLibCore.Storage.SQL
 {
+    /// <summary>
+    /// 谓词表达式翻译结果执行
+    /// </summary>
     public sealed class PredicateExpressionTranslatorResultExecutor : IDisposable
     {
         private readonly MapperDbContextBase _mapperDbContextBase;
