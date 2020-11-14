@@ -226,10 +226,6 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
             return this;
         }
 
-        /// <summary>
-        /// ִ�в�ѯ�����ķ���
-        /// </summary>
-        /// <returns></returns>
         public ExecutorResult Execute()
         {
             if (!FromComponent.AliasNameMappers.Any())
