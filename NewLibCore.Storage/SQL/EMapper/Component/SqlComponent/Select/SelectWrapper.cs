@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Options;
 using NewLibCore.Storage.SQL.Component.Sql;
 using NewLibCore.Storage.SQL.EMapper;
+using NewLibCore.Storage.SQL.EMapper.Component.SqlComponent;
 using NewLibCore.Storage.SQL.Extension;
 using NewLibCore.Storage.SQL.Validate;
 using NewLibCore.Validate;
@@ -12,7 +13,7 @@ using System.Reflection;
 
 namespace NewLibCore.Storage.SQL.ProcessorFactory
 {
-    public class SelectWrapper : PredicateExpressionTranslator
+    public class SelectWrapper : PredicateExpressionTranslator, IEntityMapperExecutor
     {
         internal ColumnFieldComponent SelectComponent { get; private set; }
         internal FromComponent FromComponent { get; private set; }
@@ -261,10 +262,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
              });
         }
 
-        /// <summary>
-        /// ��ȡ�������ֶ�
-        /// </summary>
-        /// <returns></returns>
+
         private (String Fields, String AliasName) ExtractOrderFields()
         {
             var fields = (LambdaExpression)OrderComponent.Expression;

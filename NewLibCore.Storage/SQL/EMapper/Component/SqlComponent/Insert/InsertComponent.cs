@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Options;
 using NewLibCore.Storage.SQL.EMapper;
+using NewLibCore.Storage.SQL.EMapper.Component.SqlComponent;
 using NewLibCore.Storage.SQL.Extension;
 using NewLibCore.Storage.SQL.Template;
 using NewLibCore.Validate;
@@ -7,7 +8,7 @@ using System.Linq;
 
 namespace NewLibCore.Storage.SQL.Component.Sql
 {
-    public class InsertComponent
+    public class InsertComponent : IEntityMapperExecutor
     {
         private readonly TemplateBase _templateBase;
         private readonly EntityMapperOptions _options;
@@ -28,7 +29,7 @@ namespace NewLibCore.Storage.SQL.Component.Sql
             _model = model;
         }
 
-        internal ExecutorResult Execute()
+        public ExecutorResult Execute()
         {
             return RunDiagnosis.Watch(() =>
              {
