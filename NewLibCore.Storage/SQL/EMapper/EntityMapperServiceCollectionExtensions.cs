@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NewLibCore.Storage.SQL.Component.Sql;
 using NewLibCore.Storage.SQL.EMapper.Component.SqlComponent;
 
-namespace NewLibCore.Storage.SQL.EMapper
+namespace NewLibCore.Storage.SQL
 {
     public static class EntityMapperExtensions
     {

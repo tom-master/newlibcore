@@ -4,7 +4,7 @@ using NewLibCore.Logger;
 using NewLibCore.Storage.SQL.Template;
 using NewLibCore.Storage.SQL.Extension;
 
-namespace NewLibCore.Storage.SQL.EMapper
+namespace NewLibCore.Storage.SQL
 {
     public class EntityMapperOptions
     {
