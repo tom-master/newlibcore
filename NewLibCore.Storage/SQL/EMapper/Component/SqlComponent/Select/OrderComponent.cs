@@ -2,7 +2,7 @@ using System;
 using System.Linq.Expressions;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Storage.SQL.Component.Sql
+namespace NewLibCore.Storage.SQL.Component
 {
     internal class OrderComponent : ComponentBase
     {

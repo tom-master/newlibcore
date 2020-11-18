@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace NewLibCore.Storage.SQL.Component.Sql
+namespace NewLibCore.Storage.SQL.Component
 {
     internal abstract class AliasNameComponent
     {

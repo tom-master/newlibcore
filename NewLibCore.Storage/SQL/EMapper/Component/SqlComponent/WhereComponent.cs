@@ -1,7 +1,7 @@
 using NewLibCore.Validate;
 using System.Linq.Expressions;
 
-namespace NewLibCore.Storage.SQL.Component.Sql
+namespace NewLibCore.Storage.SQL.Component
 {
     internal class WhereComponent : ComponentBase
     {

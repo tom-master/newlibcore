@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using NewLibCore.Storage.SQL.Extension;
 
-namespace NewLibCore.Storage.SQL.Component.Sql
+namespace NewLibCore.Storage.SQL.Component
 {
     internal class FromComponent : ComponentBase
     {

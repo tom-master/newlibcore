@@ -1,7 +1,6 @@
 using System;
 using Microsoft.Extensions.DependencyInjection;
-using NewLibCore.Storage.SQL.Component.Sql;
-using NewLibCore.Storage.SQL.EMapper.Component.SqlComponent;
+using NewLibCore.Storage.SQL.Component;
 
 namespace NewLibCore.Storage.SQL
 {

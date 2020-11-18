@@ -5,7 +5,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using NewLibCore.Storage.SQL.Component.Sql;
+using NewLibCore.Storage.SQL.Component;
 using NewLibCore.Storage.SQL.Extension;
 using NewLibCore.Storage.SQL.Validate;
 using NewLibCore.Validate;

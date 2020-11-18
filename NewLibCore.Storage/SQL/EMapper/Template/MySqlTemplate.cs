@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Data.Common;
 using System.Text;
-using Microsoft.Extensions.Options;
 using MySql.Data.MySqlClient;
-using NewLibCore.Storage.SQL.Component.Sql;
-using NewLibCore.Storage.SQL.EMapper;
+using NewLibCore.Storage.SQL.Component;
 using NewLibCore.Storage.SQL.Extension;
 using NewLibCore.Validate;
 

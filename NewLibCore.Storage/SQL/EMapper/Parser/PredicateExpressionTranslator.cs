@@ -4,8 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using Microsoft.Extensions.Options;
-using NewLibCore.Storage.SQL.Component.Sql;
-using NewLibCore.Storage.SQL.EMapper;
+using NewLibCore.Storage.SQL.Component;
 using NewLibCore.Storage.SQL.Extension;
 using NewLibCore.Validate;
 

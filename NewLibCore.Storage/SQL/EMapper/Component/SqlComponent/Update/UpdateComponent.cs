@@ -1,10 +1,8 @@
 using Microsoft.Extensions.Options;
-using NewLibCore.Storage.SQL.EMapper;
-using NewLibCore.Storage.SQL.EMapper.Component.SqlComponent;
 using NewLibCore.Storage.SQL.Extension;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Storage.SQL.Component.Sql
+namespace NewLibCore.Storage.SQL.Component
 {
     public class UpdateComponent : PredicateExpressionTranslator, IEntityMapperExecutor
     {

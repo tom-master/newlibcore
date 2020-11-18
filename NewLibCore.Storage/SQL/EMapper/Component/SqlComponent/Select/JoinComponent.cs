@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -7,7 +6,7 @@ using NewLibCore.Storage.SQL.Extension;
 using NewLibCore.Storage.SQL.Validate;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Storage.SQL.Component.Sql
+namespace NewLibCore.Storage.SQL.Component
 {
     internal class JoinComponent : ComponentBase
     {

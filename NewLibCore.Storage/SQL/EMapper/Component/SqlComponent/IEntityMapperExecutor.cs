@@ -1,6 +1,6 @@
 using System;
 
-namespace NewLibCore.Storage.SQL.EMapper.Component.SqlComponent
+namespace NewLibCore.Storage.SQL.Component
 {
     public interface IEntityMapperExecutor
     {
