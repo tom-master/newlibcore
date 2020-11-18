@@ -1,12 +1,11 @@
 using Microsoft.Extensions.Options;
-using NewLibCore.Storage.SQL.EMapper;
 using NewLibCore.Storage.SQL.EMapper.Component.SqlComponent;
 using NewLibCore.Storage.SQL.Extension;
 using NewLibCore.Storage.SQL.Template;
 using NewLibCore.Validate;
 using System.Linq;
 
-namespace NewLibCore.Storage.SQL.Component.Sql
+namespace NewLibCore.Storage.SQL.Component
 {
     public class InsertComponent : IEntityMapperExecutor
     {
