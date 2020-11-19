@@ -3,7 +3,6 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using Microsoft.Extensions.Options;
-using NewLibCore.Storage.SQL.EMapper;
 using NewLibCore.Storage.SQL.Extension;
 using NewLibCore.Validate;
 

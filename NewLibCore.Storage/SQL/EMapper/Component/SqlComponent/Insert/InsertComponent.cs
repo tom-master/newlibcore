@@ -1,5 +1,4 @@
 using Microsoft.Extensions.Options;
-using NewLibCore.Storage.SQL.EMapper.Component.SqlComponent;
 using NewLibCore.Storage.SQL.Extension;
 using NewLibCore.Storage.SQL.Template;
 using NewLibCore.Validate;
