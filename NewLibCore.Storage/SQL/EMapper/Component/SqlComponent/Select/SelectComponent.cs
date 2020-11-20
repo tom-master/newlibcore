@@ -22,15 +22,15 @@ namespace NewLibCore.Storage.SQL.Component
         public string ComponentIdentity => this.GetType().Name;
 
         internal readonly EntityMapperOptions _options;
-        private readonly PredicateExpressionTranslatorResultExecutor _predicateProcessorResultExecutor;
+        private readonly ResultExecutor _resultExecutor;
 
-        public SelectComponent(IOptions<EntityMapperOptions> options, PredicateExpressionTranslatorResultExecutor predicateExpressionTranslatorResultExecutor)
+        public SelectComponent(IOptions<EntityMapperOptions> options, ResultExecutor resultExecutor)
         : base(options)
         {
             Check.IfNullOrZero(options);
             _options = options.Value;
             JoinComponents = new List<JoinComponent>();
-            _predicateProcessorResultExecutor = predicateExpressionTranslatorResultExecutor;
+            _resultExecutor = resultExecutor;
         }
 
         public SelectComponent Query<TModel>() where TModel : EntityBase, new()
@@ -259,7 +259,7 @@ namespace NewLibCore.Storage.SQL.Component
                      selectStatement.Append(orderTemplate);
                  }
 
-                 return _predicateProcessorResultExecutor.Execute(predicateProcessorResult);
+                 return _resultExecutor.Execute(predicateProcessorResult);
              });
         }
 

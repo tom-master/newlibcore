@@ -9,11 +9,11 @@ namespace NewLibCore.Storage.SQL
     /// <summary>
     /// 谓词表达式翻译结果执行
     /// </summary>
-    public sealed class PredicateExpressionTranslatorResultExecutor : IDisposable
+    public sealed class ResultExecutor : IDisposable
     {
         private readonly MapperDbContextBase _mapperDbContextBase;
 
-        public PredicateExpressionTranslatorResultExecutor(MapperDbContextBase mapperDbContextBase)
+        public ResultExecutor(MapperDbContextBase mapperDbContextBase)
         {
             _mapperDbContextBase = mapperDbContextBase;
         }

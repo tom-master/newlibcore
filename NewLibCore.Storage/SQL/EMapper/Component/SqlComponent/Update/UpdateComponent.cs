@@ -14,14 +14,14 @@ namespace NewLibCore.Storage.SQL.Component
 
         private readonly EntityMapperOptions _options;
 
-        private readonly PredicateExpressionTranslatorResultExecutor _processResultExecutor;
+        private readonly ResultExecutor _resultExecutor;
 
         public string ComponentIdentity => this.GetType().Name;
 
-        public UpdateComponent(IOptions<EntityMapperOptions> options, PredicateExpressionTranslatorResultExecutor predicateExpressionTranslatorResultExecutor) : base(options)
+        public UpdateComponent(IOptions<EntityMapperOptions> options, ResultExecutor resultExecutor) : base(options)
         {
             _options = options.Value;
-            _processResultExecutor = predicateExpressionTranslatorResultExecutor;
+            _resultExecutor = resultExecutor;
         }
 
         internal void AddModel<TModel>(TModel model) where TModel : EntityBase, new()
@@ -65,7 +65,7 @@ namespace NewLibCore.Storage.SQL.Component
                 //predicateProcessResult.Sql.Append($@"{update} {PredicateType.AND} {aliasName}.{nameof(instance.IsDeleted)} = 0 {_options.TemplateBase.AffectedRows}");
                 instance.Reset();
 
-                return _processResultExecutor.Execute(predicateExpressionTranslatorResultBuilder);
+                return _resultExecutor.Execute(predicateExpressionTranslatorResultBuilder);
             });
         }
 
