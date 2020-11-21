@@ -10,17 +10,17 @@ namespace NewLibCore.Storage.SQL.Component
     {
         private readonly TemplateBase _templateBase;
         private readonly EntityMapperOptions _options;
-        private readonly PredicateExpressionTranslatorResultExecutor _processResultExecutor;
+        private readonly ResultExecutor _resultExecutor;
 
         private EntityBase _model;
 
         public string ComponentIdentity => this.GetType().Name;
 
-        public InsertComponent(IOptions<EntityMapperOptions> options, PredicateExpressionTranslatorResultExecutor predicateExpressionTranslatorResultExecutor)
+        public InsertComponent(IOptions<EntityMapperOptions> options, ResultExecutor resultExecutor)
         {
             Check.IfNullOrZero(options);
 
-            _processResultExecutor = predicateExpressionTranslatorResultExecutor;
+            _resultExecutor = resultExecutor;
             _options = options.Value;
         }
 
@@ -46,7 +46,7 @@ namespace NewLibCore.Storage.SQL.Component
                  predicateExpressionTranslatorResultBuilder.StatmentTemplate = insert;
                  instance.GetSqlElements().Parameters.Select(s => predicateExpressionTranslatorResultBuilder.Parameters.Append(s));
 
-                 return _processResultExecutor.Execute(predicateExpressionTranslatorResultBuilder);
+                 return _resultExecutor.Execute(predicateExpressionTranslatorResultBuilder);
              });
         }
     }
