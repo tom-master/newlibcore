@@ -13,7 +13,7 @@ namespace NewLibCore.Storage.SQL
             services.AddScoped<IEntityMapperExecutor, UpdateComponent>();
             services.AddScoped<IEntityMapperExecutor, SelectComponent>();
             services.AddScoped<MapperDbContextBase, MapperDbContext>();
-            services.AddScoped<PredicateExpressionTranslatorResultExecutor>();
+            services.AddScoped<ResultExecutor>();
             services.AddScoped<EntityMapper>();
             return services;
         }
