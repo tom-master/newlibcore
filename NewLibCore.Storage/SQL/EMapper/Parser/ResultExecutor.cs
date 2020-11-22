@@ -27,13 +27,13 @@ namespace NewLibCore.Storage.SQL
         /// 执行表达式翻译出的sql语句
         /// </summary>
         /// <returns></returns>
-        internal ExecutorResult Execute(PredicateExpressionTranslatorResultBuilder predicateExpressionTranslatorResultBuilder)
+        internal ExecutorResult Execute(StatementResultBuilder statementResultBuilder)
         {
-            var sql = predicateExpressionTranslatorResultBuilder.Build();
+            var sql = statementResultBuilder.Build();
             sql = ReformatSql(sql);
             var executeType = GetExecuteType(sql);
-            var parameters = predicateExpressionTranslatorResultBuilder.Parameters.ToArray();
-            predicateExpressionTranslatorResultBuilder.Clear();
+            var parameters = statementResultBuilder.Parameters.ToArray();
+            statementResultBuilder.Clear();
             switch (executeType)
             {
                 case ExecuteType.SELECT:

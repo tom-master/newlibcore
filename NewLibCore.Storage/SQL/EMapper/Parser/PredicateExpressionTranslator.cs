@@ -18,7 +18,7 @@ namespace NewLibCore.Storage.SQL
         private readonly Stack<PredicateType> _predicateTypeStack;
         private readonly Stack<String> _parameterNameStack;
         private readonly EntityMapperOptions _options;
-        private readonly PredicateExpressionTranslatorResultBuilder _predicateExpressionTranslatorResultBuilder;
+        private readonly StatementResultBuilder _statementResultBuilder;
 
         private IList<KeyValuePair<String, String>> _aliasMapper;
 
@@ -31,15 +31,15 @@ namespace NewLibCore.Storage.SQL
             _predicateTypeStack = new Stack<PredicateType>();
 
             _aliasMapper = new List<KeyValuePair<String, String>>();
-            _predicateExpressionTranslatorResultBuilder = new PredicateExpressionTranslatorResultBuilder();
+            _statementResultBuilder = new StatementResultBuilder();
         }
 
-        internal PredicateExpressionTranslatorResultBuilder Translate(WhereComponent whereComponent, FromComponent fromComponent)
+        internal StatementResultBuilder Translate(WhereComponent whereComponent, FromComponent fromComponent)
         {
             return Translate(whereComponent, fromComponent, new List<JoinComponent>());
         }
 
-        internal PredicateExpressionTranslatorResultBuilder Translate(WhereComponent whereComponent, FromComponent fromComponent, IEnumerable<JoinComponent> joinComponents)
+        internal StatementResultBuilder Translate(WhereComponent whereComponent, FromComponent fromComponent, IEnumerable<JoinComponent> joinComponents)
         {
             _aliasMapper = MergeComponentAlias(joinComponents, whereComponent, fromComponent);
             //循环翻译连接对象
@@ -72,7 +72,7 @@ namespace NewLibCore.Storage.SQL
                 //当表达式主体为常量时则直接返回，不做解析
                 if (lambdaExp.Body.NodeType == ExpressionType.Constant)
                 {
-                    return _predicateExpressionTranslatorResultBuilder;
+                    return _statementResultBuilder;
                 }
                 AssignmentPredicateType(JoinRelation.NONE, PredicateType.AND.ToString());
 
@@ -84,18 +84,18 @@ namespace NewLibCore.Storage.SQL
             {
                 AssignmentPredicateType(JoinRelation.NONE, $@"{PredicateType.AND} {aliasItem.Value.ToLower()}.IsDeleted = 0");
             }
-            return _predicateExpressionTranslatorResultBuilder;
+            return _statementResultBuilder;
         }
 
         private void AssignmentPredicateType(JoinRelation joinRelation, String value)
         {
             if (joinRelation == JoinRelation.NONE)
             {
-                _predicateExpressionTranslatorResultBuilder.WhereStatement.Append($@" {value} ");
+                _statementResultBuilder.WhereStatement.Append($@" {value} ");
             }
             else
             {
-                _predicateExpressionTranslatorResultBuilder.JoinStatement.Append($@" {value} ");
+                _statementResultBuilder.JoinStatement.Append($@" {value} ");
             }
         }
 
@@ -148,7 +148,7 @@ namespace NewLibCore.Storage.SQL
                 case ExpressionType.Constant:
                     {
                         var binaryExp = (ConstantExpression)expression;
-                        _predicateExpressionTranslatorResultBuilder.Parameters.Add(new MapperParameter(_parameterNameStack.Pop(), binaryExp.Value));
+                        _statementResultBuilder.Parameters.Add(new MapperParameter(_parameterNameStack.Pop(), binaryExp.Value));
                         break;
                     }
                 case ExpressionType.Equal:
@@ -246,7 +246,7 @@ namespace NewLibCore.Storage.SQL
                         else
                         {
                             var getter = Expression.Lambda(memberExp).Compile();
-                            _predicateExpressionTranslatorResultBuilder.Parameters.Add(new MapperParameter(_parameterNameStack.Pop(), getter.DynamicInvoke()));
+                            _statementResultBuilder.Parameters.Add(new MapperParameter(_parameterNameStack.Pop(), getter.DynamicInvoke()));
                         }
                         break;
                     }
@@ -450,7 +450,7 @@ namespace NewLibCore.Storage.SQL
         }
     }
 
-    internal class PredicateExpressionTranslatorResultBuilder
+    internal class StatementResultBuilder
     {
         private static readonly String _joinPlaceHolder = "<join>";
         private static readonly String _wherePlaceHolder = "<where>";
