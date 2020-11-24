@@ -60,8 +60,7 @@ namespace NewLibCore.Storage.SQL.Component
 
                 var (_, aliasName) = instance.GetEntityBaseAliasName();
                 var update = _options.TemplateBase.CreateUpdate(instance);
-                var statementResultBuilder = Translate(WhereComponent, FromComponent);
-                statementResultBuilder.StatmentTemplate = update;
+                var statementResultBuilder = Translate(update, WhereComponent, FromComponent);
                 //predicateProcessResult.Sql.Append($@"{update} {PredicateType.AND} {aliasName}.{nameof(instance.IsDeleted)} = 0 {_options.TemplateBase.AffectedRows}");
                 instance.Reset();
 

@@ -238,9 +238,8 @@ namespace NewLibCore.Storage.SQL.Component
              {
                  var mainTable = FromComponent.AliasNameMappers[0];
                  var selectStatement = _options.TemplateBase.CreateSelect(ExtractSelectFields(), mainTable.Key, mainTable.Value);
-                 var predicateProcessorResult = Translate(WhereComponent, FromComponent, JoinComponents);
+                 var statementResultBuilder = Translate(selectStatement, WhereComponent, FromComponent, JoinComponents);
                  JoinComponents.Clear();
-                 predicateProcessorResult.StatmentTemplate = selectStatement;
                  if (PaginationComponent != null)
                  {
                      if (OrderComponent == null)
@@ -249,7 +248,7 @@ namespace NewLibCore.Storage.SQL.Component
                      }
                      var (fields, tableName) = ExtractOrderFields();
                      var orderTemplate = _options.TemplateBase.CreateOrderBy(OrderComponent.OrderBy, $@"{tableName}.{fields}");
-                     _options.TemplateBase.CreatePagination(PaginationComponent, orderTemplate, predicateProcessorResult.StatmentTemplate);
+                     _options.TemplateBase.CreatePagination(PaginationComponent, orderTemplate, statementResultBuilder.StatmentTemplate);
 
                  }
                  else if (OrderComponent != null)
@@ -259,7 +258,7 @@ namespace NewLibCore.Storage.SQL.Component
                      selectStatement.Append(orderTemplate);
                  }
 
-                 return _resultExecutor.Execute(predicateProcessorResult);
+                 return _resultExecutor.Execute(statementResultBuilder);
              });
         }
 

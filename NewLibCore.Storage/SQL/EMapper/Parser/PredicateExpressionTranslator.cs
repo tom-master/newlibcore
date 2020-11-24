@@ -34,14 +34,15 @@ namespace NewLibCore.Storage.SQL
             _statementResultBuilder = new StatementResultBuilder();
         }
 
-        internal StatementResultBuilder Translate(WhereComponent whereComponent, FromComponent fromComponent)
+        internal StatementResultBuilder Translate(StringBuilder statementTemplate, WhereComponent whereComponent, FromComponent fromComponent)
         {
-            return Translate(whereComponent, fromComponent, new List<JoinComponent>());
+            return Translate(statementTemplate, whereComponent, fromComponent, new List<JoinComponent>());
         }
 
-        internal StatementResultBuilder Translate(WhereComponent whereComponent, FromComponent fromComponent, IEnumerable<JoinComponent> joinComponents)
+        internal StatementResultBuilder Translate(StringBuilder statementTemplate, WhereComponent whereComponent, FromComponent fromComponent, IEnumerable<JoinComponent> joinComponents)
         {
             _aliasMapper = MergeComponentAlias(joinComponents, whereComponent, fromComponent);
+            _statementResultBuilder.AddStatementTemplate(statementTemplate);
             //循环翻译连接对象
             foreach (var item in joinComponents)
             {
@@ -459,15 +460,20 @@ namespace NewLibCore.Storage.SQL
 
         internal StringBuilder WhereStatement { get; } = new StringBuilder();
 
-        internal StringBuilder StatmentTemplate { get; set; }
+        internal StringBuilder StatmentTemplate { get; private set; } = new StringBuilder();
 
         internal IList<MapperParameter> Parameters { get; } = new List<MapperParameter>();
 
-        internal String Build()
+        internal void AddStatementTemplate(StringBuilder statementTemplate)
+        {
+            StatmentTemplate = statementTemplate;
+        }
+
+        internal (String sql, IEnumerable<MapperParameter> parameters) Build()
         {
             StatmentTemplate = StatmentTemplate.Replace(_joinPlaceHolder, JoinStatement.ToString());
             StatmentTemplate = StatmentTemplate.Replace(_wherePlaceHolder, WhereStatement.ToString());
-            return StatmentTemplate.ToString();
+            return (StatmentTemplate.ToString(), Parameters);
         }
         internal void Clear()
         {
