@@ -254,7 +254,7 @@ namespace NewLibCore.Storage.SQL
 
         internal String UpdatePlaceHolders { get; private set; }
 
-        internal MapperParameter[] Parameters { get; private set; }
+        internal IEnumerable<MapperParameter> Parameters { get; private set; }
 
         internal SqlElements(IEnumerable<ChangedProperty> changedProperties)
         {

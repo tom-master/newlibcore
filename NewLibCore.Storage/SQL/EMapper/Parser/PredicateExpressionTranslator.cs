@@ -149,7 +149,7 @@ namespace NewLibCore.Storage.SQL
                 case ExpressionType.Constant:
                     {
                         var binaryExp = (ConstantExpression)expression;
-                        _statementResultBuilder.Parameters.Add(new MapperParameter(_parameterNameStack.Pop(), binaryExp.Value));
+                        _statementResultBuilder.AddParameter(new MapperParameter(_parameterNameStack.Pop(), binaryExp.Value));
                         break;
                     }
                 case ExpressionType.Equal:
@@ -247,7 +247,7 @@ namespace NewLibCore.Storage.SQL
                         else
                         {
                             var getter = Expression.Lambda(memberExp).Compile();
-                            _statementResultBuilder.Parameters.Add(new MapperParameter(_parameterNameStack.Pop(), getter.DynamicInvoke()));
+                            _statementResultBuilder.AddParameter(new MapperParameter(_parameterNameStack.Pop(), getter.DynamicInvoke()));
                         }
                         break;
                     }
@@ -462,25 +462,30 @@ namespace NewLibCore.Storage.SQL
 
         internal StringBuilder StatmentTemplate { get; private set; } = new StringBuilder();
 
-        internal IList<MapperParameter> Parameters { get; } = new List<MapperParameter>();
+        private ICollection<MapperParameter> _parameters = new List<MapperParameter>();
 
         internal void AddStatementTemplate(StringBuilder statementTemplate)
         {
             StatmentTemplate = statementTemplate;
         }
 
+        internal void AddParameter(MapperParameter parameter)
+        {
+            _parameters.Add(parameter);
+        }
+
         internal (String sql, IEnumerable<MapperParameter> parameters) Build()
         {
             StatmentTemplate = StatmentTemplate.Replace(_joinPlaceHolder, JoinStatement.ToString());
             StatmentTemplate = StatmentTemplate.Replace(_wherePlaceHolder, WhereStatement.ToString());
-            return (StatmentTemplate.ToString(), Parameters);
+            return (StatmentTemplate.ToString(), _parameters);
         }
         internal void Clear()
         {
             JoinStatement.Clear();
             WhereStatement.Clear();
             StatmentTemplate.Clear();
-            Parameters.Clear();
+            _parameters.Clear();
         }
     }
 }

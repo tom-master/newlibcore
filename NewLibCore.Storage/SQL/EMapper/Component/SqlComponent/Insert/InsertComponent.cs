@@ -44,8 +44,11 @@ namespace NewLibCore.Storage.SQL.Component
                  var insert = _templateBase.CreateInsert(instance);
                  var statementResultBuilder = new StatementResultBuilder();
                  statementResultBuilder.AddStatementTemplate(insert);
-                 instance.GetSqlElements().Parameters.Select(s => statementResultBuilder.Parameters.Append(s));
-
+                 var parameters = instance.GetSqlElements().Parameters;
+                 foreach (var item in parameters)
+                 {
+                     statementResultBuilder.AddParameter(item);
+                 }
                  return _resultExecutor.Execute(statementResultBuilder);
              });
         }
