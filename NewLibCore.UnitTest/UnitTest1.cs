@@ -17,7 +17,7 @@ namespace NewLibCore.UnitTest
             service.AddEntityMapper(options =>
             {
                 options.UseMySql();
-                options.ConnectionStringName = "sql";
+                options.SetConnectionString();
                 options.SetLogger();
             });
             var provider = service.BuildServiceProvider();

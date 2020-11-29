@@ -13,7 +13,7 @@ namespace NewLibCore.Storage.SQL
         /// 连接字符串名称
         /// </summary>
         /// <value></value>
-        public String ConnectionStringName { get; set; }
+        internal String ConnectionStringName { get; private set; }
 
         /// <summary>
         /// 是否在出现异常时抛出异常
@@ -62,6 +62,11 @@ namespace NewLibCore.Storage.SQL
         public void SetLogger(ILogger logger = null)
         {
             RunDiagnosis.SetLoggerInstance(logger ?? new DefaultLogger());
+        }
+
+        public void SetConnectionString(String connectionName = "sql")
+        {
+            ConnectionStringName = connectionName;
         }
     }
 
