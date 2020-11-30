@@ -26,7 +26,7 @@ namespace NewLibCore.Storage.SQL
         /// 获取所有出现值变更的属性
         /// </summary>
         /// <param name="propertyName">属性名称</param>
-        private void OnChanged(IEnumerable<PropertyInfo> propertyInfos)
+        private void OnChanged(params PropertyInfo[] propertyInfos)
         {
             foreach (var propertyInfo in propertyInfos)
             {
@@ -49,7 +49,7 @@ namespace NewLibCore.Storage.SQL
             {
                 throw new ArgumentException($@"属性：{propertyName},不属于类：{_subClassType.Name}或它的父类");
             }
-            OnChanged(new List<PropertyInfo>() { propertyInfo });
+            OnChanged(propertyInfo);
         }
 
         /// <summary>
@@ -58,7 +58,8 @@ namespace NewLibCore.Storage.SQL
         internal void OnChanged()
         {
             var propertys = _subClassType.GetProperties(BindingFlags.Instance | BindingFlags.Public)
-                .Where(w => w.GetAttributes<PropertyValidateAttribute>().Any() && !w.GetAttributes<PrimaryKeyAttribute>().Any());
+                .Where(w => w.GetAttributes<PropertyValidateAttribute>().Any() && !w.GetAttributes<PrimaryKeyAttribute>().Any())
+                .ToArray();
             OnChanged(propertys);
         }
 
