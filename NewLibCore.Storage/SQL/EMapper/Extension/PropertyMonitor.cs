@@ -63,10 +63,6 @@ namespace NewLibCore.Storage.SQL
             OnChanged(propertys);
         }
 
-        /// <summary>
-        /// 获取值发生变更的属性
-        /// </summary>
-        /// <returns></returns>
         internal SqlElements GetSqlElements()
         {
             return new SqlElements(_changedPropertys);
