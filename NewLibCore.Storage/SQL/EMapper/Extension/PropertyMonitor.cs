@@ -37,7 +37,7 @@ namespace NewLibCore.Storage.SQL
                     Type = propertyInfo.PropertyType,
                     PropertyName = propertyInfo.Name,
                     Value = new FastProperty(propertyInfo).Get(this),
-                    Validates = propertyInfo.GetAttributes<PropertyValidateAttribute>(true)
+                    PropertyValidateAttributes = propertyInfo.GetAttributes<PropertyValidateAttribute>(true)
                 });
             }
         }
@@ -85,12 +85,12 @@ namespace NewLibCore.Storage.SQL
         {
             foreach (var changedProperty in _changedPropertys)
             {
-                if (!changedProperty.Validates.Any() || changedProperty.IsNullable)
+                if (!changedProperty.PropertyValidateAttributes.Any() || changedProperty.IsNullable)
                 {
                     continue;
                 }
 
-                var validateBases = ValidateAttributeOrder(changedProperty.PropertyName, changedProperty.Validates);
+                var validateBases = ValidateAttributeOrder(changedProperty.PropertyName, changedProperty.PropertyValidateAttributes);
                 for (var i = 0; i < validateBases.Count; i++)
                 {
                     if (validateBases[i] is RequiredAttribute)
@@ -240,7 +240,7 @@ namespace NewLibCore.Storage.SQL
         /// <summary>
         /// 属性上应用的PropertyValidate特性
         /// </summary>
-        internal IEnumerable<PropertyValidateAttribute> Validates { get; set; }
+        internal IEnumerable<PropertyValidateAttribute> PropertyValidateAttributes { get; set; }
     }
 
     internal class SqlElements
