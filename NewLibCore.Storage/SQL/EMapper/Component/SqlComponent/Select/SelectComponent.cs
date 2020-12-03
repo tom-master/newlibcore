@@ -272,7 +272,7 @@ namespace NewLibCore.Storage.SQL.Component
                 return (members.Member.Name, aliasName);
             }
 
-            throw new Exception("��֧�ֵ� ORDER BY ����ʽ");
+            throw new Exception();
         }
 
         /// <summary>
