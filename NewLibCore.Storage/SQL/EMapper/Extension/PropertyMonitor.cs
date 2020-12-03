@@ -90,44 +90,44 @@ namespace NewLibCore.Storage.SQL
                     continue;
                 }
 
-                var validateBases = ValidateAttributeOrder(changedProperty.PropertyName, changedProperty.PropertyValidateAttributes);
-                for (var i = 0; i < validateBases.Count; i++)
+                var propertyValidateAttributes = ValidateAttributeOrder(changedProperty.PropertyName, changedProperty.PropertyValidateAttributes);
+                for (var i = 0; i < propertyValidateAttributes.Count; i++)
                 {
-                    if (validateBases[i] is RequiredAttribute)
+                    if (propertyValidateAttributes[i] is RequiredAttribute)
                     {
-                        if (!validateBases[i].IsValidate(changedProperty))
+                        if (!propertyValidateAttributes[i].IsValidate(changedProperty))
                         {
-                            if (i + 1 >= validateBases.Count)
+                            if (i + 1 >= propertyValidateAttributes.Count)
                             {
-                                ThrowValidateException(validateBases[i], changedProperty);
+                                ThrowValidateException(propertyValidateAttributes[i], changedProperty);
                             }
 
-                            if (validateBases[i + 1] is DefaultValueAttribute attribute)
+                            if (propertyValidateAttributes[i + 1] is DefaultValueAttribute attribute)
                             {
-                                if (!validateBases[i + 1].IsValidate(changedProperty))
+                                if (!propertyValidateAttributes[i + 1].IsValidate(changedProperty))
                                 {
-                                    ThrowValidateException(validateBases[i], changedProperty);
+                                    ThrowValidateException(propertyValidateAttributes[i], changedProperty);
                                 }
                                 SetPropertyDefaultValue(attribute, changedProperty, changedProperty.Value);
                                 i += 1;
                                 continue;
                             }
-                            ThrowValidateException(validateBases[i], changedProperty);
+                            ThrowValidateException(propertyValidateAttributes[i], changedProperty);
                         }
                     }
-                    else if (validateBases[i] is DefaultValueAttribute attribute)
+                    else if (propertyValidateAttributes[i] is DefaultValueAttribute attribute)
                     {
-                        if (!validateBases[i].IsValidate(changedProperty))
+                        if (!propertyValidateAttributes[i].IsValidate(changedProperty))
                         {
-                            ThrowValidateException(validateBases[i], changedProperty);
+                            ThrowValidateException(propertyValidateAttributes[i], changedProperty);
                         }
                         SetPropertyDefaultValue(attribute, changedProperty, changedProperty.Value);
                     }
-                    else if (validateBases[i] is InputRangeAttribute)
+                    else if (propertyValidateAttributes[i] is InputRangeAttribute)
                     {
-                        if (!validateBases[i].IsValidate(changedProperty))
+                        if (!propertyValidateAttributes[i].IsValidate(changedProperty))
                         {
-                            ThrowValidateException(validateBases[i], changedProperty);
+                            ThrowValidateException(propertyValidateAttributes[i], changedProperty);
                         }
                     }
                 }
