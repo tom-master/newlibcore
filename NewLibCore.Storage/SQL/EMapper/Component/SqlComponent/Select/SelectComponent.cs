@@ -275,10 +275,6 @@ namespace NewLibCore.Storage.SQL.Component
             throw new Exception();
         }
 
-        /// <summary>
-        /// ��ȡ��Select�ֶ�
-        /// </summary>
-        /// <returns></returns>
         private String ExtractSelectFields()
         {
             var anonymousObjFields = new List<String>();
