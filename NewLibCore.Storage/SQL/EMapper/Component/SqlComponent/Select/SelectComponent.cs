@@ -300,7 +300,7 @@ namespace NewLibCore.Storage.SQL.Component
             }
             else
             {
-                var types = GetParameterTypes();
+                var types = GetExpressionParameterTypes();
                 var tableNames = types.Select(s => new KeyValuePair<String, String>(s.Name, s.GetEntityBaseAliasName().AliasName)).ToList();
                 anonymousObjFields = types
                     .SelectMany(s => s.GetProperties(BindingFlags.Instance | BindingFlags.Public)
@@ -312,7 +312,7 @@ namespace NewLibCore.Storage.SQL.Component
         }
 
 
-        internal IList<Type> GetParameterTypes()
+        internal IList<Type> GetExpressionParameterTypes()
         {
             var types = new List<Type>();
             if (FromComponent != null)
