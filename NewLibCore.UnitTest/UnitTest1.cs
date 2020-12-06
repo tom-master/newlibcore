@@ -31,11 +31,6 @@ namespace NewLibCore.UnitTest
             .ThenByDesc<User, DateTime>(a => a.AddTime)
             .Page(1, 10).Select<UserRole>(role => new { role.RoleId, role.UserId, role.AddTime })
             .Execute();
-
-
-            // var user = new User();
-            // user.ModifyLockScreenPassword("123123123");
-            // mapper.Update(user, u => u.Id == 4);
         }
     }
 }
