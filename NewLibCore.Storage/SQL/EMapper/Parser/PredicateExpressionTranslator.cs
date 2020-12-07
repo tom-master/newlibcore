@@ -456,7 +456,7 @@ namespace NewLibCore.Storage.SQL
         }
     }
 
-    internal class StatementResultBuilder
+    internal class StatementResultBuilder : IDisposable
     {
         private static readonly String _joinPlaceHolder = "<join>";
         private static readonly String _wherePlaceHolder = "<where>";
@@ -485,12 +485,17 @@ namespace NewLibCore.Storage.SQL
             StatmentTemplate = StatmentTemplate.Replace(_wherePlaceHolder, WhereStatement.ToString());
             return (StatmentTemplate.ToString(), _parameters);
         }
-        internal void Clear()
+        private void Clear()
         {
             JoinStatement.Clear();
             WhereStatement.Clear();
             StatmentTemplate.Clear();
             _parameters.Clear();
+        }
+
+        public void Dispose()
+        {
+            Clear();
         }
     }
 }
