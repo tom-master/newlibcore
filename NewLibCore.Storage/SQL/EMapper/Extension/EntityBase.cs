@@ -58,7 +58,11 @@ namespace NewLibCore.Storage.SQL
         /// </summary>
         protected internal override void SetAddTime()
         {
-            AddTime = DateTime.Now;
+            if (AddTime == default(DateTime))
+            {
+                AddTime = DateTime.Now;
+            }
+
             OnChanged(nameof(AddTime));
         }
 
