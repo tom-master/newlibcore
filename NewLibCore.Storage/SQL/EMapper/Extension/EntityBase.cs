@@ -71,7 +71,10 @@ namespace NewLibCore.Storage.SQL
         /// </summary>
         protected internal override void SetUpdateTime()
         {
-            LastModifyTime = DateTime.Now;
+            if (LastModifyTime == default(DateTime))
+            {
+                LastModifyTime = DateTime.Now;
+            }
             OnChanged(nameof(LastModifyTime));
         }
     }
