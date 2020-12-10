@@ -17,10 +17,10 @@ namespace NewLibCore.Storage.SQL.Template
 
         private MsSqlPaginationVersion _mssqlPaginationVersion;
 
-        internal override StringBuilder CreateUpdate<TModel>(TModel model)
+        internal override StringBuilder CreateUpdate<TModel>(TModel model, String placeHolders)
         {
             var (tableName, aliasName) = model.GetEntityBaseAliasName();
-            var s = $@"UPDATE {aliasName} SET {model.GetSqlElements().UpdatePlaceHolders} FROM {tableName} AS {aliasName} <where>";
+            var s = $@"UPDATE {aliasName} SET {placeHolders} FROM {tableName} AS {aliasName} <where>";
             return new StringBuilder(s);
         }
 

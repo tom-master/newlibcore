@@ -63,9 +63,9 @@ namespace NewLibCore.Storage.SQL
             OnChanged(propertys);
         }
 
-        internal SqlElements GetSqlElements()
+        internal IReadOnlyList<ChangedProperty> GetChangedProperties()
         {
-            return new SqlElements(_changedPropertys);
+            return _changedPropertys.ToList().AsReadOnly();
         }
 
         /// <summary>

@@ -63,17 +63,16 @@ namespace NewLibCore.Storage.SQL.Template
         /// <summary>
         /// 添加模板
         /// </summary>
-        internal virtual StringBuilder CreateInsert<TModel>(TModel model) where TModel : EntityBase
+        internal virtual StringBuilder CreateInsert(String tableName, String fields, String placeHolders)
         {
-            var elements = model.GetSqlElements();
-            var s = $@"INSERT {model.GetEntityBaseAliasName().TableName} ({elements.Fields}) VALUES ({elements.InsertPlaceHolders}) {Identity} ";
+            var s = $@"INSERT {tableName} ({fields}) VALUES ({placeHolders}) {Identity} ";
             return new StringBuilder(s);
         }
 
         /// <summary>
         /// 更新模板
         /// </summary>
-        internal abstract StringBuilder CreateUpdate<TModel>(TModel model) where TModel : EntityBase;
+        internal abstract StringBuilder CreateUpdate<TModel>(TModel model, String placeHolders) where TModel : EntityBase;
 
         /// <summary>
         /// 追加关系类型
