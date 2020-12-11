@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Options;
+using NewLibCore.Storage.SQL.EMapper.Extension;
 using NewLibCore.Storage.SQL.Extension;
 using NewLibCore.Validate;
 
@@ -54,8 +55,9 @@ namespace NewLibCore.Storage.SQL.Component
                     instance.CheckPropertyValue();
                 }
 
-                var (_, aliasName) = instance.GetEntityBaseAliasName();
-                var update = _options.TemplateBase.CreateUpdate(instance);
+                var (tableName, aliasName) = instance.GetEntityBaseAliasName();
+                var sqlElements = instance.GetChangedProperties().GetSqlElements();
+                var update = _options.TemplateBase.CreateUpdate(tableName, aliasName, sqlElements.UpdatePlaceHolders);
                 var statementResultBuilder = Translate(update, WhereComponent);
                 instance.Reset();
 

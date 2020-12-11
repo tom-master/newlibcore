@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Options;
+using NewLibCore.Storage.SQL.EMapper.Extension;
 using NewLibCore.Storage.SQL.Extension;
 using NewLibCore.Storage.SQL.Template;
 using NewLibCore.Validate;
@@ -34,18 +35,24 @@ namespace NewLibCore.Storage.SQL.Component
             return RunDiagnosis.Watch(() =>
              {
                  Check.IfNullOrZero(_model);
+
                  var instance = _model;
                  instance.SetAddTime();
                  instance.OnChanged();
+
                  if (_options.ModelValidate)
                  {
                      instance.CheckPropertyValue();
                  }
-                 var insert = _templateBase.CreateInsert(instance);
+                 var (tableName, aliasName) = instance.GetEntityBaseAliasName();
+
+                 var sqlElements = instance.GetChangedProperties().GetSqlElements();
+                 var insert = _templateBase.CreateInsert(tableName, sqlElements.Fields, sqlElements.InsertPlaceHolders);
+
                  var statementResultBuilder = new StatementResultBuilder();
                  statementResultBuilder.AddStatementTemplate(insert);
-                 var parameters = instance.GetSqlElements().Parameters;
-                 foreach (var item in parameters)
+
+                 foreach (var item in sqlElements.Parameters)
                  {
                      statementResultBuilder.AddParameter(item);
                  }
