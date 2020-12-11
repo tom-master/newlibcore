@@ -14,9 +14,8 @@ namespace NewLibCore.Storage.SQL.Template
     internal class MySqlTemplate : TemplateBase
     {
         public MySqlTemplate() : base() { }
-        internal override StringBuilder CreateUpdate<TModel>(TModel model, String placeHolders)
+        internal override StringBuilder CreateUpdate(String tableName, String aliasName, String placeHolders)
         {
-            var (tableName, aliasName) = model.GetEntityBaseAliasName();
             var s = $@"UPDATE {tableName} AS {aliasName} SET {placeHolders} <where>";
             return new StringBuilder(s);
         }

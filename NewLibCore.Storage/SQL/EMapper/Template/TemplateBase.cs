@@ -72,7 +72,7 @@ namespace NewLibCore.Storage.SQL.Template
         /// <summary>
         /// 更新模板
         /// </summary>
-        internal abstract StringBuilder CreateUpdate<TModel>(TModel model, String placeHolders) where TModel : EntityBase;
+        internal abstract StringBuilder CreateUpdate(String tableName, String aliasName, String placeHolders);
 
         /// <summary>
         /// 追加关系类型
