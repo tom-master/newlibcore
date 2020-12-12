@@ -32,13 +32,18 @@ namespace NewLibCore
             return "";
         }
 
-        private static String ReadFromAppsettings(String path, String key)
+        private static String ReadFromAppsettings(String key)
         {
-            Parameter.IfNullOrZero(path);
             Parameter.IfNullOrZero(key);
             var builder = new ConfigurationBuilder();
             var root = builder.AddJsonFile($@"{AppDomain.CurrentDomain.BaseDirectory}/appsettings.json").Build();
-            return "";
+            var path = $@"{key}";
+            var result = root[path];
+            if (!string.IsNullOrEmpty(result))
+            {
+                return result;
+            }
+            throw new ArgumentException($@"没有找到{path}对应的值");
         }
 
         /// <summary>
