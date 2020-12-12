@@ -12,15 +12,12 @@ namespace NewLibCore.Storage.SQL.DataConvert
             {
                 return new TupleConverter();
             }
-
-            if (!type.IsComplexType())
+            else if (!type.IsComplexType())
             {
                 return new SimpleTypeConverter();
             }
-            else
-            {
-                return new ClassConverter();
-            }
+
+            return new ClassConverter();
         }
     }
 }
