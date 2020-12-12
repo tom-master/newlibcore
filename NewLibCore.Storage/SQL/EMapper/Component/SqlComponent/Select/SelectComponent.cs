@@ -235,10 +235,12 @@ namespace NewLibCore.Storage.SQL.Component
                  {
                      throw new ArgumentException("From");
                  }
+
                  var mainTable = FromComponent.AliasNameMappers[0];
                  var selectStatement = _options.TemplateBase.CreateSelect(ExtractSelectFields(), mainTable.Key, mainTable.Value);
                  var statementResultBuilder = Translate(selectStatement, WhereComponent, FromComponent, JoinComponents);
                  JoinComponents.Clear();
+
                  if (PaginationComponent != null)
                  {
                      if (OrderComponent == null)
@@ -334,7 +336,5 @@ namespace NewLibCore.Storage.SQL.Component
             }
             return types.Distinct().ToList();
         }
-
-
     }
 }
