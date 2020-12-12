@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
 
-namespace NewLibCore.Data.SQL.DataConvert
+namespace NewLibCore.Storage.SQL.DataConvert
 {
     internal class ClassConverter : IConverter
     {
