@@ -14,13 +14,8 @@ namespace NewLibCore.UnitTest
         [TestMethod]
         public void TestMethod1()
         {
+
         }
     }
 
-    public enum Test
-    {
-        A = 1,
-        B = 2,
-        C = 3
-    }
 }
