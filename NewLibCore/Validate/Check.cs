@@ -2,7 +2,7 @@
 
 namespace NewLibCore.Validate
 {
-    public static class Parameter
+    public static class Check
     {
         /// <summary>
         /// 是否为0或null
