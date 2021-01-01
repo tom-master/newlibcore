@@ -12,7 +12,11 @@ namespace NewLibCore
         private static String ReadFromApollo(String key)
         {
             var builder = new ConfigurationBuilder();
-            var root = builder.AddApollo(builder.Build().GetSection("apollo")).AddDefault().Build();
+            var root = builder
+            .AddJsonFile($@"{AppDomain.CurrentDomain.BaseDirectory}/appsettings.json")
+            .AddApollo(builder.Build().GetSection("apollo"))
+            .AddDefault()
+            .Build();
             var value = root[key];
             if (string.IsNullOrEmpty(value))
             {

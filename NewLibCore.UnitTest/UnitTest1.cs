@@ -14,7 +14,7 @@ namespace NewLibCore.UnitTest
         [TestMethod]
         public void TestMethod1()
         {
-
+            var r = ConfigReader.GetHostVar("sql");
         }
     }
 
