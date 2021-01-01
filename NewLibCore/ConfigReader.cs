@@ -11,25 +11,32 @@ namespace NewLibCore
 
         private static String ReadFromApollo(String key)
         {
-            return "";
+            var builder = new ConfigurationBuilder();
+            var root = builder.AddApollo(builder.Build().GetSection("apollo")).AddDefault().Build();
+            var value = root[key];
+            if (string.IsNullOrEmpty(value))
+            {
+                return "";
+            }
+            return value;
         }
 
-        private static String ReadFromEnvironmentVariable(String varKey)
+        private static String ReadFromEnvironmentVariable(String key)
         {
-            Check.IfNullOrZero(varKey);
-            var v1 = Environment.GetEnvironmentVariable(varKey, EnvironmentVariableTarget.Machine);
+            Check.IfNullOrZero(key);
+            var v1 = Environment.GetEnvironmentVariable(key, EnvironmentVariableTarget.Machine);
             if (!String.IsNullOrEmpty(v1))
             {
                 return v1;
             }
 
-            v1 = Environment.GetEnvironmentVariable(varKey, EnvironmentVariableTarget.Process);
+            v1 = Environment.GetEnvironmentVariable(key, EnvironmentVariableTarget.Process);
             if (!String.IsNullOrEmpty(v1))
             {
                 return v1;
             }
 
-            v1 = Environment.GetEnvironmentVariable(varKey, EnvironmentVariableTarget.User);
+            v1 = Environment.GetEnvironmentVariable(key, EnvironmentVariableTarget.User);
             if (!String.IsNullOrEmpty(v1))
             {
                 return v1;
@@ -42,13 +49,12 @@ namespace NewLibCore
             Check.IfNullOrZero(key);
             var builder = new ConfigurationBuilder();
             var root = builder.AddJsonFile($@"{AppDomain.CurrentDomain.BaseDirectory}/appsettings.json").Build();
-            var path = $@"{key}";
-            var result = root[path];
-            if (!string.IsNullOrEmpty(result))
+            var value = root[key];
+            if (string.IsNullOrEmpty(value))
             {
-                return result;
+                return "";
             }
-            throw new ArgumentException($@"没有找到{path}对应的值");
+            return value;
         }
 
         /// <summary>
@@ -58,19 +64,22 @@ namespace NewLibCore
         public static String GetHostVar(String varName)
         {
             var v1 = "";
-            v1 = ConfigurationManager.AppSettings[varName];
-            if (!String.IsNullOrEmpty(v1))
+            v1 = ReadFromEnvironmentVariable(varName);
+            if (!string.IsNullOrEmpty(v1))
             {
                 return v1;
             }
-
-            v1 = ConfigurationManager.ConnectionStrings[varName]?.ConnectionString;
-            if (!String.IsNullOrEmpty(v1))
+            v1 = ReadFromAppsettings(varName);
+            if (!string.IsNullOrEmpty(v1))
             {
                 return v1;
             }
-
-            throw new Exception($@"没有找到设置的{varName}环境变量");
+            v1 = ReadFromApollo(varName);
+            if (!string.IsNullOrEmpty(v1))
+            {
+                return v1;
+            }
+            throw new ArgumentNullException($@"没有在环境变量,appsettings,apollo中找到对应的key:{varName}的值");
         }
     }
 }
