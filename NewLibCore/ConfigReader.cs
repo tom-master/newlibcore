@@ -67,8 +67,7 @@ namespace NewLibCore
         /// <returns></returns>
         public static String GetHostVar(String varName)
         {
-            var v1 = "";
-            v1 = ReadFromEnvironmentVariable(varName);
+            string v1 = ReadFromEnvironmentVariable(varName);
             if (!string.IsNullOrEmpty(v1))
             {
                 return v1;

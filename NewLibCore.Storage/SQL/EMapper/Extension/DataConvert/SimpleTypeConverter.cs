@@ -14,7 +14,8 @@ namespace NewLibCore.Storage.SQL.DataConvert
             {
                 obj = Activator.CreateInstance<TResult>();
             }
-            var type = obj == null ? typeof(TResult) : obj.GetType();
+
+            _ = obj == null ? typeof(TResult) : obj.GetType();
             for (var i = 0; i < dt.Rows.Count; i++)
             {
                 var rowData = dt.Rows[i][0];
