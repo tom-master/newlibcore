@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Configuration;
 using Microsoft.Extensions.Configuration;
 using NewLibCore.Validate;
 using Com.Ctrip.Framework.Apollo;
@@ -67,6 +66,7 @@ namespace NewLibCore
         /// <returns></returns>
         public static String GetHostVar(String varName)
         {
+            Check.IfNullOrZero(varName);
             string v1 = ReadFromEnvironmentVariable(varName);
             if (!string.IsNullOrEmpty(v1))
             {
