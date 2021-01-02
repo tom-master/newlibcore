@@ -26,7 +26,7 @@ namespace NewLibCore.Storage.SQL
         /// 获取所有出现值变更的属性
         /// </summary>
         /// <param name="propertyName">属性名称</param>
-        protected void OnChanged(String propertyName)
+        protected void OnChanged(String propertyName, Object value)
         {
             Check.IfNullOrZero(propertyName);
 
@@ -42,7 +42,7 @@ namespace NewLibCore.Storage.SQL
                 DeclaringType = propertyInfo.DeclaringType.FullName,
                 Type = propertyInfo.PropertyType,
                 PropertyName = propertyName,
-                Value = new FastProperty(propertyInfo).Get(this),
+                Value = value,
                 Validates = propertyInfo.GetAttributes<PropertyValidateAttribute>(true)
             });
         }
@@ -58,7 +58,7 @@ namespace NewLibCore.Storage.SQL
             SetUpdateTime();
             foreach (var item in propertys)
             {
-                OnChanged(item.Name);
+                OnChanged(item.Name, new FastProperty(item).Get(this));
             }
         }
 
