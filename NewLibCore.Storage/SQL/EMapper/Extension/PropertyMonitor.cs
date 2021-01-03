@@ -26,25 +26,30 @@ namespace NewLibCore.Storage.SQL
         /// 获取所有出现值变更的属性
         /// </summary>
         /// <param name="propertyName">属性名称</param>
-        protected void OnChanged(String propertyName)
+        private void OnChanged(IEnumerable<PropertyInfo> propertyInfos)
         {
-            Check.IfNullOrZero(propertyName);
+            foreach (var propertyInfo in propertyInfos)
+            {
+                _changedPropertys.Add(new ChangedProperty
+                {
+                    IsNullable = Nullable.GetUnderlyingType(propertyInfo.PropertyType) != null,
+                    DeclaringType = propertyInfo.DeclaringType.FullName,
+                    Type = propertyInfo.PropertyType,
+                    PropertyName = propertyInfo.Name,
+                    Value = new FastProperty(propertyInfo).Get(this),
+                    Validates = propertyInfo.GetAttributes<PropertyValidateAttribute>(true)
+                });
+            }
+        }
 
+        protected void OnChanged(string propertyName)
+        {
             var propertyInfo = _subClassType.GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance);
             if (propertyInfo == null)
             {
                 throw new ArgumentException($@"属性：{propertyName},不属于类：{_subClassType.Name}或它的父类");
             }
-
-            _changedPropertys.Add(new ChangedProperty
-            {
-                IsNullable = Nullable.GetUnderlyingType(propertyInfo.PropertyType) != null,
-                DeclaringType = propertyInfo.DeclaringType.FullName,
-                Type = propertyInfo.PropertyType,
-                PropertyName = propertyName,
-                Value = new FastProperty(propertyInfo).Get(this),
-                Validates = propertyInfo.GetAttributes<PropertyValidateAttribute>(true)
-            });
+            OnChanged(new List<PropertyInfo>() { propertyInfo });
         }
 
         /// <summary>
@@ -52,14 +57,11 @@ namespace NewLibCore.Storage.SQL
         /// </summary>
         internal void OnChanged()
         {
-            var propertys = _subClassType.GetProperties(BindingFlags.Instance | BindingFlags.Public)
-                .Where(w => w.GetAttributes<PropertyValidateAttribute>().Any() && !w.GetAttributes<IgnoreMonitorAttribute>().Any());
             SetAddTime();
             SetUpdateTime();
-            foreach (var item in propertys)
-            {
-                OnChanged(item.Name);
-            }
+            var propertys = _subClassType.GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                .Where(w => w.GetAttributes<PropertyValidateAttribute>().Any() && !w.GetAttributes<PrimaryKeyAttribute>().Any());
+            OnChanged(propertys);
         }
 
         /// <summary>

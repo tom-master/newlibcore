@@ -20,7 +20,7 @@ namespace NewLibCore.Storage.SQL
         /// 主键
         /// </summary>
         /// <value></value>
-        [PrimaryKey, IgnoreMonitor]
+        [PrimaryKey]
         public Int32 Id { get; set; }
 
         /// <summary>
@@ -34,14 +34,14 @@ namespace NewLibCore.Storage.SQL
         /// 添加时间
         /// </summary>
         /// <value></value>
-        [DateTimeDefaultValue, IgnoreMonitor]
+        [DateTimeDefaultValue]
         public DateTime AddTime { get; set; }
 
         /// <summary>
         /// 更新时间
         /// </summary>
         /// <value></value>
-        [DateTimeDefaultValue, IgnoreMonitor]
+        [DateTimeDefaultValue]
         public DateTime LastModifyTime { get; set; }
 
         /// <summary>
