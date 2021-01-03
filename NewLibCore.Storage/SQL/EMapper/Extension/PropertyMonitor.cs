@@ -13,13 +13,13 @@ namespace NewLibCore.Storage.SQL
     /// </summary>
     public abstract class PropertyMonitor
     {
-        private readonly Type _type;
+        private readonly Type _subClassType;
 
         private readonly IList<ChangedProperty> _changedPropertys = new List<ChangedProperty>();
 
         internal PropertyMonitor()
         {
-            _type = GetType();
+            _subClassType = GetType();
         }
 
         /// <summary>
@@ -30,10 +30,10 @@ namespace NewLibCore.Storage.SQL
         {
             Check.IfNullOrZero(propertyName);
 
-            var propertyInfo = _type.GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance);
+            var propertyInfo = _subClassType.GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance);
             if (propertyInfo == null)
             {
-                throw new ArgumentException($@"属性：{propertyName},不属于类：{_type.Name}或它的父类");
+                throw new ArgumentException($@"属性：{propertyName},不属于类：{_subClassType.Name}或它的父类");
             }
 
             _changedPropertys.Add(new ChangedProperty
@@ -52,7 +52,7 @@ namespace NewLibCore.Storage.SQL
         /// </summary>
         internal void OnChanged()
         {
-            var propertys = _type.GetProperties(BindingFlags.Instance | BindingFlags.Public)
+            var propertys = _subClassType.GetProperties(BindingFlags.Instance | BindingFlags.Public)
                 .Where(w => w.GetAttributes<PropertyValidateAttribute>().Any() && !w.GetAttributes<IgnoreMonitorAttribute>().Any());
             SetAddTime();
             SetUpdateTime();
