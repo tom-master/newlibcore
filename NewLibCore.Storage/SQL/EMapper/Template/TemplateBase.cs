@@ -62,7 +62,8 @@ namespace NewLibCore.Storage.SQL.Template
         /// </summary>
         internal virtual String CreateInsert<TModel>(TModel model) where TModel : EntityBase
         {
-            return $@"INSERT {model.GetEntityBaseAliasName().TableName} ({model.SqlPart.Fields}) VALUES ({model.SqlPart.InsertPlaceHolders}) {Identity} ";
+            var elements = model.GetSqlElements();
+            return $@"INSERT {model.GetEntityBaseAliasName().TableName} ({elements.Fields}) VALUES ({elements.InsertPlaceHolders}) {Identity} ";
         }
 
         /// <summary>

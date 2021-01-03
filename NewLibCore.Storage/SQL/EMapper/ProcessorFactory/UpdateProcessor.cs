@@ -39,7 +39,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
             var result = _expressionProcessor.Processor(new ParseModel
             {
                 Sql = _templateBase.CreateUpdate(instance),
-                Parameters = instance.SqlPart.Parameters,
+                Parameters = instance.GetSqlElements().Parameters,
                 ExpressionStore = store
             });
 

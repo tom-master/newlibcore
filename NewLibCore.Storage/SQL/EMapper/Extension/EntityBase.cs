@@ -50,7 +50,7 @@ namespace NewLibCore.Storage.SQL
         public virtual void Remove()
         {
             IsDeleted = true;
-            OnChanged(nameof(IsDeleted), IsDeleted);
+            OnChanged(nameof(IsDeleted));
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace NewLibCore.Storage.SQL
         protected internal override void SetAddTime()
         {
             AddTime = DateTime.Now;
-            OnChanged(nameof(AddTime), AddTime);
+            OnChanged(nameof(AddTime));
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace NewLibCore.Storage.SQL
         protected internal override void SetUpdateTime()
         {
             LastModifyTime = DateTime.Now;
-            OnChanged(nameof(LastModifyTime), LastModifyTime);
+            OnChanged(nameof(LastModifyTime));
         }
     }
 }

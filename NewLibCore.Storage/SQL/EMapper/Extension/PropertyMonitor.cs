@@ -26,7 +26,7 @@ namespace NewLibCore.Storage.SQL
         /// 获取所有出现值变更的属性
         /// </summary>
         /// <param name="propertyName">属性名称</param>
-        protected void OnChanged(String propertyName, Object value)
+        protected void OnChanged(String propertyName)
         {
             Check.IfNullOrZero(propertyName);
 
@@ -42,7 +42,7 @@ namespace NewLibCore.Storage.SQL
                 DeclaringType = propertyInfo.DeclaringType.FullName,
                 Type = propertyInfo.PropertyType,
                 PropertyName = propertyName,
-                Value = value,
+                Value = new FastProperty(propertyInfo).Get(this),
                 Validates = propertyInfo.GetAttributes<PropertyValidateAttribute>(true)
             });
         }
@@ -58,7 +58,7 @@ namespace NewLibCore.Storage.SQL
             SetUpdateTime();
             foreach (var item in propertys)
             {
-                OnChanged(item.Name, new FastProperty(item).Get(this));
+                OnChanged(item.Name);
             }
         }
 
@@ -66,12 +66,9 @@ namespace NewLibCore.Storage.SQL
         /// 获取值发生变更的属性
         /// </summary>
         /// <returns></returns>
-        internal SqlPart SqlPart
+        internal SqlElements GetSqlElements()
         {
-            get
-            {
-                return new SqlPart(_changedPropertys);
-            }
+            return new SqlElements(_changedPropertys);
         }
 
         /// <summary>
@@ -249,7 +246,7 @@ namespace NewLibCore.Storage.SQL
         internal IEnumerable<PropertyValidateAttribute> Validates { get; set; }
     }
 
-    internal class SqlPart
+    internal class SqlElements
     {
         internal String Fields { get; private set; }
 
@@ -259,7 +256,7 @@ namespace NewLibCore.Storage.SQL
 
         internal List<MapperParameter> Parameters { get; private set; }
 
-        internal SqlPart(IEnumerable<ChangedProperty> changedProperties)
+        internal SqlElements(IEnumerable<ChangedProperty> changedProperties)
         {
             Check.IfNullOrZero(changedProperties);
 
