@@ -25,6 +25,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
             Check.IfNullOrZero(store);
 
             var instance = store.Model;
+            instance.SetAddTime();
             instance.OnChanged();
             if (EntityMapperConfig.EnableModelValidate)
             {

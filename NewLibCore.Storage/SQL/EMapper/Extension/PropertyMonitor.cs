@@ -57,8 +57,6 @@ namespace NewLibCore.Storage.SQL
         /// </summary>
         internal void OnChanged()
         {
-            SetAddTime();
-            SetUpdateTime();
             var propertys = _subClassType.GetProperties(BindingFlags.Instance | BindingFlags.Public)
                 .Where(w => w.GetAttributes<PropertyValidateAttribute>().Any() && !w.GetAttributes<PrimaryKeyAttribute>().Any());
             OnChanged(propertys);
