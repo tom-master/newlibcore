@@ -11,7 +11,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
 
         protected override SqlExecuteResultConvert Execute(ExpressionStore store)
         {
-            var result = _conditionProcessor.Processor(new ParseModel
+            var result = _conditionProcessor.Process(new ParseModel
             {
                 Sql = store.RawSql.Sql,
                 Parameters = store.RawSql.Parameters

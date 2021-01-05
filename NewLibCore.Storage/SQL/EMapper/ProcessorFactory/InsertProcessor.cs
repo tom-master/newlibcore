@@ -31,7 +31,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
             {
                 instance.CheckPropertyValue();
             }
-            var result = _conditionProcessor.Processor(new ParseModel
+            var result = _conditionProcessor.Process(new ParseModel
             {
                 Sql = _templateBase.CreateInsert(instance),
                 Parameters = instance.GetSqlElements().Parameters

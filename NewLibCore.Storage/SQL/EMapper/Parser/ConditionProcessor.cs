@@ -23,9 +23,9 @@ namespace NewLibCore.Storage.SQL.EMapper.Parser
         /// 翻译
         /// </summary>
         /// <returns></returns>
-        protected abstract ProcessorResult InnerProcessor();
+        protected abstract ProcessorResult Process();
 
-        internal ProcessorResult Processor(ParseModel parseModel)
+        internal ProcessorResult Process(ParseModel parseModel)
         {
             Check.IfNullOrZero(parseModel);
             Check.IfNullOrZero(parseModel.Sql);
@@ -42,7 +42,7 @@ namespace NewLibCore.Storage.SQL.EMapper.Parser
             if (parseModel.ExpressionStore != null)
             {
                 _expressionStore = parseModel.ExpressionStore;
-                InnerProcessor();
+                Process();
             }
 
             return _processorResult;

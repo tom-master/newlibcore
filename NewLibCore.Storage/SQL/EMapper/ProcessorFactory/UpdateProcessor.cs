@@ -36,7 +36,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
             }
 
             var (_, aliasName) = instance.GetEntityBaseAliasName();
-            var result = _conditionProcessor.Processor(new ParseModel
+            var result = _conditionProcessor.Process(new ParseModel
             {
                 Sql = _templateBase.CreateUpdate(instance),
                 Parameters = instance.GetSqlElements().Parameters,

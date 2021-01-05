@@ -35,7 +35,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
             }
 
             var mainTable = store.From.AliaNameMapper[0];
-            var result = _conditionProcessor.Processor(new ParseModel
+            var result = _conditionProcessor.Process(new ParseModel
             {
                 Sql = _templateBase.CreateSelect(ExtractSelectFields(store), mainTable.Key, mainTable.Value),
                 ExpressionStore = store

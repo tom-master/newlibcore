@@ -41,7 +41,7 @@ namespace NewLibCore.Storage.SQL
         /// </summary>
         /// <param name="expressionStore"></param>
         /// <returns></returns>
-        protected override ProcessorResult InnerProcessor()
+        protected override ProcessorResult Process()
         {
             //获取合并后的表别名
             _aliasMapper = _expressionStore.MergeAliasMapper();
