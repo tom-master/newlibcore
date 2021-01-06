@@ -21,7 +21,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         /// <param name="templateBase"></param>
         /// <param name="expressionProcessor"></param>
         /// <returns></returns>
-        public UpdateProcessor(TemplateBase templateBase, ExpressionProcessor expressionProcessor) : base(templateBase, expressionProcessor)
+        public UpdateProcessor(TemplateBase templateBase, ConditionProcessor conditionProcessor) : base(templateBase, conditionProcessor)
         {
         }
 
@@ -36,7 +36,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
             }
 
             var (_, aliasName) = instance.GetEntityBaseAliasName();
-            var result = _expressionProcessor.Processor(new ParseModel
+            var result = _conditionProcessor.Processor(new ParseModel
             {
                 Sql = _templateBase.CreateUpdate(instance),
                 Parameters = instance.GetSqlElements().Parameters,

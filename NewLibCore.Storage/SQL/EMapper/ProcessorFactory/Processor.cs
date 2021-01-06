@@ -10,21 +10,21 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
     {
         protected readonly TemplateBase _templateBase;
 
-        protected readonly ExpressionProcessor _expressionProcessor;
+        protected readonly ConditionProcessor _conditionProcessor;
 
         internal virtual String CurrentId { get { return GetType().Name; } }
 
-        protected Processor(ExpressionProcessor expressionProcessor) : this(null, expressionProcessor)
+        protected Processor(ConditionProcessor conditionProcessor) : this(null, conditionProcessor)
         {
 
         }
-        protected Processor(TemplateBase templateBase, ExpressionProcessor expressionProcessor)
+        protected Processor(TemplateBase templateBase, ConditionProcessor conditionProcessor)
         {
             Check.IfNullOrZero(templateBase);
-            Check.IfNullOrZero(expressionProcessor);
+            Check.IfNullOrZero(conditionProcessor);
 
             _templateBase = templateBase;
-            _expressionProcessor = expressionProcessor;
+            _conditionProcessor = conditionProcessor;
         }
 
         internal SqlExecuteResultConvert Process(ExpressionStore store)

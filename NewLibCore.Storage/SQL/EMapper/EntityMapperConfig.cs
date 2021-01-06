@@ -86,7 +86,7 @@ namespace NewLibCore.Storage.SQL.EMapper
 
             RunDiagnosis.SetLoggerInstance(_logger ?? new DefaultLogger());
 
-            services = services.AddTransient<ExpressionProcessor, DefaultExpressionProcessor>();
+            services = services.AddTransient<ConditionProcessor, DefaultConditionProcessor>();
             services = services.AddTransient<ProcessorResult>();
 
             services = services.AddTransient<Processor, RawSqlProcessor>();
