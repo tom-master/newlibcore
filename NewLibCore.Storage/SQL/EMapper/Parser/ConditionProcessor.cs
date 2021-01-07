@@ -9,12 +9,12 @@ namespace NewLibCore.Storage.SQL.EMapper.Parser
     /// <summary>
     /// 将Expression解析为对应的SQL谓词
     /// </summary>
-    internal abstract class ExpressionProcessor
+    internal abstract class ConditionProcessor
     {
         protected readonly ProcessorResult _processorResult;
         protected ExpressionStore _expressionStore;
 
-        internal ExpressionProcessor(ProcessorResult processorResult)
+        internal ConditionProcessor(ProcessorResult processorResult)
         {
             _processorResult = processorResult;
         }

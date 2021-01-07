@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using NewLibCore.Storage.SQL.EMapper.Parser;
 using NewLibCore.Storage.SQL.Extension;
 using NewLibCore.Storage.SQL.Template;
 using NewLibCore.Validate;
@@ -12,7 +11,7 @@ namespace NewLibCore.Storage.SQL
     /// <summary>
     /// 将Expression解析为对应的SQL谓词
     /// </summary>
-    internal class DefaultExpressionProcessor : ExpressionProcessor
+    internal class DefaultConditionProcessor : ConditionProcessor
     {
         private readonly Stack<PredicateType> _predicateTypeStack;
 
@@ -26,7 +25,7 @@ namespace NewLibCore.Storage.SQL
         /// 初始化Parser类的新实例
         /// </summary>
         /// <param name="templateBase"></param>
-        public DefaultExpressionProcessor(TemplateBase template, ProcessorResult processorResult)
+        public DefaultConditionProcessor(TemplateBase template, ProcessorResult processorResult)
             : base(processorResult)
         {
             Check.IfNullOrZero(template);
