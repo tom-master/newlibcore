@@ -6,7 +6,7 @@ namespace NewLibCore.Storage.SQL.Extension.ConditionBuilder
     /// <summary>
     /// 合并工厂
     /// </summary>
-    public sealed class FilterFactory
+    public sealed class ConditionBuilderFactory
     {
         /// <summary>
         /// 创建一个默认的表达式合并对象

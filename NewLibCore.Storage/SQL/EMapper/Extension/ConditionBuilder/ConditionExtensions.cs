@@ -7,7 +7,7 @@ namespace NewLibCore.Storage.SQL.Extension.ConditionBuilder
     /// <summary>
     /// 合并扩展
     /// </summary>
-    public static class FilterExtensions
+    public static class ConditionExtensions
     {
 
         /// <summary>
