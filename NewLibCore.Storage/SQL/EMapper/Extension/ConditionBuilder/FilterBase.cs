@@ -2,13 +2,13 @@
 using System.Linq.Expressions;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Storage.SQL.Extension.Filter
+namespace NewLibCore.Storage.SQL.Extension.ConditionBuilder
 {
     /// <summary>
     /// 合并作为查询条件的表达式树
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class FilterBase<T> where T : EntityBase
+    public abstract class ConditionBuilderBase<T> where T : EntityBase
     {
         internal Expression<Func<T, Boolean>> Filter { get; set; }
 
@@ -18,7 +18,7 @@ namespace NewLibCore.Storage.SQL.Extension.Filter
         /// <param name="right"></param>
         /// <typeparam name="T1"></typeparam>
         /// <returns></returns>
-        public Expression<Func<T, T1, Boolean>> Append<T1>(FilterBase<T1> right) where T1 : EntityBase
+        public Expression<Func<T, T1, Boolean>> Append<T1>(ConditionBuilderBase<T1> right) where T1 : EntityBase
         {
             Check.IfNullOrZero(right);
             Check.IfNullOrZero(right.Filter);
@@ -48,7 +48,7 @@ namespace NewLibCore.Storage.SQL.Extension.Filter
         /// </summary>
         /// <param name="combination"></param>
         /// <returns></returns>
-        public static implicit operator Expression<Func<T, Boolean>>(FilterBase<T> combination)
+        public static implicit operator Expression<Func<T, Boolean>>(ConditionBuilderBase<T> combination)
         {
             Check.IfNullOrZero(combination);
             return combination.Filter;

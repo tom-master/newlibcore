@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 using NewLibCore.Storage.SQL.Extension;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Storage.SQL.Extension.Filter
+namespace NewLibCore.Storage.SQL.Extension.ConditionBuilder
 {
     /// <summary>
     /// 合并扩展
@@ -17,7 +17,7 @@ namespace NewLibCore.Storage.SQL.Extension.Filter
         /// <param name="left"></param>
         /// <param name="right"></param>
         /// <typeparam name="T"></typeparam>
-        public static void And<T>(this FilterBase<T> left, Expression<Func<T, Boolean>> right) where T : EntityBase
+        public static void And<T>(this ConditionBuilderBase<T> left, Expression<Func<T, Boolean>> right) where T : EntityBase
         {
             Check.IfNullOrZero(left);
             Check.IfNullOrZero(right);
@@ -43,7 +43,7 @@ namespace NewLibCore.Storage.SQL.Extension.Filter
         /// <param name="left"></param>
         /// <param name="right"></param>
         /// <typeparam name="T"></typeparam>
-        public static void Or<T>(this FilterBase<T> left, Expression<Func<T, Boolean>> right) where T : EntityBase
+        public static void Or<T>(this ConditionBuilderBase<T> left, Expression<Func<T, Boolean>> right) where T : EntityBase
         {
             Check.IfNullOrZero(left);
             Check.IfNullOrZero(right);
@@ -68,7 +68,7 @@ namespace NewLibCore.Storage.SQL.Extension.Filter
         /// </summary>
         /// <param name="left"></param>
         /// <typeparam name="T"></typeparam>
-        public static void Not<T>(this FilterBase<T> left) where T : EntityBase
+        public static void Not<T>(this ConditionBuilderBase<T> left) where T : EntityBase
         {
             Check.IfNullOrZero(left);
             Check.IfNullOrZero(left.Filter);

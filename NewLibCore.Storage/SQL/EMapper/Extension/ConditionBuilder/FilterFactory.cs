@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 
-namespace NewLibCore.Storage.SQL.Extension.Filter
+namespace NewLibCore.Storage.SQL.Extension.ConditionBuilder
 {
     /// <summary>
     /// 合并工厂
@@ -14,13 +14,13 @@ namespace NewLibCore.Storage.SQL.Extension.Filter
         /// <param name="exp"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static FilterBase<T> Create<T>(Expression<Func<T, Boolean>> filter = null) where T : EntityBase
+        public static ConditionBuilderBase<T> Create<T>(Expression<Func<T, Boolean>> filter = null) where T : EntityBase
         {
             if (filter == null)
             {
                 filter = (t) => true;
             }
-            return new DefaultFilter<T>(filter);
+            return new DefaultCondition<T>(filter);
         }
     }
 }

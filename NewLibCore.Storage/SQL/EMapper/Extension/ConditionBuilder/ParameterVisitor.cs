@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace NewLibCore.Storage.SQL.Extension.Filter
+namespace NewLibCore.Storage.SQL.Extension.ConditionBuilder
 {
 
     /// <summary>
