@@ -10,7 +10,7 @@ using NewLibCore.Validate;
 
 namespace NewLibCore.Storage.SQL.EMapper
 {
-    public class EntityMapperConfig
+    public class EntityMapperBuilder
     {
         private static ILogger _logger;
 
