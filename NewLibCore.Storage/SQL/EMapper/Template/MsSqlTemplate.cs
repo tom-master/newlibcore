@@ -13,6 +13,7 @@ namespace NewLibCore.Storage.SQL.Template
     /// </summary>
     internal class MsSqlTemplate : TemplateBase
     {
+        public MsSqlTemplate(EntityMapperOptions options) : base(options) { }
         internal override String CreateUpdate<TModel>(TModel model)
         {
             var (tableName, aliasName) = model.GetEntityBaseAliasName();
@@ -59,7 +60,7 @@ namespace NewLibCore.Storage.SQL.Template
             Check.IfNullOrZero(rawSql);
 
             String sql;
-            if (EntityMapperConfig.MsSqlPaginationVersion == MsSqlPaginationVersion.GREATERTHAN2012)
+            if (Options.MsSqlPaginationVersion == MsSqlPaginationVersion.GREATERTHAN2012)
             {
                 sql = $@" {rawSql} {orderBy} OFFSET ({pagination.Index * pagination.Size}) ROWS FETCH NEXT {pagination.Size} ROWS ONLY ;";
             }
@@ -83,7 +84,7 @@ namespace NewLibCore.Storage.SQL.Template
 
         internal override DbConnection CreateDbConnection()
         {
-            return new SqlConnection(ConfigReader.GetHostVar(EntityMapperConfig.ConnectionStringName));
+            return new SqlConnection(ConfigReader.GetHostVar(Options.ConnectionStringName));
         }
     }
 }

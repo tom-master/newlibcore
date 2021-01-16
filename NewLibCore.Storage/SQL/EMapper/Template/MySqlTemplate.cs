@@ -13,6 +13,7 @@ namespace NewLibCore.Storage.SQL.Template
     /// </summary>
     internal class MySqlTemplate : TemplateBase
     {
+        public MySqlTemplate(EntityMapperOptions options) : base(options) { }
         internal override String CreateUpdate<TModel>(TModel model)
         {
             var (tableName, aliasName) = model.GetEntityBaseAliasName();
@@ -62,7 +63,7 @@ namespace NewLibCore.Storage.SQL.Template
 
         internal override DbConnection CreateDbConnection()
         {
-            return new MySqlConnection(ConfigReader.GetHostVar(EntityMapperConfig.ConnectionStringName));
+            return new MySqlConnection(ConfigReader.GetHostVar(Options.ConnectionStringName));
         }
 
         internal override String Identity

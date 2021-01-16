@@ -5,9 +5,12 @@ namespace NewLibCore.Storage.SQL.EMapper
 {
     public static class EntityMapperExtensions
     {
-        public static EntityMapperBuilder AddEntityMapper(this IServiceCollection services)
+        public static IServiceCollection AddEntityMapper(this IServiceCollection services, Action<EntityMapperOptions> options)
         {
-            return new EntityMapperBuilder();
+            services.Configure(options);
+            var entityMapperBuilder = new EntityMapperBuilder(services);
+            services.AddSingleton(entityMapperBuilder);
+            return services;
         }
     }
 }

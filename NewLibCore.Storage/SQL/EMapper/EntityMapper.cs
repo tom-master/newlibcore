@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Linq.Expressions;
 using Microsoft.Extensions.DependencyInjection;
-using NewLibCore.Storage.SQL.EMapper;
 using NewLibCore.Storage.SQL.Extension;
 using NewLibCore.Storage.SQL.ProcessorFactory;
 using NewLibCore.Storage.SQL.Store;
@@ -15,26 +14,11 @@ namespace NewLibCore.Storage.SQL
     /// </summary>
     public sealed class EntityMapper : IDisposable
     {
-        private readonly IServiceProvider _provider;
+        private readonly IServiceProvider _serviceProvider;
 
-        private readonly MapperDbContextBase _contextBase;
-        private EntityMapper()
+        public EntityMapper(IServiceProvider serviceProvider)
         {
-            _provider = new EntityMapperConfig().InitDependency();
-            _contextBase = _provider.GetService<MapperDbContextBase>();
-        }
-
-        static EntityMapper()
-        {
-        }
-
-        /// <summary>
-        /// 初始化EntityMapper类的新实例
-        /// </summary>
-        /// <returns></returns>
-        public static EntityMapper CreateMapper()
-        {
-            return new EntityMapper();
+            _serviceProvider = serviceProvider;
         }
 
         /// <summary>
@@ -116,17 +100,20 @@ namespace NewLibCore.Storage.SQL
 
         public void Commit()
         {
-            _contextBase.Commit();
+            var dbContext = _serviceProvider.GetRequiredService<MapperDbContextBase>();
+            dbContext.Commit();
         }
 
         public void Rollback()
         {
-            _contextBase.Rollback();
+            var dbContext = _serviceProvider.GetRequiredService<MapperDbContextBase>();
+            dbContext.Rollback();
         }
 
         public void OpenTransaction()
         {
-            _contextBase.UseTransaction = true;
+            var dbContext = _serviceProvider.GetRequiredService<MapperDbContextBase>();
+            dbContext.UseTransaction = true;
         }
 
         /// <summary>
@@ -134,13 +121,13 @@ namespace NewLibCore.Storage.SQL
         /// </summary>
         public void Dispose()
         {
-            (_provider as ServiceProvider).Dispose();
+            (_serviceProvider as ServiceProvider).Dispose();
         }
 
         private Processor FindProcessor(String target)
         {
             Check.IfNullOrZero(target);
-            var result = _provider.GetServices<Processor>().FirstOrDefault(w => w.CurrentId == target);
+            var result = _serviceProvider.GetServices<Processor>().FirstOrDefault(w => w.CurrentId == target);
             if (result != null)
             {
                 return result;

@@ -1,6 +1,5 @@
 using System;
 using System.Diagnostics;
-using NewLibCore.Storage.SQL.EMapper;
 using NewLibCore.Logger;
 using NewLibCore.Validate;
 
@@ -18,10 +17,7 @@ namespace NewLibCore.Storage.SQL.Extension
         private static void CurrentDomain_UnhandledException(Object sender, UnhandledExceptionEventArgs e)
         {
             _logger.Error(((Exception)e.ExceptionObject).Message);
-            if (EntityMapperConfig.ThrowException)
-            {
-                throw (Exception)e.ExceptionObject;
-            }
+            throw (Exception)e.ExceptionObject;
         }
 
         /// <summary>

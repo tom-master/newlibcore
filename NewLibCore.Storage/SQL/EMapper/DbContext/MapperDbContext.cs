@@ -22,12 +22,15 @@ namespace NewLibCore.Storage.SQL
 
         private readonly TemplateBase _templateBase;
 
+        private readonly EntityMapperOptions _options;
+
         /// <summary>
         /// 初始化MapperDbContext类的新实例
         /// </summary>
-        public MapperDbContext(TemplateBase templateBase)
+        public MapperDbContext(TemplateBase templateBase, EntityMapperOptions options)
         {
             Check.IfNullOrZero(templateBase);
+            _options = options;
             _templateBase = templateBase;
             _connection = templateBase.CreateDbConnection();
         }
@@ -58,16 +61,16 @@ namespace NewLibCore.Storage.SQL
                 _connection.Open();
 
                 //根据不同的sql server数据库引擎来选择需要执行的分页方法
-                if (EntityMapperConfig.MapperType == MapperType.MSSQL && EntityMapperConfig.MsSqlPaginationVersion == MsSqlPaginationVersion.NONE)
+                if (_options.MapperType == MapperType.MSSQL && _options.MsSqlPaginationVersion == MsSqlPaginationVersion.NONE)
                 {
                     var version = Int32.Parse(_connection.ServerVersion.Substring(0, _connection.ServerVersion.IndexOf(".")));
                     if (version <= 11)
                     {
-                        EntityMapperConfig.MsSqlPaginationVersion = MsSqlPaginationVersion.LESSTHEN2012;
+                        _options.MsSqlPaginationVersion = MsSqlPaginationVersion.LESSTHEN2012;
                     }
                     else
                     {
-                        EntityMapperConfig.MsSqlPaginationVersion = MsSqlPaginationVersion.GREATERTHAN2012;
+                        _options.MsSqlPaginationVersion = MsSqlPaginationVersion.GREATERTHAN2012;
                     }
                 }
 
@@ -78,7 +81,7 @@ namespace NewLibCore.Storage.SQL
         {
             if (_dataTransaction == null)
             {
-                _dataTransaction = _connection.BeginTransaction(EntityMapperConfig.TransactionLevel);
+                _dataTransaction = _connection.BeginTransaction(_options.TransactionLevel);
                 RunDiagnosis.Info("开启事务");
             }
             return _dataTransaction;

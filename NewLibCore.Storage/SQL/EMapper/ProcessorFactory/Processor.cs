@@ -1,4 +1,5 @@
 using System;
+using NewLibCore.Storage.SQL.EMapper;
 using NewLibCore.Storage.SQL.EMapper.Parser;
 using NewLibCore.Storage.SQL.Store;
 using NewLibCore.Storage.SQL.Template;
@@ -8,23 +9,25 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
 {
     internal abstract class Processor
     {
-        protected readonly TemplateBase _templateBase;
+        protected readonly TemplateBase TemplateBase;
 
-        protected readonly ConditionProcessor _conditionProcessor;
+        protected readonly EntityMapperOptions Options;
+
+        protected readonly ConditionProcessor ConditionProcessor;
 
         internal virtual String CurrentId { get { return GetType().Name; } }
 
-        protected Processor(ConditionProcessor conditionProcessor) : this(null, conditionProcessor)
+        protected Processor(ConditionProcessor conditionProcessor) : this(null, conditionProcessor, null)
         {
 
         }
-        protected Processor(TemplateBase templateBase, ConditionProcessor conditionProcessor)
+        protected Processor(TemplateBase templateBase, ConditionProcessor conditionProcessor, EntityMapperOptions options)
         {
-            Check.IfNullOrZero(templateBase);
             Check.IfNullOrZero(conditionProcessor);
 
-            _templateBase = templateBase;
-            _conditionProcessor = conditionProcessor;
+            Options = options;
+            TemplateBase = templateBase;
+            ConditionProcessor = conditionProcessor;
         }
 
         internal SqlExecuteResultConvert Process(ExpressionStore store)

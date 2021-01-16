@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using NewLibCore.Storage.SQL.EMapper;
 using NewLibCore.Storage.SQL.EMapper.Parser;
 using NewLibCore.Storage.SQL.Extension;
 using NewLibCore.Storage.SQL.Store;
@@ -18,7 +19,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
     internal class QueryProcessor : Processor
     {
 
-        public QueryProcessor(TemplateBase templateBase, ConditionProcessor conditionProcessor) : base(templateBase, conditionProcessor)
+        public QueryProcessor(TemplateBase templateBase, ConditionProcessor conditionProcessor, EntityMapperOptions options) : base(templateBase, conditionProcessor, options)
         {
         }
 
@@ -35,9 +36,9 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
             }
 
             var mainTable = store.From.AliaNameMapper[0];
-            var result = _conditionProcessor.Process(new ParseModel
+            var result = ConditionProcessor.Process(new ParseModel
             {
-                Sql = _templateBase.CreateSelect(ExtractSelectFields(store), mainTable.Key, mainTable.Value),
+                Sql = TemplateBase.CreateSelect(ExtractSelectFields(store), mainTable.Key, mainTable.Value),
                 ExpressionStore = store
             });
 
@@ -54,16 +55,16 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
                     throw new Exception("分页中没有指定排序字段");
                 }
                 var (fields, tableName) = ExtractOrderFields(store);
-                var orderTemplate = _templateBase.CreateOrderBy(store.Order.OrderBy, $@"{tableName}.{fields}");
+                var orderTemplate = TemplateBase.CreateOrderBy(store.Order.OrderBy, $@"{tableName}.{fields}");
 
-                var newSql = _templateBase.CreatePagination(store.Pagination, orderTemplate, result.ToString());
+                var newSql = TemplateBase.CreatePagination(store.Pagination, orderTemplate, result.ToString());
                 result.ClearSql();
                 result.Append(newSql);
             }
             else if (store.Order != null)
             {
                 var (fields, tableName) = ExtractOrderFields(store);
-                var orderTemplate = _templateBase.CreateOrderBy(store.Order.OrderBy, $@"{tableName}.{fields}");
+                var orderTemplate = TemplateBase.CreateOrderBy(store.Order.OrderBy, $@"{tableName}.{fields}");
                 result.Append(orderTemplate);
             }
 

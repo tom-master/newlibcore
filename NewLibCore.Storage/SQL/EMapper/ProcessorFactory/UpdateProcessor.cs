@@ -21,7 +21,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         /// <param name="templateBase"></param>
         /// <param name="expressionProcessor"></param>
         /// <returns></returns>
-        public UpdateProcessor(TemplateBase templateBase, ConditionProcessor conditionProcessor) : base(templateBase, conditionProcessor)
+        public UpdateProcessor(TemplateBase templateBase, ConditionProcessor conditionProcessor, EntityMapperOptions options) : base(templateBase, conditionProcessor, options)
         {
         }
 
@@ -30,20 +30,20 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
             var instance = store.Model;
             instance.SetUpdateTime();
 
-            if (EntityMapperConfig.EnableModelValidate)
+            if (Options.EnableModelValidate)
             {
                 instance.CheckPropertyValue();
             }
 
             var (_, aliasName) = instance.GetEntityBaseAliasName();
-            var result = _conditionProcessor.Process(new ParseModel
+            var result = ConditionProcessor.Process(new ParseModel
             {
-                Sql = _templateBase.CreateUpdate(instance),
+                Sql = TemplateBase.CreateUpdate(instance),
                 Parameters = instance.GetSqlElements().Parameters,
                 ExpressionStore = store
             });
 
-            result.Append($@"{PredicateType.AND} {aliasName}.{nameof(instance.IsDeleted)}=0 {_templateBase.AffectedRows}");
+            result.Append($@"{PredicateType.AND} {aliasName}.{nameof(instance.IsDeleted)} = 0 {TemplateBase.AffectedRows}");
             instance.Reset();
 
             return result.Execute();
