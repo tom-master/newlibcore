@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Microsoft.Extensions.Options;
 using NewLibCore.Storage.SQL.EMapper;
 using NewLibCore.Storage.SQL.EMapper.Parser;
 using NewLibCore.Storage.SQL.Extension;
@@ -21,7 +22,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         /// <param name="templateBase"></param>
         /// <param name="expressionProcessor"></param>
         /// <returns></returns>
-        public UpdateProcessor(TemplateBase templateBase, ConditionProcessor conditionProcessor, EntityMapperOptions options) : base(templateBase, conditionProcessor, options)
+        public UpdateProcessor(TemplateBase templateBase, ConditionProcessor conditionProcessor, IOptions<EntityMapperOptions> options) : base(templateBase, conditionProcessor, options)
         {
         }
 

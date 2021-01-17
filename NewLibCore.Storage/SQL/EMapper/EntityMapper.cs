@@ -12,7 +12,7 @@ namespace NewLibCore.Storage.SQL
     /// <summary>
     /// 将对应的操作翻译为sql并执行
     /// </summary>
-    public sealed class EntityMapper : IDisposable
+    public sealed class EntityMapper
     {
         private readonly IServiceProvider _serviceProvider;
 
@@ -114,14 +114,6 @@ namespace NewLibCore.Storage.SQL
         {
             var dbContext = _serviceProvider.GetRequiredService<MapperDbContextBase>();
             dbContext.UseTransaction = true;
-        }
-
-        /// <summary>
-        /// 释放资源
-        /// </summary>
-        public void Dispose()
-        {
-            (_serviceProvider as ServiceProvider).Dispose();
         }
 
         private Processor FindProcessor(String target)

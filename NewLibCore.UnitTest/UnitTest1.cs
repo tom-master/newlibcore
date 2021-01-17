@@ -2,7 +2,10 @@ using System;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NewLibCore.Storage.SQL;
+using NewLibCore.Storage.SQL.EMapper;
 using NewLibCore.UnitTest.Entitys.Agent;
 using NewLibCore.UnitTest.Entitys.System;
 
@@ -14,7 +17,15 @@ namespace NewLibCore.UnitTest
         [TestMethod]
         public void TestMethod1()
         {
-            var r = ConfigReader.GetHostVar("sql");
+            IServiceCollection service = new ServiceCollection();
+            service.AddEntityMapper(options =>
+            {
+                options.UseMySql();
+                options.ConnectionStringName = "sql";
+            });
+            var provider = service.BuildServiceProvider();
+            var mapper = provider.GetRequiredService<EntityMapper>();
+            var users = mapper.Query<User>().ToList();
         }
     }
 

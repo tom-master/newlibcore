@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.Common;
 using System.Data.SqlClient;
+using Microsoft.Extensions.Options;
 using NewLibCore.Storage.SQL.EMapper;
 using NewLibCore.Storage.SQL.Extension;
 using NewLibCore.Storage.SQL.Store;
@@ -13,7 +14,7 @@ namespace NewLibCore.Storage.SQL.Template
     /// </summary>
     internal class MsSqlTemplate : TemplateBase
     {
-        public MsSqlTemplate(EntityMapperOptions options) : base(options) { }
+        public MsSqlTemplate(IOptions<EntityMapperOptions> options) : base(options) { }
         internal override String CreateUpdate<TModel>(TModel model)
         {
             var (tableName, aliasName) = model.GetEntityBaseAliasName();

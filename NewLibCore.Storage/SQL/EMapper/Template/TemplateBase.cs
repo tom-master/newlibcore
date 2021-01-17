@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Reflection;
+using Microsoft.Extensions.Options;
 using NewLibCore.Storage.SQL.EMapper;
 using NewLibCore.Storage.SQL.Extension;
 using NewLibCore.Storage.SQL.Store;
@@ -40,9 +41,9 @@ namespace NewLibCore.Storage.SQL.Template
         /// <summary>
         /// 初始化TemplateBase类的新实例
         /// </summary>
-        protected TemplateBase(EntityMapperOptions options)
+        protected TemplateBase(IOptions<EntityMapperOptions> options)
         {
-            Options = options;
+            Options = options.Value;
             JoinMapper.Clear();
             PredicateMapper.Clear();
             OrderTypeMapper.Clear();

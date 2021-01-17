@@ -438,6 +438,10 @@ namespace NewLibCore.Storage.SQL.Store
             {
                 newAliasMapper.AddRange(Include.AliaNameMapper);
             }
+            if (From != null)
+            {
+                newAliasMapper.AddRange(From.AliaNameMapper);
+            }
             newAliasMapper = newAliasMapper.Select(s => s).Distinct().ToList();
 
             var sameGroup = newAliasMapper.GroupBy(a => a.Value);

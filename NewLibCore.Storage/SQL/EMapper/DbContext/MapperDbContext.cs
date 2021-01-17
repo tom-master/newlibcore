@@ -2,6 +2,7 @@
 using System.Data;
 using System.Data.Common;
 using System.Linq;
+using Microsoft.Extensions.Options;
 using NewLibCore.Storage.SQL.EMapper;
 using NewLibCore.Storage.SQL.Extension;
 using NewLibCore.Storage.SQL.Template;
@@ -27,10 +28,10 @@ namespace NewLibCore.Storage.SQL
         /// <summary>
         /// 初始化MapperDbContext类的新实例
         /// </summary>
-        public MapperDbContext(TemplateBase templateBase, EntityMapperOptions options)
+        public MapperDbContext(TemplateBase templateBase, IOptions<EntityMapperOptions> options)
         {
             Check.IfNullOrZero(templateBase);
-            _options = options;
+            _options = options.Value;
             _templateBase = templateBase;
             _connection = templateBase.CreateDbConnection();
         }

@@ -13,7 +13,7 @@ namespace NewLibCore.Storage.SQL.EMapper
         /// 连接字符串名称
         /// </summary>
         /// <value></value>
-        internal String ConnectionStringName { get; set; }
+        public String ConnectionStringName { get; set; }
 
         /// <summary>
         /// 是否在出现异常时抛出异常

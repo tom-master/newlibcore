@@ -1,4 +1,5 @@
-﻿using NewLibCore.Storage.SQL.EMapper;
+﻿using Microsoft.Extensions.Options;
+using NewLibCore.Storage.SQL.EMapper;
 using NewLibCore.Storage.SQL.EMapper.Parser;
 using NewLibCore.Storage.SQL.Store;
 using NewLibCore.Storage.SQL.Template;
@@ -16,7 +17,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         /// 初始化一个InsertHandler类的实例
         /// </summary>
         /// <param name="model">要插入的模型</param>
-        public InsertProcessor(TemplateBase templateBase, ConditionProcessor conditionProcessor, EntityMapperOptions options) : base(templateBase, conditionProcessor, options)
+        public InsertProcessor(TemplateBase templateBase, ConditionProcessor conditionProcessor, IOptions<EntityMapperOptions> options) : base(templateBase, conditionProcessor, options)
         {
         }
 

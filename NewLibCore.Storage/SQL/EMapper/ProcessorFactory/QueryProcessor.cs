@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using Microsoft.Extensions.Options;
 using NewLibCore.Storage.SQL.EMapper;
 using NewLibCore.Storage.SQL.EMapper.Parser;
 using NewLibCore.Storage.SQL.Extension;
@@ -19,7 +20,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
     internal class QueryProcessor : Processor
     {
 
-        public QueryProcessor(TemplateBase templateBase, ConditionProcessor conditionProcessor, EntityMapperOptions options) : base(templateBase, conditionProcessor, options)
+        public QueryProcessor(TemplateBase templateBase, ConditionProcessor conditionProcessor, IOptions<EntityMapperOptions> options) : base(templateBase, conditionProcessor, options)
         {
         }
 
