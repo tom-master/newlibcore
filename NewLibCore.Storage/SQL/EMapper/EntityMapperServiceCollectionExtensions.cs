@@ -38,7 +38,7 @@ namespace NewLibCore.Storage.SQL.EMapper
             services = services.AddScoped<Processor, QueryProcessor>();
             services = services.AddScoped<Processor, UpdateProcessor>();
             services = services.AddScoped<Processor, InsertProcessor>();
-            services.AddScoped<EntityMapper>();
+            services = services.AddScoped<EntityMapper>();
             return services;
         }
     }
