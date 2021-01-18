@@ -60,12 +60,7 @@ namespace NewLibCore.Storage.SQL.Store
         /// <summary>
         /// from语句 对象
         /// </summary>
-        internal SimpleExpressionMapper From { get; private set; }
-
-        /// <summary>
-        /// 包含
-        /// </summary>
-        internal SimpleExpressionMapper Include { get; private set; }
+        internal FromExpressionMapper From { get; private set; }
 
         /// <summary>
         /// 分页语句对象
@@ -95,13 +90,10 @@ namespace NewLibCore.Storage.SQL.Store
             var modelType = typeof(TModel);
             Expression<Func<TModel, TModel>> expression = (a) => a;
 
-            From = new SimpleExpressionMapper
+            From = new FromExpressionMapper
             {
                 Expression = expression,
-                AliaNameMapper = new List<KeyValuePair<String, String>>
-                {
-                   new KeyValuePair<String, String>(modelType.GetEntityBaseAliasName().TableName,modelType.GetEntityBaseAliasName().AliasName)
-                }
+                MainTableMapper = new KeyValuePair<String, String>(modelType.GetEntityBaseAliasName().TableName, modelType.GetEntityBaseAliasName().AliasName)
             };
         }
 
@@ -293,7 +285,7 @@ namespace NewLibCore.Storage.SQL.Store
         where TModel1 : EntityBase, new()
         {
             Check.IfNullOrZero(selector);
-            Select = new SimpleExpressionMapper
+            Select = new ExpressionBase
             {
                 Expression = selector
             };
@@ -310,7 +302,7 @@ namespace NewLibCore.Storage.SQL.Store
         where TModel2 : EntityBase, new()
         {
             Check.IfNullOrZero(selector);
-            Select = new SimpleExpressionMapper
+            Select = new ExpressionBase
             {
                 Expression = selector
             };
@@ -329,7 +321,7 @@ namespace NewLibCore.Storage.SQL.Store
         where TModel3 : EntityBase, new()
         {
             Check.IfNullOrZero(selector);
-            Select = new SimpleExpressionMapper
+            Select = new ExpressionBase
             {
                 Expression = selector
             };
@@ -350,9 +342,9 @@ namespace NewLibCore.Storage.SQL.Store
         where TModel4 : EntityBase, new()
         {
             Check.IfNullOrZero(selector);
-            Select = new SimpleExpressionMapper
+            Select = new ExpressionBase
             {
-                Expression = selector
+                Expression = selector,
             };
         }
 
@@ -373,7 +365,7 @@ namespace NewLibCore.Storage.SQL.Store
         where TModel5 : EntityBase, new()
         {
             Check.IfNullOrZero(selector);
-            Select = new SimpleExpressionMapper
+            Select = new ExpressionBase
             {
                 Expression = selector
             };
@@ -415,7 +407,7 @@ namespace NewLibCore.Storage.SQL.Store
                 Index = pageIndex,
                 Size = pageSize,
                 MaxKey = maxKey,
-                QueryMainTable = From.AliaNameMapper[0]
+                QueryMainTable = From.MainTableMapper
             };
         }
 
@@ -434,13 +426,9 @@ namespace NewLibCore.Storage.SQL.Store
             {
                 newAliasMapper.AddRange(Joins.SelectMany(s => s.AliaNameMapper));
             }
-            if (Include != null)
-            {
-                newAliasMapper.AddRange(Include.AliaNameMapper);
-            }
             if (From != null)
             {
-                newAliasMapper.AddRange(From.AliaNameMapper);
+                newAliasMapper.Add(From.MainTableMapper);
             }
             newAliasMapper = newAliasMapper.Select(s => s).Distinct().ToList();
 

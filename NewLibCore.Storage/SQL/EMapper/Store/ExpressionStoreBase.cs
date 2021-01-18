@@ -59,6 +59,11 @@ namespace NewLibCore.Storage.SQL.Store
 
     }
 
+    internal class FromExpressionMapper : ExpressionBase
+    {
+        protected internal KeyValuePair<String, String> MainTableMapper { get; set; }
+    }
+
     internal class RawSqlMapper
     {
         internal String Sql { get; set; }

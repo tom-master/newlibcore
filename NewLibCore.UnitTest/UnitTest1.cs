@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,6 +18,11 @@ namespace NewLibCore.UnitTest
         [TestMethod]
         public void TestMethod1()
         {
+            KeyValuePair<String, String> keyValuePair = new KeyValuePair<string, string>("1", "2");
+            if (default(KeyValuePair<string, string>).Equals(keyValuePair))
+            {
+
+            }
             IServiceCollection service = new ServiceCollection();
             service.AddEntityMapper(options =>
             {
