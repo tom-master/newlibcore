@@ -26,7 +26,6 @@ namespace NewLibCore.UnitTest
             var provider = service.BuildServiceProvider();
             var mapper = provider.GetRequiredService<EntityMapper>();
             var users1 = mapper.Query<User>().ToList();
-            var users2 = mapper.Query<User>().ToList();
         }
     }
 

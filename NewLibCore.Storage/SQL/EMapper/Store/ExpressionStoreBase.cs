@@ -4,13 +4,17 @@ using System.Linq.Expressions;
 
 namespace NewLibCore.Storage.SQL.Store
 {
+    internal class ExpressionBase
+    {
+        protected internal Expression Expression { get; set; }
+    }
+
+
     /// <summary>
     /// 表达式拆分后的语句对象
     /// </summary>
-    internal abstract class ExpressionMapperBase
+    internal class ExpressionMapperBase : ExpressionBase
     {
-        protected internal Expression Expression { get; set; }
-
         protected internal IReadOnlyList<KeyValuePair<String, String>> AliaNameMapper { get; set; }
     }
 
@@ -28,7 +32,7 @@ namespace NewLibCore.Storage.SQL.Store
     /// <summary>
     /// 排序语句对象
     /// </summary>
-    internal class OrderExpressionMapper : ExpressionMapperBase
+    internal class OrderExpressionMapper : ExpressionBase
     {
         protected internal OrderByType OrderBy { get; set; }
     }
@@ -36,7 +40,7 @@ namespace NewLibCore.Storage.SQL.Store
     /// <summary>
     /// 分页语句对象
     /// </summary>
-    internal class PaginationExpressionMapper : ExpressionMapperBase
+    internal class PaginationExpressionMapper : ExpressionBase
     {
         internal Int32 Index { get; set; }
 

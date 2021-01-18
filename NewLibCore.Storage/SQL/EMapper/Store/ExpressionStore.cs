@@ -49,7 +49,7 @@ namespace NewLibCore.Storage.SQL.Store
         /// 字段语句对象
         /// </summary>
         /// <value></value>
-        internal SimpleExpressionMapper Select { get; private set; }
+        internal ExpressionBase Select { get; private set; }
 
         /// <summary>
         /// Where语句对象
