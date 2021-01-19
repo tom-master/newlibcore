@@ -20,7 +20,7 @@ namespace NewLibCore.Storage.SQL.Store
         internal static void AddDirectSql(this ExpressionStore store, String sql, params MapperParameter[] parameters)
         {
             Check.IfNullOrZero(sql);
-            store.RawSql = new RawSqlMapper
+            store.RawSql = new RawSqlComponent
             {
                 Sql = sql,
                 Parameters = parameters
@@ -43,36 +43,36 @@ namespace NewLibCore.Storage.SQL.Store
         /// 排序语句对象
         /// </summary>
         /// <value></value>
-        internal OrderExpressionMapper Order { get; private set; }
+        internal OrderComponent Order { get; private set; }
 
         /// <summary>
         /// 字段语句对象
         /// </summary>
         /// <value></value>
-        internal ExpressionBase Select { get; private set; }
+        internal ComponentBase Select { get; private set; }
 
         /// <summary>
         /// Where语句对象
         /// </summary>
         /// <value></value>
-        internal SimpleExpressionMapper Where { get; private set; }
+        internal SimpleComponent Where { get; private set; }
 
         /// <summary>
         /// from语句 对象
         /// </summary>
-        internal FromExpressionMapper From { get; private set; }
+        internal FromComponent From { get; private set; }
 
         /// <summary>
         /// 分页语句对象
         /// </summary>
         /// <value></value>
-        internal PaginationExpressionMapper Pagination { get; private set; }
+        internal PaginationComponent Pagination { get; private set; }
 
         /// <summary>
         /// sql语句对象
         /// </summary>
         /// <value></value>
-        internal RawSqlMapper RawSql { get; set; }
+        internal RawSqlComponent RawSql { get; set; }
 
         /// <summary>
         /// 存储单个模型实例
@@ -83,14 +83,14 @@ namespace NewLibCore.Storage.SQL.Store
         /// <summary>
         /// 连接语句对象列表
         /// </summary>
-        internal IList<JoinExpressionMapper> Joins { get; private set; } = new List<JoinExpressionMapper>();
+        internal IList<JoinComponent> JoinComponents { get; private set; } = new List<JoinComponent>();
 
         internal void AddFrom<TModel>() where TModel : EntityBase, new()
         {
             var modelType = typeof(TModel);
             Expression<Func<TModel, TModel>> expression = (a) => a;
 
-            From = new FromExpressionMapper
+            From = new FromComponent
             {
                 Expression = expression,
                 MainTableMapper = new KeyValuePair<String, String>(modelType.GetEntityBaseAliasName().TableName, modelType.GetEntityBaseAliasName().AliasName)
@@ -109,7 +109,7 @@ namespace NewLibCore.Storage.SQL.Store
         where TModel : EntityBase, new()
         {
             Check.IfNullOrZero(order);
-            Order = new OrderExpressionMapper
+            Order = new OrderComponent
             {
                 Expression = order,
                 OrderBy = orderByType
@@ -159,10 +159,10 @@ namespace NewLibCore.Storage.SQL.Store
         internal void AddWhere<TModel1>(Expression<Func<TModel1, Boolean>> filter) where TModel1 : EntityBase, new()
         {
             Check.IfNullOrZero(filter);
-            Where = new SimpleExpressionMapper
+            Where = new SimpleComponent
             {
                 Expression = filter,
-                AliaNameMapper = ParseToAliasNames(((LambdaExpression)filter).Parameters)
+                AliasNameMapper = ParseToAliasNames(((LambdaExpression)filter).Parameters)
             };
         }
 
@@ -177,10 +177,10 @@ namespace NewLibCore.Storage.SQL.Store
         where TModel2 : EntityBase, new()
         {
             Check.IfNullOrZero(filter);
-            Where = new SimpleExpressionMapper
+            Where = new SimpleComponent
             {
                 Expression = filter,
-                AliaNameMapper = ParseToAliasNames(((LambdaExpression)filter).Parameters)
+                AliasNameMapper = ParseToAliasNames(((LambdaExpression)filter).Parameters)
             };
         }
 
@@ -197,10 +197,10 @@ namespace NewLibCore.Storage.SQL.Store
         where TModel3 : EntityBase, new()
         {
             Check.IfNullOrZero(filter);
-            Where = new SimpleExpressionMapper
+            Where = new SimpleComponent
             {
                 Expression = filter,
-                AliaNameMapper = ParseToAliasNames(((LambdaExpression)filter).Parameters)
+                AliasNameMapper = ParseToAliasNames(((LambdaExpression)filter).Parameters)
             };
         }
 
@@ -219,10 +219,10 @@ namespace NewLibCore.Storage.SQL.Store
         where TModel4 : EntityBase, new()
         {
             Check.IfNullOrZero(filter);
-            Where = new SimpleExpressionMapper
+            Where = new SimpleComponent
             {
                 Expression = filter,
-                AliaNameMapper = ParseToAliasNames(((LambdaExpression)filter).Parameters)
+                AliasNameMapper = ParseToAliasNames(((LambdaExpression)filter).Parameters)
             };
         }
 
@@ -243,10 +243,10 @@ namespace NewLibCore.Storage.SQL.Store
         where TModel5 : EntityBase, new()
         {
             Check.IfNullOrZero(filter);
-            Where = new SimpleExpressionMapper
+            Where = new SimpleComponent
             {
                 Expression = filter,
-                AliaNameMapper = ParseToAliasNames(((LambdaExpression)filter).Parameters)
+                AliasNameMapper = ParseToAliasNames(((LambdaExpression)filter).Parameters)
             };
         }
 
@@ -269,10 +269,10 @@ namespace NewLibCore.Storage.SQL.Store
         where TModel6 : EntityBase, new()
         {
             Check.IfNullOrZero(filter);
-            Where = new SimpleExpressionMapper
+            Where = new SimpleComponent
             {
                 Expression = filter,
-                AliaNameMapper = ParseToAliasNames(((LambdaExpression)filter).Parameters)
+                AliasNameMapper = ParseToAliasNames(((LambdaExpression)filter).Parameters)
             };
         }
 
@@ -285,7 +285,7 @@ namespace NewLibCore.Storage.SQL.Store
         where TModel1 : EntityBase, new()
         {
             Check.IfNullOrZero(selector);
-            Select = new ExpressionBase
+            Select = new ComponentBase
             {
                 Expression = selector
             };
@@ -302,7 +302,7 @@ namespace NewLibCore.Storage.SQL.Store
         where TModel2 : EntityBase, new()
         {
             Check.IfNullOrZero(selector);
-            Select = new ExpressionBase
+            Select = new ComponentBase
             {
                 Expression = selector
             };
@@ -321,7 +321,7 @@ namespace NewLibCore.Storage.SQL.Store
         where TModel3 : EntityBase, new()
         {
             Check.IfNullOrZero(selector);
-            Select = new ExpressionBase
+            Select = new ComponentBase
             {
                 Expression = selector
             };
@@ -342,7 +342,7 @@ namespace NewLibCore.Storage.SQL.Store
         where TModel4 : EntityBase, new()
         {
             Check.IfNullOrZero(selector);
-            Select = new ExpressionBase
+            Select = new ComponentBase
             {
                 Expression = selector,
             };
@@ -365,7 +365,7 @@ namespace NewLibCore.Storage.SQL.Store
         where TModel5 : EntityBase, new()
         {
             Check.IfNullOrZero(selector);
-            Select = new ExpressionBase
+            Select = new ComponentBase
             {
                 Expression = selector
             };
@@ -383,11 +383,11 @@ namespace NewLibCore.Storage.SQL.Store
         where TJoin : EntityBase, new()
         {
             Check.IfNullOrZero(expression);
-            Joins.Add(new JoinExpressionMapper
+            JoinComponents.Add(new JoinComponent
             {
                 Expression = expression,
                 JoinRelation = joinRelation,
-                AliaNameMapper = ParseToAliasNames(((LambdaExpression)expression).Parameters),
+                AliasNameMapper = ParseToAliasNames(((LambdaExpression)expression).Parameters),
                 MainTable = typeof(TModel).GetEntityBaseAliasName().TableName
             });
         }
@@ -402,7 +402,7 @@ namespace NewLibCore.Storage.SQL.Store
             Check.IfNullOrZero(pageIndex);
             Check.IfNullOrZero(pageSize);
 
-            Pagination = new PaginationExpressionMapper
+            Pagination = new PaginationComponent
             {
                 Index = pageIndex,
                 Size = pageSize,
@@ -420,11 +420,11 @@ namespace NewLibCore.Storage.SQL.Store
             var newAliasMapper = new List<KeyValuePair<String, String>>();
             if (Where != null)
             {
-                newAliasMapper.AddRange(Where.AliaNameMapper);
+                newAliasMapper.AddRange(Where.AliasNameMapper);
             }
-            if (Joins.Any())
+            if (JoinComponents.Any())
             {
-                newAliasMapper.AddRange(Joins.SelectMany(s => s.AliaNameMapper));
+                newAliasMapper.AddRange(JoinComponents.SelectMany(s => s.AliasNameMapper));
             }
             if (From != null)
             {
@@ -457,9 +457,9 @@ namespace NewLibCore.Storage.SQL.Store
                 types.Add(r);
             }
 
-            if (Joins.Any())
+            if (JoinComponents.Any())
             {
-                foreach (var item in Joins)
+                foreach (var item in JoinComponents)
                 {
                     foreach (var parameter in (item.Expression as LambdaExpression).Parameters)
                     {

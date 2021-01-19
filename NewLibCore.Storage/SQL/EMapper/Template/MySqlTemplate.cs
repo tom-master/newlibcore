@@ -38,7 +38,7 @@ namespace NewLibCore.Storage.SQL.Template
             return String.Format(PredicateMapper[predicateType], left, right);
         }
 
-        internal override String CreatePagination(PaginationExpressionMapper pagination, String orderBy, String rawSql)
+        internal override String CreatePagination(PaginationComponent pagination, String orderBy, String rawSql)
         {
             Check.IfNullOrZero(pagination.Size);
             Check.IfNullOrZero(orderBy);

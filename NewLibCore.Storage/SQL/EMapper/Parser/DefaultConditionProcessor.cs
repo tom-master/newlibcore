@@ -47,15 +47,15 @@ namespace NewLibCore.Storage.SQL
             _aliasMapper = _expressionStore.MergeAliasMapper();
 
             //循环翻译连接对象
-            foreach (var item in _expressionStore.Joins)
+            foreach (var item in _expressionStore.JoinComponents)
             {
-                if (item.AliaNameMapper == null || item.JoinRelation == JoinRelation.NONE)
+                if (item.AliasNameMapper == null || item.JoinRelation == JoinRelation.NONE)
                 {
                     continue;
                 }
 
                 //获取连接对象中的表别名，进行连接语句的翻译
-                foreach (var aliasItem in item.AliaNameMapper)
+                foreach (var aliasItem in item.AliasNameMapper)
                 {
                     if (aliasItem.Key.ToLower() == item.MainTable.ToLower())
                     {

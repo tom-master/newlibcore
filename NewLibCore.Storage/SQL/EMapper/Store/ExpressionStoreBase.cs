@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 
 namespace NewLibCore.Storage.SQL.Store
 {
-    internal class ExpressionBase
+    internal class ComponentBase
     {
         protected internal Expression Expression { get; set; }
     }
@@ -13,15 +13,15 @@ namespace NewLibCore.Storage.SQL.Store
     /// <summary>
     /// 表达式拆分后的语句对象
     /// </summary>
-    internal class ExpressionMapperBase : ExpressionBase
+    internal class AliasComponentBase : ComponentBase
     {
-        protected internal IReadOnlyList<KeyValuePair<String, String>> AliaNameMapper { get; set; }
+        protected internal IReadOnlyList<KeyValuePair<String, String>> AliasNameMapper { get; set; }
     }
 
     /// <summary>
     /// 连接语句对象
     /// </summary>
-    internal class JoinExpressionMapper : ExpressionMapperBase
+    internal class JoinComponent : AliasComponentBase
     {
         protected internal String MainTable { get; set; }
 
@@ -32,7 +32,7 @@ namespace NewLibCore.Storage.SQL.Store
     /// <summary>
     /// 排序语句对象
     /// </summary>
-    internal class OrderExpressionMapper : ExpressionBase
+    internal class OrderComponent : ComponentBase
     {
         protected internal OrderByType OrderBy { get; set; }
     }
@@ -40,7 +40,7 @@ namespace NewLibCore.Storage.SQL.Store
     /// <summary>
     /// 分页语句对象
     /// </summary>
-    internal class PaginationExpressionMapper : ExpressionBase
+    internal class PaginationComponent : ComponentBase
     {
         internal Int32 Index { get; set; }
 
@@ -54,17 +54,17 @@ namespace NewLibCore.Storage.SQL.Store
     /// <summary>
     /// 简单语句对象
     /// </summary>
-    internal class SimpleExpressionMapper : ExpressionMapperBase
+    internal class SimpleComponent : AliasComponentBase
     {
 
     }
 
-    internal class FromExpressionMapper : ExpressionBase
+    internal class FromComponent : ComponentBase
     {
         protected internal KeyValuePair<String, String> MainTableMapper { get; set; }
     }
 
-    internal class RawSqlMapper
+    internal class RawSqlComponent
     {
         internal String Sql { get; set; }
         internal IEnumerable<MapperParameter> Parameters { get; set; }

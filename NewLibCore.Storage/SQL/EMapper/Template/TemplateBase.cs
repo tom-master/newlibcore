@@ -126,7 +126,7 @@ namespace NewLibCore.Storage.SQL.Template
         /// <param name="orderBy"></param>
         /// <param name="rawSql"></param>
         /// <returns></returns>
-        internal abstract String CreatePagination(PaginationExpressionMapper pagination, String orderBy, String rawSql);
+        internal abstract String CreatePagination(PaginationComponent pagination, String orderBy, String rawSql);
 
         /// <summary>
         /// 创建谓词关系
