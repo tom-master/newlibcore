@@ -46,7 +46,7 @@ namespace NewLibCore.Storage.SQL.Template
 
             if (pagination.MaxKey > 0)
             {
-                return $@"{rawSql} AND {pagination.AliasNameMapper[0].Value}.{PrimaryKeyName}<{pagination.MaxKey} {orderBy} LIMIT {pagination.Size} ;";
+                return $@"{rawSql} AND {pagination.AliasNameMappers[0].Value}.{PrimaryKeyName}<{pagination.MaxKey} {orderBy} LIMIT {pagination.Size} ;";
             }
 
             return $@"{rawSql} {orderBy} LIMIT {pagination.Size * (pagination.Index - 1)},{pagination.Size} ;";

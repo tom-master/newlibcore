@@ -49,13 +49,13 @@ namespace NewLibCore.Storage.SQL
             //循环翻译连接对象
             foreach (var item in _expressionStore.JoinComponents)
             {
-                if (item.AliasNameMapper == null || item.JoinRelation == JoinRelation.NONE)
+                if (item.AliasNameMappers == null || item.JoinRelation == JoinRelation.NONE)
                 {
                     continue;
                 }
 
                 //获取连接对象中的表别名，进行连接语句的翻译
-                foreach (var aliasItem in item.AliasNameMapper)
+                foreach (var aliasItem in item.AliasNameMappers)
                 {
                     if (aliasItem.Key.ToLower() == item.MainTable.ToLower())
                     {

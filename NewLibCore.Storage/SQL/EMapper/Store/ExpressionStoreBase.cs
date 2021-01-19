@@ -15,7 +15,19 @@ namespace NewLibCore.Storage.SQL.Store
     /// </summary>
     internal class AliasComponentBase : ComponentBase
     {
-        protected internal IReadOnlyList<KeyValuePair<String, String>> AliasNameMapper { get; set; }
+        protected internal AliasComponentBase()
+        {
+            AliasNameMappers = new List<KeyValuePair<String, String>>();
+        }
+        protected internal IList<KeyValuePair<String, String>> AliasNameMappers { get; private set; }
+
+        internal void InitAliasNameMapper(params KeyValuePair<String, String>[] keyValues)
+        {
+            foreach (var item in keyValues)
+            {
+                AliasNameMappers.Add(item);
+            }
+        }
     }
 
     /// <summary>

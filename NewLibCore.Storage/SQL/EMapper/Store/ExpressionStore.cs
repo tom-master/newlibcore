@@ -92,12 +92,10 @@ namespace NewLibCore.Storage.SQL.Store
 
             From = new SimpleComponent
             {
-                Expression = expression,
-                AliasNameMapper = new List<KeyValuePair<String, String>>
-                {
-                    new KeyValuePair<String, String>(modelType.GetEntityBaseAliasName().TableName, modelType.GetEntityBaseAliasName().AliasName)
-                }
+                Expression = expression
             };
+            var KeyValuePair = new KeyValuePair<String, String>(modelType.GetEntityBaseAliasName().TableName, modelType.GetEntityBaseAliasName().AliasName);
+            From.InitAliasNameMapper(KeyValuePair);
         }
 
         /// <summary>
@@ -165,8 +163,8 @@ namespace NewLibCore.Storage.SQL.Store
             Where = new SimpleComponent
             {
                 Expression = filter,
-                AliasNameMapper = ParseToAliasNames(((LambdaExpression)filter).Parameters)
             };
+            Where.InitAliasNameMapper(ParseToAliasNames(((LambdaExpression)filter).Parameters).ToArray());
         }
 
         /// <summary>
@@ -182,9 +180,9 @@ namespace NewLibCore.Storage.SQL.Store
             Check.IfNullOrZero(filter);
             Where = new SimpleComponent
             {
-                Expression = filter,
-                AliasNameMapper = ParseToAliasNames(((LambdaExpression)filter).Parameters)
+                Expression = filter
             };
+            Where.InitAliasNameMapper(ParseToAliasNames(((LambdaExpression)filter).Parameters).ToArray());
         }
 
         /// <summary>
@@ -203,8 +201,8 @@ namespace NewLibCore.Storage.SQL.Store
             Where = new SimpleComponent
             {
                 Expression = filter,
-                AliasNameMapper = ParseToAliasNames(((LambdaExpression)filter).Parameters)
             };
+            Where.InitAliasNameMapper(ParseToAliasNames(((LambdaExpression)filter).Parameters).ToArray());
         }
 
         /// <summary>
@@ -225,8 +223,8 @@ namespace NewLibCore.Storage.SQL.Store
             Where = new SimpleComponent
             {
                 Expression = filter,
-                AliasNameMapper = ParseToAliasNames(((LambdaExpression)filter).Parameters)
             };
+            Where.InitAliasNameMapper(ParseToAliasNames(((LambdaExpression)filter).Parameters).ToArray());
         }
 
         /// <summary>
@@ -248,9 +246,9 @@ namespace NewLibCore.Storage.SQL.Store
             Check.IfNullOrZero(filter);
             Where = new SimpleComponent
             {
-                Expression = filter,
-                AliasNameMapper = ParseToAliasNames(((LambdaExpression)filter).Parameters)
+                Expression = filter
             };
+            Where.InitAliasNameMapper(ParseToAliasNames(((LambdaExpression)filter).Parameters).ToArray());
         }
 
         /// <summary>
@@ -274,9 +272,9 @@ namespace NewLibCore.Storage.SQL.Store
             Check.IfNullOrZero(filter);
             Where = new SimpleComponent
             {
-                Expression = filter,
-                AliasNameMapper = ParseToAliasNames(((LambdaExpression)filter).Parameters)
+                Expression = filter
             };
+            Where.InitAliasNameMapper(ParseToAliasNames(((LambdaExpression)filter).Parameters).ToArray());
         }
 
         /// <summary>
@@ -386,13 +384,14 @@ namespace NewLibCore.Storage.SQL.Store
         where TJoin : EntityBase, new()
         {
             Check.IfNullOrZero(expression);
-            JoinComponents.Add(new JoinComponent
+            var joinComponent = new JoinComponent
             {
                 Expression = expression,
                 JoinRelation = joinRelation,
-                AliasNameMapper = ParseToAliasNames(((LambdaExpression)expression).Parameters),
                 MainTable = typeof(TModel).GetEntityBaseAliasName().TableName
-            });
+            };
+            joinComponent.InitAliasNameMapper(ParseToAliasNames(((LambdaExpression)expression).Parameters).ToArray().ToArray());
+            JoinComponents.Add(joinComponent);
         }
 
         /// <summary>
@@ -409,9 +408,9 @@ namespace NewLibCore.Storage.SQL.Store
             {
                 Index = pageIndex,
                 Size = pageSize,
-                MaxKey = maxKey,
-                AliasNameMapper = From.AliasNameMapper
+                MaxKey = maxKey
             };
+            Pagination.InitAliasNameMapper(From.AliasNameMappers.ToArray());
         }
 
         /// <summary>
@@ -423,15 +422,15 @@ namespace NewLibCore.Storage.SQL.Store
             var newAliasMapper = new List<KeyValuePair<String, String>>();
             if (Where != null)
             {
-                newAliasMapper.AddRange(Where.AliasNameMapper);
+                newAliasMapper.AddRange(Where.AliasNameMappers);
             }
             if (JoinComponents.Any())
             {
-                newAliasMapper.AddRange(JoinComponents.SelectMany(s => s.AliasNameMapper));
+                newAliasMapper.AddRange(JoinComponents.SelectMany(s => s.AliasNameMappers));
             }
             if (From != null)
             {
-                newAliasMapper.AddRange(From.AliasNameMapper);
+                newAliasMapper.AddRange(From.AliasNameMappers);
             }
             newAliasMapper = newAliasMapper.Select(s => s).Distinct().ToList();
 
@@ -478,7 +477,7 @@ namespace NewLibCore.Storage.SQL.Store
         /// </summary>
         /// <param name="expression">表达式</param>
         /// <returns></returns>
-        private IReadOnlyList<KeyValuePair<String, String>> ParseToAliasNames(IReadOnlyList<ParameterExpression> parameters)
+        private List<KeyValuePair<String, String>> ParseToAliasNames(IReadOnlyList<ParameterExpression> parameters)
         {
             var list = new List<KeyValuePair<String, String>>();
             foreach (var item in parameters)

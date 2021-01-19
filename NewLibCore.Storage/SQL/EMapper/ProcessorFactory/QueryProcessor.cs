@@ -31,11 +31,11 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         protected override SqlExecuteResultConvert Execute(ExpressionStore store)
         {
             Check.IfNullOrZero(store);
-            if (!store.From.AliasNameMapper.Any())
+            if (!store.From.AliasNameMappers.Any())
             {
                 throw new ArgumentException("没有指定From表");
             }
-            var mainTable = store.From.AliasNameMapper[0];
+            var mainTable = store.From.AliasNameMappers[0];
             var result = ConditionProcessor.Process(new ParseModel
             {
                 Sql = TemplateBase.CreateSelect(ExtractSelectFields(store), mainTable.Key, mainTable.Value),
