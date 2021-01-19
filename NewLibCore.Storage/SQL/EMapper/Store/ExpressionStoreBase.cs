@@ -40,15 +40,13 @@ namespace NewLibCore.Storage.SQL.Store
     /// <summary>
     /// 分页语句对象
     /// </summary>
-    internal class PaginationComponent : ComponentBase
+    internal class PaginationComponent : AliasComponentBase
     {
         internal Int32 Index { get; set; }
 
         internal Int32 Size { get; set; }
 
         internal Int32 MaxKey { get; set; }
-
-        internal KeyValuePair<String, String> QueryMainTable { get; set; }
     }
 
     /// <summary>
@@ -57,11 +55,6 @@ namespace NewLibCore.Storage.SQL.Store
     internal class SimpleComponent : AliasComponentBase
     {
 
-    }
-
-    internal class FromComponent : ComponentBase
-    {
-        protected internal KeyValuePair<String, String> MainTableMapper { get; set; }
     }
 
     internal class RawSqlComponent

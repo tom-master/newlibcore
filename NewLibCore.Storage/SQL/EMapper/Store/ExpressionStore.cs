@@ -60,7 +60,7 @@ namespace NewLibCore.Storage.SQL.Store
         /// <summary>
         /// from语句 对象
         /// </summary>
-        internal FromComponent From { get; private set; }
+        internal SimpleComponent From { get; private set; }
 
         /// <summary>
         /// 分页语句对象
@@ -90,10 +90,13 @@ namespace NewLibCore.Storage.SQL.Store
             var modelType = typeof(TModel);
             Expression<Func<TModel, TModel>> expression = (a) => a;
 
-            From = new FromComponent
+            From = new SimpleComponent
             {
                 Expression = expression,
-                MainTableMapper = new KeyValuePair<String, String>(modelType.GetEntityBaseAliasName().TableName, modelType.GetEntityBaseAliasName().AliasName)
+                AliasNameMapper = new List<KeyValuePair<String, String>>
+                {
+                    new KeyValuePair<String, String>(modelType.GetEntityBaseAliasName().TableName, modelType.GetEntityBaseAliasName().AliasName)
+                }
             };
         }
 
@@ -407,7 +410,7 @@ namespace NewLibCore.Storage.SQL.Store
                 Index = pageIndex,
                 Size = pageSize,
                 MaxKey = maxKey,
-                QueryMainTable = From.MainTableMapper
+                AliasNameMapper = From.AliasNameMapper
             };
         }
 
@@ -428,7 +431,7 @@ namespace NewLibCore.Storage.SQL.Store
             }
             if (From != null)
             {
-                newAliasMapper.Add(From.MainTableMapper);
+                newAliasMapper.AddRange(From.AliasNameMapper);
             }
             newAliasMapper = newAliasMapper.Select(s => s).Distinct().ToList();
 
