@@ -95,7 +95,7 @@ namespace NewLibCore.Storage.SQL.Store
                 Expression = expression
             };
             var KeyValuePair = new KeyValuePair<String, String>(modelType.GetEntityBaseAliasName().TableName, modelType.GetEntityBaseAliasName().AliasName);
-            From.InitAliasNameMapper(KeyValuePair);
+            From.InitAliasNameMappers(KeyValuePair);
         }
 
         /// <summary>
@@ -164,7 +164,7 @@ namespace NewLibCore.Storage.SQL.Store
             {
                 Expression = filter,
             };
-            Where.InitAliasNameMapper(ParseToAliasNames(((LambdaExpression)filter).Parameters).ToArray());
+            Where.InitAliasNameMappers(ParseToAliasNames(((LambdaExpression)filter).Parameters).ToArray());
         }
 
         /// <summary>
@@ -182,7 +182,7 @@ namespace NewLibCore.Storage.SQL.Store
             {
                 Expression = filter
             };
-            Where.InitAliasNameMapper(ParseToAliasNames(((LambdaExpression)filter).Parameters).ToArray());
+            Where.InitAliasNameMappers(ParseToAliasNames(((LambdaExpression)filter).Parameters).ToArray());
         }
 
         /// <summary>
@@ -202,7 +202,7 @@ namespace NewLibCore.Storage.SQL.Store
             {
                 Expression = filter,
             };
-            Where.InitAliasNameMapper(ParseToAliasNames(((LambdaExpression)filter).Parameters).ToArray());
+            Where.InitAliasNameMappers(ParseToAliasNames(((LambdaExpression)filter).Parameters).ToArray());
         }
 
         /// <summary>
@@ -224,7 +224,7 @@ namespace NewLibCore.Storage.SQL.Store
             {
                 Expression = filter,
             };
-            Where.InitAliasNameMapper(ParseToAliasNames(((LambdaExpression)filter).Parameters).ToArray());
+            Where.InitAliasNameMappers(ParseToAliasNames(((LambdaExpression)filter).Parameters).ToArray());
         }
 
         /// <summary>
@@ -248,7 +248,7 @@ namespace NewLibCore.Storage.SQL.Store
             {
                 Expression = filter
             };
-            Where.InitAliasNameMapper(ParseToAliasNames(((LambdaExpression)filter).Parameters).ToArray());
+            Where.InitAliasNameMappers(ParseToAliasNames(((LambdaExpression)filter).Parameters).ToArray());
         }
 
         /// <summary>
@@ -274,7 +274,7 @@ namespace NewLibCore.Storage.SQL.Store
             {
                 Expression = filter
             };
-            Where.InitAliasNameMapper(ParseToAliasNames(((LambdaExpression)filter).Parameters).ToArray());
+            Where.InitAliasNameMappers(ParseToAliasNames(((LambdaExpression)filter).Parameters).ToArray());
         }
 
         /// <summary>
@@ -390,7 +390,7 @@ namespace NewLibCore.Storage.SQL.Store
                 JoinRelation = joinRelation,
                 MainTable = typeof(TModel).GetEntityBaseAliasName().TableName
             };
-            joinComponent.InitAliasNameMapper(ParseToAliasNames(((LambdaExpression)expression).Parameters).ToArray().ToArray());
+            joinComponent.InitAliasNameMappers(ParseToAliasNames(((LambdaExpression)expression).Parameters).ToArray().ToArray());
             JoinComponents.Add(joinComponent);
         }
 
@@ -410,7 +410,7 @@ namespace NewLibCore.Storage.SQL.Store
                 Size = pageSize,
                 MaxKey = maxKey
             };
-            Pagination.InitAliasNameMapper(From.AliasNameMappers.ToArray());
+            Pagination.InitAliasNameMappers(From.AliasNameMappers.ToArray());
         }
 
         /// <summary>

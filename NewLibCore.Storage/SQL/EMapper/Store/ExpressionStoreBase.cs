@@ -21,7 +21,7 @@ namespace NewLibCore.Storage.SQL.Store
         }
         protected internal IList<KeyValuePair<String, String>> AliasNameMappers { get; private set; }
 
-        internal void InitAliasNameMapper(params KeyValuePair<String, String>[] keyValues)
+        internal void InitAliasNameMappers(params KeyValuePair<String, String>[] keyValues)
         {
             foreach (var item in keyValues)
             {
