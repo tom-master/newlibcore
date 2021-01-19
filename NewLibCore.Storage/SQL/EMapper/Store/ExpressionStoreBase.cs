@@ -6,7 +6,11 @@ namespace NewLibCore.Storage.SQL.Store
 {
     internal class ComponentBase
     {
-        protected internal Expression Expression { get; set; }
+        protected internal Expression Expression { get; private set; }
+        protected internal ComponentBase(Expression expression)
+        {
+            Expression = expression;
+        }
     }
 
 
@@ -15,7 +19,7 @@ namespace NewLibCore.Storage.SQL.Store
     /// </summary>
     internal class AliasComponentBase : ComponentBase
     {
-        protected internal AliasComponentBase()
+        protected internal AliasComponentBase(Expression expression) : base(expression)
         {
             AliasNameMappers = new List<KeyValuePair<String, String>>();
         }
@@ -35,9 +39,15 @@ namespace NewLibCore.Storage.SQL.Store
     /// </summary>
     internal class JoinComponent : AliasComponentBase
     {
-        protected internal String MainTable { get; set; }
+        protected internal String MainTable { get; private set; }
 
-        protected internal JoinRelation JoinRelation { get; set; }
+        protected internal JoinRelation JoinRelation { get; private set; }
+
+        protected internal JoinComponent(Expression expression, JoinRelation joinRelation, String mainTable) : base(expression)
+        {
+            MainTable = mainTable;
+            JoinRelation = joinRelation;
+        }
     }
 
 
@@ -46,7 +56,13 @@ namespace NewLibCore.Storage.SQL.Store
     /// </summary>
     internal class OrderComponent : ComponentBase
     {
-        protected internal OrderByType OrderBy { get; set; }
+        protected internal OrderByType OrderBy { get; private set; }
+
+        protected internal OrderComponent(Expression expression, OrderByType orderByType) : base(expression)
+        {
+            OrderBy = orderByType;
+        }
+
     }
 
     /// <summary>
@@ -54,11 +70,18 @@ namespace NewLibCore.Storage.SQL.Store
     /// </summary>
     internal class PaginationComponent : AliasComponentBase
     {
-        internal Int32 Index { get; set; }
+        internal Int32 Index { get; private set; }
 
-        internal Int32 Size { get; set; }
+        internal Int32 Size { get; private set; }
 
-        internal Int32 MaxKey { get; set; }
+        internal Int32 MaxKey { get; private set; }
+
+        protected internal PaginationComponent(Int32 index, Int32 size, Int32 maxKey) : base(null)
+        {
+            Index = index;
+            Size = size;
+            MaxKey = maxKey;
+        }
     }
 
     /// <summary>
@@ -66,7 +89,7 @@ namespace NewLibCore.Storage.SQL.Store
     /// </summary>
     internal class SimpleComponent : AliasComponentBase
     {
-
+        protected internal SimpleComponent(Expression expression) : base(expression) { }
     }
 
     internal class RawSqlComponent
