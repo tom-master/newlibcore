@@ -2,6 +2,7 @@
 using System.Data.Common;
 using System.Data.SqlClient;
 using Microsoft.Extensions.Options;
+using NewLibCore.Storage.SQL.Component.Sql;
 using NewLibCore.Storage.SQL.EMapper;
 using NewLibCore.Storage.SQL.Extension;
 using NewLibCore.Storage.SQL.Store;
