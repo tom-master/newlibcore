@@ -44,10 +44,10 @@ namespace NewLibCore.Storage.SQL
         protected override ProcessorResult Process()
         {
             //获取合并后的表别名
-            _aliasMapper = _expressionStore.MergeAliasMapper();
+            _aliasMapper = _sqlComponent.MergeAliasMapper();
 
             //循环翻译连接对象
-            foreach (var item in _expressionStore.JoinComponents)
+            foreach (var item in _sqlComponent.JoinComponents)
             {
                 if (item.AliasNameMappers == null || item.JoinRelation == JoinRelation.NONE)
                 {
@@ -70,9 +70,9 @@ namespace NewLibCore.Storage.SQL
             }
             _processorResult.Append(" WHERE 1=1 ");
             //翻译Where条件对象
-            if (_expressionStore.Where != null)
+            if (_sqlComponent.Where != null)
             {
-                var lambdaExp = (LambdaExpression)_expressionStore.Where.Expression;
+                var lambdaExp = (LambdaExpression)_sqlComponent.Where.Expression;
                 //当表达式主体为常量时则直接返回，不做解析
                 if (lambdaExp.Body.NodeType == ExpressionType.Constant)
                 {

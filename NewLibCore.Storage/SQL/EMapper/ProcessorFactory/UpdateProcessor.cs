@@ -1,10 +1,8 @@
-﻿using System;
-using System.Linq;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
+using NewLibCore.Storage.SQL.Component.Sql;
 using NewLibCore.Storage.SQL.EMapper;
 using NewLibCore.Storage.SQL.EMapper.Parser;
 using NewLibCore.Storage.SQL.Extension;
-using NewLibCore.Storage.SQL.Store;
 using NewLibCore.Storage.SQL.Template;
 
 namespace NewLibCore.Storage.SQL.ProcessorFactory
@@ -26,9 +24,9 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         {
         }
 
-        protected override SqlExecuteResultConvert Execute(ExpressionStore store)
+        protected override SqlExecuteResultConvert Execute(SqlComponent sqlComponent)
         {
-            var instance = store.Model;
+            var instance = sqlComponent.Model;
             instance.SetUpdateTime();
 
             if (Options.EnableModelValidate)
@@ -41,7 +39,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
             {
                 Sql = TemplateBase.CreateUpdate(instance),
                 Parameters = instance.GetSqlElements().Parameters,
-                ExpressionStore = store
+                SqlComponent = sqlComponent
             });
 
             result.Append($@"{PredicateType.AND} {aliasName}.{nameof(instance.IsDeleted)} = 0 {TemplateBase.AffectedRows}");

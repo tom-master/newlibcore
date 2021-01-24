@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
+using NewLibCore.Storage.SQL.Component.Sql;
 using NewLibCore.Storage.SQL.EMapper;
 using NewLibCore.Storage.SQL.EMapper.Parser;
-using NewLibCore.Storage.SQL.Store;
 using NewLibCore.Storage.SQL.Template;
 using NewLibCore.Validate;
 
@@ -21,11 +21,11 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         {
         }
 
-        protected override SqlExecuteResultConvert Execute(ExpressionStore store)
+        protected override SqlExecuteResultConvert Execute(SqlComponent sqlComponent)
         {
-            Check.IfNullOrZero(store);
+            Check.IfNullOrZero(sqlComponent);
 
-            var instance = store.Model;
+            var instance = sqlComponent.Model;
             instance.SetAddTime();
             instance.OnChanged();
             if (Options.EnableModelValidate)

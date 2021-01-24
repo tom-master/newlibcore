@@ -1,5 +1,5 @@
+using NewLibCore.Storage.SQL.Component.Sql;
 using NewLibCore.Storage.SQL.EMapper.Parser;
-using NewLibCore.Storage.SQL.Store;
 
 namespace NewLibCore.Storage.SQL.ProcessorFactory
 {
@@ -9,12 +9,12 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         {
         }
 
-        protected override SqlExecuteResultConvert Execute(ExpressionStore store)
+        protected override SqlExecuteResultConvert Execute(SqlComponent sqlComponent)
         {
             var result = ConditionProcessor.Process(new ParseModel
             {
-                Sql = store.RawSql.Sql,
-                Parameters = store.RawSql.Parameters
+                Sql = sqlComponent.RawSql.Sql,
+                Parameters = sqlComponent.RawSql.Parameters
             });
             return result.Execute();
         }

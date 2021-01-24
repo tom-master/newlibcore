@@ -4,7 +4,6 @@ using System.Linq.Expressions;
 using Microsoft.Extensions.DependencyInjection;
 using NewLibCore.Storage.SQL.Extension;
 using NewLibCore.Storage.SQL.ProcessorFactory;
-using NewLibCore.Storage.SQL.Store;
 using NewLibCore.Validate;
 
 namespace NewLibCore.Storage.SQL
@@ -33,11 +32,11 @@ namespace NewLibCore.Storage.SQL
 
             return RunDiagnosis.Watch(() =>
             {
-                var store = new ExpressionStore();
-                store.AddModel(model);
+                var sqlComponent = new SqlComponent();
+                sqlComponent.AddModel(model);
 
                 var processor = FindProcessor(nameof(InsertProcessor));
-                model.Id = processor.Process(store).GetModifyRowCount();
+                model.Id = processor.Process(sqlComponent).GetModifyRowCount();
                 return model;
             });
         }
@@ -56,11 +55,11 @@ namespace NewLibCore.Storage.SQL
 
             return RunDiagnosis.Watch(() =>
             {
-                var store = new ExpressionStore();
-                store.AddWhere(expression);
-                store.AddModel(model);
+                var sqlComponent = new SqlComponent();
+                sqlComponent.AddWhere(expression);
+                sqlComponent.AddModel(model);
                 var processor = FindProcessor(nameof(UpdateProcessor));
-                return processor.Process(store).GetModifyRowCount() > 0;
+                return processor.Process(sqlComponent).GetModifyRowCount() > 0;
             });
         }
 
@@ -71,11 +70,11 @@ namespace NewLibCore.Storage.SQL
         /// <returns></returns>
         public QueryWrapper<TModel> Query<TModel>() where TModel : EntityBase, new()
         {
-            var expressionStore = new ExpressionStore();
-            expressionStore.AddFrom<TModel>();
+            var sqlComponent = new SqlComponent();
+            sqlComponent.AddFrom<TModel>();
 
             var processor = FindProcessor(nameof(QueryProcessor));
-            return new QueryWrapper<TModel>(expressionStore, processor);
+            return new QueryWrapper<TModel>(sqlComponent, processor);
         }
 
         /// <summary>
@@ -91,10 +90,10 @@ namespace NewLibCore.Storage.SQL
 
             return RunDiagnosis.Watch(() =>
             {
-                var store = new ExpressionStore();
-                store.AddDirectSql(sql, parameters);
+                var sqlComponent = new SqlComponent();
+                sqlComponent.AddDirectSql(sql, parameters);
                 var processor = FindProcessor(nameof(RawSqlProcessor));
-                return processor.Process(store);
+                return processor.Process(sqlComponent);
             });
         }
 

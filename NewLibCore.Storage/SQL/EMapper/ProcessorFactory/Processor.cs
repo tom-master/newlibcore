@@ -1,8 +1,8 @@
 using System;
 using Microsoft.Extensions.Options;
+using NewLibCore.Storage.SQL.Component.Sql;
 using NewLibCore.Storage.SQL.EMapper;
 using NewLibCore.Storage.SQL.EMapper.Parser;
-using NewLibCore.Storage.SQL.Store;
 using NewLibCore.Storage.SQL.Template;
 using NewLibCore.Validate;
 
@@ -32,12 +32,11 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
             ConditionProcessor = conditionProcessor;
         }
 
-        internal SqlExecuteResultConvert Process(ExpressionStore store)
+        internal SqlExecuteResultConvert Process()
         {
-            Check.IfNullOrZero(store);
-            return Execute(store);
+            return Execute();
         }
 
-        protected abstract SqlExecuteResultConvert Execute(ExpressionStore store);
+        protected abstract SqlExecuteResultConvert Execute();
     }
 }

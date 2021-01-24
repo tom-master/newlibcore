@@ -4,10 +4,10 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Microsoft.Extensions.Options;
+using NewLibCore.Storage.SQL.Component.Sql;
 using NewLibCore.Storage.SQL.EMapper;
 using NewLibCore.Storage.SQL.EMapper.Parser;
 using NewLibCore.Storage.SQL.Extension;
-using NewLibCore.Storage.SQL.Store;
 using NewLibCore.Storage.SQL.Template;
 using NewLibCore.Storage.SQL.Validate;
 using NewLibCore.Validate;
@@ -28,43 +28,43 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         /// 执行查询操作的翻译
         /// </summary>
         /// <returns></returns>
-        protected override SqlExecuteResultConvert Execute(ExpressionStore store)
+        protected override SqlExecuteResultConvert Execute(SqlComponent sqlComponent)
         {
-            Check.IfNullOrZero(store);
-            if (!store.From.AliasNameMappers.Any())
+            Check.IfNullOrZero(sqlComponent);
+            if (!sqlComponent.From.AliasNameMappers.Any())
             {
                 throw new ArgumentException("没有指定From表");
             }
-            var mainTable = store.From.AliasNameMappers[0];
+            var mainTable = sqlComponent.From.AliasNameMappers[0];
             var result = ConditionProcessor.Process(new ParseModel
             {
-                Sql = TemplateBase.CreateSelect(ExtractSelectFields(store), mainTable.Key, mainTable.Value),
-                ExpressionStore = store
+                Sql = TemplateBase.CreateSelect(ExtractSelectFields(sqlComponent), mainTable.Key, mainTable.Value),
+                SqlComponent = sqlComponent
             });
 
-            var aliasMapper = store.MergeAliasMapper();
+            var aliasMapper = sqlComponent.MergeAliasMapper();
             foreach (var aliasItem in aliasMapper)
             {
-                result.Append($@"{PredicateType.AND} {aliasItem.Value.ToLower()}.{nameof(store.Model.IsDeleted)} = 0");
+                result.Append($@"{PredicateType.AND} {aliasItem.Value.ToLower()}.{nameof(sqlComponent.Model.IsDeleted)} = 0");
             }
 
-            if (store.Pagination != null)
+            if (sqlComponent.Pagination != null)
             {
-                if (store.Order == null)
+                if (sqlComponent.Order == null)
                 {
                     throw new Exception("分页中没有指定排序字段");
                 }
-                var (fields, tableName) = ExtractOrderFields(store);
-                var orderTemplate = TemplateBase.CreateOrderBy(store.Order.OrderBy, $@"{tableName}.{fields}");
+                var (fields, tableName) = ExtractOrderFields(sqlComponent);
+                var orderTemplate = TemplateBase.CreateOrderBy(sqlComponent.Order.OrderBy, $@"{tableName}.{fields}");
 
-                var newSql = TemplateBase.CreatePagination(store.Pagination, orderTemplate, result.ToString());
+                var newSql = TemplateBase.CreatePagination(sqlComponent.Pagination, orderTemplate, result.ToString());
                 result.ClearSql();
                 result.Append(newSql);
             }
-            else if (store.Order != null)
+            else if (sqlComponent.Order != null)
             {
-                var (fields, tableName) = ExtractOrderFields(store);
-                var orderTemplate = TemplateBase.CreateOrderBy(store.Order.OrderBy, $@"{tableName}.{fields}");
+                var (fields, tableName) = ExtractOrderFields(sqlComponent);
+                var orderTemplate = TemplateBase.CreateOrderBy(sqlComponent.Order.OrderBy, $@"{tableName}.{fields}");
                 result.Append(orderTemplate);
             }
 
@@ -75,10 +75,10 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         /// 提取出排序字段
         /// </summary>
         /// <returns></returns>
-        private (String Fields, String AliasName) ExtractOrderFields(ExpressionStore store)
+        private (String Fields, String AliasName) ExtractOrderFields(SqlComponent sqlComponent)
         {
-            Check.IfNullOrZero(store);
-            var fields = (LambdaExpression)store.Order.Expression;
+            Check.IfNullOrZero(sqlComponent);
+            var fields = (LambdaExpression)sqlComponent.Order.Expression;
             if (fields.Body.NodeType == ExpressionType.MemberAccess)
             {
                 var aliasName = fields.Parameters[0].Type.GetEntityBaseAliasName().AliasName;
@@ -93,14 +93,14 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         /// 提取出Select字段
         /// </summary>
         /// <returns></returns>
-        private String ExtractSelectFields(ExpressionStore store)
+        private String ExtractSelectFields(SqlComponent sqlComponent)
         {
-            Check.IfNullOrZero(store);
+            Check.IfNullOrZero(sqlComponent);
             var anonymousObjFields = new List<String>();
 
-            if (store.Select != null)
+            if (sqlComponent.Select != null)
             {
-                var fields = (LambdaExpression)store.Select.Expression;
+                var fields = (LambdaExpression)sqlComponent.Select.Expression;
                 if (fields.Body.NodeType == ExpressionType.Constant)
                 {
                     var bodyArguments = (fields.Body as ConstantExpression);
@@ -119,7 +119,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
             }
             else
             {
-                var types = store.MergeParameterTypes();
+                var types = sqlComponent.MergeParameterTypes();
                 var tableNames = types.Select(s => new KeyValuePair<String, String>(s.Name, s.GetEntityBaseAliasName().AliasName)).ToList();
                 anonymousObjFields = types
                     .SelectMany(s => s.GetProperties(BindingFlags.Instance | BindingFlags.Public)

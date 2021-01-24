@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using NewLibCore.Storage.SQL.Store;
+using NewLibCore.Storage.SQL.Component.Sql;
 using NewLibCore.Validate;
 
 namespace NewLibCore.Storage.SQL.EMapper.Parser
@@ -12,7 +12,7 @@ namespace NewLibCore.Storage.SQL.EMapper.Parser
     internal abstract class ConditionProcessor
     {
         protected readonly ProcessorResult _processorResult;
-        protected ExpressionStore _expressionStore;
+        protected SqlComponent _sqlComponent;
 
         internal ConditionProcessor(ProcessorResult processorResult)
         {
@@ -39,9 +39,9 @@ namespace NewLibCore.Storage.SQL.EMapper.Parser
                 _processorResult.Append(parseModel.Sql);
             }
 
-            if (parseModel.ExpressionStore != null)
+            if (parseModel.SqlComponent != null)
             {
-                _expressionStore = parseModel.ExpressionStore;
+                _sqlComponent = parseModel.SqlComponent;
                 Process();
             }
 
@@ -56,6 +56,6 @@ namespace NewLibCore.Storage.SQL.EMapper.Parser
 
         internal IEnumerable<MapperParameter> Parameters { get; set; }
 
-        internal ExpressionStore ExpressionStore { get; set; }
+        internal SqlComponent SqlComponent { get; set; }
     }
 }
