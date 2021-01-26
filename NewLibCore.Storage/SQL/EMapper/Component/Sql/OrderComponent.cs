@@ -4,7 +4,7 @@ using NewLibCore.Validate;
 
 namespace NewLibCore.Storage.SQL.Component.Sql
 {
-    internal class OrderComponent : ExpressionComponent
+    internal class OrderComponent : ComponentBase
     {
         internal OrderByType OrderBy { get; private set; }
         internal void AddOrderBy<TModel, TKey>(Expression<Func<TModel, TKey>> expression, OrderByType orderByType)

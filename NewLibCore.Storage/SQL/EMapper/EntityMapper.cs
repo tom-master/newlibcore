@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,11 +14,10 @@ namespace NewLibCore.Storage.SQL
     /// </summary>
     public sealed class EntityMapper
     {
-        private readonly IServiceProvider _serviceProvider;
-
-        public EntityMapper(IServiceProvider serviceProvider)
+        private readonly MapperDbContextBase _dbContextBase;
+        public EntityMapper(MapperDbContextBase mapperDbContextBase)
         {
-            _serviceProvider = serviceProvider;
+            _dbContextBase = mapperDbContextBase;
         }
 
         /// <summary>
@@ -64,20 +64,6 @@ namespace NewLibCore.Storage.SQL
         }
 
         /// <summary>
-        /// 查询
-        /// </summary>
-        /// <typeparam name="TModel"></typeparam>
-        /// <returns></returns>
-        public QueryWrapper<TModel> Query<TModel>() where TModel : EntityBase, new()
-        {
-            var sqlComponent = new SqlComponent();
-            sqlComponent.AddFrom<TModel>();
-
-            var processor = FindProcessor(nameof(QueryProcessor));
-            return new QueryWrapper<TModel>(sqlComponent, processor);
-        }
-
-        /// <summary>
         /// 执行原生的SQL语句
         /// </summary>
         /// <param name="sql">sql语句</param>
@@ -99,20 +85,17 @@ namespace NewLibCore.Storage.SQL
 
         public void Commit()
         {
-            var dbContext = _serviceProvider.GetRequiredService<MapperDbContextBase>();
-            dbContext.Commit();
+            _dbContextBase.Commit();
         }
 
         public void Rollback()
         {
-            var dbContext = _serviceProvider.GetRequiredService<MapperDbContextBase>();
-            dbContext.Rollback();
+            _dbContextBase.Rollback();
         }
 
         public void OpenTransaction()
         {
-            var dbContext = _serviceProvider.GetRequiredService<MapperDbContextBase>();
-            dbContext.UseTransaction = true;
+            _dbContextBase.UseTransaction = true;
         }
 
         private Processor FindProcessor(String target)

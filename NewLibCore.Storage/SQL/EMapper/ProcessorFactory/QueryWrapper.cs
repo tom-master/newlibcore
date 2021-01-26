@@ -1,30 +1,30 @@
 using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
 using NewLibCore.Storage.SQL.Component.Sql;
-using NewLibCore.Storage.SQL.Extension;
 using NewLibCore.Validate;
 
 namespace NewLibCore.Storage.SQL.ProcessorFactory
 {
     public class QueryWrapper<TModel> where TModel : EntityBase, new()
     {
-        private readonly Processor _processor;
+        internal SelectComponent SelectComponent { get; private set; }
+        internal FromComponent FromComponent { get; private set; }
+        internal JoinComponent JoinComponent { get; private set; }
+        internal WhereComponent WhereComponent { get; private set; }
+        internal OrderComponent OrderComponent { get; private set; }
 
-        private readonly SelectComponent _selectComponent;
-
-        internal QueryWrapper(Processor processor)
+        internal QueryWrapper()
         {
-            Check.IfNullOrZero(processor);
-
-            _processor = processor;
-            _selectComponent = new SelectComponent();
+            SelectComponent = new SelectComponent();
+            FromComponent = new FromComponent();
+            JoinComponent = new JoinComponent();
+            WhereComponent = new WhereComponent();
+            OrderComponent = new OrderComponent();
         }
 
         public QueryWrapper<TModel> Query()
         {
-            var fromComponent = new FromComponent();
-            fromComponent.AddFrom<TModel>();
+            FromComponent.AddFrom<TModel>();
             return this;
         }
 
@@ -32,8 +32,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         where TRight : EntityBase, new()
         {
             Check.IfNullOrZero(join);
-            var joinComponent = new JoinComponent();
-            joinComponent.AddJoin(join, JoinRelation.LEFT);
+            JoinComponent.AddJoin(join, JoinRelation.LEFT);
             return this;
         }
 
@@ -42,8 +41,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         where TRight : EntityBase, new()
         {
             Check.IfNullOrZero(join);
-            var joinComponent = new JoinComponent();
-            joinComponent.AddJoin(join, JoinRelation.LEFT);
+            JoinComponent.AddJoin(join, JoinRelation.LEFT);
             return this;
         }
 
@@ -51,8 +49,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         where TRight : EntityBase, new()
         {
             Check.IfNullOrZero(join);
-            var joinComponent = new JoinComponent();
-            joinComponent.AddJoin(join, JoinRelation.RIGHT);
+            JoinComponent.AddJoin(join, JoinRelation.RIGHT);
             return this;
         }
 
@@ -61,8 +58,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         where TRight : EntityBase, new()
         {
             Check.IfNullOrZero(join);
-            var joinComponent = new JoinComponent();
-            joinComponent.AddJoin(join, JoinRelation.RIGHT);
+            JoinComponent.AddJoin(join, JoinRelation.RIGHT);
             return this;
         }
 
@@ -70,8 +66,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         where TRight : EntityBase, new()
         {
             Check.IfNullOrZero(join);
-            var joinComponent = new JoinComponent();
-            joinComponent.AddJoin(join, JoinRelation.INNER);
+            JoinComponent.AddJoin(join, JoinRelation.INNER);
             return this;
         }
 
@@ -80,8 +75,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         where TRight : EntityBase, new()
         {
             Check.IfNullOrZero(join);
-            var joinComponent = new JoinComponent();
-            joinComponent.AddJoin(join, JoinRelation.INNER);
+            JoinComponent.AddJoin(join, JoinRelation.INNER);
             return this;
         }
 
@@ -98,7 +92,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         {
             if (selector != null)
             {
-                _selectComponent.AddSelect(selector);
+                SelectComponent.AddSelect(selector);
             }
 
             return this;
@@ -109,7 +103,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         {
             if (selector != null)
             {
-                _selectComponent.AddSelect(selector);
+                SelectComponent.AddSelect(selector);
             }
             return this;
         }
@@ -120,7 +114,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         {
             if (selector != null)
             {
-                _selectComponent.AddSelect(selector);
+                SelectComponent.AddSelect(selector);
             }
             return this;
         }
@@ -131,7 +125,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         {
             if (selector != null)
             {
-                _selectComponent.AddSelect(selector);
+                SelectComponent.AddSelect(selector);
             }
             return this;
         }
@@ -144,7 +138,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         {
             if (selector != null)
             {
-                _selectComponent.AddSelect(selector);
+                SelectComponent.AddSelect(selector);
             }
             return this;
         }
@@ -158,7 +152,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         {
             if (selector != null)
             {
-                _selectComponent.AddSelect(selector);
+                SelectComponent.AddSelect(selector);
             }
             return this;
         }
@@ -166,8 +160,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         public QueryWrapper<TModel> Where(Expression<Func<TModel, Boolean>> filter)
         {
             Check.IfNullOrZero(filter);
-            var whereComponent = new WhereComponent();
-            whereComponent.AddWhere(filter);
+            WhereComponent.AddWhere(filter);
             return this;
         }
 
@@ -175,8 +168,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         where TModel1 : EntityBase, new()
         {
             Check.IfNullOrZero(filter);
-            var whereComponent = new WhereComponent();
-            whereComponent.AddWhere(filter);
+            WhereComponent.AddWhere(filter);
             return this;
         }
 
@@ -184,8 +176,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         where TModel1 : EntityBase, new()
         {
             Check.IfNullOrZero(filter);
-            var whereComponent = new WhereComponent();
-            whereComponent.AddWhere(filter);
+            WhereComponent.AddWhere(filter);
             return this;
         }
 
@@ -194,11 +185,9 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         where TModel2 : EntityBase, new()
         {
             Check.IfNullOrZero(filter);
-            var whereComponent = new WhereComponent();
-            whereComponent.AddWhere(filter);
+            WhereComponent.AddWhere(filter);
             return this;
         }
-
 
         public QueryWrapper<TModel> Where<TModel1, TModel2, TModel3>(Expression<Func<TModel, TModel1, TModel2, TModel3, Boolean>> filter)
         where TModel1 : EntityBase, new()
@@ -206,8 +195,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         where TModel3 : EntityBase, new()
         {
             Check.IfNullOrZero(filter);
-            var whereComponent = new WhereComponent();
-            whereComponent.AddWhere(filter);
+            WhereComponent.AddWhere(filter);
             return this;
         }
 
@@ -218,8 +206,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         where TModel4 : EntityBase, new()
         {
             Check.IfNullOrZero(filter);
-            var whereComponent = new WhereComponent();
-            whereComponent.AddWhere(filter);
+            WhereComponent.AddWhere(filter);
             return this;
         }
 
@@ -232,24 +219,21 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         where TModel5 : EntityBase, new()
         {
             Check.IfNullOrZero(filter);
-            var whereComponent = new WhereComponent();
-            whereComponent.AddWhere(filter);
+            WhereComponent.AddWhere(filter);
             return this;
         }
 
         public QueryWrapper<TModel> ThenByDesc<TKey>(Expression<Func<TModel, TKey>> order)
         {
             Check.IfNullOrZero(order);
-            var orderComponent = new OrderComponent();
-            orderComponent.AddOrderBy(order, OrderByType.DESC);
+            OrderComponent.AddOrderBy(order, OrderByType.DESC);
             return this;
         }
 
         public QueryWrapper<TModel> ThenByAsc<TKey>(Expression<Func<TModel, TKey>> order)
         {
             Check.IfNullOrZero(order);
-            var orderComponent = new OrderComponent();
-            orderComponent.AddOrderBy(order, OrderByType.ASC);
+            OrderComponent.AddOrderBy(order, OrderByType.ASC);
             return this;
         }
 
@@ -257,51 +241,8 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         where TModel1 : EntityBase, new()
         {
             Check.IfNullOrZero(include);
-
-            var joinComponent = new JoinComponent();
-            joinComponent.AddInclude(include);
+            JoinComponent.AddInclude(include);
             return this;
-        }
-
-        public TModel FirstOrDefault()
-        {
-            return RunDiagnosis.Watch(() =>
-            {
-                return _processor.Process().FirstOrDefault<TModel>();
-            });
-        }
-
-        public TResult FirstOrDefault<TResult>() where TResult : new()
-        {
-            return RunDiagnosis.Watch(() =>
-            {
-                return _processor.Process().FirstOrDefault<TResult>();
-            });
-        }
-
-        public List<TModel> ToList()
-        {
-            return RunDiagnosis.Watch(() =>
-            {
-                return _processor.Process().ToList<TModel>();
-            });
-        }
-
-        public List<TResult> ToList<TResult>() where TResult : new()
-        {
-            return RunDiagnosis.Watch(() =>
-            {
-                return _processor.Process().ToList<TResult>();
-            });
-        }
-
-        public Int32 Count()
-        {
-            return RunDiagnosis.Watch(() =>
-            {
-                Select((a) => "COUNT(1)");
-                return _processor.Process().FirstOrDefault<Int32>();
-            });
         }
     }
 }

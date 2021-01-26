@@ -6,7 +6,7 @@ namespace NewLibCore.Storage.SQL
     /// <summary>
     /// 执行解析后的SQL
     /// </summary>
-    internal abstract class MapperDbContextBase : IDisposable
+    public abstract class MapperDbContextBase : IDisposable
     {
         /// <summary>
         /// 是否使用事物
