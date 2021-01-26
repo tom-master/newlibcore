@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using NewLibCore.Storage.SQL.Component.Sql;
-using NewLibCore.Storage.SQL.Component.Sql.ComponentBase;
 using NewLibCore.Storage.SQL.Extension;
 using NewLibCore.Validate;
 
@@ -26,7 +25,6 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         {
             var fromComponent = new FromComponent();
             fromComponent.AddFrom<TModel>();
-            _selectComponent.AddFromComponent(fromComponent);
             return this;
         }
 
@@ -36,7 +34,6 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
             Check.IfNullOrZero(join);
             var joinComponent = new JoinComponent();
             joinComponent.AddJoin(join, JoinRelation.LEFT);
-            _selectComponent.AddJoinComponent(joinComponent);
             return this;
         }
 
@@ -47,7 +44,6 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
             Check.IfNullOrZero(join);
             var joinComponent = new JoinComponent();
             joinComponent.AddJoin(join, JoinRelation.LEFT);
-            _selectComponent.AddJoinComponent(joinComponent);
             return this;
         }
 
@@ -57,7 +53,6 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
             Check.IfNullOrZero(join);
             var joinComponent = new JoinComponent();
             joinComponent.AddJoin(join, JoinRelation.RIGHT);
-            _selectComponent.AddJoinComponent(joinComponent);
             return this;
         }
 
@@ -68,7 +63,6 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
             Check.IfNullOrZero(join);
             var joinComponent = new JoinComponent();
             joinComponent.AddJoin(join, JoinRelation.RIGHT);
-            _selectComponent.AddJoinComponent(joinComponent);
             return this;
         }
 
@@ -78,7 +72,6 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
             Check.IfNullOrZero(join);
             var joinComponent = new JoinComponent();
             joinComponent.AddJoin(join, JoinRelation.INNER);
-            _selectComponent.AddJoinComponent(joinComponent);
             return this;
         }
 
@@ -89,7 +82,6 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
             Check.IfNullOrZero(join);
             var joinComponent = new JoinComponent();
             joinComponent.AddJoin(join, JoinRelation.INNER);
-            _selectComponent.AddJoinComponent(joinComponent);
             return this;
         }
 
@@ -99,7 +91,6 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
             Check.IfNullOrZero(pageSize);
             var paginationComponent = new PaginationComponent();
             paginationComponent.AddPagination(pageIndex, pageSize, maxKey);
-            _selectComponent.AddPaginationComponent(paginationComponent);
             return this;
         }
 
@@ -177,7 +168,6 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
             Check.IfNullOrZero(filter);
             var whereComponent = new WhereComponent();
             whereComponent.AddWhere(filter);
-            _selectComponent.AddWhereComponent(whereComponent);
             return this;
         }
 
@@ -187,7 +177,6 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
             Check.IfNullOrZero(filter);
             var whereComponent = new WhereComponent();
             whereComponent.AddWhere(filter);
-            _selectComponent.AddWhereComponent(whereComponent);
             return this;
         }
 
@@ -197,7 +186,6 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
             Check.IfNullOrZero(filter);
             var whereComponent = new WhereComponent();
             whereComponent.AddWhere(filter);
-            _selectComponent.AddWhereComponent(whereComponent);
             return this;
         }
 
@@ -208,7 +196,6 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
             Check.IfNullOrZero(filter);
             var whereComponent = new WhereComponent();
             whereComponent.AddWhere(filter);
-            _selectComponent.AddWhereComponent(whereComponent);
             return this;
         }
 
@@ -221,7 +208,6 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
             Check.IfNullOrZero(filter);
             var whereComponent = new WhereComponent();
             whereComponent.AddWhere(filter);
-            _selectComponent.AddWhereComponent(whereComponent);
             return this;
         }
 
@@ -234,7 +220,6 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
             Check.IfNullOrZero(filter);
             var whereComponent = new WhereComponent();
             whereComponent.AddWhere(filter);
-            _selectComponent.AddWhereComponent(whereComponent);
             return this;
         }
 
@@ -249,7 +234,6 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
             Check.IfNullOrZero(filter);
             var whereComponent = new WhereComponent();
             whereComponent.AddWhere(filter);
-            _selectComponent.AddWhereComponent(whereComponent);
             return this;
         }
 
@@ -258,7 +242,6 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
             Check.IfNullOrZero(order);
             var orderComponent = new OrderComponent();
             orderComponent.AddOrderBy(order, OrderByType.DESC);
-            _selectComponent.AddOrderComponent(orderComponent);
             return this;
         }
 
@@ -267,7 +250,6 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
             Check.IfNullOrZero(order);
             var orderComponent = new OrderComponent();
             orderComponent.AddOrderBy(order, OrderByType.ASC);
-            _selectComponent.AddOrderComponent(orderComponent);
             return this;
         }
 
@@ -278,7 +260,6 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
 
             var joinComponent = new JoinComponent();
             joinComponent.AddInclude(include);
-            _selectComponent.AddJoinComponent(joinComponent);
             return this;
         }
 

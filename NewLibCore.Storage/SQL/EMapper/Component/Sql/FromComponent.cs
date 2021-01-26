@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using NewLibCore.Storage.SQL.Extension;
 
-namespace NewLibCore.Storage.SQL.Component.Sql.ComponentBase
+namespace NewLibCore.Storage.SQL.Component.Sql
 {
-    internal class FromComponent : ExpressionComponent
+    internal class FromComponent : ComponentBase
     {
         internal void AddFrom<TModel>() where TModel : EntityBase, new()
         {

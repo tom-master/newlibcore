@@ -7,9 +7,9 @@ using NewLibCore.Storage.SQL.Extension;
 using NewLibCore.Storage.SQL.Validate;
 using NewLibCore.Validate;
 
-namespace NewLibCore.Storage.SQL.Component.Sql.ComponentBase
+namespace NewLibCore.Storage.SQL.Component.Sql
 {
-    internal class JoinComponent : ExpressionComponent
+    internal class JoinComponent : ComponentBase
     {
         internal String MainTable { get; private set; }
 

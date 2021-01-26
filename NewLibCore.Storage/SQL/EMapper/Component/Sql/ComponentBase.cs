@@ -5,9 +5,9 @@ using System.Linq;
 using System.Linq.Expressions;
 using NewLibCore.Storage.SQL.Extension;
 
-namespace NewLibCore.Storage.SQL.Component.Sql.ComponentBase
+namespace NewLibCore.Storage.SQL.Component.Sql
 {
-    internal abstract class ExpressionComponent : AliasNameComponent
+    internal abstract class ComponentBase : AliasNameComponent
     {
         internal Expression Expression { get; set; }
 

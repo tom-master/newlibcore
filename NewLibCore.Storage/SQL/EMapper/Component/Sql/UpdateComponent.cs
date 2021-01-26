@@ -1,4 +1,3 @@
-using NewLibCore.Storage.SQL.Component.Sql.ComponentBase;
 using NewLibCore.Validate;
 
 namespace NewLibCore.Storage.SQL.Component.Sql
