@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
+using NewLibCore.Storage.SQL.Component.Sql;
 using NewLibCore.Storage.SQL.Extension;
 using NewLibCore.Storage.SQL.ProcessorFactory;
 using NewLibCore.Validate;
+using System;
+using System.Linq;
+using System.Linq.Expressions;
 
 namespace NewLibCore.Storage.SQL
 {
@@ -32,11 +32,9 @@ namespace NewLibCore.Storage.SQL
 
             return RunDiagnosis.Watch(() =>
             {
-                var sqlComponent = new SqlComponent();
-                sqlComponent.AddModel(model);
-
+                var insertComponent = new InsertComponent<TModel>(model);
                 var processor = FindProcessor(nameof(InsertProcessor));
-                model.Id = processor.Process(sqlComponent).GetModifyRowCount();
+                model.Id = processor.Process(insertComponent).GetModifyRowCount();
                 return model;
             });
         }
@@ -55,11 +53,9 @@ namespace NewLibCore.Storage.SQL
 
             return RunDiagnosis.Watch(() =>
             {
-                var sqlComponent = new SqlComponent();
-                sqlComponent.AddWhere(expression);
-                sqlComponent.AddModel(model);
+                var updateComponent = new UpdateComponent<TModel>(model, new WhereComponent(expression));
                 var processor = FindProcessor(nameof(UpdateProcessor));
-                return processor.Process(sqlComponent).GetModifyRowCount() > 0;
+                return processor.Process(updateComponent).GetModifyRowCount() > 0;
             });
         }
 

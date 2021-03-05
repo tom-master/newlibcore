@@ -1,18 +1,15 @@
-
-using System;
-using System.Linq.Expressions;
 using NewLibCore.Validate;
+using System.Linq.Expressions;
 
 namespace NewLibCore.Storage.SQL.Component.Sql
 {
     internal class WhereComponent : ComponentBase
     {
-        internal void AddWhere(Expression filter)
+        internal WhereComponent(Expression expression) 
         {
-            Check.IfNullOrZero(filter);
-            Expression = filter;
-            InitAliasNameMappers(ParseToAliasNames(filter).ToArray());
+            Check.IfNullOrZero(expression);
+            Expression = expression;
+            InitAliasNameMappers(ParseToAliasNames(expression).ToArray());
         }
-
     }
 }

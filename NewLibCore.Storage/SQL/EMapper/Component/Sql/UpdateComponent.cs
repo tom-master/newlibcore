@@ -2,7 +2,7 @@ using NewLibCore.Validate;
 
 namespace NewLibCore.Storage.SQL.Component.Sql
 {
-    internal class UpdateComponent
+    internal class UpdateComponent<TModel> where TModel : EntityBase, new()
     {
         internal EntityBase Model { get; set; }
 
@@ -10,15 +10,12 @@ namespace NewLibCore.Storage.SQL.Component.Sql
 
         internal FromComponent FromComponent { get; private set; }
 
-        internal void AddModel<TModel>(TModel model) where TModel : EntityBase, new()
+        internal UpdateComponent(TModel model, WhereComponent whereComponent)
         {
             Check.IfNullOrZero(model);
-            Model = model;
-        }
-
-        internal void AddWhereComponent(WhereComponent whereComponent)
-        {
             Check.IfNullOrZero(whereComponent);
+
+            Model = model;
             WhereComponent = whereComponent;
         }
 
@@ -28,5 +25,4 @@ namespace NewLibCore.Storage.SQL.Component.Sql
             FromComponent = fromComponent;
         }
     }
-
 }

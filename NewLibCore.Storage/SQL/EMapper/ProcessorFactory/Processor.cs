@@ -1,10 +1,9 @@
-using System;
 using Microsoft.Extensions.Options;
-using NewLibCore.Storage.SQL.Component.Sql;
 using NewLibCore.Storage.SQL.EMapper;
 using NewLibCore.Storage.SQL.EMapper.Parser;
 using NewLibCore.Storage.SQL.Template;
 using NewLibCore.Validate;
+using System;
 
 namespace NewLibCore.Storage.SQL.ProcessorFactory
 {
