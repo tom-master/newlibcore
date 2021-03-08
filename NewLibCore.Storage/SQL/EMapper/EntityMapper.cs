@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using NewLibCore.Storage.SQL.Component.Sql;
 using NewLibCore.Storage.SQL.Extension;
+using NewLibCore.Storage.SQL.ProcessorFactory;
 using NewLibCore.Validate;
 using System;
 using System.Linq;
@@ -13,11 +14,8 @@ namespace NewLibCore.Storage.SQL
     /// </summary>
     public sealed class EntityMapper
     {
-        private readonly MapperDbContextBase _dbContextBase;
-        public EntityMapper(MapperDbContextBase mapperDbContextBase)
-        {
-            _dbContextBase = mapperDbContextBase;
-        }
+
+        public EntityMapper(InsertComponent insertComponent, UpdateComponent updateComponent, SelectWrapper selectWrapper) { }
 
         /// <summary>
         /// 添加

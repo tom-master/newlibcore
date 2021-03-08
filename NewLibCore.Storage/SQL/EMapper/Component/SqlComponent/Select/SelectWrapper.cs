@@ -1,18 +1,18 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
 using NewLibCore.Storage.SQL.Component.Sql;
 using NewLibCore.Storage.SQL.EMapper.Parser;
 using NewLibCore.Storage.SQL.Extension;
 using NewLibCore.Storage.SQL.Template;
 using NewLibCore.Storage.SQL.Validate;
 using NewLibCore.Validate;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
 
 namespace NewLibCore.Storage.SQL.ProcessorFactory
 {
-    public class SelectWrapper<TModel> where TModel : EntityBase, new()
+    public class SelectWrapper
     {
         internal SelectComponent SelectComponent { get; private set; }
         internal FromComponent FromComponent { get; private set; }
@@ -21,8 +21,8 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         internal OrderComponent OrderComponent { get; private set; }
         internal PaginationComponent PaginationComponent { get; private set; }
 
-        internal ConditionProcessor _conditionProcessor;
         internal TemplateBase _templateBase;
+        internal ConditionProcessor _conditionProcessor;
 
         internal SelectWrapper(TemplateBase templateBase, ConditionProcessor conditionProcessor)
         {
@@ -39,21 +39,13 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
             OrderComponent = new OrderComponent();
         }
 
-        public SelectWrapper<TModel> Query()
+        public SelectWrapper Query<TModel>() where TModel : EntityBase, new()
         {
             FromComponent.AddFrom<TModel>();
             return this;
         }
 
-        public SelectWrapper<TModel> LeftJoin<TRight>(Expression<Func<TModel, TRight, Boolean>> join)
-        where TRight : EntityBase, new()
-        {
-            Check.IfNullOrZero(join);
-            JoinComponent.AddJoin(join, JoinRelation.LEFT);
-            return this;
-        }
-
-        public SelectWrapper<TModel> LeftJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> join)
+        public SelectWrapper LeftJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> join)
         where TLeft : EntityBase, new()
         where TRight : EntityBase, new()
         {
@@ -62,15 +54,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
             return this;
         }
 
-        public SelectWrapper<TModel> RightJoin<TRight>(Expression<Func<TModel, TRight, Boolean>> join)
-        where TRight : EntityBase, new()
-        {
-            Check.IfNullOrZero(join);
-            JoinComponent.AddJoin(join, JoinRelation.RIGHT);
-            return this;
-        }
-
-        public SelectWrapper<TModel> RightJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> join)
+        public SelectWrapper RightJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> join)
         where TLeft : EntityBase, new()
         where TRight : EntityBase, new()
         {
@@ -79,15 +63,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
             return this;
         }
 
-        public SelectWrapper<TModel> InnerJoin<TRight>(Expression<Func<TModel, TRight, Boolean>> join)
-        where TRight : EntityBase, new()
-        {
-            Check.IfNullOrZero(join);
-            JoinComponent.AddJoin(join, JoinRelation.INNER);
-            return this;
-        }
-
-        public SelectWrapper<TModel> InnerJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> join)
+        public SelectWrapper InnerJoin<TLeft, TRight>(Expression<Func<TLeft, TRight, Boolean>> join)
         where TLeft : EntityBase, new()
         where TRight : EntityBase, new()
         {
@@ -96,7 +72,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
             return this;
         }
 
-        public SelectWrapper<TModel> Page(Int32 pageIndex, Int32 pageSize, Int32 maxKey = 0)
+        public SelectWrapper Page(Int32 pageIndex, Int32 pageSize, Int32 maxKey = 0)
         {
             Check.IfNullOrZero(pageIndex);
             Check.IfNullOrZero(pageSize);
@@ -105,7 +81,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
             return this;
         }
 
-        public SelectWrapper<TModel> Select(Expression<Func<TModel, dynamic>> selector = null)
+        public SelectWrapper Select<TModel>(Expression<Func<TModel, dynamic>> selector = null) where TModel : EntityBase, new()
         {
             if (selector != null)
             {
@@ -115,17 +91,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
             return this;
         }
 
-        public SelectWrapper<TModel> Select<TModel1>(Expression<Func<TModel, TModel1, dynamic>> selector = null)
-        where TModel1 : EntityBase, new()
-        {
-            if (selector != null)
-            {
-                SelectComponent.AddSelect(selector);
-            }
-            return this;
-        }
-
-        public SelectWrapper<TModel> Select<TModel1, TModel2>(Expression<Func<TModel1, TModel2, dynamic>> selector = null)
+        public SelectWrapper Select<TModel1, TModel2>(Expression<Func<TModel1, TModel2, dynamic>> selector = null)
         where TModel1 : EntityBase, new()
         where TModel2 : EntityBase, new()
         {
@@ -135,7 +101,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
             }
             return this;
         }
-        public SelectWrapper<TModel> Select<TModel1, TModel2, TModel3>(Expression<Func<TModel1, TModel2, TModel3, dynamic>> selector = null)
+        public SelectWrapper Select<TModel1, TModel2, TModel3>(Expression<Func<TModel1, TModel2, TModel3, dynamic>> selector = null)
         where TModel1 : EntityBase, new()
         where TModel2 : EntityBase, new()
         where TModel3 : EntityBase, new()
@@ -147,7 +113,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
             return this;
         }
 
-        public SelectWrapper<TModel> Select<TModel1, TModel2, TModel3, TModel4>(Expression<Func<TModel1, TModel2, TModel3, TModel4, dynamic>> selector = null)
+        public SelectWrapper Select<TModel1, TModel2, TModel3, TModel4>(Expression<Func<TModel1, TModel2, TModel3, TModel4, dynamic>> selector = null)
         where TModel1 : EntityBase, new()
         where TModel2 : EntityBase, new()
         where TModel3 : EntityBase, new()
@@ -160,7 +126,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
             return this;
         }
 
-        public SelectWrapper<TModel> Select<TModel1, TModel2, TModel3, TModel4, TModel5>(Expression<Func<TModel1, TModel2, TModel3, TModel4, TModel5, dynamic>> selector = null)
+        public SelectWrapper Select<TModel1, TModel2, TModel3, TModel4, TModel5>(Expression<Func<TModel1, TModel2, TModel3, TModel4, TModel5, dynamic>> selector = null)
         where TModel1 : EntityBase, new()
         where TModel2 : EntityBase, new()
         where TModel3 : EntityBase, new()
@@ -174,14 +140,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
             return this;
         }
 
-        public SelectWrapper<TModel> Where(Expression<Func<TModel, Boolean>> filter)
-        {
-            Check.IfNullOrZero(filter);
-            WhereComponent.AddWhere(filter);
-            return this;
-        }
-
-        public SelectWrapper<TModel> Where<TModel1>(Expression<Func<TModel1, Boolean>> filter)
+        public SelectWrapper Where<TModel1>(Expression<Func<TModel1, Boolean>> filter)
         where TModel1 : EntityBase, new()
         {
             Check.IfNullOrZero(filter);
@@ -189,15 +148,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
             return this;
         }
 
-        public SelectWrapper<TModel> Where<TModel1>(Expression<Func<TModel, TModel1, Boolean>> filter)
-        where TModel1 : EntityBase, new()
-        {
-            Check.IfNullOrZero(filter);
-            WhereComponent.AddWhere(filter);
-            return this;
-        }
-
-        public SelectWrapper<TModel> Where<TModel1, TModel2>(Expression<Func<TModel, TModel1, TModel2, Boolean>> filter)
+        public SelectWrapper Where<TModel1, TModel2>(Expression<Func<TModel1, TModel2, Boolean>> filter)
         where TModel1 : EntityBase, new()
         where TModel2 : EntityBase, new()
         {
@@ -206,7 +157,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
             return this;
         }
 
-        public SelectWrapper<TModel> Where<TModel1, TModel2, TModel3>(Expression<Func<TModel, TModel1, TModel2, TModel3, Boolean>> filter)
+        public SelectWrapper Where<TModel1, TModel2, TModel3>(Expression<Func<TModel1, TModel2, TModel3, Boolean>> filter)
         where TModel1 : EntityBase, new()
         where TModel2 : EntityBase, new()
         where TModel3 : EntityBase, new()
@@ -216,7 +167,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
             return this;
         }
 
-        public SelectWrapper<TModel> Where<TModel1, TModel2, TModel3, TModel4>(Expression<Func<TModel, TModel1, TModel2, TModel3, TModel4, Boolean>> filter)
+        public SelectWrapper Where<TModel1, TModel2, TModel3, TModel4>(Expression<Func<TModel1, TModel2, TModel3, TModel4, Boolean>> filter)
         where TModel1 : EntityBase, new()
         where TModel2 : EntityBase, new()
         where TModel3 : EntityBase, new()
@@ -227,8 +178,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
             return this;
         }
 
-
-        public SelectWrapper<TModel> Where<TModel1, TModel2, TModel3, TModel4, TModel5>(Expression<Func<TModel, TModel1, TModel2, TModel3, TModel4, TModel5, Boolean>> filter)
+        public SelectWrapper Where<TModel1, TModel2, TModel3, TModel4, TModel5>(Expression<Func<TModel1, TModel2, TModel3, TModel4, TModel5, Boolean>> filter)
         where TModel1 : EntityBase, new()
         where TModel2 : EntityBase, new()
         where TModel3 : EntityBase, new()
@@ -240,21 +190,21 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
             return this;
         }
 
-        public SelectWrapper<TModel> ThenByDesc<TKey>(Expression<Func<TModel, TKey>> order)
+        public SelectWrapper ThenByDesc<TModel, TKey>(Expression<Func<TModel, TKey>> order) where TModel : EntityBase, new()
         {
             Check.IfNullOrZero(order);
             OrderComponent.AddOrderBy(order, OrderByType.DESC);
             return this;
         }
 
-        public SelectWrapper<TModel> ThenByAsc<TKey>(Expression<Func<TModel, TKey>> order)
+        public SelectWrapper ThenByAsc<TModel, TKey>(Expression<Func<TModel, TKey>> order) where TModel : EntityBase, new()
         {
             Check.IfNullOrZero(order);
             OrderComponent.AddOrderBy(order, OrderByType.ASC);
             return this;
         }
 
-        public SelectWrapper<TModel> Include<TModel1>(Expression<Func<TModel, TModel1>> include)
+        public SelectWrapper Include<TModel, TModel1>(Expression<Func<TModel, TModel1>> include) where TModel : EntityBase, new()
         where TModel1 : EntityBase, new()
         {
             Check.IfNullOrZero(include);
@@ -356,7 +306,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
             return String.Join(",", anonymousObjFields);
         }
 
-      
+
         internal IList<Type> GetParameterTypes()
         {
             var types = new List<Type>();

@@ -7,7 +7,7 @@ using NewLibCore.Validate;
 
 namespace NewLibCore.Storage.SQL.Component.Sql
 {
-    internal class UpdateComponent<TModel> where TModel : EntityBase, new()
+    internal class UpdateComponent
     {
         internal EntityBase Model { get; set; }
 
@@ -26,12 +26,15 @@ namespace NewLibCore.Storage.SQL.Component.Sql
             _entityMapperOptions = options.Value;
         }
 
-        internal void AddWhereComponent(TModel model, WhereComponent whereComponent)
+        internal void AddModel<TModel>(TModel model) where TModel : EntityBase, new()
         {
             Check.IfNullOrZero(model);
-            Check.IfNullOrZero(whereComponent);
-
             Model = model;
+        }
+
+        internal void AddWhereComponent<TModel>(WhereComponent whereComponent)
+        {
+            Check.IfNullOrZero(whereComponent);
             WhereComponent = whereComponent;
         }
 
@@ -53,7 +56,7 @@ namespace NewLibCore.Storage.SQL.Component.Sql
 
             var (_, aliasName) = instance.GetEntityBaseAliasName();
             var update = _templateBase.CreateUpdate(instance);
-            var result = _conditionProcessor.Process(null, WhereComponent);
+            var result = _conditionProcessor.Process(null, WhereComponent, FromComponent);
 
             result.Append($@"{update} {PredicateType.AND} {aliasName}.{nameof(instance.IsDeleted)} = 0 {_templateBase.AffectedRows}");
             instance.Reset();

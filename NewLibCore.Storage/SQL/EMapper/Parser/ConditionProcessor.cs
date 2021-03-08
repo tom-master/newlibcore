@@ -17,8 +17,6 @@ namespace NewLibCore.Storage.SQL.EMapper.Parser
 
         internal ProcessExecutor Process(JoinComponent joinComponent, WhereComponent whereComponent, FromComponent fromComponent)
         {
-            Check.IfNullOrZero(joinComponent);
-            Check.IfNullOrZero(whereComponent);
             return _processorResult;
         }
 
