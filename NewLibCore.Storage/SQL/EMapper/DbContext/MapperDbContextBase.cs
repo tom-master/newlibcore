@@ -41,15 +41,9 @@ namespace NewLibCore.Storage.SQL
         /// <param name="disposing"></param>
         protected internal abstract void Dispose(Boolean disposing);
 
-        /// <summary>
-        /// 执行原生sql语句
-        /// </summary>
-        /// <param name="executeType">执行的类型</param>
-        /// <param name="sql">语句</param>
-        /// <param name="parameters">参数</param>
-        /// <param name="commandType"></param>
-        /// <returns></returns>
-        protected internal abstract SqlExecuteResultConvert RawExecute(ExecuteType executeType, String sql, params MapperParameter[] parameters);
+        protected internal abstract SqlExecuteResultConvert Insert(String sql, params MapperParameter[] parameters);
+        protected internal abstract SqlExecuteResultConvert Select(String sql, params MapperParameter[] parameters);
+        protected internal abstract SqlExecuteResultConvert Update(String sql, params MapperParameter[] parameters);
 
         public void Dispose()
         {

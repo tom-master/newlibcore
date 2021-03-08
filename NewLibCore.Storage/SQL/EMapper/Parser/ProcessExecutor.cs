@@ -57,7 +57,18 @@ namespace NewLibCore.Storage.SQL
         {
             var sql = ToString();
             var executeType = GetExecuteType(sql);
-            return _mapperDbContextBase.RawExecute(executeType, sql, _parameters.ToArray());
+
+            switch (executeType)
+            {
+                case ExecuteType.SELECT:
+                    return _mapperDbContextBase.Select(sql, _parameters.ToArray());
+                case ExecuteType.UPDATE:
+                    return _mapperDbContextBase.Update(sql, _parameters.ToArray());
+                case ExecuteType.INSERT:
+                    return _mapperDbContextBase.Insert(sql, _parameters.ToArray());
+                default:
+                    throw new InvalidOperationException($@"无效的sql语句操作{executeType}");
+            }
         }
 
         private ExecuteType GetExecuteType(String sql)

@@ -46,22 +46,25 @@ namespace NewLibCore.Storage.SQL.Component.Sql
 
         internal SqlExecuteResultConvert Execute()
         {
-            var instance = Model;
-            instance.SetUpdateTime();
-
-            if (_entityMapperOptions.EnableModelValidate)
+            return RunDiagnosis.Watch(() =>
             {
-                instance.CheckPropertyValue();
-            }
+                var instance = Model;
+                instance.SetUpdateTime();
 
-            var (_, aliasName) = instance.GetEntityBaseAliasName();
-            var update = _templateBase.CreateUpdate(instance);
-            var result = _conditionProcessor.Process(null, WhereComponent, FromComponent);
+                if (_entityMapperOptions.EnableModelValidate)
+                {
+                    instance.CheckPropertyValue();
+                }
 
-            result.Append($@"{update} {PredicateType.AND} {aliasName}.{nameof(instance.IsDeleted)} = 0 {_templateBase.AffectedRows}");
-            instance.Reset();
+                var (_, aliasName) = instance.GetEntityBaseAliasName();
+                var update = _templateBase.CreateUpdate(instance);
+                var result = _conditionProcessor.Process(null, WhereComponent, FromComponent);
 
-            return result.Execute();
+                result.Append($@"{update} {PredicateType.AND} {aliasName}.{nameof(instance.IsDeleted)} = 0 {_templateBase.AffectedRows}");
+                instance.Reset();
+
+                return result.Execute();
+            });
         }
     }
 }

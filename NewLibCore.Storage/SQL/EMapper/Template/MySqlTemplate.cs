@@ -43,12 +43,6 @@ namespace NewLibCore.Storage.SQL.Template
             Check.IfNullOrZero(pagination.Size);
             Check.IfNullOrZero(orderBy);
             Check.IfNullOrZero(rawSql);
-
-            if (pagination.MaxKey > 0)
-            {
-                return $@"{rawSql} AND {pagination.AliasNameMappers[0].Value}.{PrimaryKeyName}<{pagination.MaxKey} {orderBy} LIMIT {pagination.Size} ;";
-            }
-
             return $@"{rawSql} {orderBy} LIMIT {pagination.Size * (pagination.Index - 1)},{pagination.Size} ;";
         }
 

@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Options;
 using NewLibCore.Storage.SQL.EMapper;
+using NewLibCore.Storage.SQL.Extension;
 using NewLibCore.Storage.SQL.Template;
 using NewLibCore.Validate;
 
@@ -24,17 +25,20 @@ namespace NewLibCore.Storage.SQL.Component.Sql
 
         internal SqlExecuteResultConvert Execute<TModel>(TModel model) where TModel : EntityBase, new()
         {
-            Check.IfNullOrZero(model);
-            var instance = model;
-            instance.SetAddTime();
-            instance.OnChanged();
-            if (_entityMapperOptions.EnableModelValidate)
-            {
-                instance.CheckPropertyValue();
-            }
-            var insert = _templateBase.CreateInsert(instance);
-            _processExecutor.Append(insert, instance.GetSqlElements().Parameters);
-            return _processExecutor.Execute();
+            return RunDiagnosis.Watch(() =>
+             {
+                 Check.IfNullOrZero(model);
+                 var instance = model;
+                 instance.SetAddTime();
+                 instance.OnChanged();
+                 if (_entityMapperOptions.EnableModelValidate)
+                 {
+                     instance.CheckPropertyValue();
+                 }
+                 var insert = _templateBase.CreateInsert(instance);
+                 _processExecutor.Append(insert, instance.GetSqlElements().Parameters);
+                 return _processExecutor.Execute();
+             });
         }
     }
 }

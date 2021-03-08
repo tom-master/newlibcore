@@ -112,7 +112,7 @@ namespace NewLibCore.Storage.SQL
             }
         }
 
-        protected internal override SqlExecuteResultConvert RawExecute(ExecuteType executeType, String sql, params MapperParameter[] parameters)
+        protected internal override SqlExecuteResultConvert Insert(String sql, params MapperParameter[] parameters)
         {
             Check.IfNullOrZero(sql);
             OpenConnection();
@@ -131,26 +131,65 @@ namespace NewLibCore.Storage.SQL
                 RunDiagnosis.Info($@"SQL语句:{sql} 占位符与参数:{(parameters == null || !parameters.Any() ? "" : String.Join($@"{Environment.NewLine}", parameters.Select(s => $@"{s.Key}----{s.Value}")))}");
 
                 var executeResult = new SqlExecuteResultConvert();
-                if (executeType == ExecuteType.SELECT)
-                {
-                    using (var dr = cmd.ExecuteReader())
-                    {
-                        var dataTable = new DataTable("tmpDt");
-                        dataTable.Load(dr, LoadOption.Upsert);
-                        executeResult.SaveRawResult(dataTable);
-                    }
-                }
-                else if (executeType == ExecuteType.UPDATE)
-                {
-                    executeResult.SaveRawResult(cmd.ExecuteNonQuery());
-                }
-                else if (executeType == ExecuteType.INSERT)
-                {
-                    executeResult.SaveRawResult(cmd.ExecuteScalar());
-                }
-
+                executeResult.SaveRawResult(cmd.ExecuteScalar());
                 cmd.Parameters.Clear();
                 return executeResult;
+            }
+        }
+
+        protected internal override SqlExecuteResultConvert Update(String sql, params MapperParameter[] parameters)
+        {
+            Check.IfNullOrZero(sql);
+            OpenConnection();
+            using (var cmd = _connection.CreateCommand())
+            {
+                if (UseTransaction)
+                {
+                    cmd.Transaction = OpenTransaction();
+                }
+                cmd.CommandType = CommandType.Text;
+                cmd.CommandText = sql;
+                if (parameters != null && parameters.Any())
+                {
+                    cmd.Parameters.AddRange(parameters.Select(s => _templateBase.CreateParameter(s.Key, s.Value, s.RuntimeType)).ToArray());
+                }
+                RunDiagnosis.Info($@"SQL语句:{sql} 占位符与参数:{(parameters == null || !parameters.Any() ? "" : String.Join($@"{Environment.NewLine}", parameters.Select(s => $@"{s.Key}----{s.Value}")))}");
+
+                var executeResult = new SqlExecuteResultConvert();
+                executeResult.SaveRawResult(cmd.ExecuteNonQuery());
+                cmd.Parameters.Clear();
+                return executeResult;
+            }
+        }
+
+        protected internal override SqlExecuteResultConvert Select(String sql, params MapperParameter[] parameters)
+        {
+            Check.IfNullOrZero(sql);
+            OpenConnection();
+            using (var cmd = _connection.CreateCommand())
+            {
+                if (UseTransaction)
+                {
+                    cmd.Transaction = OpenTransaction();
+                }
+                cmd.CommandType = CommandType.Text;
+                cmd.CommandText = sql;
+                if (parameters != null && parameters.Any())
+                {
+                    cmd.Parameters.AddRange(parameters.Select(s => _templateBase.CreateParameter(s.Key, s.Value, s.RuntimeType)).ToArray());
+                }
+                RunDiagnosis.Info($@"SQL语句:{sql} 占位符与参数:{(parameters == null || !parameters.Any() ? "" : String.Join($@"{Environment.NewLine}", parameters.Select(s => $@"{s.Key}----{s.Value}")))}");
+
+                using (var dr = cmd.ExecuteReader())
+                {
+                    var dataTable = new DataTable("tmpDt");
+                    dataTable.Load(dr, LoadOption.Upsert);
+
+                    var executeResult = new SqlExecuteResultConvert();
+                    executeResult.SaveRawResult(dataTable);
+                    cmd.Parameters.Clear();
+                    return executeResult;
+                }
             }
         }
     }

@@ -5,13 +5,12 @@ using NewLibCore.Validate;
 namespace NewLibCore.Storage.SQL.Component.Sql
 {
 
-    internal class SelectComponent : ComponentBase
+    internal class ColumnFieldComponent : ComponentBase
     {
-        internal void AddSelect(Expression selector)
+        internal void AddColumnField(Expression selector)
         {
             Check.IfNullOrZero(selector);
             Expression = selector;
         }
-      
     }
 }

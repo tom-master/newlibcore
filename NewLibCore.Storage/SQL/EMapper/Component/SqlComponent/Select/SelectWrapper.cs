@@ -14,7 +14,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
 {
     public class SelectWrapper
     {
-        internal SelectComponent SelectComponent { get; private set; }
+        internal ColumnFieldComponent SelectComponent { get; private set; }
         internal FromComponent FromComponent { get; private set; }
         internal JoinComponent JoinComponent { get; private set; }
         internal WhereComponent WhereComponent { get; private set; }
@@ -32,7 +32,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
             _conditionProcessor = conditionProcessor;
             _templateBase = templateBase;
 
-            SelectComponent = new SelectComponent();
+            SelectComponent = new ColumnFieldComponent();
             FromComponent = new FromComponent();
             JoinComponent = new JoinComponent();
             WhereComponent = new WhereComponent();
@@ -85,7 +85,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         {
             if (selector != null)
             {
-                SelectComponent.AddSelect(selector);
+                SelectComponent.AddColumnField(selector);
             }
 
             return this;
@@ -97,7 +97,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         {
             if (selector != null)
             {
-                SelectComponent.AddSelect(selector);
+                SelectComponent.AddColumnField(selector);
             }
             return this;
         }
@@ -108,7 +108,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         {
             if (selector != null)
             {
-                SelectComponent.AddSelect(selector);
+                SelectComponent.AddColumnField(selector);
             }
             return this;
         }
@@ -121,7 +121,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         {
             if (selector != null)
             {
-                SelectComponent.AddSelect(selector);
+                SelectComponent.AddColumnField(selector);
             }
             return this;
         }
@@ -135,7 +135,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         {
             if (selector != null)
             {
-                SelectComponent.AddSelect(selector);
+                SelectComponent.AddColumnField(selector);
             }
             return this;
         }
@@ -222,31 +222,35 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
             {
                 throw new ArgumentException("没有指定From表");
             }
-            var mainTable = FromComponent.AliasNameMappers[0];
-            _templateBase.CreateSelect(ExtractSelectFields(), mainTable.Key, mainTable.Value);
-            var result = _conditionProcessor.Process(JoinComponent, WhereComponent, FromComponent);
 
-            if (PaginationComponent != null)
-            {
-                if (OrderComponent == null)
-                {
-                    throw new Exception("分页中没有指定排序字段");
-                }
-                var (fields, tableName) = ExtractOrderFields();
-                var orderTemplate = _templateBase.CreateOrderBy(OrderComponent.OrderBy, $@"{tableName}.{fields}");
+            return RunDiagnosis.Watch(() =>
+             {
+                 var mainTable = FromComponent.AliasNameMappers[0];
+                 _templateBase.CreateSelect(ExtractSelectFields(), mainTable.Key, mainTable.Value);
+                 var result = _conditionProcessor.Process(JoinComponent, WhereComponent, FromComponent);
 
-                var newSql = _templateBase.CreatePagination(PaginationComponent, orderTemplate, result.ToString());
-                result.ClearSql();
-                result.Append(newSql);
-            }
-            else if (OrderComponent != null)
-            {
-                var (fields, tableName) = ExtractOrderFields();
-                var orderTemplate = _templateBase.CreateOrderBy(OrderComponent.OrderBy, $@"{tableName}.{fields}");
-                result.Append(orderTemplate);
-            }
+                 if (PaginationComponent != null)
+                 {
+                     if (OrderComponent == null)
+                     {
+                         throw new Exception("分页中没有指定排序字段");
+                     }
+                     var (fields, tableName) = ExtractOrderFields();
+                     var orderTemplate = _templateBase.CreateOrderBy(OrderComponent.OrderBy, $@"{tableName}.{fields}");
 
-            return result.Execute();
+                     var newSql = _templateBase.CreatePagination(PaginationComponent, orderTemplate, result.ToString());
+                     result.ClearSql();
+                     result.Append(newSql);
+                 }
+                 else if (OrderComponent != null)
+                 {
+                     var (fields, tableName) = ExtractOrderFields();
+                     var orderTemplate = _templateBase.CreateOrderBy(OrderComponent.OrderBy, $@"{tableName}.{fields}");
+                     result.Append(orderTemplate);
+                 }
+
+                 return result.Execute();
+             });
         }
 
         /// <summary>
