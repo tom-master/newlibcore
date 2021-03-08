@@ -254,7 +254,7 @@ namespace NewLibCore.Storage.SQL
 
         internal String UpdatePlaceHolders { get; private set; }
 
-        internal List<MapperParameter> Parameters { get; private set; }
+        internal MapperParameter[] Parameters { get; private set; }
 
         internal SqlElements(IEnumerable<ChangedProperty> changedProperties)
         {
@@ -263,7 +263,7 @@ namespace NewLibCore.Storage.SQL
             Fields = String.Join(",", changedProperties.Select(c => c.PropertyName));
             InsertPlaceHolders = String.Join(",", changedProperties.Select(key => $@"@{key.PropertyName}"));
             UpdatePlaceHolders = String.Join(",", changedProperties.Select(c => $@"{c.PropertyName}=@{c.PropertyName}"));
-            Parameters = changedProperties.Select(c => new MapperParameter(c.PropertyName, c.Value)).ToList();
+            Parameters = changedProperties.Select(c => new MapperParameter(c.PropertyName, c.Value)).ToArray();
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using NewLibCore.Storage.SQL.Component.Sql;
 using NewLibCore.Storage.SQL.Extension;
-using NewLibCore.Storage.SQL.ProcessorFactory;
 using NewLibCore.Validate;
 using System;
 using System.Linq;
@@ -56,26 +55,6 @@ namespace NewLibCore.Storage.SQL
                 var updateComponent = new UpdateComponent<TModel>(model, new WhereComponent(expression));
                 var processor = FindProcessor(nameof(UpdateProcessor));
                 return processor.Process(updateComponent).GetModifyRowCount() > 0;
-            });
-        }
-
-        /// <summary>
-        /// 执行原生的SQL语句
-        /// </summary>
-        /// <param name="sql">sql语句</param>
-        /// <param name="parameters">实体参数</param>
-        /// <typeparam name="TModel"></typeparam>
-        /// <returns></returns>
-        public SqlExecuteResultConvert SqlQuery(String sql, params MapperParameter[] parameters)
-        {
-            Check.IfNullOrZero(sql);
-
-            return RunDiagnosis.Watch(() =>
-            {
-                var sqlComponent = new SqlComponent();
-                sqlComponent.AddDirectSql(sql, parameters);
-                var processor = FindProcessor(nameof(RawSqlProcessor));
-                return processor.Process(sqlComponent);
             });
         }
 

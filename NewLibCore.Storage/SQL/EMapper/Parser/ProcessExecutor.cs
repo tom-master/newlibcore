@@ -7,10 +7,7 @@ using NewLibCore.Validate;
 
 namespace NewLibCore.Storage.SQL
 {
-    /// <summary>
-    /// 执行表达式翻译结果
-    /// </summary>
-    internal sealed class ProcessorResult : IDisposable
+    internal sealed class ProcessExecutor : IDisposable
     {
         private readonly StringBuilder _innerSql;
 
@@ -22,7 +19,7 @@ namespace NewLibCore.Storage.SQL
         /// 初始化一个ResultExecutor类的实例
         /// </summary>
         /// <param name="mapperDbContextBase"></param>
-        public ProcessorResult(MapperDbContextBase mapperDbContextBase)
+        public ProcessExecutor(MapperDbContextBase mapperDbContextBase)
         {
             Check.IfNullOrZero(mapperDbContextBase);
 

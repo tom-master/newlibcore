@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using NewLibCore.Storage.SQL.Component.Sql;
 using NewLibCore.Storage.SQL.EMapper.Parser;
 using NewLibCore.Storage.SQL.Extension;
 using NewLibCore.Storage.SQL.Template;
@@ -23,7 +24,7 @@ namespace NewLibCore.Storage.SQL
         /// 初始化Parser类的新实例
         /// </summary>
         /// <param name="templateBase"></param>
-        public DefaultConditionProcessor(TemplateBase template, ProcessorResult processorResult)
+        public DefaultConditionProcessor(TemplateBase template, ProcessExecutor processorResult)
             : base(processorResult)
         {
             Check.IfNullOrZero(template);
@@ -41,13 +42,11 @@ namespace NewLibCore.Storage.SQL
         /// </summary>
         /// <param name="expressionStore"></param>
         /// <returns></returns>
-        protected override ProcessorResult Process()
+        protected override ProcessExecutor InnerProcess(JoinComponent joinComponent, WhereComponent whereComponent, FromComponent fromComponent)
         {
-            //获取合并后的表别名
-            _aliasMapper = _sqlComponent.MergeAliasMapper();
-
+            _aliasMapper = MergeComponentAlias(joinComponent, whereComponent, fromComponent);
             //循环翻译连接对象
-            foreach (var item in _sqlComponent.JoinComponents)
+            foreach (var item in joinComponent.JoinComponents)
             {
                 if (item.AliasNameMappers == null || item.JoinRelation == JoinRelation.NONE)
                 {
@@ -70,9 +69,9 @@ namespace NewLibCore.Storage.SQL
             }
             _processorResult.Append(" WHERE 1=1 ");
             //翻译Where条件对象
-            if (_sqlComponent.Where != null)
+            if (whereComponent != null)
             {
-                var lambdaExp = (LambdaExpression)_sqlComponent.Where.Expression;
+                var lambdaExp = (LambdaExpression)whereComponent.Expression;
                 //当表达式主体为常量时则直接返回，不做解析
                 if (lambdaExp.Body.NodeType == ExpressionType.Constant)
                 {
@@ -82,6 +81,12 @@ namespace NewLibCore.Storage.SQL
 
                 //获取Where类型中的存储的表达式对象进行翻译
                 InternalParser(lambdaExp, JoinRelation.NONE);
+            }
+
+            var aliasMapper = MergeComponentAlias(joinComponent, whereComponent, fromComponent);
+            foreach (var aliasItem in aliasMapper)
+            {
+                _processorResult.Append($@"{PredicateType.AND} {aliasItem.Value.ToLower()}.IsDeleted = 0");
             }
             return _processorResult;
         }
@@ -408,5 +413,36 @@ namespace NewLibCore.Storage.SQL
             return _aliasMapper.Where(w => w.Key == tableName && w.Value == aliasName).FirstOrDefault().Value.ToLower();
         }
 
+        private IReadOnlyList<KeyValuePair<String, String>> MergeComponentAlias(JoinComponent joinComponent, WhereComponent whereComponent, FromComponent fromComponent)
+        {
+            var newAliasMapper = new List<KeyValuePair<String, String>>();
+
+            if (joinComponent.JoinComponents.Any())
+            {
+                newAliasMapper.AddRange(joinComponent.JoinComponents.SelectMany(s => s.AliasNameMappers));
+            }
+
+            if (whereComponent != null)
+            {
+                newAliasMapper.AddRange(whereComponent.AliasNameMappers);
+            }
+
+            if (fromComponent != null)
+            {
+                newAliasMapper.AddRange(fromComponent.AliasNameMappers);
+            }
+
+            newAliasMapper = newAliasMapper.Select(s => s).Distinct().ToList();
+
+            var sameGroup = newAliasMapper.GroupBy(a => a.Value);
+            foreach (var groupItem in sameGroup)
+            {
+                if (groupItem.Count() > 1)
+                {
+                    throw new ArgumentException($@"表:{String.Join(",", groupItem.Select(s => s.Key))}指定了相同别名:{groupItem.Key}");
+                }
+            }
+            return newAliasMapper;
+        }
     }
 }

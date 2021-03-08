@@ -32,7 +32,7 @@ namespace NewLibCore.Storage.SQL.EMapper
             RunDiagnosis.SetLoggerInstance(options.Logger ?? new DefaultLogger());
 
             services = services.AddScoped<ConditionProcessor, DefaultConditionProcessor>();
-            services = services.AddScoped<ProcessorResult>();
+            services = services.AddScoped<ProcessExecutor>();
 
             services = services.AddScoped<Processor, RawSqlProcessor>();
             services = services.AddScoped<Processor, QueryProcessor>();
