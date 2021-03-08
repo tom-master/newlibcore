@@ -2,6 +2,7 @@ using System;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using NewLibCore.Logger;
+using NewLibCore.Storage.SQL.Component.Sql;
 using NewLibCore.Storage.SQL.EMapper.Parser;
 using NewLibCore.Storage.SQL.Extension;
 using NewLibCore.Storage.SQL.ProcessorFactory;
@@ -34,10 +35,9 @@ namespace NewLibCore.Storage.SQL.EMapper
             services = services.AddScoped<ConditionProcessor, DefaultConditionProcessor>();
             services = services.AddScoped<ProcessExecutor>();
 
-            services = services.AddScoped<Processor, RawSqlProcessor>();
-            services = services.AddScoped<Processor, QueryProcessor>();
-            services = services.AddScoped<Processor, UpdateProcessor>();
-            services = services.AddScoped<Processor, InsertProcessor>();
+            services = services.AddScoped<InsertComponent>();
+            services = services.AddScoped<UpdateComponent>();
+            services = services.AddScoped<SelectWrapper>();
             services = services.AddScoped<EntityMapper>();
             return services;
         }

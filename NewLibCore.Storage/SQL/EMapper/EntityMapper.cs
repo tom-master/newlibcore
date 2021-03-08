@@ -1,10 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using NewLibCore.Storage.SQL.Component.Sql;
+﻿using NewLibCore.Storage.SQL.Component.Sql;
 using NewLibCore.Storage.SQL.Extension;
 using NewLibCore.Storage.SQL.ProcessorFactory;
 using NewLibCore.Validate;
 using System;
-using System.Linq;
 using System.Linq.Expressions;
 
 namespace NewLibCore.Storage.SQL
@@ -14,8 +12,15 @@ namespace NewLibCore.Storage.SQL
     /// </summary>
     public sealed class EntityMapper
     {
-
-        public EntityMapper(InsertComponent insertComponent, UpdateComponent updateComponent, SelectWrapper selectWrapper) { }
+        private readonly InsertComponent _insertComponent;
+        private readonly UpdateComponent _updateComponent;
+        private readonly SelectWrapper _selectWrapper;
+        public EntityMapper(InsertComponent insertComponent, UpdateComponent updateComponent, SelectWrapper selectWrapper)
+        {
+            _insertComponent = insertComponent;
+            _updateComponent = updateComponent;
+            _selectWrapper = selectWrapper;
+        }
 
         /// <summary>
         /// 添加
@@ -29,9 +34,7 @@ namespace NewLibCore.Storage.SQL
 
             return RunDiagnosis.Watch(() =>
             {
-                var insertComponent = new InsertComponent<TModel>(model);
-                var processor = FindProcessor(nameof(InsertProcessor));
-                model.Id = processor.Process(insertComponent).GetModifyRowCount();
+                model.Id = _insertComponent.Execute(model).GetModifyRowCount();
                 return model;
             });
         }
@@ -50,36 +53,13 @@ namespace NewLibCore.Storage.SQL
 
             return RunDiagnosis.Watch(() =>
             {
-                var updateComponent = new UpdateComponent<TModel>(model, new WhereComponent(expression));
-                var processor = FindProcessor(nameof(UpdateProcessor));
-                return processor.Process(updateComponent).GetModifyRowCount() > 0;
+                var whereComponent = new WhereComponent();
+                whereComponent.AddWhere(expression);
+
+                _updateComponent.AddModel(model);
+                _updateComponent.AddWhereComponent(whereComponent);
+                return _updateComponent.Execute().GetModifyRowCount() > 0;
             });
-        }
-
-        public void Commit()
-        {
-            _dbContextBase.Commit();
-        }
-
-        public void Rollback()
-        {
-            _dbContextBase.Rollback();
-        }
-
-        public void OpenTransaction()
-        {
-            _dbContextBase.UseTransaction = true;
-        }
-
-        private Processor FindProcessor(String target)
-        {
-            Check.IfNullOrZero(target);
-            var result = _serviceProvider.GetServices<Processor>().FirstOrDefault(w => w.CurrentId == target);
-            if (result != null)
-            {
-                return result;
-            }
-            throw new ArgumentException($@"没有找到{target}所注册的实现类");
         }
     }
 }

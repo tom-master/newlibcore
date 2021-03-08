@@ -10,7 +10,7 @@ namespace NewLibCore.Storage.SQL.EMapper.Parser
     {
         protected readonly ProcessExecutor _processorResult;
 
-        internal ConditionProcessor(ProcessExecutor processorResult)
+        public ConditionProcessor(ProcessExecutor processorResult)
         {
             _processorResult = processorResult;
         }

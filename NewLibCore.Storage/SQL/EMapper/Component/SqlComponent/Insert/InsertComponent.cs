@@ -5,13 +5,13 @@ using NewLibCore.Validate;
 
 namespace NewLibCore.Storage.SQL.Component.Sql
 {
-    internal class InsertComponent<TModel> where TModel : EntityBase, new()
+    public class InsertComponent
     {
         private readonly TemplateBase _templateBase;
         private readonly ProcessExecutor _processExecutor;
         private readonly EntityMapperOptions _entityMapperOptions;
 
-        internal InsertComponent(TemplateBase templateBase, ProcessExecutor processExecutor, IOptions<EntityMapperOptions> options)
+        public InsertComponent(TemplateBase templateBase, ProcessExecutor processExecutor, IOptions<EntityMapperOptions> options)
         {
             Check.IfNullOrZero(templateBase);
             Check.IfNullOrZero(processExecutor);
@@ -22,7 +22,7 @@ namespace NewLibCore.Storage.SQL.Component.Sql
             _entityMapperOptions = options.Value;
         }
 
-        protected SqlExecuteResultConvert Execute(TModel model)
+        internal SqlExecuteResultConvert Execute<TModel>(TModel model) where TModel : EntityBase, new()
         {
             Check.IfNullOrZero(model);
             var instance = model;

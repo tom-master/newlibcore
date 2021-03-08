@@ -24,7 +24,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         internal TemplateBase _templateBase;
         internal ConditionProcessor _conditionProcessor;
 
-        internal SelectWrapper(TemplateBase templateBase, ConditionProcessor conditionProcessor)
+        public SelectWrapper(TemplateBase templateBase, ConditionProcessor conditionProcessor)
         {
             Check.IfNullOrZero(templateBase);
             Check.IfNullOrZero(conditionProcessor);

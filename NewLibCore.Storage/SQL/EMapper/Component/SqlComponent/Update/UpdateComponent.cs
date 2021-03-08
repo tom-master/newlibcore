@@ -7,7 +7,7 @@ using NewLibCore.Validate;
 
 namespace NewLibCore.Storage.SQL.Component.Sql
 {
-    internal class UpdateComponent
+    public class UpdateComponent
     {
         internal EntityBase Model { get; set; }
 
@@ -32,7 +32,7 @@ namespace NewLibCore.Storage.SQL.Component.Sql
             Model = model;
         }
 
-        internal void AddWhereComponent<TModel>(WhereComponent whereComponent)
+        internal void AddWhereComponent(WhereComponent whereComponent)
         {
             Check.IfNullOrZero(whereComponent);
             WhereComponent = whereComponent;
@@ -44,7 +44,7 @@ namespace NewLibCore.Storage.SQL.Component.Sql
             FromComponent = fromComponent;
         }
 
-        protected SqlExecuteResultConvert Execute()
+        internal SqlExecuteResultConvert Execute()
         {
             var instance = Model;
             instance.SetUpdateTime();
