@@ -21,16 +21,16 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         internal OrderComponent OrderComponent { get; private set; }
         internal PaginationComponent PaginationComponent { get; private set; }
 
-        internal TemplateBase _templateBase;
-        internal ConditionProcessor _conditionProcessor;
+        internal readonly TemplateBase _templateBase;
+        internal readonly ConditionProcessor _conditionProcessor;
 
-        public SelectWrapper(TemplateBase templateBase, ConditionProcessor conditionProcessor)
+        public SelectWrapper(TemplateBase templateBase, MapperDbContextBase mapperDbContextBase)
         {
             Check.IfNullOrZero(templateBase);
-            Check.IfNullOrZero(conditionProcessor);
+            Check.IfNullOrZero(mapperDbContextBase);
 
-            _conditionProcessor = conditionProcessor;
             _templateBase = templateBase;
+            _conditionProcessor = new DefaultConditionProcessor(templateBase, new ProcessExecutor(mapperDbContextBase));
 
             SelectComponent = new ColumnFieldComponent();
             FromComponent = new FromComponent();

@@ -19,10 +19,10 @@ namespace NewLibCore.Storage.SQL.Component.Sql
         private readonly ConditionProcessor _conditionProcessor;
         private readonly EntityMapperOptions _entityMapperOptions;
 
-        public UpdateComponent(TemplateBase templateBase, ConditionProcessor conditionProcessor, IOptions<EntityMapperOptions> options)
+        public UpdateComponent(TemplateBase templateBase, MapperDbContextBase mapperDbContextBase, IOptions<EntityMapperOptions> options)
         {
             _templateBase = templateBase;
-            _conditionProcessor = conditionProcessor;
+            _conditionProcessor = new DefaultConditionProcessor(templateBase, new ProcessExecutor(mapperDbContextBase));
             _entityMapperOptions = options.Value;
         }
 

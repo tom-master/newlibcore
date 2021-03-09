@@ -1,11 +1,7 @@
 ﻿using NewLibCore.Storage.SQL.Component.Sql;
-using NewLibCore.Validate;
 
 namespace NewLibCore.Storage.SQL.EMapper.Parser
 {
-    /// <summary>
-    /// 将Expression解析为对应的SQL谓词
-    /// </summary>
     internal abstract class ConditionProcessor
     {
         protected readonly ProcessExecutor _processorResult;
@@ -17,7 +13,7 @@ namespace NewLibCore.Storage.SQL.EMapper.Parser
 
         internal ProcessExecutor Process(JoinComponent joinComponent, WhereComponent whereComponent, FromComponent fromComponent)
         {
-            return _processorResult;
+            return InnerProcess(joinComponent, whereComponent, fromComponent);
         }
 
         protected abstract ProcessExecutor InnerProcess(JoinComponent joinComponent, WhereComponent whereComponent, FromComponent fromComponent);

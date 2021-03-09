@@ -16,7 +16,7 @@ namespace NewLibCore.Storage.SQL.Template
     /// <summary>
     /// 为相应的数据库实例提供对应的模板化SQL
     /// </summary>
-    internal abstract class TemplateBase
+    public abstract class TemplateBase
     {
         protected EntityMapperOptions Options;
 
@@ -25,23 +25,23 @@ namespace NewLibCore.Storage.SQL.Template
         /// <summary>
         /// 谓词关系映射
         /// </summary>
-        protected readonly IDictionary<PredicateType, String> PredicateMapper = new Dictionary<PredicateType, String>();
+        internal readonly IDictionary<PredicateType, String> PredicateMapper = new Dictionary<PredicateType, String>();
 
         /// <summary>
         /// 连接关系映射
         /// </summary>
-        protected readonly IDictionary<JoinRelation, String> JoinMapper = new Dictionary<JoinRelation, String>();
+        internal readonly IDictionary<JoinRelation, String> JoinMapper = new Dictionary<JoinRelation, String>();
 
         /// <summary>
         /// 排序方式映射
         /// </summary>
-        protected readonly IDictionary<OrderByType, String> OrderTypeMapper = new Dictionary<OrderByType, String>();
+        internal readonly IDictionary<OrderByType, String> OrderTypeMapper = new Dictionary<OrderByType, String>();
 
 
         /// <summary>
         /// 初始化TemplateBase类的新实例
         /// </summary>
-        protected TemplateBase(IOptions<EntityMapperOptions> options)
+        public TemplateBase(IOptions<EntityMapperOptions> options)
         {
             Options = options.Value;
             JoinMapper.Clear();

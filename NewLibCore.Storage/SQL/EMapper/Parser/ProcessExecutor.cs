@@ -7,7 +7,7 @@ using NewLibCore.Validate;
 
 namespace NewLibCore.Storage.SQL
 {
-    internal sealed class ProcessExecutor : IDisposable
+    public sealed class ProcessExecutor : IDisposable
     {
         private readonly StringBuilder _innerSql;
 
