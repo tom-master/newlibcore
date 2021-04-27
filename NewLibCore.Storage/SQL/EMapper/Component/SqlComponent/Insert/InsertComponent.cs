@@ -3,7 +3,7 @@ using NewLibCore.Storage.SQL.EMapper;
 using NewLibCore.Storage.SQL.Extension;
 using NewLibCore.Storage.SQL.Template;
 using NewLibCore.Validate;
-
+using System;
 namespace NewLibCore.Storage.SQL.Component.Sql
 {
     public class InsertComponent
@@ -11,6 +11,8 @@ namespace NewLibCore.Storage.SQL.Component.Sql
         private readonly TemplateBase _templateBase;
         private readonly ProcessExecutor _processExecutor;
         private readonly EntityMapperOptions _entityMapperOptions;
+
+        private EntityBase _model;
 
         public InsertComponent(TemplateBase templateBase, ProcessExecutor processExecutor, IOptions<EntityMapperOptions> options)
         {
@@ -23,12 +25,17 @@ namespace NewLibCore.Storage.SQL.Component.Sql
             _entityMapperOptions = options.Value;
         }
 
-        internal SqlExecuteResultConvert Execute<TModel>(TModel model) where TModel : EntityBase, new()
+        internal void AddModel<TModel>(TModel model) where TModel : EntityBase, new()
+        {
+            _model = model;
+        }
+
+        internal SqlExecuteResultConvert Execute()
         {
             return RunDiagnosis.Watch(() =>
              {
-                 Check.IfNullOrZero(model);
-                 var instance = model;
+                 Check.IfNullOrZero(_model);
+                 var instance = _model;
                  instance.SetAddTime();
                  instance.OnChanged();
                  if (_entityMapperOptions.EnableModelValidate)

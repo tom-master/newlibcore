@@ -25,9 +25,8 @@ namespace NewLibCore.Storage.SQL
         public void Add<TModel>(TModel model) where TModel : EntityBase, new()
         {
             Check.IfNullOrZero(model);
-            model.Id = _insertComponent.Execute(model).GetModifyRowCount();
- 
-           
+            _insertComponent.AddModel(model);
+            model.Id = _insertComponent.Execute().GetModifyRowCount();
         }
 
         public Boolean Update<TModel>(TModel model, Expression<Func<TModel, Boolean>> expression) where TModel : EntityBase, new()
