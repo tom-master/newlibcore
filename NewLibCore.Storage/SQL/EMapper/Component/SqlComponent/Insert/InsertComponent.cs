@@ -10,18 +10,16 @@ namespace NewLibCore.Storage.SQL.Component.Sql
     {
         private readonly TemplateBase _templateBase;
         private readonly ProcessExecutor _processExecutor;
-        private readonly EntityMapperOptions _entityMapperOptions;
+        private readonly EntityMapperOptions _options;
         private EntityBase _model;
 
-        public InsertComponent(TemplateBase templateBase, ProcessExecutor processExecutor, IOptions<EntityMapperOptions> options)
+        public InsertComponent(ProcessExecutor processExecutor, IOptions<EntityMapperOptions> options)
         {
-            Check.IfNullOrZero(templateBase);
             Check.IfNullOrZero(processExecutor);
             Check.IfNullOrZero(options);
 
-            _templateBase = templateBase;
             _processExecutor = processExecutor;
-            _entityMapperOptions = options.Value;
+            _options = options.Value;
         }
 
         internal void AddModel<TModel>(TModel model) where TModel : EntityBase, new()
@@ -37,7 +35,7 @@ namespace NewLibCore.Storage.SQL.Component.Sql
                  var instance = _model;
                  instance.SetAddTime();
                  instance.OnChanged();
-                 if (_entityMapperOptions.EnableModelValidate)
+                 if (_options.EnableModelValidate)
                  {
                      instance.CheckPropertyValue();
                  }

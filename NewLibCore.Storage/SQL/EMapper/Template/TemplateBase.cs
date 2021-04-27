@@ -4,9 +4,7 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Reflection;
-using Microsoft.Extensions.Options;
 using NewLibCore.Storage.SQL.Component.Sql;
-using NewLibCore.Storage.SQL.EMapper;
 using NewLibCore.Storage.SQL.Extension;
 using NewLibCore.Storage.SQL.Validate;
 using NewLibCore.Validate;
@@ -18,9 +16,9 @@ namespace NewLibCore.Storage.SQL.Template
     /// </summary>
     public abstract class TemplateBase
     {
-        protected EntityMapperOptions Options;
-
         private static String _primaryKeyName;
+
+        protected virtual void SetVersion(int version) { }
 
         /// <summary>
         /// 谓词关系映射
@@ -41,9 +39,8 @@ namespace NewLibCore.Storage.SQL.Template
         /// <summary>
         /// 初始化TemplateBase类的新实例
         /// </summary>
-        public TemplateBase(IOptions<EntityMapperOptions> options)
+        public TemplateBase()
         {
-            Options = options.Value;
             JoinMapper.Clear();
             PredicateMapper.Clear();
             OrderTypeMapper.Clear();

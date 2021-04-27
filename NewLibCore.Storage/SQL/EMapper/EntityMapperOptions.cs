@@ -2,6 +2,7 @@ using System;
 using System.Data;
 using NewLibCore.Logger;
 using NewLibCore.Validate;
+using NewLibCore.Storage.SQL.Template;
 
 namespace NewLibCore.Storage.SQL.EMapper
 {
@@ -37,10 +38,7 @@ namespace NewLibCore.Storage.SQL.EMapper
         /// </summary>
         internal MapperType MapperType { get; set; } = MapperType.NONE;
 
-        /// <summary>
-        /// mssql的版本
-        /// </summary>
-        internal MsSqlPaginationVersion MsSqlPaginationVersion { get; set; } = MsSqlPaginationVersion.NONE;
+        internal TemplateBase TemplateBase { get; private set; }
 
         /// <summary>
         /// 切换为mysql
@@ -48,6 +46,7 @@ namespace NewLibCore.Storage.SQL.EMapper
         public void UseMySql()
         {
             MapperType = MapperType.MYSQL;
+            TemplateBase = new MySqlTemplate();
         }
 
         /// <summary>
@@ -56,6 +55,7 @@ namespace NewLibCore.Storage.SQL.EMapper
         public void UseMsSql()
         {
             MapperType = MapperType.MSSQL;
+            TemplateBase = new MsSqlTemplate();
         }
 
         /// <summary>

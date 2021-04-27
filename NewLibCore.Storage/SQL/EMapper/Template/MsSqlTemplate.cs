@@ -14,7 +14,10 @@ namespace NewLibCore.Storage.SQL.Template
     /// </summary>
     internal class MsSqlTemplate : TemplateBase
     {
-        public MsSqlTemplate(IOptions<EntityMapperOptions> options) : base(options) { }
+        public MsSqlTemplate() : base() { }
+
+        private MsSqlPaginationVersion _mssqlPaginationVersion;
+
         internal override String CreateUpdate<TModel>(TModel model)
         {
             var (tableName, aliasName) = model.GetEntityBaseAliasName();
@@ -54,6 +57,18 @@ namespace NewLibCore.Storage.SQL.Template
             return String.Format(PredicateMapper[predicateType], left, right);
         }
 
+        protected override void SetVersion(int version)
+        {
+            if (version <= 11)
+            {
+                _mssqlPaginationVersion = MsSqlPaginationVersion.LESSTHEN2012;
+            }
+            else
+            {
+                _mssqlPaginationVersion = MsSqlPaginationVersion.GREATERTHAN2012;
+            }
+        }
+
         internal override String CreatePagination(PaginationComponent pagination, String orderBy, String rawSql)
         {
             Check.IfNullOrZero(pagination.Size);
@@ -61,7 +76,7 @@ namespace NewLibCore.Storage.SQL.Template
             Check.IfNullOrZero(rawSql);
 
             String sql;
-            if (Options.MsSqlPaginationVersion == MsSqlPaginationVersion.GREATERTHAN2012)
+            if (_mssqlPaginationVersion == MsSqlPaginationVersion.GREATERTHAN2012)
             {
                 sql = $@" {rawSql} {orderBy} OFFSET ({pagination.Index * pagination.Size}) ROWS FETCH NEXT {pagination.Size} ROWS ONLY ;";
             }
@@ -85,7 +100,7 @@ namespace NewLibCore.Storage.SQL.Template
 
         internal override DbConnection CreateDbConnection()
         {
-            return new SqlConnection(ConfigReader.GetHostVar(Options.ConnectionStringName));
+            return new SqlConnection();
         }
     }
 }

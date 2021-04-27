@@ -5,7 +5,6 @@ using System.Linq;
 using Microsoft.Extensions.Options;
 using NewLibCore.Storage.SQL.EMapper;
 using NewLibCore.Storage.SQL.Extension;
-using NewLibCore.Storage.SQL.Template;
 using NewLibCore.Validate;
 
 namespace NewLibCore.Storage.SQL
@@ -21,19 +20,16 @@ namespace NewLibCore.Storage.SQL
 
         private DbTransaction _dataTransaction;
 
-        private readonly TemplateBase _templateBase;
-
         private readonly EntityMapperOptions _options;
 
         /// <summary>
         /// 初始化MapperDbContext类的新实例
         /// </summary>
-        public MapperDbContext(TemplateBase templateBase, IOptions<EntityMapperOptions> options)
+        public MapperDbContext(IOptions<EntityMapperOptions> options)
         {
-            Check.IfNullOrZero(templateBase);
+            Check.IfNullOrZero(options);
             _options = options.Value;
-            _templateBase = templateBase;
-            _connection = templateBase.CreateDbConnection();
+            _connection = options.Value.TemplateBase.CreateDbConnection();
         }
 
         protected internal override void Commit()
@@ -59,22 +55,8 @@ namespace NewLibCore.Storage.SQL
             if (_connection.State == ConnectionState.Closed)
             {
                 RunDiagnosis.Info("开启连接");
+                _connection.ConnectionString = ConfigReader.GetHostVar(_options.ConnectionStringName);
                 _connection.Open();
-
-                //根据不同的sql server数据库引擎来选择需要执行的分页方法
-                if (_options.MapperType == MapperType.MSSQL && _options.MsSqlPaginationVersion == MsSqlPaginationVersion.NONE)
-                {
-                    var version = Int32.Parse(_connection.ServerVersion.Substring(0, _connection.ServerVersion.IndexOf(".")));
-                    if (version <= 11)
-                    {
-                        _options.MsSqlPaginationVersion = MsSqlPaginationVersion.LESSTHEN2012;
-                    }
-                    else
-                    {
-                        _options.MsSqlPaginationVersion = MsSqlPaginationVersion.GREATERTHAN2012;
-                    }
-                }
-
             }
         }
 
@@ -126,7 +108,7 @@ namespace NewLibCore.Storage.SQL
                 cmd.CommandText = sql;
                 if (parameters != null && parameters.Any())
                 {
-                    cmd.Parameters.AddRange(parameters.Select(s => _templateBase.CreateParameter(s.Key, s.Value, s.RuntimeType)).ToArray());
+                    cmd.Parameters.AddRange(parameters.Select(s => _options.TemplateBase.CreateParameter(s.Key, s.Value, s.RuntimeType)).ToArray());
                 }
                 RunDiagnosis.Info($@"SQL语句:{sql} 占位符与参数:{(parameters == null || !parameters.Any() ? "" : String.Join($@"{Environment.NewLine}", parameters.Select(s => $@"{s.Key}----{s.Value}")))}");
 
@@ -151,7 +133,7 @@ namespace NewLibCore.Storage.SQL
                 cmd.CommandText = sql;
                 if (parameters != null && parameters.Any())
                 {
-                    cmd.Parameters.AddRange(parameters.Select(s => _templateBase.CreateParameter(s.Key, s.Value, s.RuntimeType)).ToArray());
+                    cmd.Parameters.AddRange(parameters.Select(s => _options.TemplateBase.CreateParameter(s.Key, s.Value, s.RuntimeType)).ToArray());
                 }
                 RunDiagnosis.Info($@"SQL语句:{sql} 占位符与参数:{(parameters == null || !parameters.Any() ? "" : String.Join($@"{Environment.NewLine}", parameters.Select(s => $@"{s.Key}----{s.Value}")))}");
 
@@ -176,7 +158,7 @@ namespace NewLibCore.Storage.SQL
                 cmd.CommandText = sql;
                 if (parameters != null && parameters.Any())
                 {
-                    cmd.Parameters.AddRange(parameters.Select(s => _templateBase.CreateParameter(s.Key, s.Value, s.RuntimeType)).ToArray());
+                    cmd.Parameters.AddRange(parameters.Select(s => _options.TemplateBase.CreateParameter(s.Key, s.Value, s.RuntimeType)).ToArray());
                 }
                 RunDiagnosis.Info($@"SQL语句:{sql} 占位符与参数:{(parameters == null || !parameters.Any() ? "" : String.Join($@"{Environment.NewLine}", parameters.Select(s => $@"{s.Key}----{s.Value}")))}");
 

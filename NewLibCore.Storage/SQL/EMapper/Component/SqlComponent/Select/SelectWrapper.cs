@@ -1,5 +1,4 @@
 using NewLibCore.Storage.SQL.Component.Sql;
-using NewLibCore.Storage.SQL.EMapper.Parser;
 using NewLibCore.Storage.SQL.Extension;
 using NewLibCore.Storage.SQL.Template;
 using NewLibCore.Storage.SQL.Validate;
@@ -12,7 +11,7 @@ using System.Reflection;
 
 namespace NewLibCore.Storage.SQL.ProcessorFactory
 {
-    public class SelectWrapper
+    public class SelectWrapper : ConditionProcessor
     {
         internal ColumnFieldComponent SelectComponent { get; private set; }
         internal FromComponent FromComponent { get; private set; }
@@ -22,15 +21,13 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         internal PaginationComponent PaginationComponent { get; private set; }
 
         internal readonly TemplateBase _templateBase;
-        internal readonly ConditionProcessor _conditionProcessor;
 
-        public SelectWrapper(TemplateBase templateBase, MapperDbContextBase mapperDbContextBase)
+        public SelectWrapper(TemplateBase templateBase, MapperDbContextBase mapperDbContextBase) : base(templateBase, mapperDbContextBase)
         {
             Check.IfNullOrZero(templateBase);
             Check.IfNullOrZero(mapperDbContextBase);
 
             _templateBase = templateBase;
-            _conditionProcessor = new DefaultConditionProcessor(templateBase, new ProcessExecutor(mapperDbContextBase));
 
             SelectComponent = new ColumnFieldComponent();
             FromComponent = new FromComponent();
@@ -213,27 +210,27 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         }
 
         /// <summary>
-        /// Ö´ÐÐ²éÑ¯²Ù×÷µÄ·­Òë
+        /// Ö´ï¿½Ð²ï¿½Ñ¯ï¿½ï¿½ï¿½ï¿½ï¿½Ä·ï¿½ï¿½ï¿½
         /// </summary>
         /// <returns></returns>
         public SqlExecuteResultConvert Execute()
         {
             if (!FromComponent.AliasNameMappers.Any())
             {
-                throw new ArgumentException("Ã»ÓÐÖ¸¶¨From±í");
+                throw new ArgumentException("Ã»ï¿½ï¿½Ö¸ï¿½ï¿½Fromï¿½ï¿½");
             }
 
             return RunDiagnosis.Watch(() =>
              {
                  var mainTable = FromComponent.AliasNameMappers[0];
                  _templateBase.CreateSelect(ExtractSelectFields(), mainTable.Key, mainTable.Value);
-                 var result = _conditionProcessor.Process(JoinComponent, WhereComponent, FromComponent);
+                 var result = Process(JoinComponent, WhereComponent, FromComponent);
 
                  if (PaginationComponent != null)
                  {
                      if (OrderComponent == null)
                      {
-                         throw new Exception("·ÖÒ³ÖÐÃ»ÓÐÖ¸¶¨ÅÅÐò×Ö¶Î");
+                         throw new Exception("ï¿½ï¿½Ò³ï¿½ï¿½Ã»ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¶ï¿½");
                      }
                      var (fields, tableName) = ExtractOrderFields();
                      var orderTemplate = _templateBase.CreateOrderBy(OrderComponent.OrderBy, $@"{tableName}.{fields}");
@@ -254,7 +251,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         }
 
         /// <summary>
-        /// ÌáÈ¡³öÅÅÐò×Ö¶Î
+        /// ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¶ï¿½
         /// </summary>
         /// <returns></returns>
         private (String Fields, String AliasName) ExtractOrderFields()
@@ -267,11 +264,11 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
                 return (members.Member.Name, aliasName);
             }
 
-            throw new Exception("²»Ö§³ÖµÄ ORDER BY ±í´ïÊ½");
+            throw new Exception("ï¿½ï¿½Ö§ï¿½Öµï¿½ ORDER BY ï¿½ï¿½ï¿½ï¿½Ê½");
         }
 
         /// <summary>
-        /// ÌáÈ¡³öSelect×Ö¶Î
+        /// ï¿½ï¿½È¡ï¿½ï¿½Selectï¿½Ö¶ï¿½
         /// </summary>
         /// <returns></returns>
         private String ExtractSelectFields()

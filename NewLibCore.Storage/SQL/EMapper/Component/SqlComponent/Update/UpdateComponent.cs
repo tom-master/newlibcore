@@ -1,13 +1,12 @@
 using Microsoft.Extensions.Options;
 using NewLibCore.Storage.SQL.EMapper;
-using NewLibCore.Storage.SQL.EMapper.Parser;
 using NewLibCore.Storage.SQL.Extension;
 using NewLibCore.Storage.SQL.Template;
 using NewLibCore.Validate;
 
 namespace NewLibCore.Storage.SQL.Component.Sql
 {
-    public class UpdateComponent
+    public class UpdateComponent : ConditionProcessor
     {
         internal EntityBase Model { get; set; }
 
@@ -15,15 +14,11 @@ namespace NewLibCore.Storage.SQL.Component.Sql
 
         internal FromComponent FromComponent { get; private set; }
 
-        private readonly TemplateBase _templateBase;
-        private readonly ConditionProcessor _conditionProcessor;
-        private readonly EntityMapperOptions _entityMapperOptions;
+        private readonly EntityMapperOptions _options;
 
-        public UpdateComponent(TemplateBase templateBase, MapperDbContextBase mapperDbContextBase, IOptions<EntityMapperOptions> options)
+        public UpdateComponent(MapperDbContextBase mapperDbContextBase, IOptions<EntityMapperOptions> options) : base(mapperDbContextBase)
         {
-            _templateBase = templateBase;
-            _conditionProcessor = new DefaultConditionProcessor(templateBase, new ProcessExecutor(mapperDbContextBase));
-            _entityMapperOptions = options.Value;
+            _options = options.Value;
         }
 
         internal void AddModel<TModel>(TModel model) where TModel : EntityBase, new()
@@ -51,16 +46,16 @@ namespace NewLibCore.Storage.SQL.Component.Sql
                 var instance = Model;
                 instance.SetUpdateTime();
 
-                if (_entityMapperOptions.EnableModelValidate)
+                if (_options.EnableModelValidate)
                 {
                     instance.CheckPropertyValue();
                 }
 
                 var (_, aliasName) = instance.GetEntityBaseAliasName();
-                var update = _templateBase.CreateUpdate(instance);
-                var result = _conditionProcessor.Process(null, WhereComponent, FromComponent);
+                var update = _options.TemplateBase.CreateUpdate(instance);
+                var result = Process(null, WhereComponent, FromComponent);
 
-                result.Append($@"{update} {PredicateType.AND} {aliasName}.{nameof(instance.IsDeleted)} = 0 {_templateBase.AffectedRows}");
+                result.Append($@"{update} {PredicateType.AND} {aliasName}.{nameof(instance.IsDeleted)} = 0 {_options.TemplateBase.AffectedRows}");
                 instance.Reset();
 
                 return result.Execute();

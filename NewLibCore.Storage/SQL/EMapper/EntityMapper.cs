@@ -12,41 +12,33 @@ namespace NewLibCore.Storage.SQL
     /// </summary>
     public sealed class EntityMapper
     {
-        private readonly InsertComponent _insertComponent;
-        private readonly UpdateComponent _updateComponent;
-        private readonly SelectWrapper _selectWrapper;
-        public EntityMapper(InsertComponent insertComponent, UpdateComponent updateComponent, SelectWrapper selectWrapper)
-        {
-            _insertComponent = insertComponent;
-            _updateComponent = updateComponent;
-            _selectWrapper = selectWrapper;
-        }
-
         public void Add<TModel>(TModel model) where TModel : EntityBase, new()
         {
             Check.IfNullOrZero(model);
-            _insertComponent.AddModel(model);
-            model.Id = _insertComponent.Execute().GetModifyRowCount();
+            var insert = new InsertComponent();
+            insert.AddModel(model);
+            model.Id = insert.Execute().GetModifyRowCount();
         }
 
         public Boolean Update<TModel>(TModel model, Expression<Func<TModel, Boolean>> filter = null) where TModel : EntityBase, new()
         {
             Check.IfNullOrZero(model);
-
+            var update = new UpdateComponent();
             if (filter != null)
             {
                 var whereComponent = new WhereComponent();
                 whereComponent.AddWhere(filter);
-                _updateComponent.AddWhereComponent(whereComponent);
+                update.AddWhereComponent(whereComponent);
             }
 
-            _updateComponent.AddModel(model);
-            return _updateComponent.Execute().GetModifyRowCount() > 0;
+            update.AddModel(model);
+            return update.Execute().GetModifyRowCount() > 0;
         }
 
         public SelectWrapper Query<TModel>() where TModel : EntityBase, new()
         {
-            return _selectWrapper.Query<TModel>();
+            var select = new SelectWrapper();
+            return select.Query<TModel>();
         }
     }
 }
