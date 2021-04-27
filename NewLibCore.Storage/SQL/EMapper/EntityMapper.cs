@@ -29,18 +29,19 @@ namespace NewLibCore.Storage.SQL
             model.Id = _insertComponent.Execute().GetModifyRowCount();
         }
 
-        public Boolean Update<TModel>(TModel model, Expression<Func<TModel, Boolean>> expression) where TModel : EntityBase, new()
+        public Boolean Update<TModel>(TModel model, Expression<Func<TModel, Boolean>> filter = null) where TModel : EntityBase, new()
         {
             Check.IfNullOrZero(model);
-            Check.IfNullOrZero(expression);
 
-            var whereComponent = new WhereComponent();
-            whereComponent.AddWhere(expression);
+            if (filter != null)
+            {
+                var whereComponent = new WhereComponent();
+                whereComponent.AddWhere(filter);
+                _updateComponent.AddWhereComponent(whereComponent);
+            }
 
             _updateComponent.AddModel(model);
-            _updateComponent.AddWhereComponent(whereComponent);
             return _updateComponent.Execute().GetModifyRowCount() > 0;
-          
         }
 
         public SelectWrapper Query<TModel>() where TModel : EntityBase, new()

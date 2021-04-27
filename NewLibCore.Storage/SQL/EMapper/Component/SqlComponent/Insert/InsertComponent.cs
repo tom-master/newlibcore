@@ -11,7 +11,6 @@ namespace NewLibCore.Storage.SQL.Component.Sql
         private readonly TemplateBase _templateBase;
         private readonly ProcessExecutor _processExecutor;
         private readonly EntityMapperOptions _entityMapperOptions;
-
         private EntityBase _model;
 
         public InsertComponent(TemplateBase templateBase, ProcessExecutor processExecutor, IOptions<EntityMapperOptions> options)
