@@ -16,7 +16,7 @@ namespace NewLibCore.Storage.SQL.Component.Sql
 
         private readonly EntityMapperOptions _options;
 
-        public UpdateComponent(MapperDbContextBase mapperDbContextBase, IOptions<EntityMapperOptions> options) : base(mapperDbContextBase)
+        public UpdateComponent(MapperDbContextBase mapperDbContextBase, IOptions<EntityMapperOptions> options) : base(options, mapperDbContextBase)
         {
             _options = options.Value;
         }

@@ -1,4 +1,6 @@
+using Microsoft.Extensions.Options;
 using NewLibCore.Storage.SQL.Component.Sql;
+using NewLibCore.Storage.SQL.EMapper;
 using NewLibCore.Storage.SQL.Extension;
 using NewLibCore.Storage.SQL.Template;
 using NewLibCore.Storage.SQL.Validate;
@@ -19,15 +21,15 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         internal WhereComponent WhereComponent { get; private set; }
         internal OrderComponent OrderComponent { get; private set; }
         internal PaginationComponent PaginationComponent { get; private set; }
+        internal readonly EntityMapperOptions _options;
 
-        internal readonly TemplateBase _templateBase;
-
-        public SelectWrapper(TemplateBase templateBase, MapperDbContextBase mapperDbContextBase) : base(templateBase, mapperDbContextBase)
+        public SelectWrapper(IOptions<EntityMapperOptions> options, MapperDbContextBase mapperDbContextBase)
+        : base(options, mapperDbContextBase)
         {
-            Check.IfNullOrZero(templateBase);
+            Check.IfNullOrZero(options);
             Check.IfNullOrZero(mapperDbContextBase);
 
-            _templateBase = templateBase;
+            _options = options.Value;
 
             SelectComponent = new ColumnFieldComponent();
             FromComponent = new FromComponent();
@@ -223,7 +225,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
             return RunDiagnosis.Watch(() =>
              {
                  var mainTable = FromComponent.AliasNameMappers[0];
-                 _templateBase.CreateSelect(ExtractSelectFields(), mainTable.Key, mainTable.Value);
+                 _options.TemplateBase.CreateSelect(ExtractSelectFields(), mainTable.Key, mainTable.Value);
                  var result = Process(JoinComponent, WhereComponent, FromComponent);
 
                  if (PaginationComponent != null)
@@ -233,16 +235,15 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
                          throw new Exception("��ҳ��û��ָ�������ֶ�");
                      }
                      var (fields, tableName) = ExtractOrderFields();
-                     var orderTemplate = _templateBase.CreateOrderBy(OrderComponent.OrderBy, $@"{tableName}.{fields}");
-
-                     var newSql = _templateBase.CreatePagination(PaginationComponent, orderTemplate, result.ToString());
+                     var orderTemplate = _options.TemplateBase.CreateOrderBy(OrderComponent.OrderBy, $@"{tableName}.{fields}");
+                     var newSql = _options.TemplateBase.CreatePagination(PaginationComponent, orderTemplate, result.ToString());
                      result.ClearSql();
                      result.Append(newSql);
                  }
                  else if (OrderComponent != null)
                  {
                      var (fields, tableName) = ExtractOrderFields();
-                     var orderTemplate = _templateBase.CreateOrderBy(OrderComponent.OrderBy, $@"{tableName}.{fields}");
+                     var orderTemplate = _options.TemplateBase.CreateOrderBy(OrderComponent.OrderBy, $@"{tableName}.{fields}");
                      result.Append(orderTemplate);
                  }
 
