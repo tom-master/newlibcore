@@ -41,11 +41,11 @@ namespace NewLibCore.Storage.SQL.Component.Sql
                      instance.CheckPropertyValue();
                  }
                  var insert = _templateBase.CreateInsert(instance);
-                 PredicateProcessorResult predicateProcessorResult = new PredicateProcessorResult();
-                 predicateProcessorResult.Sql.Append(insert);
-                 instance.GetSqlElements().Parameters.Select(s => predicateProcessorResult.Parameters.Append(s));
+                 PredicateProcessorResultBuilder predicateProcessorResultBuilder = new PredicateProcessorResultBuilder();
+                 predicateProcessorResultBuilder.StatmentTemplate = insert;
+                 instance.GetSqlElements().Parameters.Select(s => predicateProcessorResultBuilder.Parameters.Append(s));
 
-                 return _processResultExecutor.Execute(predicateProcessorResult);
+                 return _processResultExecutor.Execute(predicateProcessorResultBuilder);
              });
         }
     }

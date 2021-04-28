@@ -225,9 +225,9 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
             return RunDiagnosis.Watch(() =>
              {
                  var mainTable = FromComponent.AliasNameMappers[0];
-                 _options.TemplateBase.CreateSelect(ExtractSelectFields(), mainTable.Key, mainTable.Value);
-                 var result = Process(JoinComponent, WhereComponent, FromComponent);
-
+                 var selectStatement = _options.TemplateBase.CreateSelect(ExtractSelectFields(), mainTable.Key, mainTable.Value);
+                 var predicateProcessorResult = Process(JoinComponent, WhereComponent, FromComponent);
+                 predicateProcessorResult.StatmentTemplate = selectStatement;
                  if (PaginationComponent != null)
                  {
                      if (OrderComponent == null)
@@ -236,17 +236,18 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
                      }
                      var (fields, tableName) = ExtractOrderFields();
                      var orderTemplate = _options.TemplateBase.CreateOrderBy(OrderComponent.OrderBy, $@"{tableName}.{fields}");
-                     var newSql = _options.TemplateBase.CreatePagination(PaginationComponent, orderTemplate, result.ToString());
-                     result.Sql.Append(newSql);
+                     var newSql = _options.TemplateBase.CreatePagination(PaginationComponent, orderTemplate, predicateProcessorResult.ToString());
+
+                     selectStatement.Append(newSql);
                  }
                  else if (OrderComponent != null)
                  {
                      var (fields, tableName) = ExtractOrderFields();
                      var orderTemplate = _options.TemplateBase.CreateOrderBy(OrderComponent.OrderBy, $@"{tableName}.{fields}");
-                     result.Sql.Append(orderTemplate);
+                     selectStatement.Append(orderTemplate);
                  }
 
-                 return _predicateProcessorResultExecutor.Execute(result);
+                 return _predicateProcessorResultExecutor.Execute(predicateProcessorResult);
              });
         }
 
@@ -275,7 +276,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         {
             var anonymousObjFields = new List<String>();
 
-            if (SelectComponent != null)
+            if (SelectComponent.Expression != null)
             {
                 var fields = (LambdaExpression)SelectComponent.Expression;
                 if (fields.Body.NodeType == ExpressionType.Constant)
@@ -311,7 +312,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         internal IList<Type> GetParameterTypes()
         {
             var types = new List<Type>();
-            if (FromComponent != null)
+            if (FromComponent.Expression != null)
             {
                 var type = (FromComponent.Expression as LambdaExpression).Parameters[0].Type;
                 types.Add(type);
@@ -321,6 +322,10 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
             {
                 foreach (var item in JoinComponent.JoinComponents)
                 {
+                    if (item.Expression == null)
+                    {
+                        continue;
+                    }
                     foreach (var parameter in (item.Expression as LambdaExpression).Parameters)
                     {
                         types.Add(parameter.Type);

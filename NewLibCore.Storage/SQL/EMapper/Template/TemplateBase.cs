@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using NewLibCore.Storage.SQL.Component.Sql;
 using NewLibCore.Storage.SQL.Extension;
 using NewLibCore.Storage.SQL.Validate;
@@ -53,24 +54,26 @@ namespace NewLibCore.Storage.SQL.Template
         /// <summary>
         /// 查询模板
         /// </summary>
-        internal virtual String CreateSelect(String field, String tableName, String aliasName)
+        internal virtual StringBuilder CreateSelect(String field, String tableName, String aliasName)
         {
-            return String.Format("SELECT {0} FROM {1} AS {2} ", field, tableName, aliasName);
+            var s = String.Format("SELECT {0} FROM {1} AS {2} <join> <where> ", field, tableName, aliasName);
+            return new StringBuilder(s);
         }
 
         /// <summary>
         /// 添加模板
         /// </summary>
-        internal virtual String CreateInsert<TModel>(TModel model) where TModel : EntityBase
+        internal virtual StringBuilder CreateInsert<TModel>(TModel model) where TModel : EntityBase
         {
             var elements = model.GetSqlElements();
-            return $@"INSERT {model.GetEntityBaseAliasName().TableName} ({elements.Fields}) VALUES ({elements.InsertPlaceHolders}) {Identity} ";
+            var s = $@"INSERT {model.GetEntityBaseAliasName().TableName} ({elements.Fields}) VALUES ({elements.InsertPlaceHolders}) {Identity} ";
+            return new StringBuilder(s);
         }
 
         /// <summary>
         /// 更新模板
         /// </summary>
-        internal abstract String CreateUpdate<TModel>(TModel model) where TModel : EntityBase;
+        internal abstract StringBuilder CreateUpdate<TModel>(TModel model) where TModel : EntityBase;
 
         /// <summary>
         /// 追加关系类型

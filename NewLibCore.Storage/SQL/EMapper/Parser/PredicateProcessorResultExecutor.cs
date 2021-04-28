@@ -25,12 +25,12 @@ namespace NewLibCore.Storage.SQL
         /// 执行表达式翻译出的sql语句
         /// </summary>
         /// <returns></returns>
-        internal ExecutorResult Execute(PredicateProcessorResult processorResult)
+        internal ExecutorResult Execute(PredicateProcessorResultBuilder processorResultBuilder)
         {
-            var sql = processorResult.Sql.ToString();
+            var sql = processorResultBuilder.Build();
             sql = ReformatSql(sql);
             var executeType = GetExecuteType(sql);
-            var parameters = processorResult.Parameters.ToArray();
+            var parameters = processorResultBuilder.Parameters.ToArray();
             switch (executeType)
             {
                 case ExecuteType.SELECT:

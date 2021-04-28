@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.Common;
+using System.Text;
 using Microsoft.Extensions.Options;
 using MySql.Data.MySqlClient;
 using NewLibCore.Storage.SQL.Component.Sql;
@@ -15,10 +16,11 @@ namespace NewLibCore.Storage.SQL.Template
     internal class MySqlTemplate : TemplateBase
     {
         public MySqlTemplate() : base() { }
-        internal override String CreateUpdate<TModel>(TModel model)
+        internal override StringBuilder CreateUpdate<TModel>(TModel model)
         {
             var (tableName, aliasName) = model.GetEntityBaseAliasName();
-            return $@"UPDATE {tableName} AS {aliasName} SET {model.GetSqlElements().UpdatePlaceHolders}";
+            var s = $@"UPDATE {tableName} AS {aliasName} SET {model.GetSqlElements().UpdatePlaceHolders}";
+            return new StringBuilder(s);
         }
 
         protected override void AppendPredicateType()

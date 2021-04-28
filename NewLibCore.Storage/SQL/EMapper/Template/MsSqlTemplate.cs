@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.Common;
 using System.Data.SqlClient;
+using System.Text;
 using Microsoft.Extensions.Options;
 using NewLibCore.Storage.SQL.Component.Sql;
 using NewLibCore.Storage.SQL.EMapper;
@@ -18,10 +19,11 @@ namespace NewLibCore.Storage.SQL.Template
 
         private MsSqlPaginationVersion _mssqlPaginationVersion;
 
-        internal override String CreateUpdate<TModel>(TModel model)
+        internal override StringBuilder CreateUpdate<TModel>(TModel model)
         {
             var (tableName, aliasName) = model.GetEntityBaseAliasName();
-            return $@"UPDATE {aliasName} SET {model.GetSqlElements().UpdatePlaceHolders} FROM {tableName} AS {aliasName}";
+            var s = $@"UPDATE {aliasName} SET {model.GetSqlElements().UpdatePlaceHolders} FROM {tableName} AS {aliasName}";
+            return new StringBuilder(s);
         }
 
         internal override String Identity
