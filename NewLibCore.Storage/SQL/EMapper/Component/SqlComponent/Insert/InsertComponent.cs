@@ -9,16 +9,17 @@ namespace NewLibCore.Storage.SQL.Component.Sql
     public class InsertComponent
     {
         private readonly TemplateBase _templateBase;
-        private readonly ProcessExecutor _processExecutor;
         private readonly EntityMapperOptions _options;
+        private readonly PredicateProcessorResultExecutor _processResultExecutor;
+
         private EntityBase _model;
 
-        public InsertComponent(ProcessExecutor processExecutor, IOptions<EntityMapperOptions> options)
+        public InsertComponent(MapperDbContextBase mapperDbContextBase, IOptions<EntityMapperOptions> options)
         {
-            Check.IfNullOrZero(processExecutor);
+            Check.IfNullOrZero(mapperDbContextBase);
             Check.IfNullOrZero(options);
 
-            _processExecutor = processExecutor;
+            _processResultExecutor = new PredicateProcessorResultExecutor(mapperDbContextBase);
             _options = options.Value;
         }
 
@@ -40,8 +41,7 @@ namespace NewLibCore.Storage.SQL.Component.Sql
                      instance.CheckPropertyValue();
                  }
                  var insert = _templateBase.CreateInsert(instance);
-                 _processExecutor.Append(insert, instance.GetSqlElements().Parameters);
-                 return _processExecutor.Execute();
+                 return _processResultExecutor.Execute(insert, instance.GetSqlElements().Parameters);
              });
         }
     }
