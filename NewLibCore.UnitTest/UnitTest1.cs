@@ -22,7 +22,13 @@ namespace NewLibCore.UnitTest
             });
             var provider = service.BuildServiceProvider();
             var mapper = provider.GetRequiredService<EntityMapper>();
-            var users1 = mapper.Query<User>().Execute().ToList<User>();
+            var users1 = mapper.Query<User>()
+            .InnerJoin<User, UserRole>((user, role) => user.Id == role.UserId)
+            .Where<User>(user => user.Name != "wasd")
+            .ThenByDesc<User, DateTime>(a => a.AddTime)
+            .Page(1, 10)
+            .Execute()
+            .ToList<User>();
         }
     }
 

@@ -71,23 +71,24 @@ namespace NewLibCore.Storage.SQL.Template
             }
         }
 
-        internal override String CreatePagination(PaginationComponent pagination, String orderBy, String rawSql)
+        internal override void CreatePagination(PaginationComponent pagination, String orderBy, StringBuilder rawSql)
         {
             Check.IfNullOrZero(pagination.Size);
             Check.IfNullOrZero(orderBy);
             Check.IfNullOrZero(rawSql);
 
-            String sql;
+            String sql = "";
             if (_mssqlPaginationVersion == MsSqlPaginationVersion.GREATERTHAN2012)
             {
-                sql = $@" {rawSql} {orderBy} OFFSET ({pagination.Index * pagination.Size}) ROWS FETCH NEXT {pagination.Size} ROWS ONLY ;";
+                rawSql = rawSql.Append($@" {orderBy} OFFSET ({pagination.Index * pagination.Size}) ROWS FETCH NEXT {pagination.Size} ROWS ONLY ;");
             }
             else
             {
-                sql = rawSql;
+
+                sql = rawSql.ToString();
                 sql = $@" SELECT * FROM ( {sql.Insert(sql.IndexOf(" "), $@" TOP({pagination.Size}) ROW_NUMBER() OVER({orderBy}) AS rownumber,")} ) AS temprow WHERE temprow.rownumber>({pagination.Size}*({pagination.Index}-1)) {orderBy}";
             }
-            return sql;
+            rawSql = new StringBuilder(sql);
         }
 
         internal override DbParameter CreateParameter(String key, Object value, Type dataType)

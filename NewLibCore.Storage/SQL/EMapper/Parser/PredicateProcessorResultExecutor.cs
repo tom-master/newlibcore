@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -61,10 +60,10 @@ namespace NewLibCore.Storage.SQL
         private String ReformatSql(string sql)
         {
             Check.IfNullOrZero(sql);
-            if (sql[0] != ' ')
-            {
-                return sql;
-            }
+            // if (sql[0] != ' ')
+            // {
+            //     return sql;
+            // }
             sql = Regex.Replace(sql, "\\s{2,}", " ").Trim();
             return sql;
         }

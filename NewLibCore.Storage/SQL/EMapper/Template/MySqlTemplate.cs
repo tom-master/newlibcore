@@ -40,12 +40,12 @@ namespace NewLibCore.Storage.SQL.Template
             return String.Format(PredicateMapper[predicateType], left, right);
         }
 
-        internal override String CreatePagination(PaginationComponent pagination, String orderBy, String rawSql)
+        internal override void CreatePagination(PaginationComponent pagination, String orderBy, StringBuilder rawSql)
         {
             Check.IfNullOrZero(pagination.Size);
             Check.IfNullOrZero(orderBy);
             Check.IfNullOrZero(rawSql);
-            return $@"{rawSql} {orderBy} LIMIT {pagination.Size * (pagination.Index - 1)},{pagination.Size} ;";
+            rawSql = rawSql.Append($@" {orderBy} LIMIT {pagination.Size * (pagination.Index - 1)},{pagination.Size} ;");
         }
 
         internal override DbParameter CreateParameter(String key, Object value, Type dataType)

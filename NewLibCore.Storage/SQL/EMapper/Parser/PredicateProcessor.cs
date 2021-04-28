@@ -36,30 +36,33 @@ namespace NewLibCore.Storage.SQL
         {
             _aliasMapper = MergeComponentAlias(joinComponent, whereComponent, fromComponent);
             //循环翻译连接对象
-            foreach (var item in joinComponent.JoinComponents)
+            if (joinComponent != null)
             {
-                if (item.AliasNameMappers == null || item.JoinRelation == JoinRelation.NONE)
+                foreach (var item in joinComponent.JoinComponents)
                 {
-                    continue;
-                }
-
-                //获取连接对象中的表别名，进行连接语句的翻译
-                foreach (var aliasItem in item.AliasNameMappers)
-                {
-                    if (aliasItem.Key.ToLower() == item.MainTable.ToLower())
+                    if (item.AliasNameMappers == null || item.JoinRelation == JoinRelation.NONE)
                     {
                         continue;
                     }
-                    //获取连接语句的模板 
-                    AssignmentPredicateType(item.JoinRelation, _options.TemplateBase.CreateJoin(item.JoinRelation, aliasItem.Key, aliasItem.Value.ToLower()));
 
-                    //获取连接类型中的存储的表达式对象进行翻译
-                    InternalProcess(item.Expression, item.JoinRelation);
+                    //获取连接对象中的表别名，进行连接语句的翻译
+                    foreach (var aliasItem in item.AliasNameMappers)
+                    {
+                        if (aliasItem.Key.ToLower() == item.MainTable.ToLower())
+                        {
+                            continue;
+                        }
+                        //获取连接语句的模板 
+                        AssignmentPredicateType(item.JoinRelation, _options.TemplateBase.CreateJoin(item.JoinRelation, aliasItem.Key, aliasItem.Value.ToLower()));
+
+                        //获取连接类型中的存储的表达式对象进行翻译
+                        InternalProcess(item.Expression, item.JoinRelation);
+                    }
                 }
             }
             AssignmentPredicateType(JoinRelation.NONE, " WHERE 1=1 ");
             //翻译Where条件对象
-            if (whereComponent.Expression != null)
+            if (whereComponent != null)
             {
                 var lambdaExp = (LambdaExpression)whereComponent.Expression;
                 //当表达式主体为常量时则直接返回，不做解析
@@ -73,8 +76,7 @@ namespace NewLibCore.Storage.SQL
                 InternalProcess(lambdaExp, JoinRelation.NONE);
             }
 
-            var aliasMapper = MergeComponentAlias(joinComponent, whereComponent, fromComponent);
-            foreach (var aliasItem in aliasMapper)
+            foreach (var aliasItem in _aliasMapper)
             {
                 AssignmentPredicateType(JoinRelation.NONE, $@"{PredicateType.AND} {aliasItem.Value.ToLower()}.IsDeleted = 0");
             }
@@ -85,11 +87,11 @@ namespace NewLibCore.Storage.SQL
         {
             if (joinRelation == JoinRelation.NONE)
             {
-                _predicateProcessorResultBuilder.WhereStatement.Append(value);
+                _predicateProcessorResultBuilder.WhereStatement.Append($@" {value} ");
             }
             else
             {
-                _predicateProcessorResultBuilder.JoinStatement.Append(value);
+                _predicateProcessorResultBuilder.JoinStatement.Append($@" {value} ");
             }
         }
 
@@ -416,22 +418,22 @@ namespace NewLibCore.Storage.SQL
         {
             var newAliasMapper = new List<KeyValuePair<String, String>>();
 
-            if (joinComponent.JoinComponents.Any())
+            if (joinComponent != null)
             {
                 newAliasMapper.AddRange(joinComponent.JoinComponents.SelectMany(s => s.AliasNameMappers));
             }
 
-            if (whereComponent.Expression != null)
+            if (whereComponent != null)
             {
                 newAliasMapper.AddRange(whereComponent.AliasNameMappers);
             }
 
-            if (fromComponent.Expression != null)
+            if (fromComponent != null)
             {
                 newAliasMapper.AddRange(fromComponent.AliasNameMappers);
             }
-
-            CheckDuplicateTableAliasName(newAliasMapper.Select(s => s).Distinct().ToList());
+            newAliasMapper = newAliasMapper.Select(s => s).Distinct().ToList();
+            CheckDuplicateTableAliasName(newAliasMapper);
             return newAliasMapper;
         }
         private void CheckDuplicateTableAliasName(IEnumerable<KeyValuePair<String, String>> newAliasMapper)

@@ -28,18 +28,13 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         : base(options)
         {
             Check.IfNullOrZero(options);
-
             _options = options.Value;
             _predicateProcessorResultExecutor = new PredicateProcessorResultExecutor(options.Value.DbContext);
-            SelectComponent = new ColumnFieldComponent();
-            FromComponent = new FromComponent();
-            JoinComponent = new JoinComponent();
-            WhereComponent = new WhereComponent();
-            OrderComponent = new OrderComponent();
         }
 
         public SelectWrapper Query<TModel>() where TModel : EntityBase, new()
         {
+            FromComponent = new FromComponent();
             FromComponent.AddFrom<TModel>();
             return this;
         }
@@ -49,6 +44,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         where TRight : EntityBase, new()
         {
             Check.IfNullOrZero(join);
+            JoinComponent = new JoinComponent();
             JoinComponent.AddJoin(join, JoinRelation.LEFT);
             return this;
         }
@@ -58,6 +54,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         where TRight : EntityBase, new()
         {
             Check.IfNullOrZero(join);
+            JoinComponent = new JoinComponent();
             JoinComponent.AddJoin(join, JoinRelation.RIGHT);
             return this;
         }
@@ -67,6 +64,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         where TRight : EntityBase, new()
         {
             Check.IfNullOrZero(join);
+            JoinComponent = new JoinComponent();
             JoinComponent.AddJoin(join, JoinRelation.INNER);
             return this;
         }
@@ -75,8 +73,8 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         {
             Check.IfNullOrZero(pageIndex);
             Check.IfNullOrZero(pageSize);
-            var paginationComponent = new PaginationComponent();
-            paginationComponent.AddPagination(pageIndex, pageSize, maxKey);
+            PaginationComponent = new PaginationComponent();
+            PaginationComponent.AddPagination(pageIndex, pageSize, maxKey);
             return this;
         }
 
@@ -143,6 +141,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         where TModel1 : EntityBase, new()
         {
             Check.IfNullOrZero(filter);
+            WhereComponent = new WhereComponent();
             WhereComponent.AddWhere(filter);
             return this;
         }
@@ -152,6 +151,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         where TModel2 : EntityBase, new()
         {
             Check.IfNullOrZero(filter);
+            WhereComponent = new WhereComponent();
             WhereComponent.AddWhere(filter);
             return this;
         }
@@ -162,6 +162,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         where TModel3 : EntityBase, new()
         {
             Check.IfNullOrZero(filter);
+            WhereComponent = new WhereComponent();
             WhereComponent.AddWhere(filter);
             return this;
         }
@@ -173,6 +174,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         where TModel4 : EntityBase, new()
         {
             Check.IfNullOrZero(filter);
+            WhereComponent = new WhereComponent();
             WhereComponent.AddWhere(filter);
             return this;
         }
@@ -185,6 +187,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         where TModel5 : EntityBase, new()
         {
             Check.IfNullOrZero(filter);
+            WhereComponent = new WhereComponent();
             WhereComponent.AddWhere(filter);
             return this;
         }
@@ -192,6 +195,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         public SelectWrapper ThenByDesc<TModel, TKey>(Expression<Func<TModel, TKey>> order) where TModel : EntityBase, new()
         {
             Check.IfNullOrZero(order);
+            OrderComponent = new OrderComponent();
             OrderComponent.AddOrderBy(order, OrderByType.DESC);
             return this;
         }
@@ -199,6 +203,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         public SelectWrapper ThenByAsc<TModel, TKey>(Expression<Func<TModel, TKey>> order) where TModel : EntityBase, new()
         {
             Check.IfNullOrZero(order);
+            OrderComponent = new OrderComponent();
             OrderComponent.AddOrderBy(order, OrderByType.ASC);
             return this;
         }
@@ -207,6 +212,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         where TModel1 : EntityBase, new()
         {
             Check.IfNullOrZero(include);
+            JoinComponent = new JoinComponent();
             JoinComponent.AddInclude(include);
             return this;
         }
@@ -236,9 +242,8 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
                      }
                      var (fields, tableName) = ExtractOrderFields();
                      var orderTemplate = _options.TemplateBase.CreateOrderBy(OrderComponent.OrderBy, $@"{tableName}.{fields}");
-                     var newSql = _options.TemplateBase.CreatePagination(PaginationComponent, orderTemplate, predicateProcessorResult.ToString());
+                     _options.TemplateBase.CreatePagination(PaginationComponent, orderTemplate, predicateProcessorResult.StatmentTemplate);
 
-                     selectStatement.Append(newSql);
                  }
                  else if (OrderComponent != null)
                  {
@@ -276,7 +281,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         {
             var anonymousObjFields = new List<String>();
 
-            if (SelectComponent.Expression != null)
+            if (SelectComponent != null)
             {
                 var fields = (LambdaExpression)SelectComponent.Expression;
                 if (fields.Body.NodeType == ExpressionType.Constant)
@@ -312,13 +317,13 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         internal IList<Type> GetParameterTypes()
         {
             var types = new List<Type>();
-            if (FromComponent.Expression != null)
+            if (FromComponent != null)
             {
                 var type = (FromComponent.Expression as LambdaExpression).Parameters[0].Type;
                 types.Add(type);
             }
 
-            if (JoinComponent.JoinComponents.Any())
+            if (JoinComponent != null)
             {
                 foreach (var item in JoinComponent.JoinComponents)
                 {
