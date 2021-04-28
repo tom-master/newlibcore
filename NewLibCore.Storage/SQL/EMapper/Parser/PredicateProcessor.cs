@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Text;
 using Microsoft.Extensions.Options;
 using NewLibCore.Storage.SQL.Component.Sql;
 using NewLibCore.Storage.SQL.EMapper;
@@ -14,8 +15,8 @@ namespace NewLibCore.Storage.SQL
     {
         private readonly Stack<PredicateType> _predicateTypeStack;
         private readonly Stack<String> _parameterNameStack;
-        private readonly ProcessExecutor _processExecutor;
         private readonly EntityMapperOptions _options;
+        private readonly PredicateProcessorResult _predicateProcessorResult;
 
         private IReadOnlyList<KeyValuePair<String, String>> _aliasMapper;
 
@@ -23,19 +24,16 @@ namespace NewLibCore.Storage.SQL
         /// 初始化Parser类的新实例
         /// </summary>
         /// <param name="templateBase"></param>
-        internal ConditionProcessor(IOptions<EntityMapperOptions> options, MapperDbContextBase mapperDbContextBase)
+        internal ConditionProcessor(IOptions<EntityMapperOptions> options)
         {
             Check.IfNullOrZero(options);
-            Check.IfNullOrZero(mapperDbContextBase);
 
             _options = options.Value;
             _parameterNameStack = new Stack<String>();
             _predicateTypeStack = new Stack<PredicateType>();
 
             _aliasMapper = new List<KeyValuePair<String, String>>();
-
-            _processExecutor = new ProcessExecutor(mapperDbContextBase);
-
+            _predicateProcessorResult = new PredicateProcessorResult();
         }
 
         /// <summary>
@@ -43,7 +41,7 @@ namespace NewLibCore.Storage.SQL
         /// </summary>
         /// <param name="expressionStore"></param>
         /// <returns></returns>
-        internal ProcessExecutor Process(JoinComponent joinComponent, WhereComponent whereComponent, FromComponent fromComponent)
+        internal PredicateProcessorResult Process(JoinComponent joinComponent, WhereComponent whereComponent, FromComponent fromComponent)
         {
             _aliasMapper = MergeComponentAlias(joinComponent, whereComponent, fromComponent);
             //循环翻译连接对象
@@ -62,13 +60,13 @@ namespace NewLibCore.Storage.SQL
                         continue;
                     }
                     //获取连接语句的模板 
-                    _processExecutor.Append(_options.TemplateBase.CreateJoin(item.JoinRelation, aliasItem.Key, aliasItem.Value.ToLower()));
+                    _predicateProcessorResult.Sql.Append(_options.TemplateBase.CreateJoin(item.JoinRelation, aliasItem.Key, aliasItem.Value.ToLower()));
 
                     //获取连接类型中的存储的表达式对象进行翻译
                     InternalParser(item.Expression, item.JoinRelation);
                 }
             }
-            _processExecutor.Append(" WHERE 1=1 ");
+            _predicateProcessorResult.Sql.Append(" WHERE 1=1 ");
             //翻译Where条件对象
             if (whereComponent != null)
             {
@@ -76,9 +74,9 @@ namespace NewLibCore.Storage.SQL
                 //当表达式主体为常量时则直接返回，不做解析
                 if (lambdaExp.Body.NodeType == ExpressionType.Constant)
                 {
-                    return _processExecutor;
+                    return _predicateProcessorResult;
                 }
-                _processExecutor.Append(PredicateType.AND.ToString());
+                _predicateProcessorResult.Sql.Append(PredicateType.AND.ToString());
 
                 //获取Where类型中的存储的表达式对象进行翻译
                 InternalParser(lambdaExp, JoinRelation.NONE);
@@ -87,9 +85,9 @@ namespace NewLibCore.Storage.SQL
             var aliasMapper = MergeComponentAlias(joinComponent, whereComponent, fromComponent);
             foreach (var aliasItem in aliasMapper)
             {
-                _processExecutor.Append($@"{PredicateType.AND} {aliasItem.Value.ToLower()}.IsDeleted = 0");
+                _predicateProcessorResult.Sql.Append($@"{PredicateType.AND} {aliasItem.Value.ToLower()}.IsDeleted = 0");
             }
-            return _processExecutor;
+            return _predicateProcessorResult;
         }
 
         /// <summary>
@@ -108,7 +106,7 @@ namespace NewLibCore.Storage.SQL
                         if (binaryExp.Left.NodeType != ExpressionType.Constant && binaryExp.Right.NodeType != ExpressionType.Constant)
                         {
                             InternalParser(binaryExp.Left, joinRelation);
-                            _processExecutor.Append(PredicateType.AND.ToString());
+                            _predicateProcessorResult.Sql.Append(PredicateType.AND.ToString());
                             InternalParser(binaryExp.Right, joinRelation);
                         }
                         else
@@ -129,7 +127,7 @@ namespace NewLibCore.Storage.SQL
                     {
                         var binaryExp = (BinaryExpression)expression;
                         InternalParser(binaryExp.Left, joinRelation);
-                        _processExecutor.Append(PredicateType.OR.ToString());
+                        _predicateProcessorResult.Sql.Append(PredicateType.OR.ToString());
                         InternalParser(binaryExp.Right, joinRelation);
                         break;
                     }
@@ -141,7 +139,7 @@ namespace NewLibCore.Storage.SQL
                 case ExpressionType.Constant:
                     {
                         var binaryExp = (ConstantExpression)expression;
-                        _processExecutor.Append(new MapperParameter(_parameterNameStack.Pop(), binaryExp.Value));
+                        _predicateProcessorResult.Parameter.Append(new MapperParameter(_parameterNameStack.Pop(), binaryExp.Value));
                         break;
                     }
                 case ExpressionType.Equal:
@@ -232,14 +230,14 @@ namespace NewLibCore.Storage.SQL
                                 internalAliasName = $@"{_aliasMapper.Where(w => w.Key == parameterExp.Type.GetEntityBaseAliasName().TableName && w.Value == parameterExp.Type.GetEntityBaseAliasName().AliasName).FirstOrDefault().Value.ToLower()}.";
 
                                 var newParameterName = Guid.NewGuid().ToString().Replace("-", "");
-                                _processExecutor.Append(_options.TemplateBase.CreatePredicate(_predicateTypeStack.Pop(), $@"{internalAliasName}{memberExp.Member.Name}", $"@{newParameterName}"));
+                                _predicateProcessorResult.Sql.Append(_options.TemplateBase.CreatePredicate(_predicateTypeStack.Pop(), $@"{internalAliasName}{memberExp.Member.Name}", $"@{newParameterName}"));
                                 _parameterNameStack.Push(newParameterName);
                             }
                         }
                         else
                         {
                             var getter = Expression.Lambda(memberExp).Compile();
-                            _processExecutor.Append(new MapperParameter(_parameterNameStack.Pop(), getter.DynamicInvoke()));
+                            _predicateProcessorResult.Parameter.Append(new MapperParameter(_parameterNameStack.Pop(), getter.DynamicInvoke()));
                         }
                         break;
                     }
@@ -379,21 +377,21 @@ namespace NewLibCore.Storage.SQL
                 var rightAliasName = ExtractMember(rightMember);
 
                 var relationTemplate = _options.TemplateBase.CreatePredicate(predicateType, $"{rightAliasName}.{rightMember.Member.Name}", $"{leftAliasName}.{leftMember.Member.Name}");
-                _processExecutor.Append(relationTemplate);
+                _predicateProcessorResult.Sql.Append(relationTemplate);
             }
             else if (binary.Left.NodeType == ExpressionType.Constant) //表达式左边为常量
             {
                 var rightAliasName = ExtractMember(rightMember);
                 var constant = (ConstantExpression)binary.Left;
                 var value = Boolean.TryParse(constant.Value.ToString(), out var result) ? (result ? 1 : 0).ToString() : constant.Value;
-                _processExecutor.Append(_options.TemplateBase.CreatePredicate(predicateType, value + "", $"{rightAliasName}.{rightMember.Member.Name}"));
+                _predicateProcessorResult.Sql.Append(_options.TemplateBase.CreatePredicate(predicateType, value + "", $"{rightAliasName}.{rightMember.Member.Name}"));
             }
             else if (binary.Right.NodeType == ExpressionType.Constant) //表达式的右边为常量
             {
                 var leftAliasName = ExtractMember(leftMember);
                 var constant = (ConstantExpression)binary.Right;
                 var value = Boolean.TryParse(constant.Value.ToString(), out var result) ? (result ? 1 : 0).ToString() : constant.Value;
-                _processExecutor.Append(_options.TemplateBase.CreatePredicate(predicateType, $"{leftAliasName}.{leftMember.Member.Name}", value + ""));
+                _predicateProcessorResult.Sql.Append(_options.TemplateBase.CreatePredicate(predicateType, $"{leftAliasName}.{leftMember.Member.Name}", value + ""));
             }
         }
 
@@ -445,5 +443,12 @@ namespace NewLibCore.Storage.SQL
             }
             return newAliasMapper;
         }
+    }
+
+    internal class PredicateProcessorResult
+    {
+        internal StringBuilder Sql { get; } = new StringBuilder();
+
+        internal IEnumerable<MapperParameter> Parameter { get; } = new List<MapperParameter>();
     }
 }

@@ -1,7 +1,7 @@
+using System.Linq;
 using Microsoft.Extensions.Options;
 using NewLibCore.Storage.SQL.EMapper;
 using NewLibCore.Storage.SQL.Extension;
-using NewLibCore.Storage.SQL.Template;
 using NewLibCore.Validate;
 
 namespace NewLibCore.Storage.SQL.Component.Sql
@@ -16,9 +16,12 @@ namespace NewLibCore.Storage.SQL.Component.Sql
 
         private readonly EntityMapperOptions _options;
 
-        public UpdateComponent(MapperDbContextBase mapperDbContextBase, IOptions<EntityMapperOptions> options) : base(options, mapperDbContextBase)
+        private readonly PredicateProcessorResultExecutor _processResultExecutor;
+
+        public UpdateComponent(MapperDbContextBase mapperDbContextBase, IOptions<EntityMapperOptions> options) : base(options)
         {
             _options = options.Value;
+            _processResultExecutor = new PredicateProcessorResultExecutor(mapperDbContextBase);
         }
 
         internal void AddModel<TModel>(TModel model) where TModel : EntityBase, new()
@@ -53,12 +56,12 @@ namespace NewLibCore.Storage.SQL.Component.Sql
 
                 var (_, aliasName) = instance.GetEntityBaseAliasName();
                 var update = _options.TemplateBase.CreateUpdate(instance);
-                var result = Process(null, WhereComponent, FromComponent);
+                var predicateProcessResult = Process(null, WhereComponent, FromComponent);
 
-                result.Append($@"{update} {PredicateType.AND} {aliasName}.{nameof(instance.IsDeleted)} = 0 {_options.TemplateBase.AffectedRows}");
+                predicateProcessResult.Sql.Append($@"{update} {PredicateType.AND} {aliasName}.{nameof(instance.IsDeleted)} = 0 {_options.TemplateBase.AffectedRows}");
                 instance.Reset();
 
-                return result.Execute();
+                return _processResultExecutor.Execute(predicateProcessResult.Sql.ToString(), predicateProcessResult.Parameter.ToArray());
             });
         }
     }
