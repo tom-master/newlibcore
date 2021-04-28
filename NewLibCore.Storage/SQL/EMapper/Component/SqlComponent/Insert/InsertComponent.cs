@@ -45,7 +45,7 @@ namespace NewLibCore.Storage.SQL.Component.Sql
                  var insert = _templateBase.CreateInsert(instance);
                  PredicateProcessorResult predicateProcessorResult = new PredicateProcessorResult();
                  predicateProcessorResult.Sql.Append(insert);
-                 predicateProcessorResult.Parameters.Append(instance.GetSqlElements().Parameters);
+                 instance.GetSqlElements().Parameters.Select(s => predicateProcessorResult.Parameters.Append(s));
 
                  return _processResultExecutor.Execute(predicateProcessorResult);
              });
