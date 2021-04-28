@@ -6,7 +6,7 @@ using NewLibCore.Validate;
 
 namespace NewLibCore.Storage.SQL.Component.Sql
 {
-    public class UpdateComponent : ConditionProcessor
+    public class UpdateComponent : PredicateProcessor
     {
         internal EntityBase Model { get; set; }
 
@@ -18,10 +18,10 @@ namespace NewLibCore.Storage.SQL.Component.Sql
 
         private readonly PredicateProcessorResultExecutor _processResultExecutor;
 
-        public UpdateComponent(MapperDbContextBase mapperDbContextBase, IOptions<EntityMapperOptions> options) : base(options)
+        public UpdateComponent(IOptions<EntityMapperOptions> options) : base(options)
         {
             _options = options.Value;
-            _processResultExecutor = new PredicateProcessorResultExecutor(mapperDbContextBase);
+            _processResultExecutor = new PredicateProcessorResultExecutor(options.Value.DbContext);
         }
 
         internal void AddModel<TModel>(TModel model) where TModel : EntityBase, new()
@@ -56,7 +56,7 @@ namespace NewLibCore.Storage.SQL.Component.Sql
 
                 var (_, aliasName) = instance.GetEntityBaseAliasName();
                 var update = _options.TemplateBase.CreateUpdate(instance);
-                var predicateProcessResult = Process(null, WhereComponent, FromComponent);
+                var predicateProcessResult = Process(new JoinComponent(), WhereComponent, FromComponent);
 
                 predicateProcessResult.Sql.Append($@"{update} {PredicateType.AND} {aliasName}.{nameof(instance.IsDeleted)} = 0 {_options.TemplateBase.AffectedRows}");
                 instance.Reset();

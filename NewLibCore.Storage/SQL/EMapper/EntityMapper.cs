@@ -1,4 +1,6 @@
-﻿using NewLibCore.Storage.SQL.Component.Sql;
+﻿using Microsoft.Extensions.Options;
+using NewLibCore.Storage.SQL.Component.Sql;
+using NewLibCore.Storage.SQL.EMapper;
 using NewLibCore.Storage.SQL.Extension;
 using NewLibCore.Storage.SQL.ProcessorFactory;
 using NewLibCore.Validate;
@@ -12,10 +14,12 @@ namespace NewLibCore.Storage.SQL
     /// </summary>
     public sealed class EntityMapper
     {
+        private readonly IOptions<EntityMapperOptions> _option;
+        public EntityMapper(IOptions<EntityMapperOptions> options) { _option = options; }
         public void Add<TModel>(TModel model) where TModel : EntityBase, new()
         {
             Check.IfNullOrZero(model);
-            var insert = new InsertComponent();
+            var insert = new InsertComponent(_option);
             insert.AddModel(model);
             model.Id = insert.Execute().GetModifyRowCount();
         }
@@ -23,7 +27,7 @@ namespace NewLibCore.Storage.SQL
         public Boolean Update<TModel>(TModel model, Expression<Func<TModel, Boolean>> filter = null) where TModel : EntityBase, new()
         {
             Check.IfNullOrZero(model);
-            var update = new UpdateComponent();
+            var update = new UpdateComponent(_option);
             if (filter != null)
             {
                 var whereComponent = new WhereComponent();
@@ -37,7 +41,7 @@ namespace NewLibCore.Storage.SQL
 
         public SelectWrapper Query<TModel>() where TModel : EntityBase, new()
         {
-            var select = new SelectWrapper();
+            var select = new SelectWrapper(_option);
             return select.Query<TModel>();
         }
     }

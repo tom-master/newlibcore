@@ -3,7 +3,6 @@ using NewLibCore.Storage.SQL.EMapper;
 using NewLibCore.Storage.SQL.Extension;
 using NewLibCore.Storage.SQL.Template;
 using NewLibCore.Validate;
-using System;
 using System.Linq;
 
 namespace NewLibCore.Storage.SQL.Component.Sql
@@ -16,12 +15,11 @@ namespace NewLibCore.Storage.SQL.Component.Sql
 
         private EntityBase _model;
 
-        public InsertComponent(MapperDbContextBase mapperDbContextBase, IOptions<EntityMapperOptions> options)
+        public InsertComponent(IOptions<EntityMapperOptions> options)
         {
-            Check.IfNullOrZero(mapperDbContextBase);
             Check.IfNullOrZero(options);
 
-            _processResultExecutor = new PredicateProcessorResultExecutor(mapperDbContextBase);
+            _processResultExecutor = new PredicateProcessorResultExecutor(options.Value.DbContext);
             _options = options.Value;
         }
 

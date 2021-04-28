@@ -25,11 +25,11 @@ namespace NewLibCore.Storage.SQL
         /// <summary>
         /// 初始化MapperDbContext类的新实例
         /// </summary>
-        public MapperDbContext(IOptions<EntityMapperOptions> options)
+        public MapperDbContext(EntityMapperOptions options)
         {
             Check.IfNullOrZero(options);
-            _options = options.Value;
-            _connection = options.Value.TemplateBase.CreateDbConnection();
+            _options = options;
+            _connection = options.TemplateBase.CreateDbConnection();
         }
 
         protected internal override void Commit()

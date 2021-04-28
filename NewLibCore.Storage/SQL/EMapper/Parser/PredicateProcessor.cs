@@ -11,20 +11,16 @@ using NewLibCore.Validate;
 
 namespace NewLibCore.Storage.SQL
 {
-    public class ConditionProcessor
+    public class PredicateProcessor
     {
         private readonly Stack<PredicateType> _predicateTypeStack;
         private readonly Stack<String> _parameterNameStack;
         private readonly EntityMapperOptions _options;
         private readonly PredicateProcessorResult _predicateProcessorResult;
 
-        private IReadOnlyList<KeyValuePair<String, String>> _aliasMapper;
+        private IList<KeyValuePair<String, String>> _aliasMapper;
 
-        /// <summary>
-        /// 初始化Parser类的新实例
-        /// </summary>
-        /// <param name="templateBase"></param>
-        internal ConditionProcessor(IOptions<EntityMapperOptions> options)
+        internal PredicateProcessor(IOptions<EntityMapperOptions> options)
         {
             Check.IfNullOrZero(options);
 
@@ -36,11 +32,6 @@ namespace NewLibCore.Storage.SQL
             _predicateProcessorResult = new PredicateProcessorResult();
         }
 
-        /// <summary>
-        /// 执行Expression的解析
-        /// </summary>
-        /// <param name="expressionStore"></param>
-        /// <returns></returns>
         internal PredicateProcessorResult Process(JoinComponent joinComponent, WhereComponent whereComponent, FromComponent fromComponent)
         {
             _aliasMapper = MergeComponentAlias(joinComponent, whereComponent, fromComponent);
@@ -63,7 +54,7 @@ namespace NewLibCore.Storage.SQL
                     _predicateProcessorResult.Sql.Append(_options.TemplateBase.CreateJoin(item.JoinRelation, aliasItem.Key, aliasItem.Value.ToLower()));
 
                     //获取连接类型中的存储的表达式对象进行翻译
-                    InternalParser(item.Expression, item.JoinRelation);
+                    InternalProcess(item.Expression, item.JoinRelation);
                 }
             }
             _predicateProcessorResult.Sql.Append(" WHERE 1=1 ");
@@ -79,7 +70,7 @@ namespace NewLibCore.Storage.SQL
                 _predicateProcessorResult.Sql.Append(PredicateType.AND.ToString());
 
                 //获取Where类型中的存储的表达式对象进行翻译
-                InternalParser(lambdaExp, JoinRelation.NONE);
+                InternalProcess(lambdaExp, JoinRelation.NONE);
             }
 
             var aliasMapper = MergeComponentAlias(joinComponent, whereComponent, fromComponent);
@@ -95,7 +86,7 @@ namespace NewLibCore.Storage.SQL
         /// </summary>
         /// <param name="expression"></param>
         /// <param name="joinRelation"></param>
-        private void InternalParser(Expression expression, JoinRelation joinRelation)
+        private void InternalProcess(Expression expression, JoinRelation joinRelation)
         {
             switch (expression.NodeType)
             {
@@ -105,19 +96,19 @@ namespace NewLibCore.Storage.SQL
 
                         if (binaryExp.Left.NodeType != ExpressionType.Constant && binaryExp.Right.NodeType != ExpressionType.Constant)
                         {
-                            InternalParser(binaryExp.Left, joinRelation);
+                            InternalProcess(binaryExp.Left, joinRelation);
                             _predicateProcessorResult.Sql.Append(PredicateType.AND.ToString());
-                            InternalParser(binaryExp.Right, joinRelation);
+                            InternalProcess(binaryExp.Right, joinRelation);
                         }
                         else
                         {
                             if (binaryExp.Left.NodeType != ExpressionType.Constant)
                             {
-                                InternalParser(binaryExp.Left, joinRelation);
+                                InternalProcess(binaryExp.Left, joinRelation);
                             }
                             else if (binaryExp.Right.NodeType != ExpressionType.Constant)
                             {
-                                InternalParser(binaryExp.Right, joinRelation);
+                                InternalProcess(binaryExp.Right, joinRelation);
                             }
                         }
 
@@ -126,14 +117,14 @@ namespace NewLibCore.Storage.SQL
                 case ExpressionType.OrElse:
                     {
                         var binaryExp = (BinaryExpression)expression;
-                        InternalParser(binaryExp.Left, joinRelation);
+                        InternalProcess(binaryExp.Left, joinRelation);
                         _predicateProcessorResult.Sql.Append(PredicateType.OR.ToString());
-                        InternalParser(binaryExp.Right, joinRelation);
+                        InternalProcess(binaryExp.Right, joinRelation);
                         break;
                     }
                 case ExpressionType.Call:
                     {
-                        ParserMethodCall(expression, joinRelation);
+                        ProcessMethodCall(expression, joinRelation);
                         break;
                     }
                 case ExpressionType.Constant:
@@ -188,19 +179,19 @@ namespace NewLibCore.Storage.SQL
 
                         if (lamdbaExp.Body is BinaryExpression expression4)
                         {
-                            InternalParser(expression4, joinRelation);
+                            InternalProcess(expression4, joinRelation);
                         }
                         else if (lamdbaExp.Body is MemberExpression expression3)
                         {
-                            InternalParser(expression3, joinRelation);
+                            InternalProcess(expression3, joinRelation);
                         }
                         else if (lamdbaExp.Body is MethodCallExpression expression2)
                         {
-                            InternalParser(expression2, joinRelation);
+                            InternalProcess(expression2, joinRelation);
                         }
                         else if (lamdbaExp.Body is UnaryExpression expression1)
                         {
-                            InternalParser(expression1, joinRelation);
+                            InternalProcess(expression1, joinRelation);
                         }
                         break;
                     }
@@ -216,7 +207,7 @@ namespace NewLibCore.Storage.SQL
                                     var parameterExp = (ParameterExpression)memberExp.Expression;
                                     var newMember = Expression.MakeMemberAccess(parameterExp, parameterExp.Type.GetMember(memberExp.Member.Name)[0]);
                                     var newExpression = Expression.Equal(newMember, Expression.Constant(true));
-                                    InternalParser(newExpression, joinRelation);
+                                    InternalProcess(newExpression, joinRelation);
                                 }
                             }
                             else
@@ -246,13 +237,13 @@ namespace NewLibCore.Storage.SQL
                         var memberExpression = (MemberExpression)((UnaryExpression)expression).Operand;
                         var parameterExp = (ParameterExpression)memberExpression.Expression;
                         var newMember = Expression.MakeMemberAccess(parameterExp, parameterExp.Type.GetMember(memberExpression.Member.Name)[0]);
-                        InternalParser(Expression.NotEqual(newMember, Expression.Constant(true)), joinRelation);
+                        InternalProcess(Expression.NotEqual(newMember, Expression.Constant(true)), joinRelation);
                         break;
                     }
                 case ExpressionType.Convert:
                     {
                         var exp = ((UnaryExpression)expression).Operand;
-                        InternalParser(exp, joinRelation);
+                        InternalProcess(exp, joinRelation);
                         break;
                     }
                 default:
@@ -262,11 +253,7 @@ namespace NewLibCore.Storage.SQL
             }
         }
 
-        /// <summary>
-        /// 翻译表达式中的方法调用
-        /// </summary>
-        /// <param name="expression">表达式</param>
-        private void ParserMethodCall(Expression expression, JoinRelation joinRelation)
+        private void ProcessMethodCall(Expression expression, JoinRelation joinRelation)
         {
             Check.IfNullOrZero(expression);
             var methodCallExp = (MethodCallExpression)expression;
@@ -318,21 +305,22 @@ namespace NewLibCore.Storage.SQL
 
             if (argumentType == typeof(String))
             {
-                InternalParser(obj, joinRelation);
-                InternalParser(argument, joinRelation);
+                InternalProcess(obj, joinRelation);
+                InternalProcess(argument, joinRelation);
             }
             else if (argumentType.IsCollection())
             {
-                InternalParser(argument, joinRelation);
-                InternalParser(obj, joinRelation);
+                InternalProcess(argument, joinRelation);
+                InternalProcess(obj, joinRelation);
             }
         }
 
         /// <summary>
         /// 创建谓词语句
         /// </summary>
-        /// <param name="binary">表达式</param>
-        /// <param name="relationType">关系类型</param>
+        /// <param name="binary"></param>
+        /// <param name="predicateType"></param>
+        /// <param name="joinRelation"></param>
         private void CreatePredicate(BinaryExpression binary, PredicateType predicateType, JoinRelation joinRelation)
         {
             Check.IfNullOrZero(binary);
@@ -348,13 +336,13 @@ namespace NewLibCore.Storage.SQL
                 //当表达式的左边和右边同时不为常量或者只有左边为常量的话，则从左到右解析表达式，否则从右到左解析表达式
                 if ((binary.Left.NodeType != ExpressionType.Constant && binary.Right.NodeType != ExpressionType.Constant) || binary.Left.NodeType != ExpressionType.Constant)
                 {
-                    InternalParser(binaryExp.Left, joinRelation);
-                    InternalParser(binaryExp.Right, joinRelation);
+                    InternalProcess(binaryExp.Left, joinRelation);
+                    InternalProcess(binaryExp.Right, joinRelation);
                 }
                 else
                 {
-                    InternalParser(binaryExp.Right, joinRelation);
-                    InternalParser(binaryExp.Left, joinRelation);
+                    InternalProcess(binaryExp.Right, joinRelation);
+                    InternalProcess(binaryExp.Left, joinRelation);
                 }
             }
         }
@@ -412,11 +400,11 @@ namespace NewLibCore.Storage.SQL
             return _aliasMapper.Where(w => w.Key == tableName && w.Value == aliasName).FirstOrDefault().Value.ToLower();
         }
 
-        private IReadOnlyList<KeyValuePair<String, String>> MergeComponentAlias(JoinComponent joinComponent, WhereComponent whereComponent, FromComponent fromComponent)
+        private IList<KeyValuePair<String, String>> MergeComponentAlias(JoinComponent joinComponent, WhereComponent whereComponent, FromComponent fromComponent)
         {
             var newAliasMapper = new List<KeyValuePair<String, String>>();
 
-            if (joinComponent.JoinComponents.Any())
+            if (joinComponent != null && joinComponent.JoinComponents.Any())
             {
                 newAliasMapper.AddRange(joinComponent.JoinComponents.SelectMany(s => s.AliasNameMappers));
             }
@@ -431,17 +419,16 @@ namespace NewLibCore.Storage.SQL
                 newAliasMapper.AddRange(fromComponent.AliasNameMappers);
             }
 
-            newAliasMapper = newAliasMapper.Select(s => s).Distinct().ToList();
-
-            var sameGroup = newAliasMapper.GroupBy(a => a.Value);
-            foreach (var groupItem in sameGroup)
-            {
-                if (groupItem.Count() > 1)
-                {
-                    throw new ArgumentException($@"表:{String.Join(",", groupItem.Select(s => s.Key))}指定了相同别名:{groupItem.Key}");
-                }
-            }
+            CheckDuplicateTableAliasName(newAliasMapper.Select(s => s).Distinct().ToList());
             return newAliasMapper;
+        }
+        private void CheckDuplicateTableAliasName(IEnumerable<KeyValuePair<String, String>> newAliasMapper)
+        {
+            var sameGroup = newAliasMapper.GroupBy(a => a.Value);
+            if (sameGroup.Any(w => w.Count() > 1))
+            {
+                throw new InvalidOperationException("DuplicateTableAliasName");
+            }
         }
     }
 

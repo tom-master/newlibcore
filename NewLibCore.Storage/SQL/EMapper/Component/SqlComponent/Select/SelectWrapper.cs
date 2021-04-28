@@ -13,7 +13,7 @@ using System.Reflection;
 
 namespace NewLibCore.Storage.SQL.ProcessorFactory
 {
-    public class SelectWrapper : ConditionProcessor
+    public class SelectWrapper : PredicateProcessor
     {
         internal ColumnFieldComponent SelectComponent { get; private set; }
         internal FromComponent FromComponent { get; private set; }
@@ -24,14 +24,13 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         internal readonly EntityMapperOptions _options;
         private readonly PredicateProcessorResultExecutor _predicateProcessorResultExecutor;
 
-        public SelectWrapper(IOptions<EntityMapperOptions> options, MapperDbContextBase mapperDbContextBase)
+        public SelectWrapper(IOptions<EntityMapperOptions> options)
         : base(options)
         {
             Check.IfNullOrZero(options);
-            Check.IfNullOrZero(mapperDbContextBase);
 
             _options = options.Value;
-            _predicateProcessorResultExecutor = new PredicateProcessorResultExecutor(mapperDbContextBase);
+            _predicateProcessorResultExecutor = new PredicateProcessorResultExecutor(options.Value.DbContext);
             SelectComponent = new ColumnFieldComponent();
             FromComponent = new FromComponent();
             JoinComponent = new JoinComponent();
