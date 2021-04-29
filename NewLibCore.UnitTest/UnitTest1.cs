@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NewLibCore.Storage.SQL;
 using NewLibCore.Storage.SQL.EMapper;
 using NewLibCore.UnitTest.Entitys.Agent;
+using NewLibCore.UnitTest.Entitys.System;
 using System;
 using System.Collections.Generic;
 
@@ -24,9 +25,10 @@ namespace NewLibCore.UnitTest
             var mapper = provider.GetRequiredService<EntityMapper>();
             var users1 = mapper.Query<User>()
             .InnerJoin<User, UserRole>((user, role) => user.Id == role.UserId)
+            .InnerJoin<User, App>((user, app) => user.Id == app.UserId)
             .Where<User>(user => user.Name != "wasd")
             .ThenByDesc<User, DateTime>(a => a.AddTime)
-            .Page(1, 10)
+            .Page(1, 10).Select<UserRole>(role => new { role.RoleId, role.UserId, role.AddTime })
             .Execute()
             .ToList<User>();
         }

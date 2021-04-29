@@ -2,7 +2,6 @@ using Microsoft.Extensions.Options;
 using NewLibCore.Storage.SQL.Component.Sql;
 using NewLibCore.Storage.SQL.EMapper;
 using NewLibCore.Storage.SQL.Extension;
-using NewLibCore.Storage.SQL.Template;
 using NewLibCore.Storage.SQL.Validate;
 using NewLibCore.Validate;
 using System;
@@ -82,6 +81,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         {
             if (selector != null)
             {
+                SelectComponent = new ColumnFieldComponent();
                 SelectComponent.AddColumnField(selector);
             }
 
@@ -94,6 +94,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         {
             if (selector != null)
             {
+                SelectComponent = new ColumnFieldComponent();
                 SelectComponent.AddColumnField(selector);
             }
             return this;
@@ -105,6 +106,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         {
             if (selector != null)
             {
+                SelectComponent = new ColumnFieldComponent();
                 SelectComponent.AddColumnField(selector);
             }
             return this;
@@ -118,6 +120,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         {
             if (selector != null)
             {
+                SelectComponent = new ColumnFieldComponent();
                 SelectComponent.AddColumnField(selector);
             }
             return this;
@@ -132,6 +135,7 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         {
             if (selector != null)
             {
+                SelectComponent = new ColumnFieldComponent();
                 SelectComponent.AddColumnField(selector);
             }
             return this;
