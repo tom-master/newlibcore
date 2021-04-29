@@ -1,5 +1,4 @@
 using Microsoft.Extensions.Options;
-using NewLibCore.Storage.SQL.Component.Sql;
 using NewLibCore.Storage.SQL.EMapper;
 using NewLibCore.Storage.SQL.EMapper.Component.SqlComponent;
 using NewLibCore.Storage.SQL.Extension;
@@ -11,7 +10,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace NewLibCore.Storage.SQL.ProcessorFactory
+namespace NewLibCore.Storage.SQL.Component.Sql
 {
     public class SelectComponent : PredicateExpressionTranslator, IEntityMapperExecutor
     {
@@ -21,6 +20,9 @@ namespace NewLibCore.Storage.SQL.ProcessorFactory
         internal WhereComponent WhereComponent { get; private set; }
         internal OrderComponent OrderComponent { get; private set; }
         internal PaginationComponent PaginationComponent { get; private set; }
+
+        public string ComponentIdentity => this.GetType().Name;
+
         internal readonly EntityMapperOptions _options;
         private readonly PredicateExpressionTranslatorResultExecutor _predicateProcessorResultExecutor;
 

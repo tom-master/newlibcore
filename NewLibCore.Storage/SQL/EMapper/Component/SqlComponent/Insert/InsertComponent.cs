@@ -16,6 +16,8 @@ namespace NewLibCore.Storage.SQL.Component.Sql
 
         private EntityBase _model;
 
+        public string ComponentIdentity => this.GetType().Name;
+
         public InsertComponent(IOptions<EntityMapperOptions> options)
         {
             Check.IfNullOrZero(options);

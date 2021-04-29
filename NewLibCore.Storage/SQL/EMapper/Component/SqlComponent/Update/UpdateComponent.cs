@@ -18,6 +18,8 @@ namespace NewLibCore.Storage.SQL.Component.Sql
 
         private readonly PredicateExpressionTranslatorResultExecutor _processResultExecutor;
 
+        public string ComponentIdentity => this.GetType().Name;
+
         public UpdateComponent(IOptions<EntityMapperOptions> options) : base(options)
         {
             _options = options.Value;
