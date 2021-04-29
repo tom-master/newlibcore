@@ -42,6 +42,10 @@ namespace NewLibCore.Storage.SQL.Component.Sql
             FromComponent = fromComponent;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public ExecutorResult Execute()
         {
             return RunDiagnosis.Watch(() =>
