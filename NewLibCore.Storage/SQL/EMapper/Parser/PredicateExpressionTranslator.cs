@@ -149,7 +149,7 @@ namespace NewLibCore.Storage.SQL
                 case ExpressionType.Constant:
                     {
                         var binaryExp = (ConstantExpression)expression;
-                        _predicateExpressionTranslatorResultBuilder.Parameters.Append(new MapperParameter(_parameterNameStack.Pop(), binaryExp.Value));
+                        _predicateExpressionTranslatorResultBuilder.Parameters.Add(new MapperParameter(_parameterNameStack.Pop(), binaryExp.Value));
                         break;
                     }
                 case ExpressionType.Equal:
@@ -247,7 +247,7 @@ namespace NewLibCore.Storage.SQL
                         else
                         {
                             var getter = Expression.Lambda(memberExp).Compile();
-                            _predicateExpressionTranslatorResultBuilder.Parameters.Append(new MapperParameter(_parameterNameStack.Pop(), getter.DynamicInvoke()));
+                            _predicateExpressionTranslatorResultBuilder.Parameters.Add(new MapperParameter(_parameterNameStack.Pop(), getter.DynamicInvoke()));
                         }
                         break;
                     }
@@ -462,13 +462,20 @@ namespace NewLibCore.Storage.SQL
 
         internal StringBuilder StatmentTemplate { get; set; }
 
-        internal IEnumerable<MapperParameter> Parameters { get; } = new List<MapperParameter>();
+        internal IList<MapperParameter> Parameters { get; } = new List<MapperParameter>();
 
         internal String Build()
         {
             StatmentTemplate = StatmentTemplate.Replace(_joinPlaceHolder, JoinStatement.ToString());
             StatmentTemplate = StatmentTemplate.Replace(_wherePlaceHolder, WhereStatement.ToString());
             return StatmentTemplate.ToString();
+        }
+        internal void Clear()
+        {
+            JoinStatement.Clear();
+            WhereStatement.Clear();
+            StatmentTemplate.Clear();
+            Parameters.Clear();
         }
     }
 }

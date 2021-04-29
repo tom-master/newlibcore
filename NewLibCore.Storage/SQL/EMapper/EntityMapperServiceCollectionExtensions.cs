@@ -13,8 +13,6 @@ namespace NewLibCore.Storage.SQL.EMapper
         public static IServiceCollection AddEntityMapper(this IServiceCollection services, Action<EntityMapperOptions> entityMapperOptions)
         {
             services.Configure<EntityMapperOptions>(entityMapperOptions);
-            var options = services.BuildServiceProvider().GetRequiredService<IOptions<EntityMapperOptions>>().Value;
-            RunDiagnosis.SetLoggerInstance(options.Logger ?? new DefaultLogger());
             services.AddScoped<IEntityMapperExecutor, InsertComponent>();
             services.AddScoped<IEntityMapperExecutor, UpdateComponent>();
             services.AddScoped<IEntityMapperExecutor, SelectComponent>();

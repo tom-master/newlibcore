@@ -241,6 +241,7 @@ namespace NewLibCore.Storage.SQL.Component.Sql
                  var mainTable = FromComponent.AliasNameMappers[0];
                  var selectStatement = _options.TemplateBase.CreateSelect(ExtractSelectFields(), mainTable.Key, mainTable.Value);
                  var predicateProcessorResult = Translate(WhereComponent, FromComponent, JoinComponents);
+                 JoinComponents.Clear();
                  predicateProcessorResult.StatmentTemplate = selectStatement;
                  if (PaginationComponent != null)
                  {
@@ -341,5 +342,7 @@ namespace NewLibCore.Storage.SQL.Component.Sql
             }
             return types.Distinct().ToList();
         }
+
+
     }
 }

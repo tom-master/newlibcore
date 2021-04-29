@@ -33,6 +33,7 @@ namespace NewLibCore.Storage.SQL
             sql = ReformatSql(sql);
             var executeType = GetExecuteType(sql);
             var parameters = predicateExpressionTranslatorResultBuilder.Parameters.ToArray();
+            predicateExpressionTranslatorResultBuilder.Clear();
             switch (executeType)
             {
                 case ExecuteType.SELECT:

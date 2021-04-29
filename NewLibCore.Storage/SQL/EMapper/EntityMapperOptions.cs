@@ -3,12 +3,12 @@ using System.Data;
 using NewLibCore.Logger;
 using NewLibCore.Validate;
 using NewLibCore.Storage.SQL.Template;
+using NewLibCore.Storage.SQL.Extension;
 
 namespace NewLibCore.Storage.SQL.EMapper
 {
     public class EntityMapperOptions
     {
-        internal ILogger Logger { get; set; }
 
         /// <summary>
         /// 连接字符串名称
@@ -75,10 +75,10 @@ namespace NewLibCore.Storage.SQL.EMapper
         /// 设置自定义日志记录组件
         /// </summary>
         /// <param name="logger"></param>
-        public void SetLogger(ILogger logger)
+        public void SetLogger(ILogger logger = null)
         {
             Check.IfNullOrZero(logger);
-            Logger = logger;
+            RunDiagnosis.SetLoggerInstance(logger ?? new DefaultLogger());
         }
     }
 }
