@@ -20,10 +20,10 @@ namespace NewLibCore.Storage.SQL.Component.Sql
 
         public string ComponentIdentity => this.GetType().Name;
 
-        public UpdateComponent(IOptions<EntityMapperOptions> options) : base(options)
+        public UpdateComponent(IOptions<EntityMapperOptions> options, PredicateExpressionTranslatorResultExecutor predicateExpressionTranslatorResultExecutor) : base(options)
         {
             _options = options.Value;
-            _processResultExecutor = new PredicateExpressionTranslatorResultExecutor(options.Value.DbContext);
+            _processResultExecutor = predicateExpressionTranslatorResultExecutor;
         }
 
         internal void AddModel<TModel>(TModel model) where TModel : EntityBase, new()

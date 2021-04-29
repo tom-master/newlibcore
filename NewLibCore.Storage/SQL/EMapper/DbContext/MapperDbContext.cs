@@ -25,11 +25,11 @@ namespace NewLibCore.Storage.SQL
         /// <summary>
         /// 初始化MapperDbContext类的新实例
         /// </summary>
-        public MapperDbContext(EntityMapperOptions options)
+        public MapperDbContext(IOptions<EntityMapperOptions> options)
         {
             Check.IfNullOrZero(options);
-            _options = options;
-            _connection = options.TemplateBase.CreateDbConnection();
+            _options = options.Value;
+            _connection = options.Value.TemplateBase.CreateDbConnection(ConfigReader.GetHostVar(_options.ConnectionStringName));
         }
 
         protected internal override void Commit()
@@ -55,7 +55,6 @@ namespace NewLibCore.Storage.SQL
             if (_connection.State == ConnectionState.Closed)
             {
                 RunDiagnosis.Info("开启连接");
-                _connection.ConnectionString = ConfigReader.GetHostVar(_options.ConnectionStringName);
                 _connection.Open();
             }
         }
@@ -161,7 +160,9 @@ namespace NewLibCore.Storage.SQL
                     cmd.Parameters.AddRange(parameters.Select(s => _options.TemplateBase.CreateParameter(s.Key, s.Value, s.RuntimeType)).ToArray());
                 }
                 RunDiagnosis.Info($@"SQL语句:{sql} 占位符与参数:{(parameters == null || !parameters.Any() ? "" : String.Join($@"{Environment.NewLine}", parameters.Select(s => $@"{s.Key}----{s.Value}")))}");
-
+                var ss = new ExecutorResult();
+                ss.SaveRawResult("123123123");
+                return ss;
                 using (var dr = cmd.ExecuteReader())
                 {
                     var dataTable = new DataTable("tmpDt");

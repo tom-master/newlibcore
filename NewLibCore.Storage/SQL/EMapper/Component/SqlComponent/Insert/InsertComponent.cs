@@ -18,11 +18,11 @@ namespace NewLibCore.Storage.SQL.Component.Sql
 
         public string ComponentIdentity => this.GetType().Name;
 
-        public InsertComponent(IOptions<EntityMapperOptions> options)
+        public InsertComponent(IOptions<EntityMapperOptions> options, PredicateExpressionTranslatorResultExecutor predicateExpressionTranslatorResultExecutor)
         {
             Check.IfNullOrZero(options);
 
-            _processResultExecutor = new PredicateExpressionTranslatorResultExecutor(options.Value.DbContext);
+            _processResultExecutor = predicateExpressionTranslatorResultExecutor;
             _options = options.Value;
         }
 

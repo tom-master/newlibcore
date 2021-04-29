@@ -26,13 +26,13 @@ namespace NewLibCore.Storage.SQL.Component.Sql
         internal readonly EntityMapperOptions _options;
         private readonly PredicateExpressionTranslatorResultExecutor _predicateProcessorResultExecutor;
 
-        public SelectComponent(IOptions<EntityMapperOptions> options)
+        public SelectComponent(IOptions<EntityMapperOptions> options, PredicateExpressionTranslatorResultExecutor predicateExpressionTranslatorResultExecutor)
         : base(options)
         {
             Check.IfNullOrZero(options);
             _options = options.Value;
             JoinComponents = new List<JoinComponent>();
-            _predicateProcessorResultExecutor = new PredicateExpressionTranslatorResultExecutor(options.Value.DbContext);
+            _predicateProcessorResultExecutor = predicateExpressionTranslatorResultExecutor;
         }
 
         public SelectComponent Query<TModel>() where TModel : EntityBase, new()

@@ -58,9 +58,9 @@ namespace NewLibCore.Storage.SQL.Template
             };
         }
 
-        internal override DbConnection CreateDbConnection()
+        internal override DbConnection CreateDbConnection(String connectionString)
         {
-            return new MySqlConnection();
+            return new MySqlConnection(connectionString);
         }
 
         internal override String Identity

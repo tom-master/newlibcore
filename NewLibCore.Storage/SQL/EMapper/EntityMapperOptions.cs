@@ -4,6 +4,7 @@ using NewLibCore.Logger;
 using NewLibCore.Validate;
 using NewLibCore.Storage.SQL.Template;
 using NewLibCore.Storage.SQL.Extension;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace NewLibCore.Storage.SQL.EMapper
 {
@@ -40,8 +41,6 @@ namespace NewLibCore.Storage.SQL.EMapper
 
         internal TemplateBase TemplateBase { get; private set; }
 
-        internal MapperDbContextBase DbContext { get; private set; }
-
         /// <summary>
         /// 切换为mysql
         /// </summary>
@@ -49,7 +48,6 @@ namespace NewLibCore.Storage.SQL.EMapper
         {
             MapperType = MapperType.MYSQL;
             TemplateBase = new MySqlTemplate();
-            DbContext = new MapperDbContext(this);
         }
 
         /// <summary>
@@ -59,7 +57,6 @@ namespace NewLibCore.Storage.SQL.EMapper
         {
             MapperType = MapperType.MSSQL;
             TemplateBase = new MsSqlTemplate();
-            DbContext = new MapperDbContext(this);
         }
 
         /// <summary>
@@ -77,7 +74,6 @@ namespace NewLibCore.Storage.SQL.EMapper
         /// <param name="logger"></param>
         public void SetLogger(ILogger logger = null)
         {
-            Check.IfNullOrZero(logger);
             RunDiagnosis.SetLoggerInstance(logger ?? new DefaultLogger());
         }
     }

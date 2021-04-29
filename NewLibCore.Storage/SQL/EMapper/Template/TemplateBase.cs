@@ -147,7 +147,7 @@ namespace NewLibCore.Storage.SQL.Template
         /// 创建连接
         /// </summary>
         /// <returns></returns>
-        internal abstract DbConnection CreateDbConnection();
+        internal abstract DbConnection CreateDbConnection(String connectionString);
 
         /// <summary>
         /// 创建连接关系

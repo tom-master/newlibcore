@@ -101,9 +101,9 @@ namespace NewLibCore.Storage.SQL.Template
             };
         }
 
-        internal override DbConnection CreateDbConnection()
+        internal override DbConnection CreateDbConnection(String connectionString)
         {
-            return new SqlConnection();
+            return new SqlConnection(connectionString);
         }
     }
 }
