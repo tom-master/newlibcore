@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using NewLibCore.Storage.SQL.Component.Sql;
 using NewLibCore.Storage.SQL.EMapper;
-using NewLibCore.Storage.SQL.Extension;
 using NewLibCore.Storage.SQL.ProcessorFactory;
 using NewLibCore.Validate;
 using System;
@@ -39,9 +38,9 @@ namespace NewLibCore.Storage.SQL
             return update.Execute().GetModifyRowCount() > 0;
         }
 
-        public SelectWrapper Query<TModel>() where TModel : EntityBase, new()
+        public SelectComponent Query<TModel>() where TModel : EntityBase, new()
         {
-            var select = new SelectWrapper(_option);
+            var select = new SelectComponent(_option);
             return select.Query<TModel>();
         }
     }
