@@ -1,10 +1,8 @@
 using System;
 using System.Data;
 using NewLibCore.Logger;
-using NewLibCore.Validate;
 using NewLibCore.Storage.SQL.Template;
 using NewLibCore.Storage.SQL.Extension;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace NewLibCore.Storage.SQL.EMapper
 {
@@ -29,17 +27,14 @@ namespace NewLibCore.Storage.SQL.EMapper
         /// <value></value>
         internal Boolean EnableModelValidate { get; set; } = true;
 
-        /// <summary>
-        /// 事务隔离级别
-        /// </summary>
-        internal IsolationLevel TransactionLevel { get; set; }
-
         /// <summary> 
         /// 映射的数据库类型
         /// </summary>
         internal MapperType MapperType { get; set; } = MapperType.NONE;
 
         internal TemplateBase TemplateBase { get; private set; }
+
+        public TransactionControl TransactionControl { get; } = new TransactionControl();
 
         /// <summary>
         /// 切换为mysql
@@ -59,14 +54,6 @@ namespace NewLibCore.Storage.SQL.EMapper
             TemplateBase = new MsSqlTemplate();
         }
 
-        /// <summary>
-        /// 设置事务隔离级别
-        /// </summary>
-        /// <param name="isolationLevel"></param>
-        public void SetTransactionLevel(IsolationLevel isolationLevel)
-        {
-            TransactionLevel = isolationLevel;
-        }
 
         /// <summary>
         /// 设置自定义日志记录组件
@@ -75,6 +62,60 @@ namespace NewLibCore.Storage.SQL.EMapper
         public void SetLogger(ILogger logger = null)
         {
             RunDiagnosis.SetLoggerInstance(logger ?? new DefaultLogger());
+        }
+    }
+
+    public class TransactionControl
+    {
+        internal Boolean Status { get; private set; }
+
+        private Action RollbackDelegate { get; set; }
+
+        private Action CommitDelegate { get; set; }
+
+        /// <summary>
+        /// 事务隔离级别
+        /// </summary>
+        internal IsolationLevel Level { get; private set; }
+
+        /// <summary>
+        /// 设置事务隔离级别
+        /// </summary>
+        /// <param name="isolationLevel"></param>
+        public void SetTransactionLevel(IsolationLevel isolationLevel)
+        {
+            Level = isolationLevel;
+        }
+
+        public void UseTransaction()
+        {
+            Status = true;
+        }
+
+        public void RegisterRollback(Action action)
+        {
+            RollbackDelegate = action;
+        }
+
+        public void RegisterCommit(Action action)
+        {
+            CommitDelegate = action;
+        }
+
+        public void Rollback()
+        {
+            if (RollbackDelegate != null)
+            {
+                RollbackDelegate();
+            }
+        }
+
+        public void Commit()
+        {
+            if (CommitDelegate != null)
+            {
+                CommitDelegate();
+            }
         }
     }
 }

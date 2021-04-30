@@ -8,11 +8,6 @@ namespace NewLibCore.Storage.SQL
     /// </summary>
     public abstract class MapperDbContextBase : IDisposable
     {
-        /// <summary>
-        /// 是否使用事物
-        /// </summary>
-        /// <value></value>
-        protected internal Boolean UseTransaction { get; set; }
 
         /// <summary>
         /// 提交一个事物

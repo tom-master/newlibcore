@@ -1,4 +1,6 @@
-﻿using NewLibCore.Storage.SQL.Component.Sql;
+﻿using Microsoft.Extensions.Options;
+using NewLibCore.Storage.SQL.Component.Sql;
+using NewLibCore.Storage.SQL.EMapper;
 using NewLibCore.Storage.SQL.EMapper.Component.SqlComponent;
 using NewLibCore.Validate;
 using System;
@@ -14,10 +16,27 @@ namespace NewLibCore.Storage.SQL
     public sealed class EntityMapper
     {
         private readonly IEnumerable<IEntityMapperExecutor> _entityMapperExecutors;
+        private readonly EntityMapperOptions _options;
 
-        public EntityMapper(IEnumerable<IEntityMapperExecutor> entityMapperExecutors)
+        public EntityMapper(IOptions<EntityMapperOptions> options, IEnumerable<IEntityMapperExecutor> entityMapperExecutors)
         {
+            _options = options.Value;
             _entityMapperExecutors = entityMapperExecutors;
+        }
+
+        public void OpenTransaction()
+        {
+            _options.TransactionControl.UseTransaction();
+        }
+
+        public void Rollback()
+        {
+            _options.TransactionControl.Rollback();
+        }
+
+        public void Commit()
+        {
+            _options.TransactionControl.Commit();
         }
 
         private IEntityMapperExecutor GetExecutor(String componentIdentity)

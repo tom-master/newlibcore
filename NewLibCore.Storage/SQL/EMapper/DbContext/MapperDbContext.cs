@@ -22,6 +22,7 @@ namespace NewLibCore.Storage.SQL
 
         private readonly EntityMapperOptions _options;
 
+
         /// <summary>
         /// 初始化MapperDbContext类的新实例
         /// </summary>
@@ -30,6 +31,8 @@ namespace NewLibCore.Storage.SQL
             Check.IfNullOrZero(options);
             _options = options.Value;
             _connection = options.Value.TemplateBase.CreateDbConnection(ConfigReader.GetHostVar(_options.ConnectionStringName));
+            _options.TransactionControl.RegisterCommit(Commit);
+            _options.TransactionControl.RegisterRollback(Rollback);
         }
 
         protected internal override void Commit()
@@ -63,7 +66,7 @@ namespace NewLibCore.Storage.SQL
         {
             if (_dataTransaction == null)
             {
-                _dataTransaction = _connection.BeginTransaction(_options.TransactionLevel);
+                _dataTransaction = _connection.BeginTransaction(_options.TransactionControl.Level);
                 RunDiagnosis.Info("开启事务");
             }
             return _dataTransaction;
@@ -99,7 +102,7 @@ namespace NewLibCore.Storage.SQL
             OpenConnection();
             using (var cmd = _connection.CreateCommand())
             {
-                if (UseTransaction)
+                if (_options.TransactionControl.Status)
                 {
                     cmd.Transaction = OpenTransaction();
                 }
@@ -124,7 +127,7 @@ namespace NewLibCore.Storage.SQL
             OpenConnection();
             using (var cmd = _connection.CreateCommand())
             {
-                if (UseTransaction)
+                if (_options.TransactionControl.Status)
                 {
                     cmd.Transaction = OpenTransaction();
                 }
@@ -149,7 +152,7 @@ namespace NewLibCore.Storage.SQL
             OpenConnection();
             using (var cmd = _connection.CreateCommand())
             {
-                if (UseTransaction)
+                if (_options.TransactionControl.Status)
                 {
                     cmd.Transaction = OpenTransaction();
                 }
@@ -160,9 +163,6 @@ namespace NewLibCore.Storage.SQL
                     cmd.Parameters.AddRange(parameters.Select(s => _options.TemplateBase.CreateParameter(s.Key, s.Value, s.RuntimeType)).ToArray());
                 }
                 RunDiagnosis.Info($@"SQL语句:{sql} 占位符与参数:{(parameters == null || !parameters.Any() ? "" : String.Join($@"{Environment.NewLine}", parameters.Select(s => $@"{s.Key}----{s.Value}")))}");
-                var ss = new ExecutorResult();
-                ss.SaveRawResult("123123123");
-                return ss;
                 using (var dr = cmd.ExecuteReader())
                 {
                     var dataTable = new DataTable("tmpDt");
