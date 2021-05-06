@@ -92,12 +92,12 @@ namespace NewLibCore.Storage.SQL
             Status = true;
         }
 
-        public void RegisterRollback(Action action)
+        internal void RegisterRollback(Action action)
         {
             RollbackDelegate = action;
         }
 
-        public void RegisterCommit(Action action)
+        internal void RegisterCommit(Action action)
         {
             CommitDelegate = action;
         }
