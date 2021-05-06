@@ -229,13 +229,12 @@ namespace NewLibCore.Storage.SQL.Component
 
         public ExecutorResult Execute()
         {
-            if (!FromComponent.AliasNameMappers.Any())
-            {
-                throw new ArgumentException("From");
-            }
-
             return RunDiagnosis.Watch(() =>
              {
+                 if (!FromComponent.AliasNameMappers.Any())
+                 {
+                     throw new ArgumentException("From");
+                 }
                  var mainTable = FromComponent.AliasNameMappers[0];
                  var selectStatement = _options.TemplateBase.CreateSelect(ExtractSelectFields(), mainTable.Key, mainTable.Value);
                  var statementResultBuilder = Translate(selectStatement, WhereComponent, FromComponent, JoinComponents);

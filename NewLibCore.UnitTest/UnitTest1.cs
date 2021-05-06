@@ -21,15 +21,17 @@ namespace NewLibCore.UnitTest
                 options.SetLogger();
             });
             var provider = service.BuildServiceProvider();
-            var mapper1 = provider.GetRequiredService<EntityMapper>();
-            var mapper2 = provider.GetRequiredService<EntityMapper>();
-            var users1 = mapper1.Query<User>()
-            .InnerJoin<User, UserRole>((user, role) => user.Id == role.UserId)
-            .InnerJoin<User, App>((user, app) => user.Id == app.UserId)
-            .Where<User>(user => user.Name != "wasd")
-            .ThenByDesc<User, DateTime>(a => a.AddTime)
-            .Page(1, 10).Select<UserRole>(role => new { role.RoleId, role.UserId, role.AddTime })
-            .Execute();
+            var mapper = provider.GetRequiredService<EntityMapper>();
+            // var users1 = mapper1.Query<User>()
+            // .InnerJoin<User, UserRole>((user, role) => user.Id == role.UserId)
+            // .InnerJoin<User, App>((user, app) => user.Id == app.UserId)
+            // .Where<User>(user => user.Name != "wasd")
+            // .ThenByDesc<User, DateTime>(a => a.AddTime)
+            // .Page(1, 10).Select<UserRole>(role => new { role.RoleId, role.UserId, role.AddTime })
+            // .Execute();
+            var user = new User();
+            user.ModifyLockScreenPassword("123123123");
+            mapper.Update(user, u => u.Id == 4);
         }
     }
 }

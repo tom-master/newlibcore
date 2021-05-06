@@ -34,9 +34,9 @@ namespace NewLibCore.Storage.SQL
             _statementResultBuilder = new StatementResultBuilder();
         }
 
-        internal StatementResultBuilder Translate(StringBuilder statementTemplate, WhereComponent whereComponent, FromComponent fromComponent)
+        internal StatementResultBuilder Translate(StringBuilder statementTemplate, WhereComponent whereComponent)
         {
-            return Translate(statementTemplate, whereComponent, fromComponent, new List<JoinComponent>());
+            return Translate(statementTemplate, whereComponent, null, new List<JoinComponent>());
         }
 
         internal StatementResultBuilder Translate(StringBuilder statementTemplate, WhereComponent whereComponent, FromComponent fromComponent, IEnumerable<JoinComponent> joinComponents)

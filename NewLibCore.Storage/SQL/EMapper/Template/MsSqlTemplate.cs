@@ -20,7 +20,7 @@ namespace NewLibCore.Storage.SQL.Template
         internal override StringBuilder CreateUpdate<TModel>(TModel model)
         {
             var (tableName, aliasName) = model.GetEntityBaseAliasName();
-            var s = $@"UPDATE {aliasName} SET {model.GetSqlElements().UpdatePlaceHolders} FROM {tableName} AS {aliasName}";
+            var s = $@"UPDATE {aliasName} SET {model.GetSqlElements().UpdatePlaceHolders} FROM {tableName} AS {aliasName} <where>";
             return new StringBuilder(s);
         }
 
