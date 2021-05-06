@@ -29,7 +29,6 @@ namespace NewLibCore.Storage.SQL
         {
             Check.IfNullOrZero(options);
             _options = options.Value;
-            _connection = options.Value.TemplateBase.CreateDbConnection(ConfigReader.GetHostVar(_options.ConnectionStringName));
             _options.TransactionControl.RegisterCommit(Commit);
             _options.TransactionControl.RegisterRollback(Rollback);
         }
@@ -54,6 +53,10 @@ namespace NewLibCore.Storage.SQL
 
         protected internal override void OpenConnection()
         {
+            if (_connection == null)
+            {
+                _connection = _options.TemplateBase.CreateDbConnection(ConfigReader.GetHostVar(_options.ConnectionStringName));
+            }
             if (_connection.State == ConnectionState.Closed)
             {
                 RunDiagnosis.Info("开启连接");
