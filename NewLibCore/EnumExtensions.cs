@@ -7,6 +7,20 @@ namespace NewLibCore
 {
     public static class EnumExtensions
     {
+        public static Boolean TestEnumValue<T>(String value) where T : struct
+        {
+            try
+            {
+                ToEnum<T>(value);
+                return true;
+            }
+            catch (System.Exception)
+            {
+                return false;
+            }
+        }
+
+
         /// <summary>
         /// 将输入的值转换成指定的枚举类型
         /// </summary>

@@ -30,17 +30,18 @@ namespace NewLibCore.Storage.SQL
         internal ExecutorResult Execute(StatementResultBuilder statementResultBuilder)
         {
             var (sql, parameters) = statementResultBuilder.Build();
+            var parametersInternal = parameters.ToArray();
             sql = ReformatSql(sql);
             var executeType = GetExecuteType(sql);
             statementResultBuilder.Clear();
             switch (executeType)
             {
                 case ExecuteType.SELECT:
-                    return _mapperDbContextBase.Select(sql, parameters.ToArray());
+                    return _mapperDbContextBase.Select(sql, parametersInternal);
                 case ExecuteType.UPDATE:
-                    return _mapperDbContextBase.Update(sql, parameters.ToArray());
+                    return _mapperDbContextBase.Update(sql, parametersInternal);
                 case ExecuteType.INSERT:
-                    return _mapperDbContextBase.Insert(sql, parameters.ToArray());
+                    return _mapperDbContextBase.Insert(sql, parametersInternal);
                 default:
                     throw new InvalidOperationException($@"无效的sql语句操作{executeType}");
             }

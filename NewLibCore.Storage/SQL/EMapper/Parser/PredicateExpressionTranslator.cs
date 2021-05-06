@@ -65,7 +65,7 @@ namespace NewLibCore.Storage.SQL
                     InternalProcess(item.Expression, item.JoinRelation);
                 }
             }
-            AssignmentPredicateType(JoinRelation.NONE, " WHERE 1=1 ");
+            AssignmentPredicateType(JoinRelation.NONE, " WHERE ");
             //翻译Where条件对象
             if (whereComponent != null)
             {
@@ -73,9 +73,10 @@ namespace NewLibCore.Storage.SQL
                 //当表达式主体为常量时则直接返回，不做解析
                 if (lambdaExp.Body.NodeType == ExpressionType.Constant)
                 {
+                    _statementResultBuilder.WhereStatement.Replace(" WHERE ", " ");
                     return _statementResultBuilder;
                 }
-                AssignmentPredicateType(JoinRelation.NONE, PredicateType.AND.ToString());
+                AssignmentPredicateType(JoinRelation.NONE, "");
 
                 //获取Where类型中的存储的表达式对象进行翻译
                 InternalProcess(lambdaExp, JoinRelation.NONE);
@@ -90,6 +91,10 @@ namespace NewLibCore.Storage.SQL
 
         private void AssignmentPredicateType(JoinRelation joinRelation, String value)
         {
+            if (String.IsNullOrEmpty(value))
+            {
+                return;
+            }
             if (joinRelation == JoinRelation.NONE)
             {
                 _statementResultBuilder.WhereStatement.Append($@" {value} ");
