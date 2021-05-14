@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NewLibCore.Storage.SQL;
+using NewLibCore.Storage.SQL.Extension.ConditionBuilder;
 using NewLibCore.UnitTest.Entitys.Agent;
 using NewLibCore.UnitTest.Entitys.System;
 using System;
@@ -29,6 +30,10 @@ namespace NewLibCore.UnitTest
             .ThenByDesc<User, DateTime>(a => a.AddTime)
             .Page(1, 10).Select<UserRole>(role => new { role.RoleId, role.UserId, role.AddTime })
             .Execute();
+            var factory = ConditionBuilderFactory.Create<User>();
+            factory.And<UserRole>(u => u.Id == 1);
+
+
             // var user = new User();
             // user.ModifyLockScreenPassword("123123123");
             // mapper.Update(user, u => u.Id == 4);
