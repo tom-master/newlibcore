@@ -25,7 +25,7 @@ namespace NewLibCore.Storage.SQL
         /// 启用模型验证
         /// </summary> 
         /// <value></value>
-        internal Boolean EnableModelValidate { get; set; } = true;
+        internal Boolean ModelValidate { get; set; } = true;
 
         /// <summary> 
         /// 映射的数据库类型
@@ -54,6 +54,10 @@ namespace NewLibCore.Storage.SQL
             TemplateBase = new MsSqlTemplate();
         }
 
+        public void EnableModelValidate()
+        {
+            ModelValidate = true;
+        }
 
         /// <summary>
         /// 设置自定义日志记录组件

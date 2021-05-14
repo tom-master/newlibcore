@@ -37,7 +37,7 @@ namespace NewLibCore.Storage.SQL.Component
                  var instance = _model;
                  instance.SetAddTime();
                  instance.OnChanged();
-                 if (_options.EnableModelValidate)
+                 if (_options.ModelValidate)
                  {
                      instance.CheckPropertyValue();
                  }

@@ -49,7 +49,7 @@ namespace NewLibCore.Storage.SQL.Component
                 var instance = Model;
                 instance.SetUpdateTime();
 
-                if (_options.EnableModelValidate)
+                if (_options.ModelValidate)
                 {
                     instance.CheckPropertyValue();
                 }
