@@ -23,6 +23,7 @@ namespace NewLibCore.Storage.SQL.Component
 
             _resultExecutor = resultExecutor;
             _options = options.Value;
+            _templateBase = options.Value.TemplateBase;
         }
 
         internal void AddModel<TModel>(TModel model) where TModel : EntityBase, new()
