@@ -31,6 +31,13 @@ namespace NewLibCore.UnitTest
             .Execute();
         }
 
+        [TestMethod]
+        public void Update()
+        {
+            var user = new User("xiaofan", "xiaofan@.1", default, ValueObject.UserType.Admin);
+            _mapper.Update(user, w => w.Id == 1);
+        }
+
 
         private static EntityMapper InitEntityMapper()
         {

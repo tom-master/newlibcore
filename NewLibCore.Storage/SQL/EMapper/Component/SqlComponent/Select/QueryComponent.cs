@@ -31,21 +31,11 @@ namespace NewLibCore.Storage.SQL.Component
             _resultExecutor = resultExecutor;
         }
 
-        public QueryComponent Query<TModel>() where TModel : EntityBase, new()
+        public QueryComponent Model<TModel>() where TModel : EntityBase, new()
         {
             FromComponent = new FromComponent();
-
-            var modelType = typeof(TModel);
             Expression<Func<TModel, TModel>> expression = (a) => a;
-
-            // var (tableName, aliasName) = modelType.GetEntityBaseAliasName();
-            // var KeyValuePair = new KeyValuePair<String, String>(tableName, aliasName);
-            // Expression = expression;
-            // InitAliasNameMappers(KeyValuePair);
-
             FromComponent.AddExpression(expression);
-
-            // FromComponent.AddFrom<TModel>();
             return this;
         }
 
@@ -256,7 +246,8 @@ namespace NewLibCore.Storage.SQL.Component
 
                  var mainTable = FromComponent.AliasNameMappers[0];
                  var selectStatement = _options.TemplateBase.CreateSelect(ColumnFieldComponent?.ExtractSelectFields(), mainTable.Key, mainTable.Value);
-                 var statementResultBuilder = Translate(selectStatement, this);
+                 var statementResultBuilder = Translate(this);
+                 statementResultBuilder.AddStatementTemplate(selectStatement);
                  JoinComponents.Clear();
 
                  if (PaginationComponent != null)
@@ -281,7 +272,11 @@ namespace NewLibCore.Storage.SQL.Component
              });
         }
 
-        internal IList<KeyValuePair<String, String>> MergeComponentAlias()
+        /// <summary>
+        /// 合并组件中的别名
+        /// </summary>
+        /// <returns></returns>
+        internal IList<KeyValuePair<String, String>> MergeAllComponentAlias()
         {
             var newAliasMapper = new List<KeyValuePair<String, String>>();
 
@@ -300,16 +295,12 @@ namespace NewLibCore.Storage.SQL.Component
                 newAliasMapper.AddRange(FromComponent.AliasNameMappers);
             }
             newAliasMapper = newAliasMapper.Select(s => s).Distinct().ToList();
-            CheckDuplicateTableAliasName(newAliasMapper);
-            return newAliasMapper;
-        }
-        private void CheckDuplicateTableAliasName(IEnumerable<KeyValuePair<String, String>> newAliasMapper)
-        {
             var sameGroup = newAliasMapper.GroupBy(a => a.Value);
             if (sameGroup.Any(w => w.Count() > 1))
             {
                 throw new InvalidOperationException("DuplicateTableAliasName");
             }
+            return newAliasMapper;
         }
     }
 }

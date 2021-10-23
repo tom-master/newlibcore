@@ -5,7 +5,7 @@ using NewLibCore.Validate;
 
 namespace NewLibCore.Storage.SQL.Component
 {
-    internal class OrderComponent : ComponentBase
+    internal class OrderComponent : RootComponent
     {
         internal OrderByType OrderBy { get; private set; }
         internal void AddOrderType(OrderByType orderByType)

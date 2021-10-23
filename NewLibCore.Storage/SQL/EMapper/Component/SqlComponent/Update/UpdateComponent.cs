@@ -5,23 +5,14 @@ using NewLibCore.Validate;
 
 namespace NewLibCore.Storage.SQL.Component
 {
-    public class UpdateComponent : PredicateExpressionTranslator, IEntityMapperExecutor
+    public class UpdateComponent : QueryComponent
     {
         internal EntityBase Model { get; set; }
 
-        internal WhereComponent WhereComponent { get; private set; }
-
-        internal FromComponent FromComponent { get; private set; }
-
-        private readonly EntityMapperOptions _options;
-
         private readonly ResultExecutor _resultExecutor;
 
-        public string ComponentIdentity => this.GetType().Name;
-
-        public UpdateComponent(IOptions<EntityMapperOptions> options, ResultExecutor resultExecutor) : base(options)
+        public UpdateComponent(IOptions<EntityMapperOptions> options, ResultExecutor resultExecutor) : base(options, resultExecutor)
         {
-            _options = options.Value;
             _resultExecutor = resultExecutor;
         }
 
@@ -31,19 +22,7 @@ namespace NewLibCore.Storage.SQL.Component
             Model = model;
         }
 
-        internal void AddWhereComponent(WhereComponent whereComponent)
-        {
-            Check.IfNullOrZero(whereComponent);
-            WhereComponent = whereComponent;
-        }
-
-        internal void AddFromComponent(FromComponent fromComponent)
-        {
-            Check.IfNullOrZero(fromComponent);
-            FromComponent = fromComponent;
-        }
-
-        public ExecutorResult Execute()
+        public new ExecutorResult Execute()
         {
             return RunDiagnosis.Watch(() =>
             {
@@ -58,7 +37,8 @@ namespace NewLibCore.Storage.SQL.Component
                 var (tableName, aliasName) = instance.GetEntityBaseAliasName();
                 var sqlElements = instance.GetChangedProperties().GetSqlElements();
                 var update = _options.TemplateBase.CreateUpdate(tableName, aliasName, sqlElements.UpdatePlaceHolders);
-                var statementResultBuilder = Translate(update, null);
+                var statementResultBuilder = Translate(this);
+                statementResultBuilder.AddStatementTemplate(update);
                 instance.Reset();
 
                 return _resultExecutor.Execute(statementResultBuilder);

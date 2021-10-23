@@ -10,7 +10,7 @@ using NewLibCore.Validate;
 namespace NewLibCore.Storage.SQL.Component
 {
 
-    internal class JoinComponent : ComponentBase
+    internal class JoinComponent : RootComponent
     {
         internal String MainTable { get; private set; }
 

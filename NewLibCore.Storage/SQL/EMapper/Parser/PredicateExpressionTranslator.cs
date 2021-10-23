@@ -34,10 +34,9 @@ namespace NewLibCore.Storage.SQL
             _statementResultBuilder = new StatementResultBuilder();
         }
 
-        internal StatementResultBuilder Translate(StringBuilder statementTemplate, QueryComponent queryComponent)
+        internal StatementResultBuilder Translate(QueryComponent queryComponent)
         {
-            _aliasMapper = queryComponent.MergeComponentAlias();
-            _statementResultBuilder.AddStatementTemplate(statementTemplate);
+            _aliasMapper = queryComponent.MergeAllComponentAlias();
             //循环翻译连接对象
             foreach (var item in queryComponent.JoinComponents)
             {

@@ -7,7 +7,7 @@ using NewLibCore.Validate;
 namespace NewLibCore.Storage.SQL.Component
 {
 
-    internal class ColumnFieldComponent : ComponentBase
+    internal class ColumnFieldComponent : RootComponent
     {
         internal String ExtractSelectFields()
         {

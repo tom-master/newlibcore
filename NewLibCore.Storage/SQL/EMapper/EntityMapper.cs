@@ -57,19 +57,17 @@ namespace NewLibCore.Storage.SQL
             var updateComponent = (UpdateComponent)GetExecutor(nameof(UpdateComponent));
             if (filter != null)
             {
-                var whereComponent = new WhereComponent();
-                whereComponent.AddExpression(filter);
-                updateComponent.AddWhereComponent(whereComponent);
+                updateComponent.Where(filter);
             }
 
-            updateComponent.AddModel(model);
+            updateComponent.Model<TModel>();
             updateComponent.Execute();
         }
 
         public QueryComponent Query<TModel>() where TModel : EntityBase, new()
         {
             var queryComponent = (QueryComponent)GetExecutor(nameof(QueryComponent));
-            return queryComponent.Query<TModel>();
+            return queryComponent.Model<TModel>();
         }
     }
 }

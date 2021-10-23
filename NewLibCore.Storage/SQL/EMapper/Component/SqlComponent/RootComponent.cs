@@ -8,7 +8,7 @@ using NewLibCore.Validate;
 
 namespace NewLibCore.Storage.SQL.Component
 {
-    internal abstract class ComponentBase
+    internal abstract class RootComponent
     {
         protected internal IList<KeyValuePair<String, String>> AliasNameMappers { get; } = new List<KeyValuePair<String, String>>();
 
@@ -19,10 +19,10 @@ namespace NewLibCore.Storage.SQL.Component
             Check.IfNullOrZero(expression);
             Expression = expression;
 
-            ParseToAliasNames(Expression);
+            ExtractAliasNames(Expression);
         }
 
-        protected void ParseToAliasNames(Expression expression)
+        protected void ExtractAliasNames(Expression expression)
         {
             var parameters = ((LambdaExpression)expression).Parameters;
             foreach (var item in parameters)
