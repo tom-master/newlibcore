@@ -11,7 +11,7 @@ namespace NewLibCore.Storage.SQL
             services.Configure<EntityMapperOptions>(entityMapperOptions);
             services.AddScoped<IEntityMapperExecutor, InsertComponent>();
             services.AddScoped<IEntityMapperExecutor, UpdateComponent>();
-            services.AddScoped<IEntityMapperExecutor, SelectComponent>();
+            services.AddScoped<IEntityMapperExecutor, QueryComponent>();
             services.AddScoped<MapperDbContextBase, MapperDbContext>();
             services.AddScoped<ResultExecutor>();
             services.AddScoped<EntityMapper>();

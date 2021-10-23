@@ -8,14 +8,10 @@ namespace NewLibCore.Storage.SQL.Component
     internal class OrderComponent : ComponentBase
     {
         internal OrderByType OrderBy { get; private set; }
-        internal void AddOrderBy<TModel, TKey>(Expression<Func<TModel, TKey>> expression, OrderByType orderByType)
-                where TModel : EntityBase, new()
+        internal void AddOrderType(OrderByType orderByType)
         {
-            Check.IfNullOrZero(expression);
-            Expression = expression;
             OrderBy = orderByType;
         }
-
 
         internal (String Fields, String AliasName) ExtractOrderFields()
         {

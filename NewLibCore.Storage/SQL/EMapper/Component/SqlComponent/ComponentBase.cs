@@ -4,24 +4,36 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using NewLibCore.Storage.SQL.Extension;
+using NewLibCore.Validate;
 
 namespace NewLibCore.Storage.SQL.Component
 {
-    internal abstract class ComponentBase : AliasNameComponent
+    internal abstract class ComponentBase
     {
-        internal Expression Expression { get; set; }
+        protected internal IList<KeyValuePair<String, String>> AliasNameMappers { get; } = new List<KeyValuePair<String, String>>();
 
-        protected List<KeyValuePair<String, String>> ParseToAliasNames(Expression expression)
+        internal Expression Expression { get; private set; }
+
+        internal void AddExpression(Expression expression)
         {
-            var list = new List<KeyValuePair<String, String>>();
+            Check.IfNullOrZero(expression);
+            Expression = expression;
+
+            ParseToAliasNames(Expression);
+        }
+
+        protected void ParseToAliasNames(Expression expression)
+        {
             var parameters = ((LambdaExpression)expression).Parameters;
             foreach (var item in parameters)
             {
-                var (TableName, AliasName) = item.Type.GetEntityBaseAliasName();
-                list.Add(new KeyValuePair<String, String>(TableName, AliasName));
+                var (tableName, aliasName) = item.Type.GetEntityBaseAliasName();
+                if (AliasNameMappers.Any(w => w.Key == tableName || w.Value == aliasName))
+                {
+                    continue;
+                }
+                AliasNameMappers.Add(new KeyValuePair<String, String>(tableName, aliasName));
             }
-            return list.ToList();
         }
-
     }
 }

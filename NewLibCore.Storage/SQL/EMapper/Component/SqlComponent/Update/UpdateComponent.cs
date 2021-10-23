@@ -58,7 +58,7 @@ namespace NewLibCore.Storage.SQL.Component
                 var (tableName, aliasName) = instance.GetEntityBaseAliasName();
                 var sqlElements = instance.GetChangedProperties().GetSqlElements();
                 var update = _options.TemplateBase.CreateUpdate(tableName, aliasName, sqlElements.UpdatePlaceHolders);
-                var statementResultBuilder = Translate(update, WhereComponent);
+                var statementResultBuilder = Translate(update, null);
                 instance.Reset();
 
                 return _resultExecutor.Execute(statementResultBuilder);

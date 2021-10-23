@@ -9,12 +9,6 @@ namespace NewLibCore.Storage.SQL.Component
 
     internal class ColumnFieldComponent : ComponentBase
     {
-        internal void AddColumnField(Expression selector)
-        {
-            Check.IfNullOrZero(selector);
-            Expression = selector;
-        }
-
         internal String ExtractSelectFields()
         {
             var anonymousObjFields = new List<String>();

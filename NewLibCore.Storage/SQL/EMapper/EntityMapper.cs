@@ -58,7 +58,7 @@ namespace NewLibCore.Storage.SQL
             if (filter != null)
             {
                 var whereComponent = new WhereComponent();
-                whereComponent.AddWhere(filter);
+                whereComponent.AddExpression(filter);
                 updateComponent.AddWhereComponent(whereComponent);
             }
 
@@ -66,10 +66,10 @@ namespace NewLibCore.Storage.SQL
             updateComponent.Execute();
         }
 
-        public SelectComponent Query<TModel>() where TModel : EntityBase, new()
+        public QueryComponent Query<TModel>() where TModel : EntityBase, new()
         {
-            var selectComponent = (SelectComponent)GetExecutor(nameof(SelectComponent));
-            return selectComponent.Query<TModel>();
+            var queryComponent = (QueryComponent)GetExecutor(nameof(QueryComponent));
+            return queryComponent.Query<TModel>();
         }
     }
 }
