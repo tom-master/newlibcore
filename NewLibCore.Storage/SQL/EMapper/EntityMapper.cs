@@ -51,7 +51,7 @@ namespace NewLibCore.Storage.SQL
             model.Id = insertComponent.Execute().GetModifyRowCount();
         }
 
-        public Boolean Update<TModel>(TModel model, Expression<Func<TModel, Boolean>> filter = null) where TModel : EntityBase, new()
+        public void Update<TModel>(TModel model, Expression<Func<TModel, Boolean>> filter = null) where TModel : EntityBase, new()
         {
             Check.IfNullOrZero(model);
             var updateComponent = (UpdateComponent)GetExecutor(nameof(UpdateComponent));
@@ -63,7 +63,7 @@ namespace NewLibCore.Storage.SQL
             }
 
             updateComponent.AddModel(model);
-            return updateComponent.Execute().GetModifyRowCount() > 0;
+            updateComponent.Execute();
         }
 
         public SelectComponent Query<TModel>() where TModel : EntityBase, new()

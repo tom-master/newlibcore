@@ -237,7 +237,7 @@ namespace NewLibCore.Storage.SQL.Component
                  }
 
                  var mainTable = FromComponent.AliasNameMappers[0];
-                 var selectStatement = _options.TemplateBase.CreateSelect(ExtractSelectFields(), mainTable.Key, mainTable.Value);
+                 var selectStatement = _options.TemplateBase.CreateSelect(ColumnFieldComponent?.ExtractSelectFields(), mainTable.Key, mainTable.Value);
                  var statementResultBuilder = Translate(selectStatement, WhereComponent, FromComponent, JoinComponents);
                  JoinComponents.Clear();
 
@@ -247,94 +247,20 @@ namespace NewLibCore.Storage.SQL.Component
                      {
                          throw new Exception("Order");
                      }
-                     var (fields, tableName) = ExtractOrderFields();
+                     var (fields, tableName) = OrderComponent.ExtractOrderFields();
                      var orderTemplate = _options.TemplateBase.CreateOrderBy(OrderComponent.OrderBy, $@"{tableName}.{fields}");
                      _options.TemplateBase.CreatePagination(PaginationComponent, orderTemplate, statementResultBuilder.StatmentTemplate);
 
                  }
                  else if (OrderComponent != null)
                  {
-                     var (fields, tableName) = ExtractOrderFields();
+                     var (fields, tableName) = OrderComponent.ExtractOrderFields();
                      var orderTemplate = _options.TemplateBase.CreateOrderBy(OrderComponent.OrderBy, $@"{tableName}.{fields}");
                      selectStatement.Append(orderTemplate);
                  }
 
                  return _resultExecutor.Execute(statementResultBuilder);
              });
-        }
-
-
-        private (String Fields, String AliasName) ExtractOrderFields()
-        {
-            var fields = (LambdaExpression)OrderComponent.Expression;
-            if (fields.Body.NodeType == ExpressionType.MemberAccess)
-            {
-                var aliasName = fields.Parameters[0].Type.GetEntityBaseAliasName().AliasName;
-                var members = (fields.Body as MemberExpression);
-                return (members.Member.Name, aliasName);
-            }
-
-            throw new Exception();
-        }
-
-        private String ExtractSelectFields()
-        {
-            var anonymousObjFields = new List<String>();
-
-            if (ColumnFieldComponent != null)
-            {
-                var fields = (LambdaExpression)ColumnFieldComponent.Expression;
-                if (fields.Body.NodeType == ExpressionType.Constant)
-                {
-                    var bodyArguments = (fields.Body as ConstantExpression);
-                    anonymousObjFields.Add(bodyArguments.Value.ToString());
-                }
-                else
-                {
-                    var bodyArguments = (fields.Body as NewExpression).Arguments;
-                    foreach (var item in bodyArguments)
-                    {
-                        var member = (MemberExpression)item;
-                        var fieldName = ((ParameterExpression)member.Expression).Type.GetEntityBaseAliasName().AliasName;
-                        anonymousObjFields.Add($@"{fieldName}.{member.Member.Name}");
-                    }
-                }
-            }
-            else
-            {
-                var types = GetExpressionParameterTypes();
-                var tableNames = types.Select(s => new KeyValuePair<String, String>(s.Name, s.GetEntityBaseAliasName().AliasName)).ToList();
-                anonymousObjFields = types
-                    .SelectMany(s => s.GetProperties(BindingFlags.Instance | BindingFlags.Public)
-                    .Where(w => w.GetAttributes<PropertyValidateAttribute>().Any())
-                  .Select(s1 => $@"{tableNames.FirstOrDefault(w => w.Key == s.Name).Value}.{s1.Name}")).Distinct().ToList();
-            }
-
-            return String.Join(",", anonymousObjFields);
-        }
-
-
-        internal IList<Type> GetExpressionParameterTypes()
-        {
-            var types = new List<Type>();
-            if (FromComponent != null)
-            {
-                var type = (FromComponent.Expression as LambdaExpression).Parameters[0].Type;
-                types.Add(type);
-            }
-
-            foreach (var item in JoinComponents)
-            {
-                if (item.Expression == null)
-                {
-                    continue;
-                }
-                foreach (var parameter in (item.Expression as LambdaExpression).Parameters)
-                {
-                    types.Add(parameter.Type);
-                }
-            }
-            return types.Distinct().ToList();
         }
     }
 }

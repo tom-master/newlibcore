@@ -56,7 +56,7 @@ namespace NewLibCore.Storage.SQL.Template
         /// </summary>
         internal virtual StringBuilder CreateSelect(String field, String tableName, String aliasName)
         {
-            var s = String.Format("SELECT {0} FROM {1} AS {2} <join> <where> ", field, tableName, aliasName);
+            var s = String.Format("SELECT {0} FROM {1} AS {2} <join> <where> ", field ?? "*", tableName, aliasName);
             return new StringBuilder(s);
         }
 
