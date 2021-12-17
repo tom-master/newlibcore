@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.Extensions.Configuration;
 using NewLibCore.Validate;
-using Com.Ctrip.Framework.Apollo;
 
 namespace NewLibCore
 {
