@@ -5,25 +5,6 @@ using Com.Ctrip.Framework.Apollo;
 
 namespace NewLibCore
 {
-    public static class ConfigReader
-    {
-        //private static String ReadFromApollo(String key)
-        //{
-        //    var builder = new ConfigurationBuilder();
-        //    var root = builder
-        //    .AddJsonFile($@"{AppDomain.CurrentDomain.BaseDirectory}/appsettings.json")
-        //    .AddApollo(builder.Build().GetSection("apollo"))
-        //    .AddDefault()
-        //    .Build();
-        //    var value = root[key];
-        //    if (string.IsNullOrEmpty(value))
-        //    {
-        //        return "";
-        //    }
-        //    return value;
-        //}
-    }
-
     public interface IConfigReader
     {
         string Read(String key);
