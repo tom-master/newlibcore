@@ -8,13 +8,33 @@ namespace NewLibCore.Storage.SQL
     {
         public static IServiceCollection AddEntityMapper(this IServiceCollection services, Action<EntityMapperOptions> entityMapperOptions)
         {
-            services.Configure<EntityMapperOptions>(entityMapperOptions);
+            services.Configure(entityMapperOptions);
+
             services.AddScoped<IEntityMapperExecutor, InsertComponent>();
             services.AddScoped<IEntityMapperExecutor, UpdateComponent>();
             services.AddScoped<IEntityMapperExecutor, SelectComponent>();
+
             services.AddScoped<MapperDbContextBase, MapperDbContext>();
             services.AddScoped<ResultExecutor>();
             services.AddScoped<EntityMapper>();
+            return services;
+        }
+
+        public static IServiceCollection AddConfigReader<TConfigReader>(this IServiceCollection services, TConfigReader configReader) where TConfigReader : IConfigReader
+        {
+            services.AddSingleton<IConfigReader>(configReader);
+            return services;
+        }
+
+        public static IServiceCollection AddEnvironmentVariableReader(this IServiceCollection services)
+        {
+            services.AddSingleton<IConfigReader, EnvironmentVariableReader>();
+            return services;
+        }
+
+        public static IServiceCollection AddAppsettingsReader(this IServiceCollection services)
+        {
+            services.AddSingleton<IConfigReader, AppsettingsReader>();
             return services;
         }
     }

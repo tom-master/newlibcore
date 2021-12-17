@@ -20,7 +20,6 @@ namespace NewLibCore
             }
         }
 
-
         /// <summary>
         /// 将输入的值转换成指定的枚举类型
         /// </summary>

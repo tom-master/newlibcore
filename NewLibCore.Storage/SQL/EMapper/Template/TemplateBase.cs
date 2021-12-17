@@ -36,7 +36,6 @@ namespace NewLibCore.Storage.SQL.Template
         /// </summary>
         internal readonly IDictionary<OrderByType, String> OrderTypeMapper = new Dictionary<OrderByType, String>();
 
-
         /// <summary>
         /// 初始化TemplateBase类的新实例
         /// </summary>
@@ -268,6 +267,5 @@ namespace NewLibCore.Storage.SQL.Template
             OrderTypeMapper.Add(OrderByType.ASC, " ORDER BY {0} ASC ");
             OrderTypeMapper.Add(OrderByType.DESC, " ORDER BY {0} DESC ");
         }
-
     }
 }

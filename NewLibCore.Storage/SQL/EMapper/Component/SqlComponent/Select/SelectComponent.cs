@@ -263,7 +263,6 @@ namespace NewLibCore.Storage.SQL.Component
              });
         }
 
-
         private (String Fields, String AliasName) ExtractOrderFields()
         {
             var fields = (LambdaExpression)OrderComponent.Expression;
@@ -312,7 +311,6 @@ namespace NewLibCore.Storage.SQL.Component
 
             return String.Join(",", anonymousObjFields);
         }
-
 
         internal IList<Type> GetExpressionParameterTypes()
         {

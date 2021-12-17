@@ -22,6 +22,5 @@ namespace NewLibCore.Storage.SQL.Component
             }
             return list.ToList();
         }
-
     }
 }

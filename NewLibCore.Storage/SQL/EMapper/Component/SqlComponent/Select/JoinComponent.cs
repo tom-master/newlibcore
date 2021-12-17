@@ -14,7 +14,6 @@ namespace NewLibCore.Storage.SQL.Component
 
         internal JoinRelation JoinRelation { get; private set; }
 
-
         internal void AddJoin<TModel, TJoin>(Expression<Func<TModel, TJoin, Boolean>> expression, JoinRelation joinRelation)
                 where TModel : EntityBase, new()
                 where TJoin : EntityBase, new()

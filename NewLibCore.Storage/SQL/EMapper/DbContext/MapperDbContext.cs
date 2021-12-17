@@ -11,7 +11,7 @@ namespace NewLibCore.Storage.SQL
     /// <summary>
     /// 执行解析后的SQL
     /// </summary>
-    internal sealed class MapperDbContext : MapperDbContextBase
+    internal sealed class MapperDbContext: MapperDbContextBase
     {
         private Boolean _disposed = false;
 
@@ -21,16 +21,18 @@ namespace NewLibCore.Storage.SQL
 
         private readonly EntityMapperOptions _options;
 
+        private readonly IConfigReader _configReader;
 
         /// <summary>
         /// 初始化MapperDbContext类的新实例
         /// </summary>
-        public MapperDbContext(IOptions<EntityMapperOptions> options)
+        public MapperDbContext(IOptions<EntityMapperOptions> options, IConfigReader configReader)
         {
             Check.IfNullOrZero(options);
             _options = options.Value;
             _options.TransactionControl.RegisterCommit(Commit);
             _options.TransactionControl.RegisterRollback(Rollback);
+            _configReader = configReader;
         }
 
         protected internal override void Commit()
@@ -55,7 +57,7 @@ namespace NewLibCore.Storage.SQL
         {
             if (_connection == null)
             {
-                _connection = _options.TemplateBase.CreateDbConnection(ConfigReader.GetHostVar(_options.ConnectionStringName));
+                _connection = _options.TemplateBase.CreateDbConnection(_configReader.Read(_options.ConnectionStringName));
             }
             if (_connection.State == ConnectionState.Closed)
             {

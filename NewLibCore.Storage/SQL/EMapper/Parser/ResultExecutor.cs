@@ -61,7 +61,6 @@ namespace NewLibCore.Storage.SQL
             throw new Exception($@"SQL语句执行类型解析失败:{operationType}");
         }
 
-
         private String ReformatSql(string sql)
         {
             Check.IfNullOrZero(sql);
