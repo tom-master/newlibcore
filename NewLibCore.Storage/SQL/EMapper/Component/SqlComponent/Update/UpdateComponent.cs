@@ -1,8 +1,8 @@
 using Microsoft.Extensions.Options;
+
 using NewLibCore.Storage.SQL.EMapper.Extension;
 using NewLibCore.Storage.SQL.Extension;
 using NewLibCore.Validate;
-
 namespace NewLibCore.Storage.SQL.Component
 {
     public class UpdateComponent : QueryComponent

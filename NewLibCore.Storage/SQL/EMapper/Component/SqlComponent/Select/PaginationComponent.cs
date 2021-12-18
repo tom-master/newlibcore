@@ -1,6 +1,5 @@
 using System;
 using NewLibCore.Validate;
-
 namespace NewLibCore.Storage.SQL.Component
 {
     internal class PaginationComponent

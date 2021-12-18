@@ -1,11 +1,10 @@
-using Microsoft.Extensions.Options;
-using NewLibCore.Storage.SQL.Extension;
-using NewLibCore.Validate;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-
+using Microsoft.Extensions.Options;
+using NewLibCore.Storage.SQL.Extension;
+using NewLibCore.Validate;
 namespace NewLibCore.Storage.SQL.Component
 {
     public class QueryComponent : PredicateExpressionTranslator, IEntityMapperExecutor

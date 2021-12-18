@@ -1,8 +1,6 @@
 using System;
 using System.Linq.Expressions;
 using NewLibCore.Storage.SQL.Extension;
-using NewLibCore.Validate;
-
 namespace NewLibCore.Storage.SQL.Component
 {
     internal class OrderComponent : RootComponent
