@@ -35,8 +35,6 @@ namespace NewLibCore.UnitTest.Entitys.System
             Remark = remark;
         }
 
-
-
         public AppType()
         {
         }

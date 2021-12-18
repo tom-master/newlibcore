@@ -21,7 +21,6 @@ namespace NewLibCore.Storage.Redis.InternalHelper
             _consoleLogger = new DefaultLogger();
         }
 
-
         /// <summary>
         /// 缓存获取
         /// </summary>
@@ -51,7 +50,6 @@ namespace NewLibCore.Storage.Redis.InternalHelper
         {
             var connect = ConnectionMultiplexer.Connect(connectionString);
             //connect.PreserveAsyncOrder = false;
-
 
             connect.ConnectionFailed += MuxerConnectionFailed;
             connect.ConnectionRestored += MuxerConnectionRestored;

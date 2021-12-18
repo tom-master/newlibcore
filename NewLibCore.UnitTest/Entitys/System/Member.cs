@@ -169,7 +169,6 @@ namespace NewLibCore.UnitTest.Entitys.System
         public Member()
         {
         }
-
     }
 
     public partial class Member
