@@ -57,54 +57,7 @@ namespace NewLibCore.Storage.SQL
         MYSQL = 2
     }
 
-    /// <summary>
-    /// 排序类型
-    /// </summary>
-    internal enum OrderByType
-    {
-        /// <summary>
-        /// 升序
-        /// </summary>
-        ASC = 1,
 
-        /// <summary>
-        /// 降序
-        /// </summary>
-        DESC = 2
-    }
-
-    /// <summary>
-    /// 连接类型
-    /// </summary>
-    internal enum JoinRelation
-    {
-        NONE = 0,
-
-        /// <summary>
-        /// 内连接
-        /// </summary>
-        INNER = 1,
-
-        /// <summary>
-        /// 左连接
-        /// </summary>
-        LEFT = 2,
-
-        /// <summary>
-        /// 右连接
-        /// </summary>
-        RIGHT = 3,
-
-        /// <summary>
-        /// 交叉连接
-        /// </summary>
-        CROSS = 4,
-
-        /// <summary>
-        /// 自连接
-        /// </summary>
-        SEIF = 5
-    }
 
     /// <summary>
     /// 谓词类型
@@ -122,6 +75,16 @@ namespace NewLibCore.Storage.SQL
         GT = 9,
         LT = 10,
         GE = 11,
-        LE = 12
+        LE = 12,
+        FROM = 13,
+        WHERE = 14,
+        INNER = 15,
+        LEFT = 16,
+        RIGHT = 17,
+        CROSS = 18,
+        SEIF = 19,
+        COLUMN = 20,
+        ASC = 21,
+        DESC = 22
     }
 }

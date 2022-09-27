@@ -1,19 +1,23 @@
 using System;
+using System.Linq;
 using System.Linq.Expressions;
 using NewLibCore.Storage.SQL.Extension;
 namespace NewLibCore.Storage.SQL.Component
 {
-    internal class OrderComponent : RootComponent
+    internal class OrderComponent: RootComponent
     {
-        internal OrderByType OrderBy { get; private set; }
-        internal void AddOrderType(OrderByType orderByType)
+        internal PredicateType OrderBy { get; private set; }
+
+        internal void AddOrderByType(PredicateType predicateType)
         {
-            OrderBy = orderByType;
+            OrderBy = predicateType;
         }
 
-        internal (String Fields, String AliasName) ExtractOrderFields()
+        internal (String Fields, String AliasName) ExtractOrderFields(PredicateType predicateType)
         {
-            var fields = (LambdaExpression)Expression;
+            var orderExpression = PredicateExpressions.Where(w => w.Key == predicateType).FirstOrDefault().Value;
+
+            var fields = (LambdaExpression)orderExpression;
             if (fields.Body.NodeType == ExpressionType.MemberAccess)
             {
                 var aliasName = fields.Parameters[0].Type.GetEntityBaseAliasName().AliasName;

@@ -29,12 +29,12 @@ namespace NewLibCore.Storage.SQL.Template
         /// <summary>
         /// 连接关系映射
         /// </summary>
-        internal readonly IDictionary<JoinRelation, String> JoinMapper = new Dictionary<JoinRelation, String>();
+        internal readonly IDictionary<PredicateType, String> JoinMapper = new Dictionary<PredicateType, String>();
 
         /// <summary>
         /// 排序方式映射
         /// </summary>
-        internal readonly IDictionary<OrderByType, String> OrderTypeMapper = new Dictionary<OrderByType, String>();
+        internal readonly IDictionary<PredicateType, String> OrderTypeMapper = new Dictionary<PredicateType, String>();
 
         /// <summary>
         /// 初始化TemplateBase类的新实例
@@ -154,7 +154,7 @@ namespace NewLibCore.Storage.SQL.Template
         /// <param name="left">左语句</param>
         /// <param name="right">右语句</param>
         /// <returns></returns>
-        internal String CreateJoin(JoinRelation joinRelation, String left, String right)
+        internal String CreateJoin(PredicateType joinRelation, String left, String right)
         {
             Check.IfNullOrZero(joinRelation);
             Check.IfNullOrZero(left);
@@ -174,7 +174,7 @@ namespace NewLibCore.Storage.SQL.Template
         /// <param name="orderByType">排序方向</param>
         /// <param name="left">左语句</param>
         /// <returns></returns>
-        internal String CreateOrderBy(OrderByType orderByType, String left)
+        internal String CreateOrderBy(PredicateType orderByType, String left)
         {
             Check.IfNullOrZero(orderByType);
             Check.IfNullOrZero(left);
@@ -253,10 +253,9 @@ namespace NewLibCore.Storage.SQL.Template
         /// </summary>
         private void InitJoinType()
         {
-            JoinMapper.Add(JoinRelation.NONE, "");
-            JoinMapper.Add(JoinRelation.INNER, " INNER JOIN {0} AS {1} ON ");
-            JoinMapper.Add(JoinRelation.LEFT, " LEFT JOIN {0} AS {1} ON ");
-            JoinMapper.Add(JoinRelation.RIGHT, " RIGHT JOIN {0} AS {1} ON ");
+            JoinMapper.Add(PredicateType.INNER, " INNER JOIN {0} AS {1} ON ");
+            JoinMapper.Add(PredicateType.LEFT, " LEFT JOIN {0} AS {1} ON ");
+            JoinMapper.Add(PredicateType.RIGHT, " RIGHT JOIN {0} AS {1} ON ");
         }
 
         /// <summary>
@@ -264,8 +263,8 @@ namespace NewLibCore.Storage.SQL.Template
         /// </summary>
         private void InitOrderType()
         {
-            OrderTypeMapper.Add(OrderByType.ASC, " ORDER BY {0} ASC ");
-            OrderTypeMapper.Add(OrderByType.DESC, " ORDER BY {0} DESC ");
+            OrderTypeMapper.Add(PredicateType.ASC, " ORDER BY {0} ASC ");
+            OrderTypeMapper.Add(PredicateType.DESC, " ORDER BY {0} DESC ");
         }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using NewLibCore.Storage.SQL.Extension;
 using NewLibCore.Validate;
@@ -7,13 +8,15 @@ using NewLibCore.Validate;
 namespace NewLibCore.Storage.SQL.Component
 {
 
-    internal class ColumnFieldComponent : RootComponent
+    internal class ColumnFieldComponent: RootComponent
     {
         internal String ExtractSelectFields()
         {
             var anonymousObjFields = new List<String>();
 
-            var fields = (LambdaExpression)Expression;
+            var columnExpression = PredicateExpressions.Where(w => w.Key == PredicateType.COLUMN).FirstOrDefault().Value;
+
+            var fields = (LambdaExpression)columnExpression;
             if (fields.Body.NodeType == ExpressionType.Constant)
             {
                 var bodyArguments = (fields.Body as ConstantExpression);

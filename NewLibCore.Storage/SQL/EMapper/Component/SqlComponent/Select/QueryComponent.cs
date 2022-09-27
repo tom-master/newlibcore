@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Microsoft.Extensions.Options;
@@ -7,14 +6,12 @@ using NewLibCore.Storage.SQL.Extension;
 using NewLibCore.Validate;
 namespace NewLibCore.Storage.SQL.Component
 {
-    public class QueryComponent : PredicateExpressionTranslator, IEntityMapperExecutor
+    public class QueryComponent: PredicateExpressionTranslator, IEntityMapperExecutor
     {
         internal ColumnFieldComponent ColumnFieldComponent { get; private set; }
-        internal FromComponent FromComponent { get; private set; }
-        internal IList<JoinComponent> JoinComponents { get; private set; }
-        internal WhereComponent WhereComponent { get; private set; }
-        internal OrderComponent OrderComponent { get; private set; }
         internal PaginationComponent PaginationComponent { get; private set; }
+        internal RootComponent RootComponent { get; private set; } = new RootComponent();
+        internal OrderComponent OrderComponent { get; private set; } = new OrderComponent();
 
         public string ComponentIdentity => this.GetType().Name;
 
@@ -26,15 +23,13 @@ namespace NewLibCore.Storage.SQL.Component
         {
             Check.IfNullOrZero(options);
             _options = options.Value;
-            JoinComponents = new List<JoinComponent>();
             _resultExecutor = resultExecutor;
         }
 
         public QueryComponent Model<TModel>() where TModel : EntityBase, new()
         {
-            FromComponent = new FromComponent();
             Expression<Func<TModel, TModel>> expression = (a) => a;
-            FromComponent.AddExpression(expression);
+            RootComponent.AddExpression(expression, PredicateType.FROM);
             return this;
         }
 
@@ -43,11 +38,7 @@ namespace NewLibCore.Storage.SQL.Component
         where TRight : EntityBase, new()
         {
             Check.IfNullOrZero(join);
-            var joinComponent = new JoinComponent();
-            joinComponent.AddJoinType(JoinRelation.LEFT);
-            joinComponent.InitMainTableName<TLeft>();
-            joinComponent.AddExpression(join);
-            JoinComponents.Add(joinComponent);
+            RootComponent.AddExpression(join, PredicateType.LEFT);
             return this;
         }
 
@@ -56,11 +47,7 @@ namespace NewLibCore.Storage.SQL.Component
         where TRight : EntityBase, new()
         {
             Check.IfNullOrZero(join);
-            var joinComponent = new JoinComponent();
-            joinComponent.AddJoinType(JoinRelation.RIGHT);
-            joinComponent.InitMainTableName<TLeft>();
-            joinComponent.AddExpression(join);
-            JoinComponents.Add(joinComponent);
+            RootComponent.AddExpression(join, PredicateType.RIGHT);
             return this;
         }
 
@@ -69,11 +56,7 @@ namespace NewLibCore.Storage.SQL.Component
         where TRight : EntityBase, new()
         {
             Check.IfNullOrZero(join);
-            var joinComponent = new JoinComponent();
-            joinComponent.AddJoinType(JoinRelation.INNER);
-            joinComponent.InitMainTableName<TLeft>();
-            joinComponent.AddExpression(join);
-            JoinComponents.Add(joinComponent);
+            RootComponent.AddExpression(join, PredicateType.INNER);
             return this;
         }
 
@@ -91,7 +74,7 @@ namespace NewLibCore.Storage.SQL.Component
             if (selector != null)
             {
                 ColumnFieldComponent = new ColumnFieldComponent();
-                ColumnFieldComponent.AddExpression(selector);
+                ColumnFieldComponent.AddExpression(selector, PredicateType.COLUMN);
             }
 
             return this;
@@ -104,7 +87,7 @@ namespace NewLibCore.Storage.SQL.Component
             if (selector != null)
             {
                 ColumnFieldComponent = new ColumnFieldComponent();
-                ColumnFieldComponent.AddExpression(selector);
+                ColumnFieldComponent.AddExpression(selector, PredicateType.COLUMN);
             }
             return this;
         }
@@ -116,7 +99,7 @@ namespace NewLibCore.Storage.SQL.Component
             if (selector != null)
             {
                 ColumnFieldComponent = new ColumnFieldComponent();
-                ColumnFieldComponent.AddExpression(selector);
+                ColumnFieldComponent.AddExpression(selector, PredicateType.COLUMN);
             }
             return this;
         }
@@ -130,7 +113,7 @@ namespace NewLibCore.Storage.SQL.Component
             if (selector != null)
             {
                 ColumnFieldComponent = new ColumnFieldComponent();
-                ColumnFieldComponent.AddExpression(selector);
+                ColumnFieldComponent.AddExpression(selector, PredicateType.COLUMN);
             }
             return this;
         }
@@ -145,7 +128,7 @@ namespace NewLibCore.Storage.SQL.Component
             if (selector != null)
             {
                 ColumnFieldComponent = new ColumnFieldComponent();
-                ColumnFieldComponent.AddExpression(selector);
+                ColumnFieldComponent.AddExpression(selector, PredicateType.COLUMN);
             }
             return this;
         }
@@ -154,8 +137,7 @@ namespace NewLibCore.Storage.SQL.Component
         where TModel1 : EntityBase, new()
         {
             Check.IfNullOrZero(filter);
-            WhereComponent = new WhereComponent();
-            WhereComponent.AddExpression(filter);
+            RootComponent.AddExpression(filter, PredicateType.WHERE);
             return this;
         }
 
@@ -164,9 +146,7 @@ namespace NewLibCore.Storage.SQL.Component
         where TModel2 : EntityBase, new()
         {
             Check.IfNullOrZero(filter);
-            WhereComponent = new WhereComponent();
-
-            WhereComponent.AddExpression(filter);
+            RootComponent.AddExpression(filter, PredicateType.WHERE);
             return this;
         }
 
@@ -176,8 +156,7 @@ namespace NewLibCore.Storage.SQL.Component
         where TModel3 : EntityBase, new()
         {
             Check.IfNullOrZero(filter);
-            WhereComponent = new WhereComponent();
-            WhereComponent.AddExpression(filter);
+            RootComponent.AddExpression(filter, PredicateType.WHERE);
             return this;
         }
 
@@ -188,8 +167,7 @@ namespace NewLibCore.Storage.SQL.Component
         where TModel4 : EntityBase, new()
         {
             Check.IfNullOrZero(filter);
-            WhereComponent = new WhereComponent();
-            WhereComponent.AddExpression(filter);
+            RootComponent.AddExpression(filter, PredicateType.WHERE);
             return this;
         }
 
@@ -201,53 +179,32 @@ namespace NewLibCore.Storage.SQL.Component
         where TModel5 : EntityBase, new()
         {
             Check.IfNullOrZero(filter);
-            WhereComponent = new WhereComponent();
-            WhereComponent.AddExpression(filter);
+            RootComponent.AddExpression(filter, PredicateType.WHERE);
             return this;
         }
 
         public QueryComponent ThenByDesc<TModel, TKey>(Expression<Func<TModel, TKey>> order) where TModel : EntityBase, new()
         {
             Check.IfNullOrZero(order);
-            OrderComponent = new OrderComponent();
-            OrderComponent.AddExpression(order);
-            OrderComponent.AddOrderType(OrderByType.DESC);
+            OrderComponent.AddExpression(order, PredicateType.DESC);
             return this;
         }
 
         public QueryComponent ThenByAsc<TModel, TKey>(Expression<Func<TModel, TKey>> order) where TModel : EntityBase, new()
         {
             Check.IfNullOrZero(order);
-            OrderComponent = new OrderComponent();
-            OrderComponent.AddExpression(order);
-            OrderComponent.AddOrderType(OrderByType.ASC);
+            OrderComponent.AddExpression(order, PredicateType.ASC);
             return this;
         }
-
-        // public QueryComponent Include<TModel, TModel1>(Expression<Func<TModel, TModel1>> include) where TModel : EntityBase, new()
-        // where TModel1 : EntityBase, new()
-        // {
-        //     Check.IfNullOrZero(include);
-        //     var joinComponent = new JoinComponent();
-        //     joinComponent.AddInclude(include);
-        //     JoinComponents.Add(joinComponent);
-        //     return this;
-        // }
 
         public ExecutorResult Execute()
         {
             return RunDiagnosis.Watch(() =>
              {
-                 if (!FromComponent.AliasNameMappers.Any())
-                 {
-                     throw new ArgumentException("From");
-                 }
-
-                 var mainTable = FromComponent.AliasNameMappers[0];
+                 var mainTable = RootComponent.GetMainTable();
                  var selectStatement = _options.TemplateBase.CreateSelect(ColumnFieldComponent?.ExtractSelectFields(), mainTable.Key, mainTable.Value);
                  var statementResultBuilder = Translate(this);
                  statementResultBuilder.AddStatementTemplate(selectStatement);
-                 JoinComponents.Clear();
 
                  if (PaginationComponent != null)
                  {
@@ -255,51 +212,20 @@ namespace NewLibCore.Storage.SQL.Component
                      {
                          throw new Exception("Order");
                      }
-                     var (fields, tableName) = OrderComponent.ExtractOrderFields();
+                     var (fields, tableName) = OrderComponent.ExtractOrderFields(OrderComponent.OrderBy);
                      var orderTemplate = _options.TemplateBase.CreateOrderBy(OrderComponent.OrderBy, $@"{tableName}.{fields}");
                      _options.TemplateBase.CreatePagination(PaginationComponent, orderTemplate, statementResultBuilder.StatmentTemplate);
 
                  }
                  else if (OrderComponent != null)
                  {
-                     var (fields, tableName) = OrderComponent.ExtractOrderFields();
+                     var (fields, tableName) = OrderComponent.ExtractOrderFields(OrderComponent.OrderBy);
                      var orderTemplate = _options.TemplateBase.CreateOrderBy(OrderComponent.OrderBy, $@"{tableName}.{fields}");
                      selectStatement.Append(orderTemplate);
                  }
 
                  return _resultExecutor.Execute(statementResultBuilder);
              });
-        }
-
-        /// <summary>
-        /// 合并组件中的别名
-        /// </summary>
-        /// <returns></returns>
-        internal IList<KeyValuePair<String, String>> MergeAllComponentAlias()
-        {
-            var newAliasMapper = new List<KeyValuePair<String, String>>();
-
-            if (JoinComponents != null)
-            {
-                newAliasMapper.AddRange(JoinComponents.SelectMany(s => s.AliasNameMappers));
-            }
-
-            if (WhereComponent != null)
-            {
-                newAliasMapper.AddRange(WhereComponent.AliasNameMappers);
-            }
-
-            if (FromComponent != null)
-            {
-                newAliasMapper.AddRange(FromComponent.AliasNameMappers);
-            }
-            newAliasMapper = newAliasMapper.Select(s => s).Distinct().ToList();
-            var sameGroup = newAliasMapper.GroupBy(a => a.Value);
-            if (sameGroup.Any(w => w.Count() > 1))
-            {
-                throw new InvalidOperationException("DuplicateTableAliasName");
-            }
-            return newAliasMapper;
         }
     }
 }
