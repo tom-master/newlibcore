@@ -35,5 +35,22 @@ namespace NewLibCore.Storage.SQL.Component
             }
             return result.Distinct().ToList();
         }
+
+        internal IList<KeyValuePair<String, String>> MergeAllComponentAlias()
+        {
+            var newAliasMapper = new List<KeyValuePair<String, String>>();
+
+            foreach (var predicateExpression in PredicateExpressions)
+            {
+                newAliasMapper.AddRange(ExtractAliasNames(predicateExpression.Value));
+            }
+            newAliasMapper = newAliasMapper.Select(s => s).Distinct().ToList();
+            var sameGroup = newAliasMapper.GroupBy(a => a.Value);
+            if (sameGroup.Any(w => w.Count() > 1))
+            {
+                throw new InvalidOperationException("DuplicateTableAliasName");
+            }
+            return newAliasMapper;
+        }
     }
 }

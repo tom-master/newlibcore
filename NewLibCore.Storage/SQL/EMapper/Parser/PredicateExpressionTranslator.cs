@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using System.Threading;
 using Microsoft.Extensions.Options;
 using NewLibCore.Storage.SQL.Component;
 using NewLibCore.Storage.SQL.Extension;
@@ -34,19 +35,14 @@ namespace NewLibCore.Storage.SQL
             _statementResultBuilder = new StatementResultBuilder();
         }
 
-        internal StatementResultBuilder Translate(QueryComponent queryComponent)
+        internal StatementResultBuilder Translate(RootComponent rootComponent)
         {
-            _aliasMapper = queryComponent.MergeAllComponentAlias();
+            _aliasMapper = rootComponent.MergeAllComponentAlias();
             //循环翻译连接对象
-            foreach (var item in queryComponent.JoinComponents)
+            var joinExpressions = rootComponent.PredicateExpressions.Where(w => new[] { PredicateType.LEFT, PredicateType.RIGHT, PredicateType.INNER, PredicateType.SEIF, PredicateType.CROSS }.Contains(w.Key)).ToList();
+            foreach (var item in joinExpressions)
             {
-                if (item.AliasNameMappers == null || item.JoinRelation == JoinRelation.NONE)
-                {
-                    continue;
-                }
-
-                //获取连接对象中的表别名，进行连接语句的翻译
-                foreach (var aliasItem in item.AliasNameMappers.Where(w => w.Key != item.MainTable))
+                foreach (var aliasItem in rootComponent.ExtractAliasNames(item.Value).Where(w => w.Key != rootComponent.GetMainTable().Key))
                 {
                     //获取连接语句的模板 
                     AssignmentPredicateType(item.JoinRelation, _options.TemplateBase.CreateJoin(item.JoinRelation, aliasItem.Key, aliasItem.Value.ToLower()));
@@ -417,7 +413,7 @@ namespace NewLibCore.Storage.SQL
         }
     }
 
-    internal class StatementResultBuilder : IDisposable
+    internal class StatementResultBuilder: IDisposable
     {
         private static readonly String _joinPlaceHolder = "<join>";
         private static readonly String _wherePlaceHolder = "<where>";
