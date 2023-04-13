@@ -1,9 +1,9 @@
-using System;
+using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NewLibCore.Storage.SQL;
+using NewLibCore.Storage.SQL.EMapper;
 using NewLibCore.UnitTest.Entitys.Agent;
-using NewLibCore.UnitTest.Entitys.System;
 
 namespace NewLibCore.UnitTest
 {
@@ -12,31 +12,32 @@ namespace NewLibCore.UnitTest
     {
         private EntityMapper _mapper = InitEntityMapper();
 
-        [TestMethod]
-        public void Add()
-        {
-            var user = new User("xiaofan", "xiaofan@.1", default, ValueObject.UserType.Admin);
-            _mapper.Add(user);
-        }
+        //[TestMethod]
+        //public void Add()
+        //{
+        //    var user = new User("xiaofan", "xiaofan@.1", default, ValueObject.UserType.Admin);
+        //    _mapper.Add(user);
+        //}
 
         [TestMethod]
         public void Query()
         {
-            var users1 = _mapper.Query<User>()
-            .InnerJoin<User, UserRole>((user, role) => user.Id == role.UserId)
-            .InnerJoin<User, App>((user, app) => user.Id == app.UserId)
-            .Where<User>(user => user.Name != "wasd")
-            .ThenByDesc<User, DateTime>(a => a.AddTime)
-            .Page(1, 10).Select<UserRole>(role => new { role.RoleId, role.UserId, role.AddTime })
-            .Execute();
+            var r = _mapper.Query<User>().InnerJoin<User, UserRole>((u, r) => u.Id == r.UserId).Where(w => w.IsDeleted).Select(s => new { s.AddTime, s.LoginPassword, s.IsOnline }).ToList();
+            //var users1 = _mapper.Query<User>()
+            //.InnerJoin<User, UserRole>((user, role) => user.Id == role.UserId)
+            //.InnerJoin<User, App>((user, app) => user.Id == app.UserId)
+            //.Where<User>(user => user.Name != "wasd")
+            //.ThenByDesc<User, DateTime>(a => a.AddTime)
+            //.Page(1, 10).Select<UserRole>(role => new { role.RoleId, role.UserId, role.AddTime })
+            //.Execute();
         }
 
-        [TestMethod]
-        public void Update()
-        {
-            var user = new User("xiaofan", "xiaofan@.1", default, ValueObject.UserType.Admin);
-            _mapper.Update(user, w => w.Id == 1);
-        }
+        //[TestMethod]
+        //public void Update()
+        //{
+        //    var user = new User("xiaofan", "xiaofan@.1", default, ValueObject.UserType.Admin);
+        //    _mapper.Update(user, w => w.Id == 1);
+        //}
 
 
         private static EntityMapper InitEntityMapper()

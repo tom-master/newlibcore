@@ -64,6 +64,7 @@ namespace NewLibCore.Storage.SQL
     /// </summary>
     internal enum PredicateType
     {
+        NONE = 0,
         AND = 1,
         OR = 2,
         FULL_LIKE = 3,

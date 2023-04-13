@@ -52,5 +52,32 @@ namespace NewLibCore.Storage.SQL.Component
             }
             return newAliasMapper;
         }
+
+        internal String ExtractSelectFields()
+        {
+            var anonymousObjFields = new List<String>();
+
+            var columnExpression = PredicateExpressions.Where(w => w.Key == PredicateType.COLUMN).FirstOrDefault().Value;
+
+            var fields = (LambdaExpression)columnExpression;
+            if (fields.Body.NodeType == ExpressionType.Constant)
+            {
+                var bodyArguments = (fields.Body as ConstantExpression);
+                anonymousObjFields.Add(bodyArguments.Value.ToString());
+            }
+            else
+            {
+                var bodyArguments = (fields.Body as NewExpression).Arguments;
+                foreach (var item in bodyArguments)
+                {
+                    var member = (MemberExpression)item;
+                    var fieldName = ((ParameterExpression)member.Expression).Type.GetEntityBaseAliasName().AliasName;
+                    anonymousObjFields.Add($@"{fieldName}.{member.Member.Name}");
+                }
+            }
+
+
+            return String.Join(",", anonymousObjFields);
+        }
     }
 }

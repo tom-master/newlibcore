@@ -45,43 +45,48 @@ namespace NewLibCore.Storage.SQL
                 foreach (var aliasItem in rootComponent.ExtractAliasNames(item.Value).Where(w => w.Key != rootComponent.GetMainTable().Key))
                 {
                     //获取连接语句的模板 
-                    AssignmentPredicateType(item.JoinRelation, _options.TemplateBase.CreateJoin(item.JoinRelation, aliasItem.Key, aliasItem.Value.ToLower()));
+                    AssignmentPredicateType(item.Key, _options.TemplateBase.CreateJoin(item.Key, aliasItem.Key, aliasItem.Value.ToLower()));
 
                     //获取连接类型中的存储的表达式对象进行翻译
-                    InternalProcess(item.Expression, item.JoinRelation);
+                    InternalProcess(item.Value, item.Key);
                 }
             }
-            AssignmentPredicateType(JoinRelation.NONE, " WHERE ");
+
             //翻译Where条件对象
-            if (queryComponent.WhereComponent != null)
+            if (rootComponent.PredicateExpressions.Where(w => w.Key == PredicateType.WHERE).Any())
             {
-                var lambdaExp = (LambdaExpression)queryComponent.WhereComponent.Expression;
+                var lambdaExp = (LambdaExpression)rootComponent.PredicateExpressions.Where(w => w.Key == PredicateType.WHERE).FirstOrDefault().Value;
                 //当表达式主体为常量时则直接返回，不做解析
                 if (lambdaExp.Body.NodeType == ExpressionType.Constant)
                 {
                     _statementResultBuilder.WhereStatement.Replace(" WHERE ", " ");
                     return _statementResultBuilder;
                 }
-                AssignmentPredicateType(JoinRelation.NONE, "");
+                AssignmentPredicateType(PredicateType.NONE, " WHERE ");
 
                 //获取Where类型中的存储的表达式对象进行翻译
-                InternalProcess(lambdaExp, JoinRelation.NONE);
+                InternalProcess(lambdaExp, PredicateType.NONE);
             }
 
             foreach (var aliasItem in _aliasMapper)
             {
-                AssignmentPredicateType(JoinRelation.NONE, $@"{PredicateType.AND} {aliasItem.Value.ToLower()}.IsDeleted = 0");
+                AssignmentPredicateType(PredicateType.NONE, $@"{PredicateType.AND} {aliasItem.Value.ToLower()}.IsDeleted = 0");
             }
+
+
+            var mainTable = rootComponent.GetMainTable();
+            var selectStatement = _options.TemplateBase.CreateSelect(rootComponent.ExtractSelectFields(), mainTable.Key, mainTable.Value);
+            _statementResultBuilder.AddStatementTemplate(selectStatement);
             return _statementResultBuilder;
         }
 
-        private void AssignmentPredicateType(JoinRelation joinRelation, String value)
+        private void AssignmentPredicateType(PredicateType joinRelation, String value)
         {
             if (String.IsNullOrEmpty(value))
             {
                 return;
             }
-            if (joinRelation == JoinRelation.NONE)
+            if (joinRelation == PredicateType.NONE)
             {
                 _statementResultBuilder.WhereStatement.Append($@" {value} ");
             }
@@ -96,7 +101,7 @@ namespace NewLibCore.Storage.SQL
         /// </summary>
         /// <param name="expression"></param>
         /// <param name="joinRelation"></param>
-        private void InternalProcess(Expression expression, JoinRelation joinRelation)
+        private void InternalProcess(Expression expression, PredicateType joinRelation)
         {
             switch (expression.NodeType)
             {
@@ -263,7 +268,7 @@ namespace NewLibCore.Storage.SQL
             }
         }
 
-        private void ProcessMethodCall(Expression expression, JoinRelation joinRelation)
+        private void ProcessMethodCall(Expression expression, PredicateType joinRelation)
         {
             Check.IfNullOrZero(expression);
             var methodCallExp = (MethodCallExpression)expression;
@@ -331,11 +336,11 @@ namespace NewLibCore.Storage.SQL
         /// <param name="binary"></param>
         /// <param name="predicateType"></param>
         /// <param name="joinRelation"></param>
-        private void CreatePredicate(BinaryExpression binary, PredicateType predicateType, JoinRelation joinRelation)
+        private void CreatePredicate(BinaryExpression binary, PredicateType predicateType, PredicateType joinRelation)
         {
             Check.IfNullOrZero(binary);
             var binaryExp = binary;
-            if (joinRelation != JoinRelation.NONE)
+            if (joinRelation != PredicateType.NONE)
             {
                 GetJoin(binaryExp, predicateType, joinRelation);
             }
@@ -362,7 +367,7 @@ namespace NewLibCore.Storage.SQL
         /// </summary>
         /// <param name="binary">表达式</param>
         /// <param name="relationType">关系类型</param>
-        private void GetJoin(BinaryExpression binary, PredicateType predicateType, JoinRelation joinRelation)
+        private void GetJoin(BinaryExpression binary, PredicateType predicateType, PredicateType joinRelation)
         {
             Check.IfNullOrZero(binary);
 

@@ -203,7 +203,7 @@ namespace NewLibCore.Storage.SQL.Component
              {
                  var mainTable = RootComponent.GetMainTable();
                  var selectStatement = _options.TemplateBase.CreateSelect(ColumnFieldComponent?.ExtractSelectFields(), mainTable.Key, mainTable.Value);
-                 var statementResultBuilder = Translate(this);
+                 var statementResultBuilder = Translate(null);
                  statementResultBuilder.AddStatementTemplate(selectStatement);
 
                  if (PaginationComponent != null)
@@ -223,7 +223,7 @@ namespace NewLibCore.Storage.SQL.Component
                      var orderTemplate = _options.TemplateBase.CreateOrderBy(OrderComponent.OrderBy, $@"{tableName}.{fields}");
                      selectStatement.Append(orderTemplate);
                  }
-
+               
                  return _resultExecutor.Execute(statementResultBuilder);
              });
         }
