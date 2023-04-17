@@ -74,11 +74,13 @@ namespace NewLibCore.Storage.SQL
         LE = 12,
         FROM = 13,
         WHERE = 14,
+
         INNER = 15,
         LEFT = 16,
         RIGHT = 17,
         CROSS = 18,
         SEIF = 19,
+
         COLUMN = 20,
         ASC = 21,
         DESC = 22

@@ -19,7 +19,7 @@ namespace NewLibCore.Storage.SQL.EMapper.Visitor
             var e = new ExpressionTranslator(Options);
             e.AliasMapper.AddRange(ExtractAliasNames(Expression.Value));
             e.Translate(expression, Expression.Key);
-            VisitResult = new KeyValuePair<EMType, string>(Expression.Key, t.Append(e.TranslationResult).ToString());
+            VisitResult = (Expression.Key, t.Append(e.TranslationResult).ToString(), e.MapperParameters);
         }
     }
 }

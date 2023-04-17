@@ -17,7 +17,7 @@ namespace NewLibCore.Storage.SQL
         private readonly Stack<EMType> _emTypeStack;
         private readonly Stack<string> _parameterNameStack;
         private readonly EntityMapperOptions _options;
-        private readonly StatementResultBuilder _statementResultBuilder;
+        internal List<MapperParameter> MapperParameters { get; private set; }
 
         internal List<KeyValuePair<string, string>> AliasMapper { get; set; }
 
@@ -30,7 +30,7 @@ namespace NewLibCore.Storage.SQL
             _emTypeStack = new Stack<EMType>();
 
             AliasMapper = new List<KeyValuePair<string, string>>();
-            _statementResultBuilder = new StatementResultBuilder();
+            MapperParameters = new List<MapperParameter>();
         }
 
         internal StringBuilder TranslationResult { get; private set; } = new StringBuilder();
@@ -92,7 +92,7 @@ namespace NewLibCore.Storage.SQL
                 case ExpressionType.Constant:
                     {
                         var binaryExp = (ConstantExpression)expression;
-                        _statementResultBuilder.AddParameter(new MapperParameter(_parameterNameStack.Pop(), binaryExp.Value));
+                        MapperParameters.Add(new MapperParameter(_parameterNameStack.Pop(), binaryExp.Value));
                         break;
                     }
                 case ExpressionType.Equal:
@@ -190,7 +190,7 @@ namespace NewLibCore.Storage.SQL
                         else
                         {
                             var getter = Expression.Lambda(memberExp).Compile();
-                            _statementResultBuilder.AddParameter(new MapperParameter(_parameterNameStack.Pop(), getter.DynamicInvoke()));
+                            MapperParameters.Add(new MapperParameter(_parameterNameStack.Pop(), getter.DynamicInvoke()));
                         }
                         break;
                     }
@@ -287,7 +287,8 @@ namespace NewLibCore.Storage.SQL
         {
             Check.IfNullOrZero(binary);
             var binaryExp = binary;
-            if (joinRelation != EMType.NONE)
+
+            if (new[] { EMType.INNER, EMType.LEFT, EMType.RIGHT, EMType.SEIF, EMType.CROSS }.Contains(joinRelation))
             {
                 GetJoin(binaryExp, predicateType, joinRelation);
             }

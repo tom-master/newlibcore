@@ -14,7 +14,7 @@ namespace NewLibCore.Storage.SQL.EMapper.Visitor
         protected override void ParseExpression(LambdaExpression expression)
         {
             var mainTable = GetMainTable();
-            VisitResult = new KeyValuePair<EMType, string>(Expression.Key, Options.Value.TemplateBase.CreateFrom(mainTable.Key, mainTable.Value));
+            VisitResult = (Expression.Key, Options.Value.TemplateBase.CreateFrom(mainTable.Key, mainTable.Value), null);
         }
 
         private KeyValuePair<string, string> GetMainTable()

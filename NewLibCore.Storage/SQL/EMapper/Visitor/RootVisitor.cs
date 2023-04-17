@@ -13,7 +13,7 @@ namespace NewLibCore.Storage.SQL.EMapper.Visitor
     {
         internal KeyValuePair<EMType, Expression> Expression { get; private set; }
 
-        internal KeyValuePair<EMType, string> VisitResult { get; set; }
+        internal (EMType, string, List<MapperParameter>) VisitResult { get; set; }
 
         internal IOptions<EntityMapperOptions> Options { get; private set; }
 

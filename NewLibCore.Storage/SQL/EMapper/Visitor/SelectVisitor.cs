@@ -34,7 +34,7 @@ namespace NewLibCore.Storage.SQL.EMapper.Visitor
                     anonymousObjFields.Add($@"{fieldName}.{member.Member.Name}");
                 }
             }
-            VisitResult = new KeyValuePair<EMType, string>(Expression.Key, Options.Value.TemplateBase.CreateSelect(string.Join(",", anonymousObjFields)).ToString());
+            VisitResult = (Expression.Key, Options.Value.TemplateBase.CreateSelect(string.Join(",", anonymousObjFields)).ToString(), null)
         }
     }
 }
