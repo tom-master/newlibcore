@@ -13,7 +13,7 @@ namespace NewLibCore.Storage.SQL
     /// </summary>
     internal sealed class MapperDbContext/*: MapperDbContextBase*/
     {
-        //private Boolean _disposed = false;
+        //private bool _disposed = false;
 
         //private DbConnection _connection;
 
@@ -76,7 +76,7 @@ namespace NewLibCore.Storage.SQL
         //    return _dataTransaction;
         //}
 
-        //protected internal override void Dispose(Boolean disposing)
+        //protected internal override void Dispose(bool disposing)
         //{
         //    RunDiagnosis.Info($@"释放资源{Environment.NewLine}");
         //    if (!_disposed)
@@ -100,7 +100,7 @@ namespace NewLibCore.Storage.SQL
         //    }
         //}
 
-        //protected internal override ExecutorResult Insert(String sql, params MapperParameter[] parameters)
+        //protected internal override ExecutorResult Insert(string sql, params MapperParameter[] parameters)
         //{
         //    Check.IfNullOrZero(sql);
         //    OpenConnection();
@@ -116,7 +116,7 @@ namespace NewLibCore.Storage.SQL
         //        {
         //            cmd.Parameters.AddRange(parameters.Select(s => _options.TemplateBase.CreateParameter(s.Key, s.Value, s.RuntimeType)).ToArray());
         //        }
-        //        RunDiagnosis.Info($@"SQL语句:{sql} 占位符与参数:{(parameters == null || !parameters.Any() ? "" : String.Join($@"{Environment.NewLine}", parameters.Select(s => $@"{s.Key}----{s.Value}")))}");
+        //        RunDiagnosis.Info($@"SQL语句:{sql} 占位符与参数:{(parameters == null || !parameters.Any() ? "" : string.Join($@"{Environment.NewLine}", parameters.Select(s => $@"{s.Key}----{s.Value}")))}");
 
         //        var executeResult = new ExecutorResult();
         //        executeResult.SaveRawResult(cmd.ExecuteScalar());
@@ -125,7 +125,7 @@ namespace NewLibCore.Storage.SQL
         //    }
         //}
 
-        //protected internal override ExecutorResult Update(String sql, params MapperParameter[] parameters)
+        //protected internal override ExecutorResult Update(string sql, params MapperParameter[] parameters)
         //{
         //    Check.IfNullOrZero(sql);
         //    OpenConnection();
@@ -141,7 +141,7 @@ namespace NewLibCore.Storage.SQL
         //        {
         //            cmd.Parameters.AddRange(parameters.Select(s => _options.TemplateBase.CreateParameter(s.Key, s.Value, s.RuntimeType)).ToArray());
         //        }
-        //        RunDiagnosis.Info($@"SQL语句:{sql} 占位符与参数:{(parameters == null || !parameters.Any() ? "" : String.Join($@"{Environment.NewLine}", parameters.Select(s => $@"{s.Key}----{s.Value}")))}");
+        //        RunDiagnosis.Info($@"SQL语句:{sql} 占位符与参数:{(parameters == null || !parameters.Any() ? "" : string.Join($@"{Environment.NewLine}", parameters.Select(s => $@"{s.Key}----{s.Value}")))}");
 
         //        var executeResult = new ExecutorResult();
         //        executeResult.SaveRawResult(cmd.ExecuteNonQuery());
@@ -150,7 +150,7 @@ namespace NewLibCore.Storage.SQL
         //    }
         //}
 
-        //protected internal override ExecutorResult Select(String sql, params MapperParameter[] parameters)
+        //protected internal override ExecutorResult Select(string sql, params MapperParameter[] parameters)
         //{
         //    Check.IfNullOrZero(sql);
         //    OpenConnection();
@@ -166,7 +166,7 @@ namespace NewLibCore.Storage.SQL
         //        {
         //            cmd.Parameters.AddRange(parameters.Select(s => _options.TemplateBase.CreateParameter(s.Key, s.Value, s.RuntimeType)).ToArray());
         //        }
-        //        RunDiagnosis.Info($@"SQL语句:{sql} 占位符与参数:{(parameters == null || !parameters.Any() ? "" : String.Join($@"{Environment.NewLine}", parameters.Select(s => $@"{s.Key}----{s.Value}")))}");
+        //        RunDiagnosis.Info($@"SQL语句:{sql} 占位符与参数:{(parameters == null || !parameters.Any() ? "" : string.Join($@"{Environment.NewLine}", parameters.Select(s => $@"{s.Key}----{s.Value}")))}");
         //        using (var dr = cmd.ExecuteReader())
         //        {
         //            var dataTable = new DataTable("tmpDt");

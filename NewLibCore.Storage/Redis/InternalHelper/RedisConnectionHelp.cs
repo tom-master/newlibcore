@@ -14,7 +14,7 @@ namespace NewLibCore.Storage.Redis.InternalHelper
 
         private static readonly Object _locker = new Object();
 
-        private static readonly ConcurrentDictionary<String, ConnectionMultiplexer> _connectionCache = new ConcurrentDictionary<String, ConnectionMultiplexer>();
+        private static readonly ConcurrentDictionary<string, ConnectionMultiplexer> _connectionCache = new ConcurrentDictionary<string, ConnectionMultiplexer>();
 
         internal RedisConnectionHelp()
         {
@@ -26,9 +26,9 @@ namespace NewLibCore.Storage.Redis.InternalHelper
         /// </summary>
         /// <param name="connectionString"></param>
         /// <returns></returns>
-        internal static ConnectionMultiplexer GetConnection(String connectionString)
+        internal static ConnectionMultiplexer GetConnection(string connectionString)
         {
-            if (String.IsNullOrEmpty(connectionString))
+            if (string.IsNullOrEmpty(connectionString))
             {
                 throw new ArgumentException("connectionString不能为空");
             }
@@ -46,7 +46,7 @@ namespace NewLibCore.Storage.Redis.InternalHelper
             return _connectionCache[connectionString];
         }
 
-        private static ConnectionMultiplexer InitConnection(String connectionString = null)
+        private static ConnectionMultiplexer InitConnection(string connectionString = null)
         {
             var connect = ConnectionMultiplexer.Connect(connectionString);
             //connect.PreserveAsyncOrder = false;

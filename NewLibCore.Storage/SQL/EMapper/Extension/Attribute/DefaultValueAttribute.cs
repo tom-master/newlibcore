@@ -41,10 +41,10 @@ namespace NewLibCore.Storage.SQL.Validate
 
             if (!type.IsComplexType())
             {
-                var hasNullOrEmpty = String.IsNullOrEmpty(value + "");
-                if (type == typeof(Boolean))
+                var hasNullOrEmpty = string.IsNullOrEmpty(value + "");
+                if (type == typeof(bool))
                 {
-                    Value = !hasNullOrEmpty && value.CastTo((Boolean)value);
+                    Value = !hasNullOrEmpty && value.CastTo((bool)value);
                 }
                 else if (type == typeof(Guid))
                 {
@@ -52,9 +52,9 @@ namespace NewLibCore.Storage.SQL.Validate
                 }
                 else if (type.IsNumeric())
                 {
-                    Value = hasNullOrEmpty ? 0 : value.CastTo((Int32)value);
+                    Value = hasNullOrEmpty ? 0 : value.CastTo((int)value);
                 }
-                else if (type == typeof(String))
+                else if (type == typeof(string))
                 {
                     Value = hasNullOrEmpty ? "" : value.CastTo(value.ToString());
                 }
@@ -85,14 +85,14 @@ namespace NewLibCore.Storage.SQL.Validate
 
         public Type Type { get; private set; }
 
-        internal override Int32 Order => 2;
+        internal override int Order => 2;
 
-        internal override String FailReason(String fieldName)
+        internal override string FailReason(string fieldName)
         {
             return $@"{fieldName} 的默认值从{Value}类型转为{_changedProperty.Type.Name}时失败";
         }
 
-        internal override Boolean IsValidate(ChangedProperty property)
+        internal override bool IsValidate(ChangedProperty property)
         {
             _changedProperty = property;
 

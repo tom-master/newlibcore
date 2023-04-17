@@ -7,7 +7,7 @@ namespace NewLibCore.Storage.Redis.InternalHelper
 {
     public interface ICacheQueryProvider
     {
-        #region String
+        #region string
 
         #region 同步方法
 
@@ -18,14 +18,14 @@ namespace NewLibCore.Storage.Redis.InternalHelper
         /// <param name="value">保存的值</param>
         /// <param name="expiry">过期时间</param>
         /// <returns></returns>
-        Boolean StringSet(String key, String value, TimeSpan? expiry = default);
+        bool StringSet(string key, string value, TimeSpan? expiry = default);
 
         /// <summary>
         /// 保存多个key value
         /// </summary>
         /// <param name="keyValues">键值对</param>
         /// <returns></returns>
-        Boolean StringSet(IEnumerable<KeyValuePair<RedisKey, RedisValue>> keyValues);
+        bool StringSet(IEnumerable<KeyValuePair<RedisKey, RedisValue>> keyValues);
 
         /// <summary>
         /// 保存一个对象
@@ -35,21 +35,21 @@ namespace NewLibCore.Storage.Redis.InternalHelper
         /// <param name="obj"></param>
         /// <param name="expiry"></param>
         /// <returns></returns>
-        Boolean StringSet<T>(String key, T obj, TimeSpan? expiry = default);
+        bool StringSet<T>(string key, T obj, TimeSpan? expiry = default);
 
         /// <summary>
         /// 获取单个key的值
         /// </summary>
         /// <param name="key">Redis Key</param>
         /// <returns></returns>
-        String StringGet(String key);
+        string StringGet(string key);
 
         /// <summary>
         /// 获取多个Key
         /// </summary>
         /// <param name="listKey">Redis Key集合</param>
         /// <returns></returns>
-        RedisValue[] StringGet(IEnumerable<String> listKey);
+        RedisValue[] StringGet(IEnumerable<string> listKey);
 
         /// <summary>
         /// 获取一个key的对象
@@ -57,7 +57,7 @@ namespace NewLibCore.Storage.Redis.InternalHelper
         /// <typeparam name="T"></typeparam>
         /// <param name="key"></param>
         /// <returns></returns>
-        T StringGet<T>(String key);
+        T StringGet<T>(string key);
 
         /// <summary>
         /// 为数字增长val
@@ -65,7 +65,7 @@ namespace NewLibCore.Storage.Redis.InternalHelper
         /// <param name="key"></param>
         /// <param name="val">可以为负</param>
         /// <returns>增长后的值</returns>
-        Double StringIncrement(String key, Double val = 1);
+        Double StringIncrement(string key, Double val = 1);
 
         /// <summary>
         /// 为数字减少val
@@ -73,7 +73,7 @@ namespace NewLibCore.Storage.Redis.InternalHelper
         /// <param name="key"></param>
         /// <param name="val">可以为负</param>
         /// <returns>减少后的值</returns>
-        Double StringDecrement(String key, Double val = 1);
+        Double StringDecrement(string key, Double val = 1);
 
         #endregion 同步方法
 
@@ -86,14 +86,14 @@ namespace NewLibCore.Storage.Redis.InternalHelper
         /// <param name="value">保存的值</param>
         /// <param name="expiry">过期时间</param>
         /// <returns></returns>
-        Task<Boolean> StringSetAsync(String key, String value, TimeSpan? expiry = default);
+        Task<bool> StringSetAsync(string key, string value, TimeSpan? expiry = default);
 
         /// <summary>
         /// 保存多个key value
         /// </summary>
         /// <param name="keyValues">键值对</param>
         /// <returns></returns>
-        Task<Boolean> StringSetAsync(IEnumerable<KeyValuePair<RedisKey, RedisValue>> keyValues);
+        Task<bool> StringSetAsync(IEnumerable<KeyValuePair<RedisKey, RedisValue>> keyValues);
 
         /// <summary>
         /// 保存一个对象
@@ -103,21 +103,21 @@ namespace NewLibCore.Storage.Redis.InternalHelper
         /// <param name="obj"></param>
         /// <param name="expiry"></param>
         /// <returns></returns>
-        Task<Boolean> StringSetAsync<T>(String key, T obj, TimeSpan? expiry = default);
+        Task<bool> StringSetAsync<T>(string key, T obj, TimeSpan? expiry = default);
 
         /// <summary>
         /// 获取单个key的值
         /// </summary>
         /// <param name="key">Redis Key</param>
         /// <returns></returns>
-        Task<String> StringGetAsync(String key);
+        Task<string> StringGetAsync(string key);
 
         /// <summary>
         /// 获取多个Key
         /// </summary>
         /// <param name="listKey">Redis Key集合</param>
         /// <returns></returns>
-        Task<RedisValue[]> StringGetAsync(IEnumerable<String> listKey);
+        Task<RedisValue[]> StringGetAsync(IEnumerable<string> listKey);
 
         /// <summary>
         /// 获取一个key的对象
@@ -125,7 +125,7 @@ namespace NewLibCore.Storage.Redis.InternalHelper
         /// <typeparam name="T"></typeparam>
         /// <param name="key"></param>
         /// <returns></returns>
-        Task<T> StringGetAsync<T>(String key);
+        Task<T> StringGetAsync<T>(string key);
 
         /// <summary>
         /// 为数字增长val
@@ -133,7 +133,7 @@ namespace NewLibCore.Storage.Redis.InternalHelper
         /// <param name="key"></param>
         /// <param name="val">可以为负</param>
         /// <returns>增长后的值</returns>
-        Task<Double> StringIncrementAsync(String key, Double val = 1);
+        Task<Double> StringIncrementAsync(string key, Double val = 1);
 
         /// <summary>
         /// 为数字减少val
@@ -141,11 +141,11 @@ namespace NewLibCore.Storage.Redis.InternalHelper
         /// <param name="key"></param>
         /// <param name="val">可以为负</param>
         /// <returns>减少后的值</returns>
-        Task<Double> StringDecrementAsync(String key, Double val = 1);
+        Task<Double> StringDecrementAsync(string key, Double val = 1);
 
         #endregion 异步方法
 
-        #endregion String
+        #endregion string
 
         #region Hash
 
@@ -157,7 +157,7 @@ namespace NewLibCore.Storage.Redis.InternalHelper
         /// <param name="key"></param>
         /// <param name="dataKey"></param>
         /// <returns></returns>
-        Boolean HashExists(String key, String dataKey);
+        bool HashExists(string key, string dataKey);
 
         /// <summary>
         /// 存储数据到hash表
@@ -167,7 +167,7 @@ namespace NewLibCore.Storage.Redis.InternalHelper
         /// <param name="dataKey"></param>
         /// <param name="t"></param>
         /// <returns></returns>
-        Boolean HashSet<T>(String key, String dataKey, T t);
+        bool HashSet<T>(string key, string dataKey, T t);
 
         /// <summary>
         /// 移除hash中的某值
@@ -175,7 +175,7 @@ namespace NewLibCore.Storage.Redis.InternalHelper
         /// <param name="key"></param>
         /// <param name="dataKey"></param>
         /// <returns></returns>
-        Boolean HashDelete(String key, String dataKey);
+        bool HashDelete(string key, string dataKey);
 
         /// <summary>
         /// 移除hash中的多个值
@@ -183,7 +183,7 @@ namespace NewLibCore.Storage.Redis.InternalHelper
         /// <param name="key"></param>
         /// <param name="dataKeys"></param>
         /// <returns></returns>
-        Int64 HashDelete(String key, IEnumerable<RedisValue> dataKeys);
+        Int64 HashDelete(string key, IEnumerable<RedisValue> dataKeys);
 
         /// <summary>
         /// 从hash表获取数据
@@ -192,7 +192,7 @@ namespace NewLibCore.Storage.Redis.InternalHelper
         /// <param name="key"></param>
         /// <param name="dataKey"></param>
         /// <returns></returns>
-        T HashGet<T>(String key, String dataKey);
+        T HashGet<T>(string key, string dataKey);
 
         /// <summary>
         /// 为数字增长val
@@ -201,7 +201,7 @@ namespace NewLibCore.Storage.Redis.InternalHelper
         /// <param name="dataKey"></param>
         /// <param name="val">可以为负</param>
         /// <returns>增长后的值</returns>
-        Double HashIncrement(String key, String dataKey, Double val = 1);
+        Double HashIncrement(string key, string dataKey, Double val = 1);
 
         /// <summary>
         /// 为数字减少val
@@ -210,7 +210,7 @@ namespace NewLibCore.Storage.Redis.InternalHelper
         /// <param name="dataKey"></param>
         /// <param name="val">可以为负</param>
         /// <returns>减少后的值</returns>
-        Double HashDecrement(String key, String dataKey, Double val = 1);
+        Double HashDecrement(string key, string dataKey, Double val = 1);
 
         /// <summary>
         /// 获取hashkey所有Redis key
@@ -218,7 +218,7 @@ namespace NewLibCore.Storage.Redis.InternalHelper
         /// <typeparam name="T"></typeparam>
         /// <param name="key"></param>
         /// <returns></returns>
-        List<T> HashKeys<T>(String key);
+        List<T> HashKeys<T>(string key);
 
         #endregion 同步方法
 
@@ -230,7 +230,7 @@ namespace NewLibCore.Storage.Redis.InternalHelper
         /// <param name="key"></param>
         /// <param name="dataKey"></param>
         /// <returns></returns>
-        Task<Boolean> HashExistsAsync(String key, String dataKey);
+        Task<bool> HashExistsAsync(string key, string dataKey);
 
         /// <summary>
         /// 存储数据到hash表
@@ -240,7 +240,7 @@ namespace NewLibCore.Storage.Redis.InternalHelper
         /// <param name="dataKey"></param>
         /// <param name="t"></param>
         /// <returns></returns>
-        Task<Boolean> HashSetAsync<T>(String key, String dataKey, T t);
+        Task<bool> HashSetAsync<T>(string key, string dataKey, T t);
 
         /// <summary>
         /// 移除hash中的某值
@@ -248,7 +248,7 @@ namespace NewLibCore.Storage.Redis.InternalHelper
         /// <param name="key"></param>
         /// <param name="dataKey"></param>
         /// <returns></returns>
-        Task<Boolean> HashDeleteAsync(String key, String dataKey);
+        Task<bool> HashDeleteAsync(string key, string dataKey);
 
         /// <summary>
         /// 移除hash中的多个值
@@ -256,7 +256,7 @@ namespace NewLibCore.Storage.Redis.InternalHelper
         /// <param name="key"></param>
         /// <param name="dataKeys"></param>
         /// <returns></returns>
-        Task<Int64> HashDeleteAsync(String key, IEnumerable<RedisValue> dataKeys);
+        Task<Int64> HashDeleteAsync(string key, IEnumerable<RedisValue> dataKeys);
 
         /// <summary>
         /// 从hash表获取数据
@@ -265,7 +265,7 @@ namespace NewLibCore.Storage.Redis.InternalHelper
         /// <param name="key"></param>
         /// <param name="dataKey"></param>
         /// <returns></returns>
-        Task<T> HashGeAsync<T>(String key, String dataKey);
+        Task<T> HashGeAsync<T>(string key, string dataKey);
 
         /// <summary>
         /// 为数字增长val
@@ -274,7 +274,7 @@ namespace NewLibCore.Storage.Redis.InternalHelper
         /// <param name="dataKey"></param>
         /// <param name="val">可以为负</param>
         /// <returns>增长后的值</returns>
-        Task<Double> HashIncrementAsync(String key, String dataKey, Double val = 1);
+        Task<Double> HashIncrementAsync(string key, string dataKey, Double val = 1);
 
         /// <summary>
         /// 为数字减少val
@@ -283,7 +283,7 @@ namespace NewLibCore.Storage.Redis.InternalHelper
         /// <param name="dataKey"></param>
         /// <param name="val">可以为负</param>
         /// <returns>减少后的值</returns>
-        Task<Double> HashDecrementAsync(String key, String dataKey, Double val = 1);
+        Task<Double> HashDecrementAsync(string key, string dataKey, Double val = 1);
 
         /// <summary>
         /// 获取hashkey所有Redis key
@@ -291,7 +291,7 @@ namespace NewLibCore.Storage.Redis.InternalHelper
         /// <typeparam name="T"></typeparam>
         /// <param name="key"></param>
         /// <returns></returns>
-        Task<List<T>> HashKeysAsync<T>(String key);
+        Task<List<T>> HashKeysAsync<T>(string key);
 
         #endregion 异步方法
 
@@ -306,23 +306,23 @@ namespace NewLibCore.Storage.Redis.InternalHelper
         /// </summary>
         /// <param name="key"></param>
         /// <param name="value"></param>
-        void ListRemove<T>(String key, T value);
+        void ListRemove<T>(string key, T value);
 
         /// <summary>
         /// 获取指定key的List
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        List<T> ListRange<T>(String key);
+        List<T> ListRange<T>(string key);
 
-        List<T> ListRange<T>(String key, Int32 start, Int32 end);
+        List<T> ListRange<T>(string key, int start, int end);
 
         /// <summary>
         /// 入队
         /// </summary>
         /// <param name="key"></param>
         /// <param name="value"></param>
-        void ListRightPush<T>(String key, T value);
+        void ListRightPush<T>(string key, T value);
 
         /// <summary>
         /// 出队
@@ -330,7 +330,7 @@ namespace NewLibCore.Storage.Redis.InternalHelper
         /// <typeparam name="T"></typeparam>
         /// <param name="key"></param>
         /// <returns></returns>
-        T ListRightPop<T>(String key);
+        T ListRightPop<T>(string key);
 
         /// <summary>
         /// 入栈
@@ -338,7 +338,7 @@ namespace NewLibCore.Storage.Redis.InternalHelper
         /// <typeparam name="T"></typeparam>
         /// <param name="key"></param>
         /// <param name="value"></param>
-        void ListLeftPush<T>(String key, T value);
+        void ListLeftPush<T>(string key, T value);
 
         /// <summary>
         /// 出栈
@@ -346,14 +346,14 @@ namespace NewLibCore.Storage.Redis.InternalHelper
         /// <typeparam name="T"></typeparam>
         /// <param name="key"></param>
         /// <returns></returns>
-        T ListLeftPop<T>(String key);
+        T ListLeftPop<T>(string key);
 
         /// <summary>
         /// 获取集合中的数量
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        Int64 ListLength(String key);
+        Int64 ListLength(string key);
 
         #endregion 同步方法
 
@@ -364,21 +364,21 @@ namespace NewLibCore.Storage.Redis.InternalHelper
         /// </summary>
         /// <param name="key"></param>
         /// <param name="value"></param>
-        Task<Int64> ListRemoveAsync<T>(String key, T value);
+        Task<Int64> ListRemoveAsync<T>(string key, T value);
 
         /// <summary>
         /// 获取指定key的List
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        Task<List<T>> ListRangeAsync<T>(String key);
+        Task<List<T>> ListRangeAsync<T>(string key);
 
         /// <summary>
         /// 入队
         /// </summary>
         /// <param name="key"></param>
         /// <param name="value"></param>
-        Task<Int64> ListRightPushAsync<T>(String key, T value);
+        Task<Int64> ListRightPushAsync<T>(string key, T value);
 
         /// <summary>
         /// 出队
@@ -386,7 +386,7 @@ namespace NewLibCore.Storage.Redis.InternalHelper
         /// <typeparam name="T"></typeparam>
         /// <param name="key"></param>
         /// <returns></returns>
-        Task<T> ListRightPopAsync<T>(String key);
+        Task<T> ListRightPopAsync<T>(string key);
 
         /// <summary>
         /// 入栈
@@ -394,7 +394,7 @@ namespace NewLibCore.Storage.Redis.InternalHelper
         /// <typeparam name="T"></typeparam>
         /// <param name="key"></param>
         /// <param name="value"></param>
-        Task<Int64> ListLeftPushAsync<T>(String key, T value);
+        Task<Int64> ListLeftPushAsync<T>(string key, T value);
 
         /// <summary>
         /// 出栈
@@ -402,14 +402,14 @@ namespace NewLibCore.Storage.Redis.InternalHelper
         /// <typeparam name="T"></typeparam>
         /// <param name="key"></param>
         /// <returns></returns>
-        Task<T> ListLeftPopAsync<T>(String key);
+        Task<T> ListLeftPopAsync<T>(string key);
 
         /// <summary>
         /// 获取集合中的数量
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        Task<Int64> ListLengthAsync(String key);
+        Task<Int64> ListLengthAsync(string key);
 
         #endregion 异步方法
 
@@ -425,28 +425,28 @@ namespace NewLibCore.Storage.Redis.InternalHelper
         /// <param name="key"></param>
         /// <param name="value"></param>
         /// <param name="score"></param>
-        Boolean SortedSetAdd<T>(String key, T value, Double score);
+        bool SortedSetAdd<T>(string key, T value, Double score);
 
         /// <summary>
         /// 删除
         /// </summary>
         /// <param name="key"></param>
         /// <param name="value"></param>
-        Boolean SortedSetRemove<T>(String key, T value);
+        bool SortedSetRemove<T>(string key, T value);
 
         /// <summary>
         /// 获取全部
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        List<T> SortedSetRangeByRank<T>(String key);
+        List<T> SortedSetRangeByRank<T>(string key);
 
         /// <summary>
         /// 获取集合中的数量
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        Int64 SortedSetLength(String key);
+        Int64 SortedSetLength(string key);
 
         #endregion 同步方法
 
@@ -458,48 +458,48 @@ namespace NewLibCore.Storage.Redis.InternalHelper
         /// <param name="key"></param>
         /// <param name="value"></param>
         /// <param name="score"></param>
-        Task<Boolean> SortedSetAddAsync<T>(String key, T value, Double score);
+        Task<bool> SortedSetAddAsync<T>(string key, T value, Double score);
 
         /// <summary>
         /// 删除
         /// </summary>
         /// <param name="key"></param>
         /// <param name="value"></param>
-        Task<Boolean> SortedSetRemoveAsync<T>(String key, T value);
+        Task<bool> SortedSetRemoveAsync<T>(string key, T value);
 
         /// <summary>
         /// 获取全部
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        Task<List<T>> SortedSetRangeByRankAsync<T>(String key);
+        Task<List<T>> SortedSetRangeByRankAsync<T>(string key);
 
         /// <summary>
         /// 获取集合中的数量
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        Task<Int64> SortedSetLengthAsync(String key);
+        Task<Int64> SortedSetLengthAsync(string key);
 
         #endregion 异步方法
 
         #endregion SortedSet 有序集合
 
-        Boolean KeyDelete(String key);
+        bool KeyDelete(string key);
 
         /// <summary>
         /// 删除多个key
         /// </summary>
         /// <param name="keys">rediskey</param>
         /// <returns>成功删除的个数</returns>
-        Int64 KeyDelete(IEnumerable<String> keys);
+        Int64 KeyDelete(IEnumerable<string> keys);
 
         /// <summary>
         /// 判断key是否存储
         /// </summary>
         /// <param name="key">redis key</param>
         /// <returns></returns>
-        Boolean KeyExists(String key);
+        bool KeyExists(string key);
 
         /// <summary>
         /// 重新命名key
@@ -507,7 +507,7 @@ namespace NewLibCore.Storage.Redis.InternalHelper
         /// <param name="key">就的redis key</param>
         /// <param name="newKey">新的redis key</param>
         /// <returns></returns>
-        Boolean KeyRename(String key, String newKey);
+        bool KeyRename(string key, string newKey);
 
         /// <summary>
         /// 设置Key的时间
@@ -515,9 +515,9 @@ namespace NewLibCore.Storage.Redis.InternalHelper
         /// <param name="key">redis key</param>
         /// <param name="expiry"></param>
         /// <returns></returns>
-        Boolean KeyExpire(String key, TimeSpan? expiry = default);
+        bool KeyExpire(string key, TimeSpan? expiry = default);
 
-        RedisType GetKeyType(String key);
+        RedisType GetKeyType(string key);
 
     }
 }

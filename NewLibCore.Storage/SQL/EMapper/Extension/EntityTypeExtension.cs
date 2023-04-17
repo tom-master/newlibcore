@@ -7,14 +7,14 @@ namespace NewLibCore.Storage.SQL.Extension
 {
     internal static class EntityTypeExtension
     {
-        private static readonly IDictionary<String, KeyValuePair<String, String>> _dic = new Dictionary<String, KeyValuePair<String, String>>();
+        private static readonly IDictionary<string, KeyValuePair<string, string>> _dic = new Dictionary<string, KeyValuePair<string, string>>();
 
         /// <summary>
         /// 获取设置在EntityBase的表别名
         /// </summary>
         /// <param name="entityBase"></param>
         /// <returns></returns>
-        internal static (String TableName, String AliasName) GetEntityBaseAliasName(this EntityBase entityBase)
+        internal static (string TableName, string AliasName) GetEntityBaseAliasName(this EntityBase entityBase)
         {
             return GetEntityBaseAliasName(entityBase.GetType());
         }
@@ -24,7 +24,7 @@ namespace NewLibCore.Storage.SQL.Extension
         /// </summary>
         /// <param name="t">对象类型</param>
         /// <returns></returns>
-        internal static (String TableName, String AliasName) GetEntityBaseAliasName(this Type t)
+        internal static (string TableName, string AliasName) GetEntityBaseAliasName(this Type t)
         {
             Check.IfNullOrZero(t);
             lock (_dic)

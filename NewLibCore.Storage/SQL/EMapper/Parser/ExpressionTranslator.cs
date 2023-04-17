@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
-using System.Threading;
 using Microsoft.Extensions.Options;
-using NewLibCore.Storage.SQL.Component;
 using NewLibCore.Storage.SQL.Extension;
 using NewLibCore.Validate;
 
@@ -14,86 +12,35 @@ namespace NewLibCore.Storage.SQL
     /// <summary>
     /// 谓词表达式翻译
     /// </summary>
-    public class PredicateExpressionTranslator
+    public class ExpressionTranslator
     {
-        private readonly Stack<PredicateType> _predicateTypeStack;
-        private readonly Stack<String> _parameterNameStack;
+        private readonly Stack<EMType> _emTypeStack;
+        private readonly Stack<string> _parameterNameStack;
         private readonly EntityMapperOptions _options;
         private readonly StatementResultBuilder _statementResultBuilder;
 
-        private IList<KeyValuePair<String, String>> _aliasMapper;
+        internal List<KeyValuePair<string, string>> AliasMapper { get; set; }
 
-        internal PredicateExpressionTranslator(IOptions<EntityMapperOptions> options)
+        internal ExpressionTranslator(IOptions<EntityMapperOptions> options)
         {
             Check.IfNullOrZero(options);
 
             _options = options.Value;
-            _parameterNameStack = new Stack<String>();
-            _predicateTypeStack = new Stack<PredicateType>();
+            _parameterNameStack = new Stack<string>();
+            _emTypeStack = new Stack<EMType>();
 
-            _aliasMapper = new List<KeyValuePair<String, String>>();
+            AliasMapper = new List<KeyValuePair<string, string>>();
             _statementResultBuilder = new StatementResultBuilder();
         }
 
-        internal StatementResultBuilder Translate(RootComponent rootComponent)
+        internal StringBuilder TranslationResult { get; private set; } = new StringBuilder();
+        private void AppendResult(string value)
         {
-            _aliasMapper = rootComponent.MergeAllComponentAlias();
-            //循环翻译连接对象
-            var joinExpressions = rootComponent.PredicateExpressions.Where(w => new[] { PredicateType.LEFT, PredicateType.RIGHT, PredicateType.INNER, PredicateType.SEIF, PredicateType.CROSS }.Contains(w.Key)).ToList();
-            foreach (var item in joinExpressions)
-            {
-                foreach (var aliasItem in rootComponent.ExtractAliasNames(item.Value).Where(w => w.Key != rootComponent.GetMainTable().Key))
-                {
-                    //获取连接语句的模板 
-                    AssignmentPredicateType(item.Key, _options.TemplateBase.CreateJoin(item.Key, aliasItem.Key, aliasItem.Value.ToLower()));
-
-                    //获取连接类型中的存储的表达式对象进行翻译
-                    InternalProcess(item.Value, item.Key);
-                }
-            }
-
-            //翻译Where条件对象
-            if (rootComponent.PredicateExpressions.Where(w => w.Key == PredicateType.WHERE).Any())
-            {
-                var lambdaExp = (LambdaExpression)rootComponent.PredicateExpressions.Where(w => w.Key == PredicateType.WHERE).FirstOrDefault().Value;
-                //当表达式主体为常量时则直接返回，不做解析
-                if (lambdaExp.Body.NodeType == ExpressionType.Constant)
-                {
-                    _statementResultBuilder.WhereStatement.Replace(" WHERE ", " ");
-                    return _statementResultBuilder;
-                }
-                AssignmentPredicateType(PredicateType.NONE, " WHERE ");
-
-                //获取Where类型中的存储的表达式对象进行翻译
-                InternalProcess(lambdaExp, PredicateType.NONE);
-            }
-
-            foreach (var aliasItem in _aliasMapper)
-            {
-                AssignmentPredicateType(PredicateType.NONE, $@"{PredicateType.AND} {aliasItem.Value.ToLower()}.IsDeleted = 0");
-            }
-
-
-            var mainTable = rootComponent.GetMainTable();
-            var selectStatement = _options.TemplateBase.CreateSelect(rootComponent.ExtractSelectFields(), mainTable.Key, mainTable.Value);
-            _statementResultBuilder.AddStatementTemplate(selectStatement);
-            return _statementResultBuilder;
-        }
-
-        private void AssignmentPredicateType(PredicateType joinRelation, String value)
-        {
-            if (String.IsNullOrEmpty(value))
+            if (string.IsNullOrEmpty(value))
             {
                 return;
             }
-            if (joinRelation == PredicateType.NONE)
-            {
-                _statementResultBuilder.WhereStatement.Append($@" {value} ");
-            }
-            else
-            {
-                _statementResultBuilder.JoinStatement.Append($@" {value} ");
-            }
+            TranslationResult.Append(value);
         }
 
         /// <summary>
@@ -101,7 +48,7 @@ namespace NewLibCore.Storage.SQL
         /// </summary>
         /// <param name="expression"></param>
         /// <param name="joinRelation"></param>
-        private void InternalProcess(Expression expression, PredicateType joinRelation)
+        internal void Translate(Expression expression, EMType joinRelation)
         {
             switch (expression.NodeType)
             {
@@ -111,19 +58,19 @@ namespace NewLibCore.Storage.SQL
 
                         if (binaryExp.Left.NodeType != ExpressionType.Constant && binaryExp.Right.NodeType != ExpressionType.Constant)
                         {
-                            InternalProcess(binaryExp.Left, joinRelation);
-                            AssignmentPredicateType(joinRelation, PredicateType.AND.ToString());
-                            InternalProcess(binaryExp.Right, joinRelation);
+                            Translate(binaryExp.Left, joinRelation);
+                            AppendResult(EMType.AND.ToString());
+                            Translate(binaryExp.Right, joinRelation);
                         }
                         else
                         {
                             if (binaryExp.Left.NodeType != ExpressionType.Constant)
                             {
-                                InternalProcess(binaryExp.Left, joinRelation);
+                                Translate(binaryExp.Left, joinRelation);
                             }
                             else if (binaryExp.Right.NodeType != ExpressionType.Constant)
                             {
-                                InternalProcess(binaryExp.Right, joinRelation);
+                                Translate(binaryExp.Right, joinRelation);
                             }
                         }
 
@@ -132,9 +79,9 @@ namespace NewLibCore.Storage.SQL
                 case ExpressionType.OrElse:
                     {
                         var binaryExp = (BinaryExpression)expression;
-                        InternalProcess(binaryExp.Left, joinRelation);
-                        AssignmentPredicateType(joinRelation, PredicateType.OR.ToString());
-                        InternalProcess(binaryExp.Right, joinRelation);
+                        Translate(binaryExp.Left, joinRelation);
+                        AppendResult(EMType.OR.ToString());
+                        Translate(binaryExp.Right, joinRelation);
                         break;
                     }
                 case ExpressionType.Call:
@@ -151,37 +98,37 @@ namespace NewLibCore.Storage.SQL
                 case ExpressionType.Equal:
                     {
                         var binaryExp = (BinaryExpression)expression;
-                        CreatePredicate(binaryExp, PredicateType.EQ, joinRelation);
+                        CreatePredicate(binaryExp, EMType.EQ, joinRelation);
                         break;
                     }
                 case ExpressionType.GreaterThan:
                     {
                         var binaryExp = (BinaryExpression)expression;
-                        CreatePredicate(binaryExp, PredicateType.GT, joinRelation);
+                        CreatePredicate(binaryExp, EMType.GT, joinRelation);
                         break;
                     }
                 case ExpressionType.NotEqual:
                     {
                         var binaryExp = (BinaryExpression)expression;
-                        CreatePredicate(binaryExp, PredicateType.NQ, joinRelation);
+                        CreatePredicate(binaryExp, EMType.NQ, joinRelation);
                         break;
                     }
                 case ExpressionType.GreaterThanOrEqual:
                     {
                         var binaryExp = (BinaryExpression)expression;
-                        CreatePredicate(binaryExp, PredicateType.GE, joinRelation);
+                        CreatePredicate(binaryExp, EMType.GE, joinRelation);
                         break;
                     }
                 case ExpressionType.LessThan:
                     {
                         var binaryExp = (BinaryExpression)expression;
-                        CreatePredicate(binaryExp, PredicateType.LT, joinRelation);
+                        CreatePredicate(binaryExp, EMType.LT, joinRelation);
                         break;
                     }
                 case ExpressionType.LessThanOrEqual:
                     {
                         var binaryExp = (BinaryExpression)expression;
-                        CreatePredicate(binaryExp, PredicateType.LE, joinRelation);
+                        CreatePredicate(binaryExp, EMType.LE, joinRelation);
                         break;
                     }
                 case ExpressionType.Lambda:
@@ -194,19 +141,19 @@ namespace NewLibCore.Storage.SQL
 
                         if (lamdbaExp.Body is BinaryExpression expression4)
                         {
-                            InternalProcess(expression4, joinRelation);
+                            Translate(expression4, joinRelation);
                         }
                         else if (lamdbaExp.Body is MemberExpression expression3)
                         {
-                            InternalProcess(expression3, joinRelation);
+                            Translate(expression3, joinRelation);
                         }
                         else if (lamdbaExp.Body is MethodCallExpression expression2)
                         {
-                            InternalProcess(expression2, joinRelation);
+                            Translate(expression2, joinRelation);
                         }
                         else if (lamdbaExp.Body is UnaryExpression expression1)
                         {
-                            InternalProcess(expression1, joinRelation);
+                            Translate(expression1, joinRelation);
                         }
                         break;
                     }
@@ -215,28 +162,28 @@ namespace NewLibCore.Storage.SQL
                         var memberExp = (MemberExpression)expression;
                         if (memberExp.Expression.NodeType == ExpressionType.Parameter)
                         {
-                            if (_predicateTypeStack.Count == 0)
+                            if (_emTypeStack.Count == 0)
                             {
-                                if (memberExp.Type == typeof(Boolean))
+                                if (memberExp.Type == typeof(bool))
                                 {
                                     var parameterExp = (ParameterExpression)memberExp.Expression;
                                     var newMember = Expression.MakeMemberAccess(parameterExp, parameterExp.Type.GetMember(memberExp.Member.Name)[0]);
                                     var newExpression = Expression.Equal(newMember, Expression.Constant(true));
-                                    InternalProcess(newExpression, joinRelation);
+                                    Translate(newExpression, joinRelation);
                                 }
                             }
                             else
                             {
                                 var parameterExp = (ParameterExpression)memberExp.Expression;
                                 var internalAliasName = "";
-                                if (!_aliasMapper.Any(a => a.Key == parameterExp.Type.GetEntityBaseAliasName().TableName && a.Value == parameterExp.Type.GetEntityBaseAliasName().AliasName))
+                                if (!AliasMapper.Any(a => a.Key == parameterExp.Type.GetEntityBaseAliasName().TableName && a.Value == parameterExp.Type.GetEntityBaseAliasName().AliasName))
                                 {
                                     throw new ArgumentException($@"没有找到{parameterExp.Type.Name}所对应的形参");
                                 }
-                                internalAliasName = $@"{_aliasMapper.Where(w => w.Key == parameterExp.Type.GetEntityBaseAliasName().TableName && w.Value == parameterExp.Type.GetEntityBaseAliasName().AliasName).FirstOrDefault().Value.ToLower()}.";
+                                internalAliasName = $@"{AliasMapper.Where(w => w.Key == parameterExp.Type.GetEntityBaseAliasName().TableName && w.Value == parameterExp.Type.GetEntityBaseAliasName().AliasName).FirstOrDefault().Value.ToLower()}.";
 
                                 var newParameterName = Guid.NewGuid().ToString().Replace("-", "");
-                                AssignmentPredicateType(joinRelation, _options.TemplateBase.CreatePredicate(_predicateTypeStack.Pop(), $@"{internalAliasName}{memberExp.Member.Name}", $"@{newParameterName}"));
+                                AppendResult(_options.TemplateBase.CreatePredicate(_emTypeStack.Pop(), $@"{internalAliasName}{memberExp.Member.Name}", $"@{newParameterName}"));
                                 _parameterNameStack.Push(newParameterName);
                             }
                         }
@@ -252,13 +199,13 @@ namespace NewLibCore.Storage.SQL
                         var memberExpression = (MemberExpression)((UnaryExpression)expression).Operand;
                         var parameterExp = (ParameterExpression)memberExpression.Expression;
                         var newMember = Expression.MakeMemberAccess(parameterExp, parameterExp.Type.GetMember(memberExpression.Member.Name)[0]);
-                        InternalProcess(Expression.NotEqual(newMember, Expression.Constant(true)), joinRelation);
+                        Translate(Expression.NotEqual(newMember, Expression.Constant(true)), joinRelation);
                         break;
                     }
                 case ExpressionType.Convert:
                     {
                         var exp = ((UnaryExpression)expression).Operand;
-                        InternalProcess(exp, joinRelation);
+                        Translate(exp, joinRelation);
                         break;
                     }
                 default:
@@ -268,7 +215,7 @@ namespace NewLibCore.Storage.SQL
             }
         }
 
-        private void ProcessMethodCall(Expression expression, PredicateType joinRelation)
+        private void ProcessMethodCall(Expression expression, EMType joinRelation)
         {
             Check.IfNullOrZero(expression);
             var methodCallExp = (MethodCallExpression)expression;
@@ -291,24 +238,24 @@ namespace NewLibCore.Storage.SQL
                 obj = methodCallExp.Object;
             }
 
-            PredicateType predicateType = default;
+            EMType predicateType = default;
             if (methodName == "StartsWith")
             {
-                predicateType = PredicateType.START_LIKE;
+                predicateType = EMType.START_LIKE;
             }
             else if (methodName == "EndsWith")
             {
-                predicateType = PredicateType.END_LIKE;
+                predicateType = EMType.END_LIKE;
             }
             else if (methodName == "Contains")
             {
-                if (argumentType == typeof(String))
+                if (argumentType == typeof(string))
                 {
-                    predicateType = PredicateType.FULL_LIKE;
+                    predicateType = EMType.FULL_LIKE;
                 }
                 else if (argumentType.IsCollection())
                 {
-                    predicateType = PredicateType.IN;
+                    predicateType = EMType.IN;
                 }
             }
             else
@@ -316,17 +263,17 @@ namespace NewLibCore.Storage.SQL
                 throw new Exception("暂不支持的方法");
             }
 
-            _predicateTypeStack.Push(predicateType);
+            _emTypeStack.Push(predicateType);
 
-            if (argumentType == typeof(String))
+            if (argumentType == typeof(string))
             {
-                InternalProcess(obj, joinRelation);
-                InternalProcess(argument, joinRelation);
+                Translate(obj, joinRelation);
+                Translate(argument, joinRelation);
             }
             else if (argumentType.IsCollection())
             {
-                InternalProcess(argument, joinRelation);
-                InternalProcess(obj, joinRelation);
+                Translate(argument, joinRelation);
+                Translate(obj, joinRelation);
             }
         }
 
@@ -336,28 +283,28 @@ namespace NewLibCore.Storage.SQL
         /// <param name="binary"></param>
         /// <param name="predicateType"></param>
         /// <param name="joinRelation"></param>
-        private void CreatePredicate(BinaryExpression binary, PredicateType predicateType, PredicateType joinRelation)
+        private void CreatePredicate(BinaryExpression binary, EMType predicateType, EMType joinRelation)
         {
             Check.IfNullOrZero(binary);
             var binaryExp = binary;
-            if (joinRelation != PredicateType.NONE)
+            if (joinRelation != EMType.NONE)
             {
                 GetJoin(binaryExp, predicateType, joinRelation);
             }
             else
             {
-                _predicateTypeStack.Push(predicateType);
+                _emTypeStack.Push(predicateType);
 
                 //当表达式的左边和右边同时不为常量或者只有左边为常量的话，则从左到右解析表达式，否则从右到左解析表达式
                 if ((binary.Left.NodeType != ExpressionType.Constant && binary.Right.NodeType != ExpressionType.Constant) || binary.Left.NodeType != ExpressionType.Constant)
                 {
-                    InternalProcess(binaryExp.Left, joinRelation);
-                    InternalProcess(binaryExp.Right, joinRelation);
+                    Translate(binaryExp.Left, joinRelation);
+                    Translate(binaryExp.Right, joinRelation);
                 }
                 else
                 {
-                    InternalProcess(binaryExp.Right, joinRelation);
-                    InternalProcess(binaryExp.Left, joinRelation);
+                    Translate(binaryExp.Right, joinRelation);
+                    Translate(binaryExp.Left, joinRelation);
                 }
             }
         }
@@ -367,10 +314,9 @@ namespace NewLibCore.Storage.SQL
         /// </summary>
         /// <param name="binary">表达式</param>
         /// <param name="relationType">关系类型</param>
-        private void GetJoin(BinaryExpression binary, PredicateType predicateType, PredicateType joinRelation)
+        private void GetJoin(BinaryExpression binary, EMType predicateType, EMType joinRelation)
         {
             Check.IfNullOrZero(binary);
-
             var leftMember = (MemberExpression)binary.Left;
             var rightMember = (MemberExpression)binary.Right;
             //表达式左右两边都不为常量时例如 xx.Id==yy.Id
@@ -379,24 +325,24 @@ namespace NewLibCore.Storage.SQL
                 var leftAliasName = ExtractMember(leftMember);
                 var rightAliasName = ExtractMember(rightMember);
 
-
-
                 var relationTemplate = _options.TemplateBase.CreatePredicate(predicateType, $"{rightAliasName}.{rightMember.Member.Name}", $"{leftAliasName}.{leftMember.Member.Name}");
-                AssignmentPredicateType(joinRelation, relationTemplate);
+                AppendResult(relationTemplate);
             }
             else if (binary.Left.NodeType == ExpressionType.Constant) //表达式左边为常量
             {
                 var rightAliasName = ExtractMember(rightMember);
                 var constant = (ConstantExpression)binary.Left;
-                var value = Boolean.TryParse(constant.Value.ToString(), out var result) ? (result ? 1 : 0).ToString() : constant.Value;
-                AssignmentPredicateType(joinRelation, _options.TemplateBase.CreatePredicate(predicateType, value + "", $"{rightAliasName}.{rightMember.Member.Name}"));
+                var value = bool.TryParse(constant.Value.ToString(), out var result) ? (result ? 1 : 0).ToString() : constant.Value;
+                var relationTemplate = _options.TemplateBase.CreatePredicate(predicateType, value + "", $"{rightAliasName}.{rightMember.Member.Name}");
+                AppendResult(relationTemplate);
             }
             else if (binary.Right.NodeType == ExpressionType.Constant) //表达式的右边为常量
             {
                 var leftAliasName = ExtractMember(leftMember);
                 var constant = (ConstantExpression)binary.Right;
-                var value = Boolean.TryParse(constant.Value.ToString(), out var result) ? (result ? 1 : 0).ToString() : constant.Value;
-                AssignmentPredicateType(joinRelation, _options.TemplateBase.CreatePredicate(predicateType, $"{leftAliasName}.{leftMember.Member.Name}", value + ""));
+                var value = bool.TryParse(constant.Value.ToString(), out var result) ? (result ? 1 : 0).ToString() : constant.Value;
+                var relationTemplate = _options.TemplateBase.CreatePredicate(predicateType, $"{leftAliasName}.{leftMember.Member.Name}", value + "");
+                AppendResult(relationTemplate);
             }
         }
 
@@ -405,23 +351,23 @@ namespace NewLibCore.Storage.SQL
         /// </summary>
         /// <param name="memberExpression"></param>
         /// <returns></returns>
-        private String ExtractMember(MemberExpression memberExpression)
+        private string ExtractMember(MemberExpression memberExpression)
         {
             Check.IfNullOrZero(memberExpression);
             var parameterExpression = (ParameterExpression)memberExpression.Expression;
             var (tableName, aliasName) = parameterExpression.Type.GetEntityBaseAliasName();
-            if (!_aliasMapper.Any(a => a.Key == tableName && a.Value == aliasName))
+            if (!AliasMapper.Any(a => a.Key == tableName && a.Value == aliasName))
             {
                 throw new Exception($@"没有找到参数名:{memberExpression.Type.Name}所对应的表别名");
             }
-            return _aliasMapper.Where(w => w.Key == tableName && w.Value == aliasName).FirstOrDefault().Value.ToLower();
+            return AliasMapper.Where(w => w.Key == tableName && w.Value == aliasName).FirstOrDefault().Value.ToLower();
         }
     }
 
     internal class StatementResultBuilder: IDisposable
     {
-        private static readonly String _joinPlaceHolder = "<join>";
-        private static readonly String _wherePlaceHolder = "<where>";
+        private static readonly string _joinPlaceHolder = "<join>";
+        private static readonly string _wherePlaceHolder = "<where>";
 
         internal StringBuilder JoinStatement { get; } = new StringBuilder();
 
@@ -441,7 +387,7 @@ namespace NewLibCore.Storage.SQL
             _parameters.Add(parameter);
         }
 
-        internal (String sql, IEnumerable<MapperParameter> parameters) Build()
+        internal (string sql, IEnumerable<MapperParameter> parameters) Build()
         {
             StatmentTemplate = StatmentTemplate.Replace(_joinPlaceHolder, JoinStatement.ToString());
             StatmentTemplate = StatmentTemplate.Replace(_wherePlaceHolder, WhereStatement.ToString());

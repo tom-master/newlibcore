@@ -38,7 +38,7 @@ namespace NewLibCore.Storage.SQL
             _options.Value.TransactionControl.Commit();
         }
 
-        //private IEntityMapperExecutor GetExecutor(String componentIdentity)
+        //private IEntityMapperExecutor GetExecutor(string componentIdentity)
         //{
         //    return _entityMapperExecutors.First(e => e.ComponentIdentity == componentIdentity);
         //}
@@ -52,7 +52,7 @@ namespace NewLibCore.Storage.SQL
         //    model.Id = insertComponent.Execute().GetModifyRowCount();
         //}
 
-        //public void Update<TModel>(TModel model, Expression<Func<TModel, Boolean>> filter = null) where TModel : EntityBase, new()
+        //public void Update<TModel>(TModel model, Expression<Func<TModel, bool>> filter = null) where TModel : EntityBase, new()
         //{
         //    Check.IfNullOrZero(model);
         //    var updateComponent = (UpdateComponent)GetExecutor(nameof(UpdateComponent));

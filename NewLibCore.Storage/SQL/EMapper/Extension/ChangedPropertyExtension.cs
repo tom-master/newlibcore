@@ -15,11 +15,11 @@ namespace NewLibCore.Storage.SQL.EMapper.Extension
 
     internal class SqlElements
     {
-        internal String Fields { get; private set; }
+        internal string Fields { get; private set; }
 
-        internal String InsertPlaceHolders { get; private set; }
+        internal string InsertPlaceHolders { get; private set; }
 
-        internal String UpdatePlaceHolders { get; private set; }
+        internal string UpdatePlaceHolders { get; private set; }
 
         internal IEnumerable<MapperParameter> Parameters { get; private set; }
 
@@ -27,9 +27,9 @@ namespace NewLibCore.Storage.SQL.EMapper.Extension
         {
             Check.IfNullOrZero(changedProperties);
 
-            Fields = String.Join(",", changedProperties.Select(c => c.PropertyName));
-            InsertPlaceHolders = String.Join(",", changedProperties.Select(key => $@"@{key.PropertyName}"));
-            UpdatePlaceHolders = String.Join(",", changedProperties.Select(c => $@"{c.PropertyName}=@{c.PropertyName}"));
+            Fields = string.Join(",", changedProperties.Select(c => c.PropertyName));
+            InsertPlaceHolders = string.Join(",", changedProperties.Select(key => $@"@{key.PropertyName}"));
+            UpdatePlaceHolders = string.Join(",", changedProperties.Select(c => $@"{c.PropertyName}=@{c.PropertyName}"));
             Parameters = changedProperties.Select(c => new MapperParameter(c.PropertyName, c.Value)).ToArray();
         }
     }

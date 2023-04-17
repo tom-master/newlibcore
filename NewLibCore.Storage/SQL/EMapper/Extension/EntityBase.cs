@@ -21,14 +21,14 @@ namespace NewLibCore.Storage.SQL
         /// </summary>
         /// <value></value>
         [PrimaryKey]
-        public Int32 Id { get; set; }
+        public int Id { get; set; }
 
         /// <summary>
         /// 是否删除
         /// </summary>
         /// <value></value>
-        [DefaultValue(typeof(Boolean))]
-        public Boolean IsDeleted { get; set; }
+        [DefaultValue(typeof(bool))]
+        public bool IsDeleted { get; set; }
 
         /// <summary>
         /// 添加时间

@@ -13,19 +13,19 @@ namespace NewLibCore.Storage.SQL.Validate
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        internal virtual Boolean IsValidate(ChangedProperty property) { return false; }
+        internal virtual bool IsValidate(ChangedProperty property) { return false; }
 
         /// <summary>
         /// 特性生效的优先级
         /// </summary>
         /// <value></value>
-        internal virtual Int32 Order { get { return -1; } }
+        internal virtual int Order { get { return -1; } }
 
         /// <summary>
         /// 失败原因
         /// </summary>
         /// <param name="fieldName"></param>
         /// <returns></returns>
-        internal virtual String FailReason(String fieldName) { return fieldName; }
+        internal virtual string FailReason(string fieldName) { return fieldName; }
     }
 }

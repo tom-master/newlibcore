@@ -10,17 +10,17 @@ namespace NewLibCore.Storage.SQL.Component
 {
     internal class RootComponent
     {
-        protected internal IList<KeyValuePair<PredicateType, Expression>> PredicateExpressions { get; } = new List<KeyValuePair<PredicateType, Expression>>();
+        protected internal IList<KeyValuePair<EMType, Expression>> PredicateExpressions { get; } = new List<KeyValuePair<EMType, Expression>>();
 
-        internal void AddExpression(Expression expression, PredicateType predicateType)
+        internal void AddExpression(Expression expression, EMType predicateType)
         {
             Check.IfNullOrZero(expression);
-            PredicateExpressions.Add(new KeyValuePair<PredicateType, Expression>(predicateType, expression));
+            PredicateExpressions.Add(new KeyValuePair<EMType, Expression>(predicateType, expression));
         }
 
         internal KeyValuePair<string, string> GetMainTable()
         {
-            var fromExpression = PredicateExpressions.Where(w => w.Key == PredicateType.FROM).FirstOrDefault();
+            var fromExpression = PredicateExpressions.Where(w => w.Key == EMType.FROM).FirstOrDefault();
             return ExtractAliasNames(fromExpression.Value).FirstOrDefault();
         }
 
@@ -36,9 +36,9 @@ namespace NewLibCore.Storage.SQL.Component
             return result.Distinct().ToList();
         }
 
-        internal IList<KeyValuePair<String, String>> MergeAllComponentAlias()
+        internal IList<KeyValuePair<string, string>> MergeAllComponentAlias()
         {
-            var newAliasMapper = new List<KeyValuePair<String, String>>();
+            var newAliasMapper = new List<KeyValuePair<string, string>>();
 
             foreach (var predicateExpression in PredicateExpressions)
             {
@@ -53,11 +53,11 @@ namespace NewLibCore.Storage.SQL.Component
             return newAliasMapper;
         }
 
-        internal String ExtractSelectFields()
+        internal string ExtractSelectFields()
         {
-            var anonymousObjFields = new List<String>();
+            var anonymousObjFields = new List<string>();
 
-            var columnExpression = PredicateExpressions.Where(w => w.Key == PredicateType.COLUMN).FirstOrDefault().Value;
+            var columnExpression = PredicateExpressions.Where(w => w.Key == EMType.COLUMN).FirstOrDefault().Value;
 
             var fields = (LambdaExpression)columnExpression;
             if (fields.Body.NodeType == ExpressionType.Constant)
@@ -77,7 +77,7 @@ namespace NewLibCore.Storage.SQL.Component
             }
 
 
-            return String.Join(",", anonymousObjFields);
+            return string.Join(",", anonymousObjFields);
         }
     }
 }

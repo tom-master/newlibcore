@@ -10,7 +10,7 @@ namespace NewLibCore.Storage.SQL.DataConvert
         {
             var convertResults = new List<TResult>();
             var obj = default(TResult);
-            if (typeof(TResult) != typeof(String))
+            if (typeof(TResult) != typeof(string))
             {
                 obj = Activator.CreateInstance<TResult>();
             }

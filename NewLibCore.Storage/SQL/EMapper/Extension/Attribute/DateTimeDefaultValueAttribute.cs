@@ -15,6 +15,6 @@ namespace NewLibCore.Storage.SQL.Validate
 
         }
 
-        internal override Boolean IsValidate(ChangedProperty property) => base.IsValidate(property);
+        internal override bool IsValidate(ChangedProperty property) => base.IsValidate(property);
     }
 }

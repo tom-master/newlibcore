@@ -54,27 +54,27 @@ namespace NewLibCore.Storage.SQL.Extension
             }
         }
 
-        internal static void Info(String message)
+        internal static void Info(string message)
         {
             _logger.Info(message);
         }
 
-        internal static void Error(String message)
+        internal static void Error(string message)
         {
             _logger.Error(message);
         }
 
-        internal static void Debug(String message)
+        internal static void Debug(string message)
         {
             _logger.Debug(message);
         }
 
-        internal static void Fail(String message)
+        internal static void Fail(string message)
         {
             _logger.Fail(message);
         }
 
-        internal static void Warn(String message)
+        internal static void Warn(string message)
         {
             _logger.Warn(message);
         }

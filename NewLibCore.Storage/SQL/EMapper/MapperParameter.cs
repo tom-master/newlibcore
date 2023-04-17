@@ -11,7 +11,7 @@ namespace NewLibCore.Storage.SQL
     /// </summary>
     public sealed class MapperParameter
     {
-        private readonly Boolean _filterBadContent;
+        private readonly bool _filterBadContent;
 
         /// <summary>
         /// 初始化EntityParameter类的新实例
@@ -19,7 +19,7 @@ namespace NewLibCore.Storage.SQL
         /// <param name="key">占位符</param>
         /// <param name="value">值</param>
         /// <param name="filterBadContent">是否过滤非法字符</param>
-        public MapperParameter(String key, Object value, Boolean filterBadContent)
+        public MapperParameter(string key, Object value, bool filterBadContent)
         {
             Check.IfNullOrZero(key);
             Check.IfNullOrZero(value);
@@ -35,7 +35,7 @@ namespace NewLibCore.Storage.SQL
         /// </summary>
         /// <param name="key">占位符</param>
         /// <param name="value">值</param>
-        public MapperParameter(String key, Object value) : this(key, value, true)
+        public MapperParameter(string key, Object value) : this(key, value, true)
         {
 
         }
@@ -43,7 +43,7 @@ namespace NewLibCore.Storage.SQL
         /// <summary>
         /// 占位符
         /// </summary>
-        internal String Key { get; private set; }
+        internal string Key { get; private set; }
 
         /// <summary>
         /// 值
@@ -65,7 +65,7 @@ namespace NewLibCore.Storage.SQL
         {
             Check.IfNullOrZero(obj);
             var objType = obj.GetType();
-            if (objType == typeof(String))
+            if (objType == typeof(string))
             {
                 if (_filterBadContent)
                 {
@@ -74,9 +74,9 @@ namespace NewLibCore.Storage.SQL
                 return obj.ToString();
             }
 
-            if (objType == typeof(Boolean))
+            if (objType == typeof(bool))
             {
-                return obj.CastTo<Boolean>() ? 1 : 0;
+                return obj.CastTo<bool>() ? 1 : 0;
             }
 
             if (objType.IsComplexType())
@@ -85,17 +85,17 @@ namespace NewLibCore.Storage.SQL
                 {
                     var argument = objType.GetGenericArguments();
                     var hasValue = argument.Any();
-                    if (hasValue && argument[0] == typeof(String))
+                    if (hasValue && argument[0] == typeof(string))
                     {
-                        return String.Join(",", ((IList<String>)obj).Select(s => $@"'{s}'"));
+                        return string.Join(",", ((IList<string>)obj).Select(s => $@"'{s}'"));
                     }
                     if (hasValue && argument[0].IsNumeric())
                     {
-                        return String.Join(",", (IList<Int32>)obj);
+                        return string.Join(",", (IList<int>)obj);
                     }
                     if (hasValue && argument[0] == typeof(DateTime))
                     {
-                        return String.Join(",", (IList<DateTime>)obj);
+                        return string.Join(",", (IList<DateTime>)obj);
                     }
                 }
                 var ex = $@"无法转换的类型{objType.Name}";

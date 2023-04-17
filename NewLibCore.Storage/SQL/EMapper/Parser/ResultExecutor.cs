@@ -48,7 +48,7 @@ namespace NewLibCore.Storage.SQL
             }
         }
 
-        private ExecuteType GetExecuteType(String sql)
+        private ExecuteType GetExecuteType(string sql)
         {
             Check.IfNullOrZero(sql);
 
@@ -61,7 +61,7 @@ namespace NewLibCore.Storage.SQL
             throw new Exception($@"SQL语句执行类型解析失败:{operationType}");
         }
 
-        private String ReformatSql(string sql)
+        private string ReformatSql(string sql)
         {
             Check.IfNullOrZero(sql);
             sql = Regex.Replace(sql, "\\s{2,}", " ").Trim();

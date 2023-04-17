@@ -158,7 +158,7 @@ namespace NewLibCore.Storage.SQL
 
             var isDefaultValue = propertyInstanceValue.ToString() == (propertyInstanceValueType.IsValueType ? Activator.CreateInstance(propertyInstanceValueType).ToString() : null);
             //判断是否为字符串类型的属性值为空
-            if (propertyInstanceValueType == typeof(String) && String.IsNullOrEmpty(propertyInstanceValue + ""))
+            if (propertyInstanceValueType == typeof(string) && string.IsNullOrEmpty(propertyInstanceValue + ""))
             {
                 propertyItem.Value = defaultValueAttribute.Value;
             }
@@ -170,7 +170,7 @@ namespace NewLibCore.Storage.SQL
             {
                 propertyItem.Value = defaultValueAttribute.Value;
             }
-            else if (propertyInstanceValue.GetType() == typeof(Boolean) && isDefaultValue)
+            else if (propertyInstanceValue.GetType() == typeof(bool) && isDefaultValue)
             {
                 propertyItem.Value = defaultValueAttribute.Value;
             }
@@ -196,7 +196,7 @@ namespace NewLibCore.Storage.SQL
         /// <param name="propertyName">属性名</param>
         /// <param name="validates">属性验证列表</param>
         /// <returns></returns>
-        private List<PropertyValidateAttribute> ValidateAttributeOrder(String propertyName, IEnumerable<PropertyValidateAttribute> validates)
+        private List<PropertyValidateAttribute> ValidateAttributeOrder(string propertyName, IEnumerable<PropertyValidateAttribute> validates)
         {
             Check.IfNullOrZero(validates);
             if (validates.GroupBy(g => g.Order).Where(w => w.Count() > 1).Any())
@@ -215,7 +215,7 @@ namespace NewLibCore.Storage.SQL
         /// <summary>
         /// 是否为可空类型
         /// </summary>
-        internal Boolean IsNullable { get; set; }
+        internal bool IsNullable { get; set; }
 
         /// <summary>
         /// 属性类型
@@ -225,12 +225,12 @@ namespace NewLibCore.Storage.SQL
         /// <summary>
         /// 属性全类型名
         /// </summary>
-        internal String DeclaringType { get; set; }
+        internal string DeclaringType { get; set; }
 
         /// <summary>
         /// 属性名称
         /// </summary>
-        internal String PropertyName { get; set; }
+        internal string PropertyName { get; set; }
 
         /// <summary>
         /// 属性值

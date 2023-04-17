@@ -18,7 +18,7 @@ namespace NewLibCore.Storage.SQL.Component.Cache
             _baseCache = MemoryCache.Default;
         }
 
-        public override void Add(String key, Object obj, TimeSpan? timeOut = default)
+        public override void Add(string key, Object obj, TimeSpan? timeOut = default)
         {
             //因为缓存可能会对分页结果产生错误，暂时注释掉
             return;
@@ -33,14 +33,14 @@ namespace NewLibCore.Storage.SQL.Component.Cache
             // _baseCache.Set(cacheItem, itemPolicy);
         }
 
-        public override void Remove(String key)
+        public override void Remove(string key)
         {
             return;
             // Parameter.Validate(key);
             // _baseCache.Remove(key);
         }
 
-        public override TResult Get<TResult>(String key)
+        public override TResult Get<TResult>(string key)
         {
             return default;
             // Parameter.Validate(key);

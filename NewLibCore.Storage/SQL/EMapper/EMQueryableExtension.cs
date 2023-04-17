@@ -6,9 +6,9 @@ namespace NewLibCore.Storage.SQL.EMapper
 {
     public static class EMQueryableExtension
     {
-        public static IQueryable<T> InnerJoin<T, R>(this IQueryable<T> source, Expression<Func<T, R, Boolean>> expression)
+        public static IQueryable<T> InnerJoin<T, R>(this IQueryable<T> source, Expression<Func<T, R, bool>> expression)
         {
-            var generic = new Func<IQueryable<T>, Expression<Func<T, R, Boolean>>, IQueryable<T>>(InnerJoin).Method;
+            var generic = new Func<IQueryable<T>, Expression<Func<T, R, bool>>, IQueryable<T>>(InnerJoin).Method;
             return source.Provider.CreateQuery<T>(
                  Expression.Call(
                      null,

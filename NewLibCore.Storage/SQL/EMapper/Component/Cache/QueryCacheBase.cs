@@ -13,7 +13,7 @@ namespace NewLibCore.Storage.SQL.Component.Cache
         /// <param name="key">缓存键</param>
         /// <param name="obj">缓存值</param>
         /// <param name="timeOut">超时时间</param>
-        public abstract void Add(String key, Object obj, TimeSpan? timeOut = default);
+        public abstract void Add(string key, Object obj, TimeSpan? timeOut = default);
 
         /// <summary>
         /// 获取一个执行结果缓存
@@ -21,12 +21,12 @@ namespace NewLibCore.Storage.SQL.Component.Cache
         /// <param name="key"></param>
         /// <typeparam name="TResult"></typeparam>
         /// <returns></returns>
-        public abstract TResult Get<TResult>(String key);
+        public abstract TResult Get<TResult>(string key);
 
         /// <summary>
         /// 使一个执行结果缓存失效
         /// </summary>
         /// <param name="key"></param>
-        public abstract void Remove(String key);
+        public abstract void Remove(string key);
     }
 }

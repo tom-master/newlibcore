@@ -2,55 +2,55 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using Google.Protobuf.WellKnownTypes;
 using Microsoft.Extensions.Options;
-using NewLibCore.Storage.SQL.Component;
+using NewLibCore.Storage.SQL.EMapper.Visitor;
 
 namespace NewLibCore.Storage.SQL.EMapper
 {
-    internal class EMExecutor<T>: PredicateExpressionTranslator
+    internal class EMExecutor<T>
     {
         private Expression _expression;
 
         private List<KeyValuePair<string, Expression>> _methodExpressions = new List<KeyValuePair<string, Expression>>();
 
-        internal EMExecutor(Expression expression, IOptions<EntityMapperOptions> options) : base(options)
+        private IOptions<EntityMapperOptions> _options;
+
+        internal EMExecutor(Expression expression, IOptions<EntityMapperOptions> options)
         {
             _expression = expression;
+            _options = options;
         }
 
         internal T Execute()
         {
-            var m = ((MethodCallExpression)_expression);
-            GetExpressionMethod(m);
-            RootComponent rootComponent = new RootComponent();
+            GetExpressionMethod((MethodCallExpression)_expression);
+            List<RootVisitor> rootVisitors = new List<RootVisitor>();
             foreach (var methodExpression in _methodExpressions)
             {
                 switch (methodExpression.Key)
                 {
                     case "InnerJoin":
-                        rootComponent.AddExpression(methodExpression.Value, PredicateType.INNER);
+                        rootVisitors.Add(new JoinVisitor(EMType.INNER, methodExpression.Value, _options));
                         break;
                     case "LeftJoin":
-                        rootComponent.AddExpression(methodExpression.Value, PredicateType.LEFT);
+                        rootVisitors.Add(new JoinVisitor(EMType.LEFT, methodExpression.Value, _options));
                         break;
                     case "RightJoin":
-                        rootComponent.AddExpression(methodExpression.Value, PredicateType.RIGHT);
+                        rootVisitors.Add(new JoinVisitor(EMType.RIGHT, methodExpression.Value, _options));
                         break;
                     case "Where":
-                        rootComponent.AddExpression(methodExpression.Value, PredicateType.WHERE);
+                        rootVisitors.Add(new WhereVisitor(EMType.WHERE, methodExpression.Value, _options));
                         break;
                     case "From":
-                        rootComponent.AddExpression(methodExpression.Value, PredicateType.FROM);
+                        rootVisitors.Add(new FromVisitor(EMType.FROM, methodExpression.Value, _options));
                         break;
                     case "Select":
-                        rootComponent.AddExpression(methodExpression.Value, PredicateType.COLUMN);
+                        rootVisitors.Add(new SelectVisitor(EMType.COLUMN, methodExpression.Value, _options));
                         break;
                     default: throw new NotSupportedException();
                 }
             }
-            
-            Translate(rootComponent);
+            rootVisitors.ForEach(f => f.Visit(f.Expression.Value));
             return default;
         }
 

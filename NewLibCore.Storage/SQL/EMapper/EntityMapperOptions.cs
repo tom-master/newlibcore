@@ -13,19 +13,19 @@ namespace NewLibCore.Storage.SQL
         /// 连接字符串名称
         /// </summary>
         /// <value></value>
-        internal String ConnectionStringName { get; private set; }
+        internal string ConnectionStringName { get; private set; }
 
         /// <summary>
         /// 是否在出现异常时抛出异常
         /// </summary>
         /// <value></value>
-        internal Boolean ThrowException { get; set; } = true;
+        internal bool ThrowException { get; set; } = true;
 
         /// <summary>
         /// 启用模型验证
         /// </summary> 
         /// <value></value>
-        internal Boolean ModelValidate { get; set; } = true;
+        internal bool ModelValidate { get; set; } = true;
 
         /// <summary> 
         /// 映射的数据库类型
@@ -68,7 +68,7 @@ namespace NewLibCore.Storage.SQL
             RunDiagnosis.SetLoggerInstance(logger ?? new DefaultLogger());
         }
 
-        public void SetConnectionString(String connectionName = "sql")
+        public void SetConnectionString(string connectionName = "sql")
         {
             ConnectionStringName = connectionName;
         }
@@ -76,7 +76,7 @@ namespace NewLibCore.Storage.SQL
 
     public class TransactionControl
     {
-        internal Boolean Status { get; private set; }
+        internal bool Status { get; private set; }
 
         private Action RollbackDelegate { get; set; }
 

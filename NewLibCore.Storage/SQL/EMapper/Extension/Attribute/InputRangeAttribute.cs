@@ -7,16 +7,16 @@ namespace NewLibCore.Storage.SQL.Validate
     /// </summary>
     public class InputRangeAttribute : PropertyValidateAttribute
     {
-        private readonly Int32 _min;
+        private readonly int _min;
 
-        private readonly Int32 _max;
+        private readonly int _max;
 
         /// <summary>
         /// 初始化一个InputRangeAttribute类的实例
         /// </summary>
         /// <param name="min">最短长度</param>
         /// <param name="max">最大长度</param>
-        public InputRangeAttribute(Int32 min, Int32 max)
+        public InputRangeAttribute(int min, int max)
         {
             _min = min;
             _max = max;
@@ -26,19 +26,19 @@ namespace NewLibCore.Storage.SQL.Validate
         /// 初始化一个InputRangeAttribute类的实例
         /// </summary>
         /// <param name="max">最大长度</param> 
-        public InputRangeAttribute(Int32 max) : this(0, max)
+        public InputRangeAttribute(int max) : this(0, max)
         {
         }
 
-        internal override Int32 Order
+        internal override int Order
         {
             get { return 1; }
         }
 
-        internal override Boolean IsValidate(ChangedProperty property)
+        internal override bool IsValidate(ChangedProperty property)
         {
             var internalValue = (property.Value + "").ToString();
-            /*if (_canbeEmpty && String.IsNullOrEmpty(internalValue))
+            /*if (_canbeEmpty && string.IsNullOrEmpty(internalValue))
             {
                 return true;
             }*/
@@ -63,7 +63,7 @@ namespace NewLibCore.Storage.SQL.Validate
             return false;
         }
 
-        internal override String FailReason(String fieldName)
+        internal override string FailReason(string fieldName)
         {
             return $@"{fieldName} 的长度不符合特性的预设长度区间，预设长度区间为为 最小长度：{_min} 最大长度：{_max}";
         }

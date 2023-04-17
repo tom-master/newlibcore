@@ -8,17 +8,17 @@ namespace NewLibCore.Storage.SQL.Validate
     /// </summary>
     public class RequiredAttribute : PropertyValidateAttribute
     {
-        internal override Int32 Order
+        internal override int Order
         {
             get { return 3; }
         }
 
-        internal override String FailReason(String fieldName)
+        internal override string FailReason(string fieldName)
         {
             return $@"{fieldName} 为必填项!";
         }
 
-        internal override Boolean IsValidate(ChangedProperty property)
+        internal override bool IsValidate(ChangedProperty property)
         {
             try
             {

@@ -6,14 +6,14 @@ namespace NewLibCore.Storage.SQL.Component
 {
     internal class OrderComponent: RootComponent
     {
-        internal PredicateType OrderBy { get; private set; }
+        internal EMType OrderBy { get; private set; }
 
-        internal void AddOrderByType(PredicateType predicateType)
+        internal void AddOrderByType(EMType predicateType)
         {
             OrderBy = predicateType;
         }
 
-        internal (String Fields, String AliasName) ExtractOrderFields(PredicateType predicateType)
+        internal (string Fields, string AliasName) ExtractOrderFields(EMType predicateType)
         {
             var orderExpression = PredicateExpressions.Where(w => w.Key == predicateType).FirstOrDefault().Value;
 

@@ -25,13 +25,13 @@ namespace NewLibCore.Storage.SQL
             _result = rawResult;
         }
 
-        internal Int32 GetModifyRowCount()
+        internal int GetModifyRowCount()
         {
             if (_result is DataTable table)
             {
-                return table.Rows[0][0].CastTo<Int32>();
+                return table.Rows[0][0].CastTo<int>();
             }
-            return _result.CastTo<Int32>();
+            return _result.CastTo<int>();
         }
 
         /// <summary>

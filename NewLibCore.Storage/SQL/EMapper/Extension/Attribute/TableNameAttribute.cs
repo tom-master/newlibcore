@@ -13,24 +13,24 @@ namespace NewLibCore.Storage.SQL.Validate
         /// <summary>
         /// 表名
         /// </summary>
-        public String TableName { get; private set; }
+        public string TableName { get; private set; }
 
         /// <summary>
         /// 表别名
         /// </summary>
-        public String AliasName { get; private set; }
+        public string AliasName { get; private set; }
 
         /// <summary>
         /// 初始化一个TableName的实例
         /// </summary>
         /// <param name="name">表名</param>
         /// <param name="aliasName">表别名</param>
-        public TableNameAttribute(String name, String aliasName = "")
+        public TableNameAttribute(string name, string aliasName = "")
         {
             Check.IfNullOrZero(name);
 
             TableName = BadChatDetection.FilterBadChat(name);
-            if (String.IsNullOrEmpty(aliasName))
+            if (string.IsNullOrEmpty(aliasName))
             {
                 AliasName = name;
             }

@@ -55,14 +55,9 @@ namespace NewLibCore.Storage.SQL
         /// mysql
         /// </summary>
         MYSQL = 2
-    }
+    } 
 
-
-
-    /// <summary>
-    /// 谓词类型
-    /// </summary>
-    internal enum PredicateType
+    internal enum EMType
     {
         NONE = 0,
         AND = 1,

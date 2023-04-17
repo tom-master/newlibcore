@@ -34,11 +34,11 @@ namespace NewLibCore.Storage.SQL
         /// 释放资源
         /// </summary>
         /// <param name="disposing"></param>
-        protected internal abstract void Dispose(Boolean disposing);
+        protected internal abstract void Dispose(bool disposing);
 
-        protected internal abstract ExecutorResult Insert(String sql, params MapperParameter[] parameters);
-        protected internal abstract ExecutorResult Select(String sql, params MapperParameter[] parameters);
-        protected internal abstract ExecutorResult Update(String sql, params MapperParameter[] parameters);
+        protected internal abstract ExecutorResult Insert(string sql, params MapperParameter[] parameters);
+        protected internal abstract ExecutorResult Select(string sql, params MapperParameter[] parameters);
+        protected internal abstract ExecutorResult Update(string sql, params MapperParameter[] parameters);
 
         public void Dispose()
         {

@@ -17,24 +17,24 @@ namespace NewLibCore.Storage.SQL.Template
     /// </summary>
     public abstract class TemplateBase
     {
-        private static String _primaryKeyName;
+        private static string _primaryKeyName;
 
         protected virtual void SetVersion(int version) { }
 
         /// <summary>
         /// 谓词关系映射
         /// </summary>
-        internal readonly IDictionary<PredicateType, String> PredicateMapper = new Dictionary<PredicateType, String>();
+        internal readonly IDictionary<EMType, string> PredicateMapper = new Dictionary<EMType, string>();
 
         /// <summary>
         /// 连接关系映射
         /// </summary>
-        internal readonly IDictionary<PredicateType, String> JoinMapper = new Dictionary<PredicateType, String>();
+        internal readonly IDictionary<EMType, string> JoinMapper = new Dictionary<EMType, string>();
 
         /// <summary>
         /// 排序方式映射
         /// </summary>
-        internal readonly IDictionary<PredicateType, String> OrderTypeMapper = new Dictionary<PredicateType, String>();
+        internal readonly IDictionary<EMType, string> OrderTypeMapper = new Dictionary<EMType, string>();
 
         /// <summary>
         /// 初始化TemplateBase类的新实例
@@ -53,16 +53,20 @@ namespace NewLibCore.Storage.SQL.Template
         /// <summary>
         /// 查询模板
         /// </summary>
-        internal virtual StringBuilder CreateSelect(String field, String tableName, String aliasName)
+        internal virtual string CreateSelect(string field)
         {
-            var s = String.Format("SELECT {0} FROM {1} AS {2} <join> <where> ", field ?? "*", tableName, aliasName);
-            return new StringBuilder(s);
+            return string.Format("SELECT {0} ", field ?? "*");
+        }
+
+        internal virtual string CreateFrom(string tableName, string aliasName)
+        {
+            return string.Format(" FROM {0} AS {1}", tableName, aliasName);
         }
 
         /// <summary>
         /// 添加模板
         /// </summary>
-        internal virtual StringBuilder CreateInsert(String tableName, String fields, String placeHolders)
+        internal virtual StringBuilder CreateInsert(string tableName, string fields, string placeHolders)
         {
             var s = $@"INSERT {tableName} ({fields}) VALUES ({placeHolders}) {Identity} ";
             return new StringBuilder(s);
@@ -71,7 +75,7 @@ namespace NewLibCore.Storage.SQL.Template
         /// <summary>
         /// 更新模板
         /// </summary>
-        internal abstract StringBuilder CreateUpdate(String tableName, String aliasName, String placeHolders);
+        internal abstract StringBuilder CreateUpdate(string tableName, string aliasName, string placeHolders);
 
         /// <summary>
         /// 追加关系类型
@@ -82,23 +86,23 @@ namespace NewLibCore.Storage.SQL.Template
         /// 返回新增主键
         /// </summary>
         /// <value></value>
-        internal abstract String Identity { get; }
+        internal abstract string Identity { get; }
 
         /// <summary>
         /// 执行受影响的行数
         /// </summary>
         /// <value></value>
-        internal abstract String AffectedRows { get; }
+        internal abstract string AffectedRows { get; }
 
         /// <summary>
         /// 获取主键名称(默认为Id)
         /// </summary>
-        internal String PrimaryKeyName
+        internal string PrimaryKeyName
         {
             get
             {
 
-                if (!String.IsNullOrEmpty(_primaryKeyName))
+                if (!string.IsNullOrEmpty(_primaryKeyName))
                 {
                     return _primaryKeyName;
                 }
@@ -124,7 +128,7 @@ namespace NewLibCore.Storage.SQL.Template
         /// <param name="orderBy"></param>
         /// <param name="rawSql"></param>
         /// <returns></returns>
-        internal abstract void CreatePagination(PaginationComponent pagination, String orderBy, StringBuilder rawSql);
+        internal abstract void CreatePagination(PaginationComponent pagination, string orderBy, StringBuilder rawSql);
 
         /// <summary>
         /// 创建谓词关系
@@ -133,19 +137,19 @@ namespace NewLibCore.Storage.SQL.Template
         /// <param name="left">左语句</param>
         /// <param name="right">右语句</param>
         /// <returns></returns>
-        internal abstract String CreatePredicate(PredicateType predicateType, String left, String right);
+        internal abstract string CreatePredicate(EMType predicateType, string left, string right);
 
         /// <summary>
         /// 创建参数
         /// </summary>
         /// <returns></returns>
-        internal abstract DbParameter CreateParameter(String key, Object value, Type dataType);
+        internal abstract DbParameter CreateParameter(string key, Object value, Type dataType);
 
         /// <summary>
         /// 创建连接
         /// </summary>
         /// <returns></returns>
-        internal abstract DbConnection CreateDbConnection(String connectionString);
+        internal abstract DbConnection CreateDbConnection(string connectionString);
 
         /// <summary>
         /// 创建连接关系
@@ -154,7 +158,7 @@ namespace NewLibCore.Storage.SQL.Template
         /// <param name="left">左语句</param>
         /// <param name="right">右语句</param>
         /// <returns></returns>
-        internal String CreateJoin(PredicateType joinRelation, String left, String right)
+        internal StringBuilder CreateJoin(EMType joinRelation, string left, string right)
         {
             Check.IfNullOrZero(joinRelation);
             Check.IfNullOrZero(left);
@@ -165,7 +169,7 @@ namespace NewLibCore.Storage.SQL.Template
                 throw new ArgumentNullException($@"{joinRelation}不存在");
             }
 
-            return String.Format(JoinMapper[joinRelation], left, right);
+            return new StringBuilder().AppendFormat(string.Format(JoinMapper[joinRelation], left, right));
         }
 
         /// <summary>
@@ -174,7 +178,7 @@ namespace NewLibCore.Storage.SQL.Template
         /// <param name="orderByType">排序方向</param>
         /// <param name="left">左语句</param>
         /// <returns></returns>
-        internal String CreateOrderBy(PredicateType orderByType, String left)
+        internal string CreateOrderBy(EMType orderByType, string left)
         {
             Check.IfNullOrZero(orderByType);
             Check.IfNullOrZero(left);
@@ -183,7 +187,7 @@ namespace NewLibCore.Storage.SQL.Template
             {
                 throw new ArgumentNullException($@"{orderByType}不存在");
             }
-            return String.Format(OrderTypeMapper[orderByType], left);
+            return string.Format(OrderTypeMapper[orderByType], left);
         }
 
         /// <summary>
@@ -236,14 +240,14 @@ namespace NewLibCore.Storage.SQL.Template
         /// </summary>
         private void InitPredicateType()
         {
-            PredicateMapper.Add(PredicateType.AND, " {0} AND {1} ");
-            PredicateMapper.Add(PredicateType.OR, " {0} OR {1} ");
-            PredicateMapper.Add(PredicateType.EQ, " {0} = {1} ");
-            PredicateMapper.Add(PredicateType.NQ, " {0} <> {1} ");
-            PredicateMapper.Add(PredicateType.GT, " {0} < {1} ");
-            PredicateMapper.Add(PredicateType.LT, " {0} > {1} ");
-            PredicateMapper.Add(PredicateType.GE, " {0} <= {1} ");
-            PredicateMapper.Add(PredicateType.LE, " {0} >= {1} ");
+            PredicateMapper.Add(EMType.AND, " {0} AND {1} ");
+            PredicateMapper.Add(EMType.OR, " {0} OR {1} ");
+            PredicateMapper.Add(EMType.EQ, " {0} = {1} ");
+            PredicateMapper.Add(EMType.NQ, " {0} <> {1} ");
+            PredicateMapper.Add(EMType.GT, " {0} < {1} ");
+            PredicateMapper.Add(EMType.LT, " {0} > {1} ");
+            PredicateMapper.Add(EMType.GE, " {0} <= {1} ");
+            PredicateMapper.Add(EMType.LE, " {0} >= {1} ");
 
             AppendPredicateType();
         }
@@ -253,9 +257,9 @@ namespace NewLibCore.Storage.SQL.Template
         /// </summary>
         private void InitJoinType()
         {
-            JoinMapper.Add(PredicateType.INNER, " INNER JOIN {0} AS {1} ON ");
-            JoinMapper.Add(PredicateType.LEFT, " LEFT JOIN {0} AS {1} ON ");
-            JoinMapper.Add(PredicateType.RIGHT, " RIGHT JOIN {0} AS {1} ON ");
+            JoinMapper.Add(EMType.INNER, " INNER JOIN {0} AS {1} ON ");
+            JoinMapper.Add(EMType.LEFT, " LEFT JOIN {0} AS {1} ON ");
+            JoinMapper.Add(EMType.RIGHT, " RIGHT JOIN {0} AS {1} ON ");
         }
 
         /// <summary>
@@ -263,8 +267,8 @@ namespace NewLibCore.Storage.SQL.Template
         /// </summary>
         private void InitOrderType()
         {
-            OrderTypeMapper.Add(PredicateType.ASC, " ORDER BY {0} ASC ");
-            OrderTypeMapper.Add(PredicateType.DESC, " ORDER BY {0} DESC ");
+            OrderTypeMapper.Add(EMType.ASC, " ORDER BY {0} ASC ");
+            OrderTypeMapper.Add(EMType.DESC, " ORDER BY {0} DESC ");
         }
     }
 }
