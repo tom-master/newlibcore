@@ -24,33 +24,7 @@ namespace NewLibCore.Storage.SQL.EMapper
         internal T Execute()
         {
             GetExpressionMethod((MethodCallExpression)_expression);
-            List<RootVisitor> rootVisitors = new List<RootVisitor>();
-            foreach (var methodExpression in _methodExpressions)
-            {
-                switch (methodExpression.Key)
-                {
-                    case "InnerJoin":
-                        rootVisitors.Add(new JoinVisitor(EMType.INNER, methodExpression.Value, _options));
-                        break;
-                    case "LeftJoin":
-                        rootVisitors.Add(new JoinVisitor(EMType.LEFT, methodExpression.Value, _options));
-                        break;
-                    case "RightJoin":
-                        rootVisitors.Add(new JoinVisitor(EMType.RIGHT, methodExpression.Value, _options));
-                        break;
-                    case "Where":
-                        rootVisitors.Add(new WhereVisitor(EMType.WHERE, methodExpression.Value, _options));
-                        break;
-                    case "From":
-                        rootVisitors.Add(new FromVisitor(EMType.FROM, methodExpression.Value, _options));
-                        break;
-                    case "Select":
-                        rootVisitors.Add(new SelectVisitor(EMType.COLUMN, methodExpression.Value, _options));
-                        break;
-                    default: throw new NotSupportedException();
-                }
-            }
-            rootVisitors.ForEach(f => f.Visit(f.Expression.Value));
+
             return default;
         }
 

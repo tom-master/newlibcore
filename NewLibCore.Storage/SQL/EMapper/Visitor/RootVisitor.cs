@@ -9,11 +9,11 @@ using NewLibCore.Storage.SQL.Extension;
 
 namespace NewLibCore.Storage.SQL.EMapper.Visitor
 {
-    internal abstract class RootVisitor: ExpressionVisitor
+    internal class RootVisitor : ExpressionVisitor
     {
         internal KeyValuePair<EMType, Expression> Expression { get; private set; }
 
-        internal (EMType EMType, string Sql, List<MapperParameter> Parameters) VisitResult { get; set; }
+        protected (EMType EMType, string Sql, List<MapperParameter> Parameters) VisitResult { get; set; }
 
         internal IOptions<EntityMapperOptions> Options { get; private set; }
 
@@ -52,6 +52,40 @@ namespace NewLibCore.Storage.SQL.EMapper.Visitor
             return result.Distinct().ToList();
         }
 
-        protected abstract void ParseExpression(LambdaExpression expression);
+        protected virtual void ParseExpression(LambdaExpression expression)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal void TranslateToSql(List<KeyValuePair<string, Expression>> expression)
+        {
+            var rootVisitors = new List<RootVisitor>();
+            foreach (var methodExpression in expression)
+            {
+                switch (methodExpression.Key)
+                {
+                    case "InnerJoin":
+                        rootVisitors.Add(new JoinVisitor(EMType.INNER, methodExpression.Value, Options));
+                        break;
+                    case "LeftJoin":
+                        rootVisitors.Add(new JoinVisitor(EMType.LEFT, methodExpression.Value, Options));
+                        break;
+                    case "RightJoin":
+                        rootVisitors.Add(new JoinVisitor(EMType.RIGHT, methodExpression.Value, Options));
+                        break;
+                    case "Where":
+                        rootVisitors.Add(new WhereVisitor(EMType.WHERE, methodExpression.Value, Options));
+                        break;
+                    case "From":
+                        rootVisitors.Add(new FromVisitor(EMType.FROM, methodExpression.Value, Options));
+                        break;
+                    case "Select":
+                        rootVisitors.Add(new SelectVisitor(EMType.COLUMN, methodExpression.Value, Options));
+                        break;
+                    default: throw new NotSupportedException();
+                }
+            }
+            rootVisitors.ForEach(f => f.Visit(f.Expression.Value));
+        }
     }
 }
