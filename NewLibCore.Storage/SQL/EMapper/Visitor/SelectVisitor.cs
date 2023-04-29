@@ -10,6 +10,7 @@ namespace NewLibCore.Storage.SQL.EMapper.Visitor
 {
     internal class SelectVisitor: RootVisitor
     {
+        internal override int Order => 1;
         public SelectVisitor(EMType eMType, Expression expression, IOptions<EntityMapperOptions> options) : base(eMType, expression, options)
         {
         }

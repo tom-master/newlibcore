@@ -6,6 +6,7 @@ namespace NewLibCore.Storage.SQL.EMapper.Visitor
 {
     internal class WhereVisitor: RootVisitor
     {
+        internal override int Order => 4;
         public WhereVisitor(EMType eMType, Expression expression, IOptions<EntityMapperOptions> options) : base(eMType, expression, options)
         {
         }

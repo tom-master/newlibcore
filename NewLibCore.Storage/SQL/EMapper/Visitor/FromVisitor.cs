@@ -7,6 +7,7 @@ namespace NewLibCore.Storage.SQL.EMapper.Visitor
 {
     internal class FromVisitor: RootVisitor
     {
+        internal override int Order => 2;
         public FromVisitor(EMType eMType, Expression expression, IOptions<EntityMapperOptions> options) : base(eMType, expression, options)
         {
         }

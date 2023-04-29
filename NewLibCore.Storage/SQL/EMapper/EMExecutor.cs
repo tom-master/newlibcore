@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Microsoft.Extensions.Options;
@@ -24,13 +23,15 @@ namespace NewLibCore.Storage.SQL.EMapper
         internal T Execute()
         {
             GetExpressionMethod((MethodCallExpression)_expression);
-
+            var visitor = new WrapVisitor(_options);
+            visitor.Translate(_methodExpressions);
+            var ss = visitor.PrintSql();
             return default;
         }
 
         protected Expression VisitUnary(UnaryExpression node)
         {
-            if (node.Operand is LambdaExpression lambdaExpression)
+            if(node.Operand is LambdaExpression lambdaExpression)
             {
                 return lambdaExpression;
             }
@@ -43,13 +44,13 @@ namespace NewLibCore.Storage.SQL.EMapper
             var expression = methodCallExpression.Arguments[1];
 
             _methodExpressions.Add(new KeyValuePair<string, Expression>(methodName, VisitUnary((UnaryExpression)expression)));
-            foreach (var item in methodCallExpression.Arguments)
+            foreach(var item in methodCallExpression.Arguments)
             {
-                if (item is MethodCallExpression callExpression)
+                if(item is MethodCallExpression callExpression)
                 {
                     GetExpressionMethod(callExpression);
                 }
-                else if (item is ConstantExpression constantExpression)
+                else if(item is ConstantExpression constantExpression)
                 {
                     var ss = ((IQueryable)constantExpression.Value).ElementType;
                     var p1 = Expression.Parameter(ss, "a");
