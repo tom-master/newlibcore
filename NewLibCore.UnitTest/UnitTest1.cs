@@ -22,7 +22,10 @@ namespace NewLibCore.UnitTest
         [TestMethod]
         public void Query()
         {
-            var r = _mapper.Query<User>().InnerJoin<User, UserRole>((u, r) => u.Id == r.UserId).Where(w => w.IsDeleted).Select(s => new { s.AddTime, s.LoginPassword, s.IsOnline }).ToList();
+            var r = _mapper.Query<User>().InnerJoin<User, UserRole>((u, r) => u.Id == r.UserId)
+                .Where(w => w.IsDeleted)
+                .Select(s => new { s.AddTime, s.LoginPassword, s.IsOnline })
+                .ToList();
             //var users1 = _mapper.Query<User>()
             //.InnerJoin<User, UserRole>((user, role) => user.Id == role.UserId)
             //.InnerJoin<User, App>((user, app) => user.Id == app.UserId)

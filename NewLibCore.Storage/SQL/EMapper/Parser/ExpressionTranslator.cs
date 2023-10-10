@@ -17,6 +17,7 @@ namespace NewLibCore.Storage.SQL
         private readonly Stack<EMType> _emTypeStack;
         private readonly Stack<string> _parameterNameStack;
         private readonly EntityMapperOptions _options;
+        private static int _parameterIndex = -1;
         internal List<MapperParameter> MapperParameters { get; private set; }
 
         internal List<KeyValuePair<string, string>> AliasMapper { get; set; }
@@ -182,7 +183,7 @@ namespace NewLibCore.Storage.SQL
                                 }
                                 internalAliasName = $@"{AliasMapper.Where(w => w.Key == parameterExp.Type.GetEntityBaseAliasName().TableName && w.Value == parameterExp.Type.GetEntityBaseAliasName().AliasName).FirstOrDefault().Value.ToLower()}.";
 
-                                var newParameterName = Guid.NewGuid().ToString().Replace("-", "");
+                                var newParameterName = $@"Param_{(++_parameterIndex)}";
                                 AppendResult(_options.TemplateBase.CreatePredicate(_emTypeStack.Pop(), $@"{internalAliasName}{memberExp.Member.Name}", $"@{newParameterName}"));
                                 _parameterNameStack.Push(newParameterName);
                             }

@@ -25,7 +25,7 @@ namespace NewLibCore.Storage.SQL.EMapper
             GetExpressionMethod((MethodCallExpression)_expression);
             var visitor = new WrapVisitor(_options);
             visitor.Translate(_methodExpressions);
-            var ss = visitor.PrintSql();
+            var sql = visitor.PrintSql();
             return default;
         }
 
