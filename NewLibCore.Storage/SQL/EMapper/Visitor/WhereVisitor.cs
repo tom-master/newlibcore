@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using Microsoft.Extensions.Options;
 
 namespace NewLibCore.Storage.SQL.EMapper.Visitor
@@ -16,7 +15,7 @@ namespace NewLibCore.Storage.SQL.EMapper.Visitor
             var e = new ExpressionTranslator(Options);
             e.AliasMapper.AddRange(ExtractAliasNames(Expression.Value));
             e.Translate(expression, Expression.Key);
-            VisitResult = (Expression.Key, e.TranslationResult.ToString(), e.MapperParameters);
+            VisitResult = (Expression.Key, $@"{Expression.Key} {e.TranslationResult}", e.MapperParameters);
         }
     }
 }

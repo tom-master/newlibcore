@@ -7,7 +7,7 @@ using NewLibCore.UnitTest.ValueObject;
 
 namespace NewLibCore.UnitTest.Entitys.Agent
 {
-    [TableName("newcrm_user")]
+    [TableName("newcrm_user","u")]
     public partial class User : EntityBase
     {
         /// <summary>

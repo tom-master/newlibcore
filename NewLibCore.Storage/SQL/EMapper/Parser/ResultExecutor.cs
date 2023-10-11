@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.RegularExpressions;
 using NewLibCore.Validate;
@@ -26,26 +27,27 @@ namespace NewLibCore.Storage.SQL
         /// 执行表达式翻译出的sql语句
         /// </summary>
         /// <returns></returns>
-        internal ExecutorResult Execute(StatementResultBuilder statementResultBuilder)
+        internal ExecutorResult Execute(/*StatementResultBuilder statementResultBuilder*/)
         {
-            using (statementResultBuilder)
-            {
-                var (sql, parameters) = statementResultBuilder.Build();
-                var parametersInternal = parameters.ToArray();
-                sql = ReformatSql(sql);
-                var executeType = GetExecuteType(sql);
-                switch (executeType)
-                {
-                    case ExecuteType.SELECT:
-                        return _mapperDbContextBase.Select(sql, parametersInternal);
-                    case ExecuteType.UPDATE:
-                        return _mapperDbContextBase.Update(sql, parametersInternal);
-                    case ExecuteType.INSERT:
-                        return _mapperDbContextBase.Insert(sql, parametersInternal);
-                    default:
-                        throw new InvalidOperationException($@"无效的sql语句操作{executeType}");
-                }
-            }
+            return new ExecutorResult();
+            //using (statementResultBuilder)
+            //{
+            //    var (sql, parameters) = statementResultBuilder.Build();
+            //    var parametersInternal = parameters.ToArray();
+            //    sql = ReformatSql(sql);
+            //    var executeType = GetExecuteType(sql);
+            //    switch (executeType)
+            //    {
+            //        case ExecuteType.SELECT:
+            //            return _mapperDbContextBase.Select(sql, parametersInternal);
+            //        case ExecuteType.UPDATE:
+            //            return _mapperDbContextBase.Update(sql, parametersInternal);
+            //        case ExecuteType.INSERT:
+            //            return _mapperDbContextBase.Insert(sql, parametersInternal);
+            //        default:
+            //            throw new InvalidOperationException($@"无效的sql语句操作{executeType}");
+            //    }
+            //}
         }
 
         private ExecuteType GetExecuteType(string sql)

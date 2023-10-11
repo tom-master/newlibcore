@@ -4,8 +4,8 @@ using NewLibCore.Storage.SQL.Validate;
 
 namespace NewLibCore.UnitTest.Entitys.Agent
 {
-    [TableName("newcrm_user_role")]
-    public class UserRole : EntityBase
+    [TableName("newcrm_user_role", "r")]
+    public class UserRole: EntityBase
     {
         [Required]
         public Int32 UserId { get; private set; }

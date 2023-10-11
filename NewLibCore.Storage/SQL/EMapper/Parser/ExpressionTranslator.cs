@@ -176,16 +176,17 @@ namespace NewLibCore.Storage.SQL
                             else
                             {
                                 var parameterExp = (ParameterExpression)memberExp.Expression;
-                                var internalAliasName = "";
-                                if (!AliasMapper.Any(a => a.Key == parameterExp.Type.GetEntityBaseAliasName().TableName && a.Value == parameterExp.Type.GetEntityBaseAliasName().AliasName))
+
+                                var entityBaseAliasName = parameterExp.Type.GetEntityBaseAliasName();
+                                if (!AliasMapper.Any(a => a.Key == entityBaseAliasName.TableName && a.Value == entityBaseAliasName.AliasName))
                                 {
                                     throw new ArgumentException($@"没有找到{parameterExp.Type.Name}所对应的形参");
                                 }
-                                internalAliasName = $@"{AliasMapper.Where(w => w.Key == parameterExp.Type.GetEntityBaseAliasName().TableName && w.Value == parameterExp.Type.GetEntityBaseAliasName().AliasName).FirstOrDefault().Value.ToLower()}.";
+                                var internalAliasName = $@"{AliasMapper.Where(w => w.Key == entityBaseAliasName.TableName && w.Value == entityBaseAliasName.AliasName).FirstOrDefault().Value.ToLower()}.";
 
-                                var newParameterName = $@"Param_{(++_parameterIndex)}";
-                                AppendResult(_options.TemplateBase.CreatePredicate(_emTypeStack.Pop(), $@"{internalAliasName}{memberExp.Member.Name}", $"@{newParameterName}"));
-                                _parameterNameStack.Push(newParameterName);
+                                var parameterPlaceHolder = $@"p{(++_parameterIndex)}";
+                                AppendResult(_options.TemplateBase.CreatePredicate(_emTypeStack.Pop(), $@"{internalAliasName}{memberExp.Member.Name}", $"@{parameterPlaceHolder}"));
+                                _parameterNameStack.Push(parameterPlaceHolder);
                             }
                         }
                         else
@@ -363,49 +364,6 @@ namespace NewLibCore.Storage.SQL
                 throw new Exception($@"没有找到参数名:{memberExpression.Type.Name}所对应的表别名");
             }
             return AliasMapper.Where(w => w.Key == tableName && w.Value == aliasName).FirstOrDefault().Value.ToLower();
-        }
-    }
-
-    internal class StatementResultBuilder: IDisposable
-    {
-        private static readonly string _joinPlaceHolder = "<join>";
-        private static readonly string _wherePlaceHolder = "<where>";
-
-        internal StringBuilder JoinStatement { get; } = new StringBuilder();
-
-        internal StringBuilder WhereStatement { get; } = new StringBuilder();
-
-        internal StringBuilder StatmentTemplate { get; private set; } = new StringBuilder();
-
-        private ICollection<MapperParameter> _parameters = new List<MapperParameter>();
-
-        internal void AddStatementTemplate(StringBuilder statementTemplate)
-        {
-            StatmentTemplate = statementTemplate;
-        }
-
-        internal void AddParameter(MapperParameter parameter)
-        {
-            _parameters.Add(parameter);
-        }
-
-        internal (string sql, IEnumerable<MapperParameter> parameters) Build()
-        {
-            StatmentTemplate = StatmentTemplate.Replace(_joinPlaceHolder, JoinStatement.ToString());
-            StatmentTemplate = StatmentTemplate.Replace(_wherePlaceHolder, WhereStatement.ToString());
-            return (StatmentTemplate.ToString(), _parameters);
-        }
-        private void Clear()
-        {
-            JoinStatement.Clear();
-            WhereStatement.Clear();
-            StatmentTemplate.Clear();
-            _parameters.Clear();
-        }
-
-        public void Dispose()
-        {
-            Clear();
         }
     }
 }

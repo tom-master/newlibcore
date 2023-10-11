@@ -8,55 +8,6 @@ using NewLibCore.Storage.SQL.Extension;
 
 namespace NewLibCore.Storage.SQL.EMapper.Visitor
 {
-    internal class WrapVisitor
-    {
-        private List<RootVisitor> _rootVisitors;
-        internal IOptions<EntityMapperOptions> Options { get; private set; }
-
-        internal WrapVisitor(IOptions<EntityMapperOptions> options)
-        {
-            Options = options;
-            _rootVisitors = new List<RootVisitor>();
-        }
-
-        internal void Translate(List<KeyValuePair<string, Expression>> expression)
-        {
-
-            foreach (var methodExpression in expression)
-            {
-                switch (methodExpression.Key)
-                {
-                    case "InnerJoin":
-                        _rootVisitors.Add(new JoinVisitor(EMType.INNER, methodExpression.Value, Options));
-                        break;
-                    case "LeftJoin":
-                        _rootVisitors.Add(new JoinVisitor(EMType.LEFT, methodExpression.Value, Options));
-                        break;
-                    case "RightJoin":
-                        _rootVisitors.Add(new JoinVisitor(EMType.RIGHT, methodExpression.Value, Options));
-                        break;
-                    case "Where":
-                        _rootVisitors.Add(new WhereVisitor(EMType.WHERE, methodExpression.Value, Options));
-                        break;
-                    case "From":
-                        _rootVisitors.Add(new FromVisitor(EMType.FROM, methodExpression.Value, Options));
-                        break;
-                    case "Select":
-                        _rootVisitors.Add(new SelectVisitor(EMType.COLUMN, methodExpression.Value, Options));
-                        break;
-                    default:
-                        throw new NotSupportedException();
-                }
-            }
-            _rootVisitors.ForEach(f => f.Visit(f.Expression.Value));
-        }
-
-        internal string PrintSql()
-        {
-            return string.Join(" ", _rootVisitors.OrderBy(o => o.Order).Select(s => s.VisitResult.Sql)).Replace("  ", " ");
-        }
-    }
-
 
     internal class RootVisitor: ExpressionVisitor
     {
@@ -64,9 +15,9 @@ namespace NewLibCore.Storage.SQL.EMapper.Visitor
 
         internal (EMType EMType, string Sql, List<MapperParameter> Parameters) VisitResult { get; set; }
 
-        internal IOptions<EntityMapperOptions> Options { get; private set; }
+        internal virtual int Order { get; } = -1;
 
-        internal virtual int Order { get; }
+        protected IOptions<EntityMapperOptions> Options { get; private set; }
 
         protected RootVisitor(EMType eMType, Expression expression, IOptions<EntityMapperOptions> options)
         {

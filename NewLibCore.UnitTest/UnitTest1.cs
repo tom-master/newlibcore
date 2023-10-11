@@ -23,7 +23,7 @@ namespace NewLibCore.UnitTest
         public void Query()
         {
             var r = _mapper.Query<User>().InnerJoin<User, UserRole>((u, r) => u.Id == r.UserId)
-                .Where(w => w.IsDeleted)
+                .Where(w => w.IsDeleted && w.IsDisable && w.IsOnline && w.IsAdmin)
                 .Select(s => new { s.AddTime, s.LoginPassword, s.IsOnline })
                 .ToList();
             //var users1 = _mapper.Query<User>()

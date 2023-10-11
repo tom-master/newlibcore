@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Microsoft.Extensions.Options;
@@ -14,6 +15,7 @@ namespace NewLibCore.Storage.SQL.EMapper
 
         private IOptions<EntityMapperOptions> _options;
 
+
         internal EMExecutor(Expression expression, IOptions<EntityMapperOptions> options)
         {
             _expression = expression;
@@ -23,15 +25,47 @@ namespace NewLibCore.Storage.SQL.EMapper
         internal T Execute()
         {
             GetExpressionMethod((MethodCallExpression)_expression);
-            var visitor = new WrapVisitor(_options);
-            visitor.Translate(_methodExpressions);
-            var sql = visitor.PrintSql();
+            var sql = Translate(_methodExpressions);
+
             return default;
+        }
+
+        private string Translate(List<KeyValuePair<string, Expression>> expression)
+        {
+            var rootVisitors = new List<RootVisitor>();
+            foreach (var methodExpression in expression)
+            {
+                switch (methodExpression.Key)
+                {
+                    case "InnerJoin":
+                        rootVisitors.Add(new JoinVisitor(EMType.INNER, methodExpression.Value, _options));
+                        break;
+                    case "LeftJoin":
+                        rootVisitors.Add(new JoinVisitor(EMType.LEFT, methodExpression.Value, _options));
+                        break;
+                    case "RightJoin":
+                        rootVisitors.Add(new JoinVisitor(EMType.RIGHT, methodExpression.Value, _options));
+                        break;
+                    case "Where":
+                        rootVisitors.Add(new WhereVisitor(EMType.WHERE, methodExpression.Value, _options));
+                        break;
+                    case "From":
+                        rootVisitors.Add(new FromVisitor(EMType.FROM, methodExpression.Value, _options));
+                        break;
+                    case "Select":
+                        rootVisitors.Add(new SelectVisitor(EMType.COLUMN, methodExpression.Value, _options));
+                        break;
+                    default:
+                        throw new NotSupportedException();
+                }
+            }
+            rootVisitors.ForEach(f => f.Visit(f.Expression.Value));
+            return string.Join(" ", rootVisitors.OrderBy(o => o.Order).Select(s => s.VisitResult.Sql)).Replace("  ", " ");
         }
 
         protected Expression VisitUnary(UnaryExpression node)
         {
-            if(node.Operand is LambdaExpression lambdaExpression)
+            if (node.Operand is LambdaExpression lambdaExpression)
             {
                 return lambdaExpression;
             }
@@ -44,13 +78,13 @@ namespace NewLibCore.Storage.SQL.EMapper
             var expression = methodCallExpression.Arguments[1];
 
             _methodExpressions.Add(new KeyValuePair<string, Expression>(methodName, VisitUnary((UnaryExpression)expression)));
-            foreach(var item in methodCallExpression.Arguments)
+            foreach (var item in methodCallExpression.Arguments)
             {
-                if(item is MethodCallExpression callExpression)
+                if (item is MethodCallExpression callExpression)
                 {
                     GetExpressionMethod(callExpression);
                 }
-                else if(item is ConstantExpression constantExpression)
+                else if (item is ConstantExpression constantExpression)
                 {
                     var ss = ((IQueryable)constantExpression.Value).ElementType;
                     var p1 = Expression.Parameter(ss, "a");
