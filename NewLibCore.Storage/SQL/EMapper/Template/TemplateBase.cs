@@ -2,12 +2,8 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Linq;
-using System.Reflection;
 using System.Text;
 using NewLibCore.Storage.SQL.Component;
-using NewLibCore.Storage.SQL.Extension;
-using NewLibCore.Storage.SQL.Validate;
 using NewLibCore.Validate;
 
 namespace NewLibCore.Storage.SQL.Template
@@ -16,9 +12,7 @@ namespace NewLibCore.Storage.SQL.Template
     /// 为相应的数据库实例提供对应的模板化SQL
     /// </summary>
     public abstract class TemplateBase
-    {
-        private static string _primaryKeyName;
-
+    { 
         protected virtual void SetVersion(int version) { }
 
         /// <summary>
@@ -93,71 +87,30 @@ namespace NewLibCore.Storage.SQL.Template
         /// </summary>
         /// <value></value>
         internal abstract string AffectedRows { get; }
-
-        /// <summary>
-        /// 获取主键名称(默认为Id)
-        /// </summary>
-        internal string PrimaryKeyName
-        {
-            get
-            {
-
-                if (!string.IsNullOrEmpty(_primaryKeyName))
-                {
-                    return _primaryKeyName;
-                }
-
-                var identityProperty = typeof(EntityBase)
-                 .GetProperties(BindingFlags.Instance | BindingFlags.Public)
-                 .ToList().FirstOrDefault(w => w.GetAttributes<PrimaryKeyAttribute>().Any());
-                if (identityProperty == null)
-                {
-                    throw new ArgumentNullException($@"未找到使用{nameof(PrimaryKeyAttribute)}修饰的主键");
-                }
-                var name = identityProperty.Name;
-                _primaryKeyName = name;
-                return name;
-            }
-        }
-
+         
         /// <summary>
         /// 追加分页语句
-        /// </summary>
-        /// <param name="pageIndex"></param>
-        /// <param name="pageSize"></param>
-        /// <param name="orderBy"></param>
-        /// <param name="rawSql"></param>
-        /// <returns></returns>
+        /// </summary> 
         internal abstract void CreatePagination(PaginationComponent pagination, string orderBy, StringBuilder rawSql);
 
         /// <summary>
         /// 创建谓词关系
-        /// </summary>
-        /// <param name="predicateType">关系的类型</param>
-        /// <param name="left">左语句</param>
-        /// <param name="right">右语句</param>
-        /// <returns></returns>
+        /// </summary> 
         internal abstract string CreatePredicate(EMType predicateType, string left, string right);
 
         /// <summary>
         /// 创建参数
-        /// </summary>
-        /// <returns></returns>
+        /// </summary> 
         internal abstract DbParameter CreateParameter(string key, Object value, Type dataType);
 
         /// <summary>
         /// 创建连接
-        /// </summary>
-        /// <returns></returns>
+        /// </summary> 
         internal abstract DbConnection CreateDbConnection(string connectionString);
 
         /// <summary>
         /// 创建连接关系
-        /// </summary>
-        /// <param name="joinRelation">连接类型</param>
-        /// <param name="left">左语句</param>
-        /// <param name="right">右语句</param>
-        /// <returns></returns>
+        /// </summary> 
         internal StringBuilder CreateJoin(EMType joinRelation, string left, string right)
         {
             Check.IfNullOrZero(joinRelation);
@@ -174,10 +127,7 @@ namespace NewLibCore.Storage.SQL.Template
 
         /// <summary>
         /// 排序语句构建
-        /// </summary>
-        /// <param name="orderByType">排序方向</param>
-        /// <param name="left">左语句</param>
-        /// <returns></returns>
+        /// </summary> 
         internal string CreateOrderBy(EMType orderByType, string left)
         {
             Check.IfNullOrZero(orderByType);
@@ -192,9 +142,7 @@ namespace NewLibCore.Storage.SQL.Template
 
         /// <summary>
         /// 将类型转换为数据库类型
-        /// </summary>
-        /// <param name="dataType"></param>
-        /// <returns></returns>
+        /// </summary> 
         protected DbType ConvertToDatabaseDataType(Type dataType)
         {
 

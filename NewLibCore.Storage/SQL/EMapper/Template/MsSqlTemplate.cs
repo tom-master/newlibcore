@@ -3,7 +3,6 @@ using System.Data.Common;
 using System.Data.SqlClient;
 using System.Text;
 using NewLibCore.Storage.SQL.Component;
-using NewLibCore.Storage.SQL.Extension;
 using NewLibCore.Validate;
 
 namespace NewLibCore.Storage.SQL.Template
