@@ -6,7 +6,7 @@ using NewLibCore.Storage.SQL.Extension;
 using NewLibCore.Validate;
 namespace NewLibCore.Storage.SQL.Component
 {
-    public class QueryComponent: ExpressionTranslator, IEntityMapperExecutor
+    public class QueryComponent: ResolveExpression, IEntityMapperExecutor
     {
         internal ColumnFieldComponent ColumnFieldComponent { get; private set; }
         internal PaginationComponent PaginationComponent { get; private set; }

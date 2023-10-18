@@ -12,8 +12,7 @@ namespace NewLibCore.Storage.SQL.EMapper.Visitor
 
         protected override void ParseExpression(LambdaExpression expression)
         {
-            var e = new ExpressionTranslator(Options);
-            e.AliasMapper.AddRange(ExtractAliasNames(Expression.Value));
+            var e = new ResolveExpression(Options);
             e.Translate(expression, Expression.Key);
             VisitResult = (Expression.Key, $@"{Expression.Key} {e.TranslationResult}", e.MapperParameters);
         }

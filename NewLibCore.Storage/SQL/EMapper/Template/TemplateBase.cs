@@ -190,12 +190,12 @@ namespace NewLibCore.Storage.SQL.Template
         {
             PredicateMapper.Add(EMType.AND, " {0} AND {1} ");
             PredicateMapper.Add(EMType.OR, " {0} OR {1} ");
-            PredicateMapper.Add(EMType.EQ, " {0} = {1} ");
-            PredicateMapper.Add(EMType.NQ, " {0} <> {1} ");
-            PredicateMapper.Add(EMType.GT, " {0} < {1} ");
-            PredicateMapper.Add(EMType.LT, " {0} > {1} ");
-            PredicateMapper.Add(EMType.GE, " {0} <= {1} ");
-            PredicateMapper.Add(EMType.LE, " {0} >= {1} ");
+            PredicateMapper.Add(EMType.Equal, " {0} = {1} ");
+            PredicateMapper.Add(EMType.NotEqual, " {0} <> {1} ");
+            PredicateMapper.Add(EMType.GreaterThan, " {0} < {1} ");
+            PredicateMapper.Add(EMType.LessThan, " {0} > {1} ");
+            PredicateMapper.Add(EMType.GreaterThanOrEqual, " {0} <= {1} ");
+            PredicateMapper.Add(EMType.LessThanOrEqual, " {0} >= {1} ");
 
             AppendPredicateType();
         }

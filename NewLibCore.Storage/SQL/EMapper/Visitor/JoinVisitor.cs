@@ -16,8 +16,7 @@ namespace NewLibCore.Storage.SQL.EMapper.Visitor
         {
             var aliasItem = ExtractAliasNames(expression).FirstOrDefault();
             var t = Options.Value.TemplateBase.CreateJoin(Expression.Key, aliasItem.Key, aliasItem.Value.ToLower());
-            var e = new ExpressionTranslator(Options);
-            e.AliasMapper.AddRange(ExtractAliasNames(Expression.Value));
+            var e = new ResolveExpression(Options);
             e.Translate(expression, Expression.Key);
             VisitResult = (Expression.Key, t.Append(e.TranslationResult).ToString(), e.MapperParameters);
         }

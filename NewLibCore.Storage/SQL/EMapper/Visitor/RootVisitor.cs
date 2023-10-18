@@ -44,14 +44,11 @@ namespace NewLibCore.Storage.SQL.EMapper.Visitor
 
         protected List<KeyValuePair<string, string>> ExtractAliasNames(Expression expression)
         {
-            var parameters = ((LambdaExpression)expression).Parameters;
-            var result = new List<KeyValuePair<string, string>>();
-            foreach (var item in parameters)
+            return ((LambdaExpression)expression).Parameters.Select(s =>
             {
-                var (tableName, aliasName) = item.Type.GetEntityBaseAliasName();
-                result.Add(new KeyValuePair<string, string>(tableName, aliasName));
-            }
-            return result.Distinct().ToList();
+                var (tableName, aliasName) = s.Type.GetEntityBaseAliasName();
+                return new KeyValuePair<string, string>(tableName, aliasName);
+            }).Distinct().ToList();
         }
 
         protected virtual void ParseExpression(LambdaExpression expression)

@@ -66,12 +66,14 @@ namespace NewLibCore.Storage.SQL
         START_LIKE = 4,
         END_LIKE = 5,
         IN = 6,
-        EQ = 7,
-        NQ = 8,
-        GT = 9,
-        LT = 10,
-        GE = 11,
-        LE = 12,
+
+        Equal = 7,
+        NotEqual = 8,
+        GreaterThan = 9,
+        LessThan = 10,
+        GreaterThanOrEqual = 11,
+        LessThanOrEqual = 12,
+
         FROM = 13,
         WHERE = 14,
 
