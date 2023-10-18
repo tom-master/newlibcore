@@ -13,7 +13,8 @@ namespace NewLibCore.Storage.SQL.EMapper.Visitor
         protected override void ParseExpression(LambdaExpression expression)
         {
             var e = new ResolveExpression(Options);
-            e.Translate(expression, Expression.Key);
+            e.EMType = Expression.Key;
+            e.Translate(expression);
             VisitResult = (Expression.Key, $@"{Expression.Key} {e.TranslationResult}", e.MapperParameters);
         }
     }
