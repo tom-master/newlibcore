@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using Microsoft.Extensions.Options;
 using NewLibCore.Storage.SQL.EMapper.Visitor;
+using NewLibCore.Storage.SQL.Extension;
 
 namespace NewLibCore.Storage.SQL.EMapper
 {
@@ -11,10 +12,7 @@ namespace NewLibCore.Storage.SQL.EMapper
     {
         private Expression _expression;
 
-        private List<KeyValuePair<string, Expression>> _methodExpressions = new List<KeyValuePair<string, Expression>>();
-
         private IOptions<EntityMapperOptions> _options;
-
 
         internal EMExecutor(Expression expression, IOptions<EntityMapperOptions> options)
         {
@@ -24,36 +22,32 @@ namespace NewLibCore.Storage.SQL.EMapper
 
         internal T Execute()
         {
-            GetExpressionMethod((MethodCallExpression)_expression);
-            var sql = Translate(_methodExpressions);
-
+            var sql = Translate(_expression);
             return default;
         }
 
-        private string Translate(List<KeyValuePair<string, Expression>> expression)
+        private string Translate(Expression expression)
         {
+            var expressions = DisassemblyExpression((MethodCallExpression)expression);
+
             var rootVisitors = new List<RootVisitor>();
-            foreach (var methodExpression in expression)
+            foreach (var methodExpression in expressions)
             {
                 switch (methodExpression.Key)
                 {
-                    case "InnerJoin":
-                        rootVisitors.Add(new JoinVisitor(EMType.INNER, methodExpression.Value, _options));
+                    case EMType.INNER:
+                    case EMType.LEFT:
+                    case EMType.RIGHT:
+                        rootVisitors.Add(new JoinVisitor(methodExpression.Key, methodExpression.Value, _options));
                         break;
-                    case "LeftJoin":
-                        rootVisitors.Add(new JoinVisitor(EMType.LEFT, methodExpression.Value, _options));
+                    case EMType.WHERE:
+                        rootVisitors.Add(new WhereVisitor(methodExpression.Key, methodExpression.Value, _options));
                         break;
-                    case "RightJoin":
-                        rootVisitors.Add(new JoinVisitor(EMType.RIGHT, methodExpression.Value, _options));
+                    case EMType.FROM:
+                        rootVisitors.Add(new FromVisitor(methodExpression.Key, methodExpression.Value, _options));
                         break;
-                    case "Where":
-                        rootVisitors.Add(new WhereVisitor(EMType.WHERE, methodExpression.Value, _options));
-                        break;
-                    case "From":
-                        rootVisitors.Add(new FromVisitor(EMType.FROM, methodExpression.Value, _options));
-                        break;
-                    case "Select":
-                        rootVisitors.Add(new SelectVisitor(EMType.COLUMN, methodExpression.Value, _options));
+                    case EMType.SELECT:
+                        rootVisitors.Add(new SelectVisitor(methodExpression.Key, methodExpression.Value, _options));
                         break;
                     default:
                         throw new NotSupportedException();
@@ -65,34 +59,33 @@ namespace NewLibCore.Storage.SQL.EMapper
 
         protected Expression VisitUnary(UnaryExpression node)
         {
-            if (node.Operand is LambdaExpression lambdaExpression)
-            {
-                return lambdaExpression;
-            }
-            return node;
+            return node.Operand is LambdaExpression lambdaExpression ? lambdaExpression : (Expression)node;
         }
 
-        private void GetExpressionMethod(MethodCallExpression methodCallExpression)
+        private List<KeyValuePair<EMType, Expression>> DisassemblyExpression(MethodCallExpression methodCall)
         {
-            var methodName = methodCallExpression.Method.Name;
-            var expression = methodCallExpression.Arguments[1];
+            var m = new List<KeyValuePair<EMType, Expression>>();
+            var methodCallCopy = methodCall;
 
-            _methodExpressions.Add(new KeyValuePair<string, Expression>(methodName, VisitUnary((UnaryExpression)expression)));
-            foreach (var item in methodCallExpression.Arguments)
+        tryL:
+            m.Add(new KeyValuePair<EMType, Expression>(Enum.Parse<EMType>(methodCallCopy.Method.Name, true), VisitUnary((UnaryExpression)methodCallCopy.Arguments[1])));
+
+            foreach (var argument in methodCallCopy.Arguments)
             {
-                if (item is MethodCallExpression callExpression)
+                if (argument is MethodCallExpression innerMethodCall)
                 {
-                    GetExpressionMethod(callExpression);
+                    methodCallCopy = innerMethodCall;
+                    goto tryL;
                 }
-                else if (item is ConstantExpression constantExpression)
+                else if (argument is ConstantExpression constant)
                 {
-                    var ss = ((IQueryable)constantExpression.Value).ElementType;
-                    var p1 = Expression.Parameter(ss, "a");
-                    var c1 = Expression.Constant(ss);
-                    var e1 = Expression.Lambda(c1, p1);
-                    _methodExpressions.Add(new KeyValuePair<string, Expression>("From", e1));
+                    var type = ((IQueryable)constant.Value).ElementType;
+                    var parameter = Expression.Parameter(type, type.GetEntityBaseAliasName().AliasName);
+                    var lamdba = Expression.Lambda(Expression.Constant(type), parameter);
+                    m.Add(new KeyValuePair<EMType, Expression>(EMType.FROM, lamdba));
                 }
             }
+            return m;
         }
     }
 }

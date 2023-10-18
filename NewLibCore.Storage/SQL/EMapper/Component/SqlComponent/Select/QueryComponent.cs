@@ -74,7 +74,7 @@ namespace NewLibCore.Storage.SQL.Component
             if (selector != null)
             {
                 ColumnFieldComponent = new ColumnFieldComponent();
-                ColumnFieldComponent.AddExpression(selector, EMType.COLUMN);
+                ColumnFieldComponent.AddExpression(selector, EMType.SELECT);
             }
 
             return this;
@@ -87,7 +87,7 @@ namespace NewLibCore.Storage.SQL.Component
             if (selector != null)
             {
                 ColumnFieldComponent = new ColumnFieldComponent();
-                ColumnFieldComponent.AddExpression(selector, EMType.COLUMN);
+                ColumnFieldComponent.AddExpression(selector, EMType.SELECT);
             }
             return this;
         }
@@ -99,7 +99,7 @@ namespace NewLibCore.Storage.SQL.Component
             if (selector != null)
             {
                 ColumnFieldComponent = new ColumnFieldComponent();
-                ColumnFieldComponent.AddExpression(selector, EMType.COLUMN);
+                ColumnFieldComponent.AddExpression(selector, EMType.SELECT);
             }
             return this;
         }
@@ -113,7 +113,7 @@ namespace NewLibCore.Storage.SQL.Component
             if (selector != null)
             {
                 ColumnFieldComponent = new ColumnFieldComponent();
-                ColumnFieldComponent.AddExpression(selector, EMType.COLUMN);
+                ColumnFieldComponent.AddExpression(selector, EMType.SELECT);
             }
             return this;
         }
@@ -128,7 +128,7 @@ namespace NewLibCore.Storage.SQL.Component
             if (selector != null)
             {
                 ColumnFieldComponent = new ColumnFieldComponent();
-                ColumnFieldComponent.AddExpression(selector, EMType.COLUMN);
+                ColumnFieldComponent.AddExpression(selector, EMType.SELECT);
             }
             return this;
         }

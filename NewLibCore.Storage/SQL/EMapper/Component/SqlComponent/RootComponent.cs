@@ -57,7 +57,7 @@ namespace NewLibCore.Storage.SQL.Component
         {
             var anonymousObjFields = new List<string>();
 
-            var columnExpression = PredicateExpressions.Where(w => w.Key == EMType.COLUMN).FirstOrDefault().Value;
+            var columnExpression = PredicateExpressions.Where(w => w.Key == EMType.SELECT).FirstOrDefault().Value;
 
             var fields = (LambdaExpression)columnExpression;
             if (fields.Body.NodeType == ExpressionType.Constant)

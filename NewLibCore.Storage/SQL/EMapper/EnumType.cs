@@ -81,7 +81,7 @@ namespace NewLibCore.Storage.SQL
         CROSS = 18,
         SEIF = 19,
 
-        COLUMN = 20,
+        SELECT = 20,
         ASC = 21,
         DESC = 22
     }

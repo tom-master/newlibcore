@@ -6,9 +6,9 @@ namespace NewLibCore.Storage.SQL.EMapper
 {
     public static class EMQueryableExtension
     {
-        public static IQueryable<T> InnerJoin<T, R>(this IQueryable<T> source, Expression<Func<T, R, bool>> expression)
+        public static IQueryable<T> Inner<T, R>(this IQueryable<T> source, Expression<Func<T, R, bool>> expression)
         {
-            var generic = new Func<IQueryable<T>, Expression<Func<T, R, bool>>, IQueryable<T>>(InnerJoin).Method;
+            var generic = new Func<IQueryable<T>, Expression<Func<T, R, bool>>, IQueryable<T>>(Inner).Method;
             return source.Provider.CreateQuery<T>(
                  Expression.Call(
                      null,
@@ -16,9 +16,9 @@ namespace NewLibCore.Storage.SQL.EMapper
                      source.Expression, Expression.Quote(expression)
                      ));
         }
-        public static IQueryable<T> LeftJoin<T, R>(this IQueryable<T> source, Expression<Func<T, R, bool>> expression)
+        public static IQueryable<T> Left<T, R>(this IQueryable<T> source, Expression<Func<T, R, bool>> expression)
         {
-            var generic = new Func<IQueryable<T>, Expression<Func<T, R, bool>>, IQueryable<T>>(LeftJoin).Method;
+            var generic = new Func<IQueryable<T>, Expression<Func<T, R, bool>>, IQueryable<T>>(Left).Method;
             return source.Provider.CreateQuery<T>(
                  Expression.Call(
                      null,
@@ -26,9 +26,9 @@ namespace NewLibCore.Storage.SQL.EMapper
                      source.Expression, Expression.Quote(expression)
                      ));
         }
-        public static IQueryable<T> RightJoin<T, R>(this IQueryable<T> source, Expression<Func<T, R, bool>> expression)
+        public static IQueryable<T> Right<T, R>(this IQueryable<T> source, Expression<Func<T, R, bool>> expression)
         {
-            var generic = new Func<IQueryable<T>, Expression<Func<T, R, bool>>, IQueryable<T>>(RightJoin).Method;
+            var generic = new Func<IQueryable<T>, Expression<Func<T, R, bool>>, IQueryable<T>>(Right).Method;
             return source.Provider.CreateQuery<T>(
                  Expression.Call(
                      null,
